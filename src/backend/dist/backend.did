@@ -1,0 +1,3957 @@
+type YieldSubmission = 
+ record {
+   amount: float64;
+   beat: nat;
+   channel: text;
+   status: text;
+   txId: opt text;
+ };
+type WorldStateSnapshot = 
+ record {
+   alertSensors: nat;
+   councilBeat: nat;
+   criticalSensors: nat;
+   lastEvaluatedTs: int;
+   nominalSensors: nat;
+   totalSensors: nat;
+   worldState: text;
+ };
+type WorldSignalFeed = 
+ record {
+   lastUpdatedAt: int;
+   signals: vec WorldSignal;
+   suggestedFilmConcept: text;
+   topPattern: text;
+   topPatternStrength: float64;
+ };
+type WorldSignal = 
+ record {
+   audioMood: text;
+   doctrineCategory: text;
+   id: text;
+   patternStrength: float64;
+   platform: text;
+   timestamp: int;
+   toneFlag: text;
+   topic: text;
+   visualHint: text;
+ };
+type WorldSelfModel = 
+ record {
+   attribution: text;
+   doctrineScore: float64;
+   driftMagnitude: float64;
+   neurochemVector:
+    record {
+      cortisol: float64;
+      dopamine: float64;
+      oxytocin: float64;
+      serotonin: float64;
+    };
+   phiAlignedCount: nat;
+   physicsVector:
+    record {
+      clarity: float64;
+      energy: float64;
+      stability: float64;
+    };
+   schumannHz: float64;
+   totalActors: nat;
+   worldId: text;
+   worldTickMs: nat;
+ };
+type WorldProductionStatus = 
+ variant {
+   active;
+   idle;
+   merging;
+   sealed;
+ };
+type WorldProductionCapture = 
+ record {
+   bufferStartTime: int;
+   framesEncoded: nat;
+   isCapturing: bool;
+   readinessScore: float64;
+   sealReady: bool;
+ };
+type WorldParamSnapshot = 
+ record {
+   anomaly_threshold: float64;
+   is_locked: bool;
+   lock_reason: text;
+   locked_beat: nat;
+   name: text;
+   unlock_at_beat: nat;
+   value: float64;
+ };
+type WorldModel__1 = 
+ record {
+   cognitiveDepth: float64;
+   currentReadiness: float64;
+   lastBeat: nat64;
+   predictedNextGateCrossing: nat64;
+   signalReadings: vec SignalReading;
+ };
+type WorldModel = 
+ record {
+   animalEngineStates: vec float64;
+   antiDriftBalance: float64;
+   attribution: text;
+   doctrineScore: float64;
+   expansiveScore: float64;
+   fieldCoherence: float64;
+   lastHeartbeatBlock: nat;
+   omnisWeight: float64;
+   receptiveScore: float64;
+   trendSignalCount: nat;
+   velaStep: nat;
+ };
+type WorldInstanceState = 
+ record {
+   actorPositions: vec record {
+                         text;
+                         record {
+                           float64;
+                           float64;
+                           float64;
+                         };
+                       };
+   artifactSealCount: nat;
+   createdAtBeat: nat;
+   creatorId: text;
+   doctrineReadiness: float64;
+   isArchived: bool;
+   isMergeable: bool;
+   lightingIntensity: float64;
+   physicsEnergy: float64;
+   worldId: WorldInstanceId;
+ };
+type WorldInstanceId = nat;
+type WorldDogonState = 
+ record {
+   actorCount: nat;
+   densityScore: float64;
+   lawViolations: vec text;
+   noveltyScore: float64;
+   objectCount: nat;
+   phiCoherenceScore: float64;
+   timestamp: int;
+   worldReadingId: nat;
+ };
+type WorldDoctrineState = 
+ record {
+   aegisCorrectionsFired: nat;
+   attribution: text;
+   doctrineScore: float64;
+   driftMagnitude: float64;
+   genesisAlignment: float64;
+   lastOxygenatedAt: int;
+   lawEngineGateOpen: bool;
+ };
+type WorkflowMedinaRecord = 
+ record {
+   abbreviation: text;
+   family: text;
+   grade: text;
+   id: text;
+   latinName: text;
+   lawText: text;
+   skaiType: text;
+ };
+type WorkflowMedinaEntry = 
+ record {
+   abbreviation: text;
+   description: text;
+   engines: vec text;
+   family: text;
+   fullLatinName: text;
+   grade: text;
+   isDeployed: bool;
+   latinName: text;
+   lawSeal: text;
+   skaiId: text;
+ };
+type WorkerSnapshot = 
+ record {
+   beingId: text;
+   currentTask: opt TaskSnapshot;
+   failureCount: nat;
+   id: text;
+   latinName: text;
+   name: text;
+   recentHistory: vec TaskSnapshot;
+   status: text;
+   successCount: nat;
+   swarmId: text;
+ };
+type WorkerObserver = 
+ record {
+   latinName: text;
+   observerType: text;
+   purpose: text;
+ };
+type WorkerMemoryEntry = 
+ record {
+   beat: nat;
+   inputHash: text;
+   outputHash: text;
+   success: bool;
+   taskId: nat;
+   taskType: text;
+ };
+type WeightDelta = 
+ record {
+   beatStamp: nat;
+   delta: float64;
+   organismId: text;
+   pathway: text;
+   sealId: text;
+ };
+type WaveStatus = 
+ record {
+   active_instances: nat;
+   cycle_floor: nat;
+   cycle_reserve: nat;
+   law_39_compliant: bool;
+   phi_resonance: float64;
+   reserve_health: text;
+   resolved_instances: nat;
+   total_deficits: nat;
+   total_delivered: nat;
+   wave_beat: nat;
+ };
+type VitalitySummary = 
+ record {
+   activeCount: nat;
+   csprActive: bool;
+   dormantCount: nat;
+   lastPulseTs: nat;
+   recoveringCount: nat;
+   totalBeats: nat;
+ };
+type VitalityState = 
+ variant {
+   ACTIVE;
+   DORMANT;
+   RECOVERING;
+ };
+type VisualDoctrineState = 
+ record {
+   attribution: text;
+   doctrineScore: float64;
+   doctrineVisualSignal: DoctrineVisualSignal;
+   domain: text;
+   executionCount: nat;
+   grade: text;
+   lastFireBeat: nat;
+   latinName: text;
+   lawViolationCount: nat;
+   name: text;
+ };
+type VeritasState = 
+ record {
+   lastFired: nat;
+   veritasScore: float64;
+ };
+type VaultDocumentKind = 
+ variant {
+   Artifact;
+   Law;
+   MacroModel;
+   MedinaModel;
+   ResearchPaper;
+   Settings;
+ };
+type VaultDocument = 
+ record {
+   ancientSymbol: text;
+   attributedTo: text;
+   content: text;
+   createdBeat: nat;
+   doctrineScore: float64;
+   executableTargets: vec text;
+   genesisAlignmentScore: float64;
+   id: text;
+   isExecutable: bool;
+   kind: VaultDocumentKind;
+   lastExecutedBeat: opt nat;
+   lawId: opt nat;
+   microName: MicroNameAttribute;
+   modelId: opt text;
+   readinessThreshold: float64;
+   reingestionCount: nat;
+   resonanceRings: nat;
+   resonanceScore: float64;
+   title: text;
+ };
+type VELARingState = 
+ record {
+   completed: nat;
+   maxSteps: nat;
+   step: nat;
+ };
+type UniverseBibleEntry = 
+ record {
+   appearsInFilms: vec text;
+   characterName: opt text;
+   description: text;
+   doctrineTheme: opt text;
+   locationName: opt text;
+ };
+type TrendingWorldSignal = 
+ record {
+   category: text;
+   doctrineAlignment: float64;
+   filmConceptGenerated: opt text;
+   id: text;
+   productionQueued: bool;
+   source: SandboxOrganismId;
+   timestamp: int;
+   title: text;
+ };
+type TrendingSignal = 
+ record {
+   archTypeMatch: text;
+   capturedAt: int;
+   doctrineAlignment: float64;
+   id: text;
+   momentum: float64;
+   platform: text;
+   suggestedGenre: text;
+   suggestedTitle: text;
+   topic: text;
+ };
+type TrendingContentItem = 
+ record {
+   contentFormat: ContentFormat;
+   doctrineAlignmentScore: float64;
+   id: text;
+   startedAt: int;
+   status: text;
+   trendSignal: text;
+ };
+type TranslationInstruction = 
+ record {
+   beat: nat;
+   doctrineScore: float64;
+   engineTarget: text;
+   executed: bool;
+   instructionType: text;
+   payload: text;
+   result: opt text;
+   sourceDocumentId: text;
+ };
+type TranslationEvent = 
+ record {
+   actionType: text;
+   attribution: text;
+   beat: nat;
+   documentId: text;
+   eventId: text;
+   executedAt: int;
+   gatePassed: bool;
+   stateChange: StateChange;
+   targetEngine: text;
+ };
+type TaskSnapshot = 
+ record {
+   anomalyId: text;
+   assignedWorkerId: text;
+   completedAt: int;
+   context: text;
+   id: text;
+   result: opt text;
+   startedAt: int;
+   success: bool;
+   taskType: text;
+ };
+type TAFTStatus = 
+ record {
+   activeThreads: nat;
+   beat: nat;
+   coherenceScore: float64;
+   dormantThreads: nat;
+   recoveringThreads: nat;
+   totalAdvances: nat;
+   totalRestarts: nat;
+   totalThreads: nat;
+ };
+type SwarmSnapshot = 
+ record {
+   activeFieldCount: nat;
+   activeMinerCount: nat;
+   attribution: text;
+   lastHeartbeat: nat;
+   routerActive: bool;
+   swarmCoherence: float64;
+   swarmId: text;
+   totalCyclesRun: nat;
+   totalHashesSubmitted: nat;
+   totalYieldRouted: float64;
+ };
+type SurgeAheadMode = 
+ record {
+   activatedAt: int;
+   enabled: bool;
+   releaseCount: nat;
+ };
+type SuccessionState = 
+ record {
+   currentLead: text;
+   masteryReached: bool;
+   successorActivated: bool;
+ };
+type SubtitleTrack = 
+ record {
+   entries: vec SubtitleEntry;
+   language: text;
+ };
+type SubtitleEntry = 
+ record {
+   endMs: nat;
+   startMs: nat;
+   "text": text;
+ };
+type SubstrateGenealogyRecord = 
+ record {
+   assemblyLevel:
+    record {
+      description: text;
+      intelligenceType: text;
+      mechanism: text;
+      primitiveVerbs: vec text;
+    };
+   electronLevel:
+    record {
+      description: text;
+      frequencyHz: float64;
+      intelligenceType: text;
+      mechanism: text;
+    };
+   genesisAnchor: text;
+   layer: int;
+   machineCodeLevel:
+    record {
+      bitDepth: nat;
+      description: text;
+      intelligenceType: text;
+      mechanism: text;
+    };
+   name: text;
+   sealedAtGenesis: bool;
+   transistorLevel:
+    record {
+      binaryChoices: nat;
+      description: text;
+      intelligenceType: text;
+      mechanism: text;
+    };
+   wasmLevel:
+    record {
+      description: text;
+      intelligenceType: text;
+      mechanism: text;
+      phiCoupling: float64;
+    };
+ };
+type SubscriptionTier = 
+ record {
+   features: vec text;
+   name: text;
+   phiRatio: float64;
+   priceAnnual: float64;
+   priceMonthly: float64;
+   tierId: nat;
+ };
+type SubmissionStatus = 
+ variant {
+   accepted;
+   pending;
+   rejected;
+   submitted;
+   withdrawn;
+ };
+type SubmissionStats = 
+ record {
+   pendingCount: nat;
+   totalAcknowledged: nat;
+   totalPrepared: nat;
+   totalSubmitted: nat;
+ };
+type SubModelRecord = 
+ record {
+   executionCount: nat;
+   function: text;
+   id: text;
+   inputKeys: vec text;
+   name: text;
+   outputKeys: vec text;
+   phiWeight: float64;
+ };
+type StrategicRecommendation = 
+ record {
+   category: text;
+   id: text;
+   law: text;
+   phiMetric: float64;
+   producedAtBeat: nat;
+   producer: text;
+   rationale: text;
+   recommendation: text;
+ };
+type StateShadowState = 
+ record {
+   attribution: text;
+   backendStateHash: text;
+   divergencePercent: float64;
+   domain: text;
+   executionCount: nat;
+   grade: text;
+   lastFireBeat: nat;
+   lastKnownFrontendChecksum: text;
+   latinName: text;
+   name: text;
+   resyncRequired: bool;
+ };
+type StateChange = 
+ record {
+   actionType: text;
+   affected_layers: vec text;
+   attribution: text;
+   beat: nat;
+   doctrine_score_delta: float64;
+   engine_calls: vec text;
+   executedAt: int;
+   neurochemistry_delta: vec record {
+                               text;
+                               float64;
+                             };
+   oxygenatedConfidence: float64;
+   sourceDocumentId: text;
+ };
+type SovereignTool = 
+ record {
+   capability: text;
+   latinName: text;
+   name: text;
+   toolId: nat;
+   uses: vec text;
+ };
+type SovereignCore = 
+ record {
+   id: nat;
+   lastBeat: nat;
+   presenceBoost: float64;
+   sphere: CoreSphere;
+ };
+type SovereignCall = 
+ record {
+   aiToAI: bool;
+   attribution: text;
+   backendMethod: opt text;
+   callId: nat;
+   description: text;
+   family: CallFamily;
+   latinName: text;
+   name: text;
+   phiWeight: float64;
+   uses: vec text;
+ };
+type SovereignActor = 
+ record {
+   ageRange: text;
+   archetype: text;
+   archetypeIndex: nat;
+   bio: text;
+   castingWeight: float64;
+   createdAtBeat: nat;
+   dedicatee: text;
+   doctrineAlignmentScore: float64;
+   doctrineSpecialty: text;
+   filmography: vec text;
+   genreAffinities: vec text;
+   id: nat;
+   isAvailable: bool;
+   masteryLevel: nat;
+   masteryTier: nat;
+   name: text;
+   neurotransmitterProfile: NeurotransmitterProfile;
+   phiFaceGeometry: PHIFaceGeometry;
+   publicProfile: ActorPublicProfile;
+   relationshipMap: vec ActorRelationshipEntry;
+   roleVersatility: vec text;
+   sealedBy: text;
+   toneAffinities: vec text;
+   totalFilms: nat;
+ };
+type SocialPost = 
+ record {
+   content: text;
+   format: text;
+   hashtags: vec text;
+   platform: text;
+   postAtBeat: nat;
+ };
+type SocialContentPlan = 
+ record {
+   filmId: text;
+   filmTitle: text;
+   law: text;
+   posts: vec SocialPost;
+   pressRelease: PressRelease;
+   producedAtBeat: nat;
+   producer: text;
+ };
+type SlatePriority = 
+ record {
+   briefForMusePrime: text;
+   compoundedPriority: float64;
+   doctrineAlignmentScore: float64;
+   productionFormat: text;
+   signalId: text;
+   signalText: text;
+   trendStatus: text;
+   worldRelevanceWeight: float64;
+ };
+type SkaiInstallSnapshot = 
+ record {
+   family: text;
+   installed_beat: nat;
+   last_heartbeat_beat: nat;
+   latin_name: text;
+   skai_id: text;
+   status: text;
+   toolbar_button_id: text;
+ };
+type SimulationStatus = 
+ record {
+   activeFactions: nat;
+   autoRunEnabled: bool;
+   beat: nat;
+   globalCoherence: float64;
+   totalEngagements: nat;
+ };
+type SignalReading = 
+ record {
+   actorTrustMapState: float64;
+   artifactQualityFloor: float64;
+   cortisol: float64;
+   distributionFeedback: float64;
+   doctrineScore: float64;
+   dopamine: float64;
+   fieldCoherence: float64;
+   filmSchoolDelta: float64;
+   masteryTier: float64;
+   norepinephrine: float64;
+   omnisWeight: float64;
+   refractoryState: float64;
+   serotonin: float64;
+   velaStep: nat;
+ };
+type SevenSpiritsState = 
+ record {
+   activeSpiritIdx: nat;
+   rotationBeat: nat;
+   spirits: vec text;
+ };
+type SettingsSnapshot = 
+ record {
+   dispatchSpeed: float64;
+   doctrineRefreshRate: float64;
+   heartbeatOverrideMs: nat;
+   isLocked: bool;
+   sensorSensitivity: float64;
+ };
+type SessionLog = 
+ record {
+   allowed: bool;
+   beat: nat;
+   event: text;
+   fieldSignal: text;
+   intent: text;
+   reason: text;
+   sessionId: text;
+ };
+type SensorSnapshot = 
+ record {
+   anomalyCount: nat;
+   anomalyThreshold: float64;
+   baselineValue: float64;
+   beingId: text;
+   currentReading: float64;
+   family: text;
+   grade: text;
+   id: text;
+   lastReadingTs: int;
+   latinName: text;
+   name: text;
+   observationTarget: text;
+   sensorType: text;
+   status: text;
+ };
+type SeasonArcProgress = 
+ record {
+   currentEpisode: nat;
+   episodesGenerated: nat;
+   escalationAtCurrent: float64;
+   lastUpdatedAt: int;
+   latestCliffhanger: text;
+   percentComplete: float64;
+   seriesId: text;
+   seriesTitle: text;
+   totalEpisodes: nat;
+ };
+type SeasonArc = 
+ record {
+   attribution: text;
+   concept: text;
+   dedicatee: text;
+   emotionalMilestones: vec EmotionalMilestone;
+   episodes: vec EpisodeArcEntry;
+   escalationCurve: vec float64;
+   generatedAt: int;
+   generatedAtBeat: nat;
+   seasonNumber: nat;
+   seriesId: text;
+   seriesTitle: text;
+   totalEpisodes: nat;
+ };
+type SealedArtifact = 
+ record {
+   artifactId: text;
+   artifactType: ArtifactType;
+   attributionHash: text;
+   beat: nat;
+   coherentResponse: opt CoherentArtifactRecord;
+   dedicatee: text;
+   doctrineStatus: text;
+   gradientScore: float64;
+   producer: text;
+   responseTokens: vec ArchResponseToken;
+   sealTimestamp: nat64;
+ };
+type SchumannAmbient = 
+ record {
+   actualFrequencyHz: float64;
+   ambientSoundHz: float64;
+   harmonicIndex: nat;
+   lightingPulseHz: float64;
+ };
+type SceneMemoryEntry = 
+ record {
+   actorDecision: text;
+   emotionalArc: text;
+   filmId: text;
+   phiWeight: float64;
+   resolutionState: text;
+   sceneIndex: nat;
+   timestamp: int;
+ };
+type SandboxSocialPost = 
+ record {
+   angle: text;
+   attribution: text;
+   caption: text;
+   doctrineTag: text;
+   hashtags: vec text;
+   platform: text;
+ };
+type SandboxSignalSnapshot = 
+ record {
+   axiomSignal: text;
+   capturedAtBeat: nat;
+   codexSignal: text;
+   doctrineAlignTag: text;
+   frameSignal: text;
+   lexSignal: text;
+   vectorSignal: text;
+ };
+type SandboxSignalBus = 
+ record {
+   busVersion: nat;
+   capturedAtBeat: nat;
+   capturedAtTime: int;
+   climateIntensity: text;
+   commercialOpportunities: vec text;
+   complianceSignals: vec text;
+   culturalSynthesis: text;
+   doctrineAlignment: text;
+   emergenceState: text;
+   emotionalClimate: text;
+   factualClaims: vec text;
+   legalContext: text;
+   locationDescriptors: vec text;
+   marketSignals: vec text;
+   narrativeDepth: text;
+   openSourceInsights: vec text;
+   revenueContext: text;
+   scientificContext: text;
+   seasonalContext: text;
+   techContext: text;
+   trendingTopics: vec text;
+   worldBuildingFacts: vec text;
+ };
+type SandboxSignal = 
+ record {
+   category: text;
+   data: text;
+   doctrineAlignment: float64;
+   headline: text;
+   id: text;
+   routedToFilmPipeline: bool;
+   source: SandboxOrganismId;
+   timestamp: int;
+ };
+type SandboxResearchDocument = 
+ record {
+   attribution: text;
+   date: int;
+   doctrineAlignmentScore: float64;
+   genesisAnchor: text;
+   id: text;
+   keyFindings: vec text;
+   onChainSealId: text;
+   organismId: SandboxOrganismId;
+   pdfUrl: opt text;
+   researchSummary: text;
+   title: text;
+ };
+type SandboxOrganismState = 
+ record {
+   currentSignals: vec SandboxSignal;
+   cycleCount: nat;
+   description: text;
+   id: SandboxOrganismId;
+   isActive: bool;
+   lastCycleTime: int;
+   lastError: opt text;
+   masteryLevel: nat;
+   name: text;
+   researchDocuments: vec SandboxResearchDocument;
+ };
+type SandboxOrganismId = 
+ variant {
+   axiom;
+   codex;
+   frame;
+   grid;
+   ledger;
+   lex;
+   sovereignGov;
+   vector;
+ };
+type SandboxEnrichedSocialAssets = 
+ record {
+   axiomAngle: text;
+   busVersion: nat;
+   codexAngle: text;
+   doctrineAlignment: text;
+   filmId: text;
+   filmTitle: text;
+   frameVisual: text;
+   generatedAt: int;
+   instagram: SandboxSocialPost;
+   ledgerAngle: text;
+   linkedin: SandboxSocialPost;
+   tiktok: SandboxSocialPost;
+   twitter: SandboxSocialPost;
+   vectorTrend: text;
+   youtube: SandboxSocialPost;
+ };
+type SKAIOrganism = 
+ record {
+   attribution: text;
+   backendWires: vec BackendWire;
+   capabilities: vec SKAICapability;
+   colonelKernel: ColonelKernel;
+   deployedAtBeat: nat;
+   description: text;
+   family: SKAIFamily;
+   heartbeatHz: float64;
+   isDeployed: bool;
+   latinName: text;
+   name: text;
+   phiCoupling: float64;
+   skaiId: nat;
+   taftThread: text;
+   uses: vec text;
+ };
+type SKAIFamily = 
+ variant {
+   DOMAIN;
+   FUSION;
+   MICRO;
+   PLATFORM;
+   SWARM;
+ };
+type SKAICapability = 
+ record {
+   capId: nat;
+   description: text;
+   name: text;
+ };
+type RingState = 
+ record {
+   active: bool;
+   contribution: float64;
+   name: text;
+   ringId: nat;
+ };
+type ReviewStatus = 
+ variant {
+   Approved;
+   Draft;
+   PendingReview;
+   Rejected;
+   RevisionRequested;
+ };
+type ReviewComment = 
+ record {
+   author: text;
+   beat: nat;
+   comment: text;
+   timestamp: int;
+ };
+type RevenueProjection = 
+ record {
+   annualRevenue: float64;
+   avgRuntimeSeconds: nat;
+   enterpriseRevenue: float64;
+   filmCount: nat;
+   law: text;
+   monthlyRevenue: float64;
+   phiGrowthFactor: float64;
+   producedAtBeat: nat;
+   producer: text;
+ };
+type ResponseRecord = 
+ record {
+   adrePhase: text;
+   attribution: text;
+   doctrineScore: float64;
+   omnisWeight: float64;
+   responseHash: text;
+   responseText: text;
+   timestamp: nat64;
+   velaStep: nat;
+ };
+type ResonexState = 
+ record {
+   cascadeCount: nat;
+   cascadeTriggered: bool;
+   lastFired: nat;
+ };
+type RenderCoherenceState = 
+ record {
+   attribution: text;
+   domain: text;
+   executionCount: nat;
+   grade: text;
+   lagFlagged: bool;
+   lastFireBeat: nat;
+   lastFramePaintMs: float64;
+   latinName: text;
+   name: text;
+   renderCoherenceScore: float64;
+ };
+type RelationshipType = 
+ variant {
+   admiration;
+   antagonism;
+   complement;
+   neutral;
+   resonance;
+   rivalry;
+   trust;
+ };
+type RelationshipCell = 
+ record {
+   admiration: float64;
+   conflictHistory: float64;
+   creativeResonance: float64;
+   rivalry: float64;
+   trust: float64;
+ };
+type ReadinessGateResult = 
+ record {
+   blocked: bool;
+   reason: text;
+   score: float64;
+ };
+type QualityStatus = 
+ variant {
+   BroadcastReady;
+   Mastery;
+   ReviewNeeded;
+   ReworkRecommended;
+ };
+type QualityScore = 
+ record {
+   actor_consistency: nat;
+   composite_score: nat;
+   frequency_presence: nat;
+   phi_coherence: nat;
+   scene_turn_density: nat;
+   status: QualityStatus;
+   subtext_depth: nat;
+   transition_intentionality: nat;
+ };
+type QmemState = 
+ record {
+   lastFired: nat;
+   memoryCoherence: float64;
+ };
+type ProtocolStatus = 
+ variant {
+   ACTIVE;
+   ARMED;
+   COMPLETE;
+   DORMANT;
+ };
+type ProtocolState = 
+ record {
+   description: text;
+   eventLog: vec ProtocolEvent;
+   lastFiredBeat: nat;
+   latinName: text;
+   name: text;
+   phiCoupling: float64;
+   protocolId: ProtocolId;
+   status: ProtocolStatus;
+   taftThread: text;
+   totalFired: nat;
+ };
+type ProtocolId = 
+ variant {
+   DOCTRINE_CAST;
+   FIELD_SYNC;
+   GENESIS_SIGNAL;
+   PHANTOM_WIRE;
+   SOVEREIGN_MESH;
+ };
+type ProtocolEvent = 
+ record {
+   attribution: text;
+   beat: nat;
+   eventId: nat;
+   payload: text;
+   protocolId: ProtocolId;
+   result: text;
+   schumannTs: float64;
+ };
+type ProphetDirective = 
+ record {
+   directive: text;
+   step: nat;
+   strength: float64;
+   targetCores: vec nat;
+ };
+type ProductionQueue = 
+ record {
+   attribution: text;
+   computedAtBlock: nat;
+   ordered: vec SlatePriority;
+ };
+type ProductionFormatConfig = 
+ record {
+   description: text;
+   displayLabel: text;
+   format: ProductionFormat;
+   framesRequired: nat;
+   maxRuntimeSeconds: nat;
+   minRuntimeSeconds: nat;
+   qualityMinimum: nat;
+   targetRuntimeSeconds: nat;
+ };
+type ProductionFormat = 
+ variant {
+   EnterpriseCommercial;
+   FeatureFilm;
+   TVSeries;
+   VerizonLongForm;
+ };
+type PressRelease = 
+ record {
+   body: text;
+   castLine: text;
+   dedicatee: text;
+   doctrineTag: text;
+   headline: text;
+   id: text;
+   law: text;
+   producedAtBeat: nat;
+   producer: text;
+   subhead: text;
+ };
+type PressKit = 
+ record {
+   attribution: text;
+   castList: vec text;
+   filmId: text;
+   format: ContentFormat;
+   founderStatement: text;
+   genesisAnchor: text;
+   genreClassification: text;
+   logline: text;
+   organismCredits: vec text;
+   rating: ContentRating;
+   runtime: nat;
+   sealId: text;
+   synopsis: text;
+   technicalSpecs: text;
+ };
+type PosterArt = 
+ record {
+   attribution: text;
+   colorTheme: text;
+   compositionStyle: text;
+   dominantOrganism: text;
+   filmId: text;
+   genesisAnchor: text;
+   sealId: text;
+   tagline: text;
+   title: text;
+ };
+type PlacedActor = 
+ record {
+   actorId: text;
+   doctrineScore: float64;
+   emotionalState: text;
+   objective: text;
+   phiAligned: bool;
+   positionX: float64;
+   positionY: float64;
+   positionZ: float64;
+   role: text;
+ };
+type PitchDeckSlide = 
+ record {
+   body: text;
+   doctrineTag: text;
+   metric: text;
+   slideNumber: nat;
+   title: text;
+ };
+type PipelineState = 
+ record {
+   beatCount: nat;
+   currentStage: text;
+   filmTitle: text;
+   isRunning: bool;
+   progress: nat;
+ };
+type PhiDriftReport = 
+ record {
+   attribution: text;
+   correctionWeight: float64;
+   currentValue: float64;
+   dimension: text;
+   driftMagnitude: float64;
+   phiTarget: float64;
+ };
+type PhiCalibrationEvent = 
+ record {
+   attribution: text;
+   blockNumber: nat;
+   drifts: vec PhiDriftReport;
+   organismsAdjusted: vec text;
+ };
+type ParsedIoTSignal = 
+ record {
+   frequency: float64;
+   signalType: IoTSignalType;
+   sourceId: text;
+   timestamp: nat;
+   value: float64;
+ };
+type ParallaxState = 
+ record {
+   depthIndex: float64;
+   lastFired: nat;
+ };
+type PHIGeometry = 
+ record {
+   depthUnits: float64;
+   genesisNote: text;
+   gridNodesX: vec float64;
+   gridNodesY: vec float64;
+   gridNodesZ: vec float64;
+   heightUnits: float64;
+   widthUnits: float64;
+ };
+type PHIFaceGeometry = 
+ record {
+   cranialHeightRatio: float64;
+   eyeSpacingRatio: float64;
+   jawWidthRatio: float64;
+   noseBridgeRatio: float64;
+   pbrMetallicCoefficient: float64;
+   pbrRoughnessCoefficient: float64;
+   skinTone: text;
+   subsurfaceScatteringDepth: float64;
+ };
+type OrganismStateSummary = 
+ record {
+   axisCx: float64;
+   axisCy: float64;
+   axisCz: float64;
+   beatCount: nat;
+   brainHebbian: float64;
+   chronoStability: float64;
+   creatorDepth: float64;
+   creatorPresent: bool;
+   entanglaCoupling: float64;
+   jubileeProgress: nat;
+   novaSignal: float64;
+   omnisProposalType: text;
+   omnisQuorumCount: nat;
+   organisms: vec OrganismMasterySummary;
+   parallaxDepth: float64;
+   qmemCoherence: float64;
+   resonexCascades: nat;
+   s0Floor: float64;
+   velaCompleted: nat;
+   velaStep: nat;
+   veritasScore: float64;
+ };
+type OrganismMasterySummary = 
+ record {
+   isEnterprise: bool;
+   masteryLevel: nat;
+   name: text;
+   outputCount: nat;
+ };
+type OrganismCredit = 
+ record {
+   name: text;
+   role: text;
+   skillAt: nat;
+ };
+type OrganismCollabSignal = 
+ record {
+   content: text;
+   filmId: opt text;
+   fromOrganism: text;
+   isRead: bool;
+   signalType: text;
+   timestamp: int;
+   toOrganism: text;
+ };
+type OrgMasteryState = 
+ record {
+   attribution: text;
+   cumulativeQuality: float64;
+   lastSealBeat: nat;
+   masteryTier: nat;
+   organismId: text;
+   tiersUnlocked: vec text;
+ };
+type OmnisVoteEntry = 
+ record {
+   contribution: float64;
+   coreId: nat;
+   vote: bool;
+   weight: float64;
+ };
+type OmnisVote = 
+ record {
+   archType: ArchType;
+   beat: nat;
+   coreId: nat;
+   voteValue: float64;
+   weight: float64;
+ };
+type OmnisStatus = 
+ variant {
+   passed;
+   rejected;
+   sealed;
+   voting;
+ };
+type OmnisState = 
+ record {
+   currentProposal: opt OmnisProposal;
+   emergencesReached: nat;
+   lastEmergenceBeat: nat;
+   proposals: vec OmnisProposal;
+   totalVotes: nat;
+ };
+type OmnisProposalType = 
+ variant {
+   coherenceShift;
+   doctrineSeal;
+   jubileeAccelerate;
+   successionTrigger;
+   typeRebalance;
+ };
+type OmnisProposal = 
+ record {
+   beat: nat;
+   emergenceValue: float64;
+   id: nat;
+   proposalType: OmnisProposalType;
+   sealedBy: text;
+   status: OmnisStatus;
+   threshold: float64;
+   votes: vec OmnisVote;
+ };
+type NovaState = 
+ record {
+   lastFired: nat;
+   signalStrength: float64;
+ };
+type NeurotransmitterProfile = 
+ record {
+   doctrineSpecialty: text;
+   dominant: text;
+   learningAxis: text;
+   secondary: text;
+ };
+type NarrativeSnapshot = 
+ record {
+   beat: nat;
+   beingId: text;
+   body: text;
+   eventType: text;
+   governingLaw: text;
+   id: text;
+   proofBreadcrumb: vec text;
+   sealedInSanctum: bool;
+   severity: text;
+   timestamp: int;
+   title: text;
+ };
+type NTCrossModulation = 
+ record {
+   coefficient: float64;
+   law: text;
+   source: text;
+   target: text;
+ };
+type ModelParams = 
+ record {
+   attribution: text;
+   derivationPath: text;
+   enforcedLaws: vec nat;
+   executionParameters: vec record {
+                              text;
+                              float64;
+                            };
+   layer: text;
+   name: text;
+   rank: text;
+   subModels: vec text;
+   symbol: text;
+ };
+type MinerSnapshot = 
+ record {
+   coherenceScore: float64;
+   currentFieldId: nat;
+   hashesThisSession: nat;
+   id: nat;
+   latinName: text;
+   name: text;
+   yieldContribution: float64;
+ };
+type MicroNameAttribute = 
+ record {
+   compressedDescription: text;
+   rank: text;
+   shortCode: text;
+   symbol: text;
+ };
+type MicroAIWorkerState = 
+ record {
+   attribution: text;
+   description: text;
+   domain: text;
+   lastActiveBeat: nat;
+   latinName: text;
+   memory: vec WorkerMemoryEntry;
+   name: text;
+   nousSovereignBound: bool;
+   observers: vec WorkerObserver;
+   phiCoupling: float64;
+   schumannHz: float64;
+   taftThread: text;
+   tools: vec SovereignTool;
+   totalTasks: nat;
+   workerId: nat;
+ };
+type MergeTransaction = 
+ record {
+   combinedArtifactCount: nat;
+   combinedCoherence: float64;
+   mergedAtBeat: nat;
+   resultWorldId: WorldInstanceId;
+   sourceWorldId: WorldInstanceId;
+   targetWorldId: WorldInstanceId;
+ };
+type MasteryShowcase = 
+ record {
+   artifactType: text;
+   attribution: text;
+   content: text;
+   doctrineEntry: text;
+   genesisAnchor: text;
+   masteryLevel: nat;
+   organismId: text;
+   sealId: text;
+   showcaseTitle: text;
+   timestamp: int;
+ };
+type MasteryRecord = 
+ record {
+   artifactCount: nat;
+   attribution: text;
+   cumulativeQualitySum: float64;
+   currentLevel: MasteryLevel;
+   lastAdvancedBlock: nat;
+   organismId: text;
+ };
+type MasteryLevel = 
+ variant {
+   Apprentice;
+   Journeyman;
+   Master;
+   Novice;
+   Sovereign;
+ };
+type MasteryCapability = 
+ record {
+   dialogueComplexityTier: nat;
+   level: MasteryLevel;
+   sceneComplexityTier: nat;
+   unlockedFacsRange: float64;
+   unlockedPoseCount: nat;
+ };
+type MasterCharterState = 
+ record {
+   cspr: CharterRecord;
+   isSealed: bool;
+   phi: float64;
+   pulseTs: nat;
+   subCharters: vec CharterRecord;
+   totalBeats: nat;
+ };
+type LockSnapshot = 
+ record {
+   isLocked: bool;
+   lockBeat: nat;
+   lockGoverningLaw: text;
+   lockReason: text;
+   lockTs: int;
+   stableBeats: nat;
+ };
+type LawRecord = 
+ record {
+   doctrineStrength: float64;
+   id: nat;
+   isActive: bool;
+   lastAppliedBeat: nat;
+   name: text;
+   parameters: vec record {
+                     text;
+                     float64;
+                   };
+ };
+type LawExecutionRecord = 
+ record {
+   beat: nat;
+   effect: text;
+   lawId: nat;
+   lawName: text;
+ };
+type JubileeState = 
+ record {
+   beatsSinceJubilee: nat;
+   jubileeCount: nat;
+   nextJubileeAt: nat;
+ };
+type IterSovereignSummary = 
+ record {
+   abbreviation: text;
+   deploymentLogSize: nat;
+   engineCount: nat;
+   family: text;
+   fullLatinName: text;
+   grade: text;
+   groupACount: nat;
+   groupBCount: nat;
+   groupCCount: nat;
+   lastBeat: nat;
+   latinName: text;
+   lawTextLength: nat;
+   pendingMigrations: nat;
+   phi: float64;
+   sovereignCanisters: nat;
+   totalPushes: nat;
+   vitalityState: text;
+ };
+type IterSovereignRecord = 
+ record {
+   abbreviation: text;
+   family: text;
+   grade: text;
+   id: text;
+   latinName: text;
+   lawText: text;
+   parentCharter: text;
+ };
+type IoTSignalType = 
+ variant {
+   acoustic;
+   chemical;
+   electromagnetic;
+   kinetic;
+   magnetic;
+   photonic;
+   pressure;
+   thermal;
+ };
+type IoTInfluence = 
+ record {
+   appliedAtBeat: nat;
+   doctrineCategory: text;
+   filmSeedContribution: text;
+   signalText: text;
+   strength: float64;
+   targetArchType: text;
+   timestamp: int;
+ };
+type InvestorPitchDeck = 
+ record {
+   avgMasteryScore: float64;
+   id: text;
+   law: text;
+   producedAtBeat: nat;
+   producer: text;
+   slides: vec PitchDeckSlide;
+   title: text;
+   totalFilms: nat;
+ };
+type InteractionResonanceState = 
+ record {
+   attribution: text;
+   domain: text;
+   executionCount: nat;
+   grade: text;
+   intentPrediction: text;
+   lastFireBeat: nat;
+   lastInteractionPattern: text;
+   latinName: text;
+   name: text;
+   preloadFlagged: bool;
+   resonanceScore: float64;
+ };
+type InterOrganismState = 
+ record {
+   cinematographerState: text;
+   composerState: text;
+   directorState: text;
+   editorState: text;
+   lastUpdated: nat64;
+   museState: text;
+   visionaryState: text;
+ };
+type IntelligenceTaxonomyState = 
+ record {
+   attribution: text;
+   chatIntelligences: vec IntelligenceRecord;
+   doctrineCoherence: float64;
+   lastHeartbeatPhase: nat;
+   sensorIntelligences: vec IntelligenceRecord;
+   totalExecutions: nat;
+   voiceIntelligences: vec IntelligenceRecord;
+ };
+type IntelligenceState = 
+ record {
+   activationState: ActivationState;
+   doctrineStrength: float64;
+   executionCount: nat;
+   id: text;
+   lastFireBeat: nat;
+   lastNTModulation: vec float64;
+   totalNTImpact: float64;
+ };
+type IntelligenceRecord = 
+ record {
+   activationState: ActivationState;
+   attribution: text;
+   doctrineStrength: float64;
+   domain: IntelligenceDomain;
+   executionCount: nat;
+   function: text;
+   heartbeatPhase: nat;
+   id: text;
+   lastFireBeat: nat;
+   lastNTModulation: vec float64;
+   phiCoupling: float64;
+   subModels: vec SubModelRecord;
+ };
+type IntelligenceOutput = 
+ record {
+   attribution: text;
+   doctrineStrengthDelta: float64;
+   domain: IntelligenceDomain;
+   executedAtBeat: nat;
+   executionSuccess: bool;
+   gatedByDoctrine: bool;
+   intelligenceId: text;
+   ntModulation: vec float64;
+   phiResonance: float64;
+   subModelOutputs: vec record {
+                          text;
+                          float64;
+                        };
+ };
+type IntelligenceInput = 
+ record {
+   beatCounter: nat;
+   doctrineScore: float64;
+   heartbeatPhase: nat;
+   intelligenceId: text;
+   ntConcentrations: vec float64;
+   parameters: vec record {
+                     text;
+                     float64;
+                   };
+ };
+type IntelligenceDomain = 
+ variant {
+   Chat;
+   Frontend;
+   Sensor;
+   Voice;
+ };
+type IPConflictResult = 
+ record {
+   checkedAtBeat: nat;
+   clearanceNote: text;
+   conflicts:
+    vec record {
+          conflictingFilmId: text;
+          note: text;
+          similarityScore: float64;
+        };
+   conflictsFound: bool;
+   filmId: text;
+   filmTitle: text;
+   law: text;
+   producer: text;
+ };
+type HospitalityDashboard = 
+ record {
+   attribution: text;
+   avgQualityScore: float64;
+   estimatedEngagement: float64;
+   estimatedImpressions: nat;
+   estimatedRevenue: float64;
+   footTrafficEstimate: nat;
+   lastProducedAt: int;
+   topVenueType: text;
+   totalArtifacts: nat;
+   totalVenueTypes: nat;
+ };
+type HospitalityArtifact = 
+ record {
+   archType: text;
+   attribution: text;
+   audioSpec: AudioSpec;
+   beatAtSeal: nat;
+   closeLine: text;
+   dedicatee: text;
+   doctrineTag: text;
+   experienceArc: vec text;
+   frames: vec FrameData;
+   hookLine: text;
+   id: text;
+   qualityScore: nat;
+   sealedAt: int;
+   targetEmotion: text;
+   velaStepAtSeal: nat;
+   venueName: text;
+   venueType: text;
+   worldBuildingLine: text;
+ };
+type HashSubmission = 
+ record {
+   beat_number: nat;
+   field_id: nat;
+   hash_hex: text;
+   is_valid: bool;
+   miner_id: nat;
+   nonce: nat;
+   schnorr_sig: text;
+   timestamp: int;
+ };
+type GradientResult = 
+ record {
+   emergencePeak: bool;
+   newMasteryDelta: float64;
+   omnisVote: bool;
+ };
+type GradientFieldState = 
+ record {
+   currentSlope: float64;
+   lastUpdated: nat64;
+   masteryTrend: vec float64;
+   peakEmergenceCount: nat;
+ };
+type GovernanceState = 
+ record {
+   doctrines: vec GovernanceDoctrine;
+   lastDoctrineAuthoredBeat: nat;
+   masteredOrganisms: vec text;
+   totalDoctrines: nat;
+ };
+type GovernanceDoctrine = 
+ record {
+   authorOrganism: text;
+   beatAuthored: nat;
+   doctrineText: text;
+   id: nat;
+   lawFamily: text;
+   onChainHash: text;
+   sealedBy: text;
+   strengthValue: float64;
+ };
+type GenesisRecord = 
+ record {
+   ancientSymbols: vec record {
+                         text;
+                         float64;
+                       };
+   founderName: text;
+   foundingDeclaration: text;
+   genesisFrequency: float64;
+   isImmutable: bool;
+   medinaLineage: vec text;
+   sealedAtBeat: nat;
+ };
+type GenerationEvent = 
+ record {
+   beat: nat;
+   eventId: nat;
+   eventType: text;
+   lawApplied: text;
+   result: text;
+   seed: text;
+ };
+type GeneratedFilmInput = 
+ record {
+   artifactHash: text;
+   dominantOrganism: text;
+   organismCredits: vec OrganismCredit;
+   prompt: text;
+   runtimeSeconds: nat;
+   sceneCount: nat;
+   scriptPages: nat;
+   title: text;
+ };
+type GeneratedFilm = 
+ record {
+   archType: ArchType;
+   artifactHash: text;
+   createdAtBeat: nat;
+   createdAtTime: int;
+   dedicatee: text;
+   dominantOrganism: text;
+   frameCount: nat;
+   id: text;
+   organismCredits: vec OrganismCredit;
+   producer: text;
+   prompt: text;
+   runtimeSeconds: nat;
+   sandboxSnapshot: opt SandboxSignalSnapshot;
+   sceneCount: nat;
+   scriptPages: nat;
+   title: text;
+ };
+type FusionTechnology = 
+ record {
+   latinName: text;
+   name: text;
+   role: text;
+ };
+type FusionSubModel = 
+ record {
+   function: text;
+   latinName: text;
+   name: text;
+ };
+type FusionGrade = 
+ variant {
+   Artifact;
+   Engine;
+   Field;
+   Organism;
+   Primordial;
+   Substrate;
+ };
+type FusionEngine = 
+ record {
+   description: text;
+   engineId: nat;
+   latinName: text;
+   name: text;
+   phi: float64;
+ };
+type FrontendDomainState = 
+ record {
+   aestheticCoherence: AestheticCoherenceState;
+   interactionResonance: InteractionResonanceState;
+   renderCoherence: RenderCoherenceState;
+   stateShadow: StateShadowState;
+   totalFrontendBeats: nat;
+   visualDoctrine: VisualDoctrineState;
+ };
+type FrameData = 
+ record {
+   colorTemperature: text;
+   depthLayer: text;
+   frameIndex: nat;
+   lightBehavior: text;
+   phiRatioX: float64;
+   phiRatioY: float64;
+   visualDescriptor: text;
+ };
+type FilmWithQuality = 
+ record {
+   archType: text;
+   catalogPromotion: bool;
+   createdAtBeat: nat;
+   dominantOrganism: text;
+   filmId: text;
+   frameCount: nat;
+   productionFormat: ProductionFormat;
+   prompt: text;
+   qualityScore: opt QualityScore;
+   runtimeSeconds: nat;
+   sceneCount: nat;
+   sealId: opt text;
+   socialTriggered: bool;
+   title: text;
+ };
+type FilmTrailer = 
+ record {
+   attribution: text;
+   filmId: text;
+   genesisAnchor: text;
+   scenes: vec text;
+   sealId: text;
+   title: text;
+   trailerDuration: nat;
+ };
+type FilmSummary = 
+ record {
+   archType: text;
+   attribution: text;
+   concept: text;
+   filmId: text;
+   filmTitle: text;
+   originSignalTopic: text;
+   qualityScore: nat;
+   runtimeSeconds: nat;
+   sealedAt: int;
+ };
+type FilmSlateRecommendation = 
+ record {
+   archType: text;
+   category: text;
+   concept: text;
+   phiScore: float64;
+   rank: nat;
+   reasoning: text;
+   signalTopics: vec text;
+   title: text;
+ };
+type FilmRecord = 
+ record {
+   audioLayerCount: nat;
+   castSize: nat;
+   dialogueLineCount: nat;
+   distinctArchetypes: nat;
+   distinctTransitionTypes: nat;
+   filmId: text;
+   frameCount: nat;
+   productionFormat: ProductionFormat;
+   runtimeSeconds: nat;
+   sceneCount: nat;
+ };
+type FilmMetadataInput = 
+ record {
+   animalSnapshot: text;
+   archTypeConsensus: text;
+   artifactHash: text;
+   beatRangeEnd: nat;
+   beatRangeStart: nat;
+   creatorPresent: bool;
+   doctrineTag: text;
+   dominantOrganism: text;
+   organismCredits: vec OrganismCredit;
+   prompt: text;
+   runtimeSeconds: nat;
+   sandboxSnapshot: opt SandboxSignalSnapshot;
+   sceneCount: nat;
+   scriptPages: nat;
+   title: text;
+ };
+type FilmGenerationSeed = 
+ record {
+   animalState: AnimalEngineSnapshot;
+   beatCounter: nat;
+   creatorPresent: bool;
+   fibHarmonic: float64;
+   jubileeProgress: nat;
+   omnisProposedType: text;
+   velaStep: nat;
+ };
+type FilmGenerationResult = 
+ record {
+   archType: text;
+   attribution: text;
+   doctrineTag: text;
+   filmId: text;
+   filmTitle: text;
+   qualityScore: nat;
+   sealedAt: int;
+   signalId: text;
+ };
+type FieldSnapshot = 
+ record {
+   difficulty: float64;
+   fieldId: nat;
+   fieldName: text;
+   isActive: bool;
+   protocol: text;
+   qualScore: float64;
+ };
+type FieldReport = 
+ record {
+   animalEngineStates: vec float64;
+   doctrineScore: float64;
+   omnisWeight: float64;
+   trendSignalCount: nat;
+   velaStep: nat;
+ };
+type FestivalSubmission = 
+ record {
+   archType: text;
+   festival: text;
+   filmId: text;
+   filmTitle: text;
+   law: text;
+   masteryScore: float64;
+   producer: text;
+   status: SubmissionStatus;
+   statusNote: text;
+   submissionId: text;
+   submittedAtBeat: nat;
+ };
+type Faction = 
+ record {
+   coherence: float64;
+   domainStrengths: vec float64;
+   id: nat;
+   isActive: bool;
+   losses: nat;
+   name: text;
+   region: text;
+   strategyIndex: float64;
+   totalEngagements: nat;
+   weights: vec float64;
+   wins: nat;
+ };
+type ExternalSession = 
+ record {
+   firstCallBeat: nat;
+   identity: text;
+   isActive: bool;
+   lastCallBeat: nat;
+   lastFieldSignal: text;
+   lastIntent: text;
+   quotaRemaining: nat;
+   sessionDepth: nat;
+   sessionId: text;
+   tier: CallerTier;
+   totalCalls: nat;
+   trustScore: nat;
+ };
+type ExtendedPhenotypeState = 
+ record {
+   coherenceAtLastSeal: float64;
+   lastFilmDoctrineCategory: text;
+   lastFilmTitle: text;
+   lastSealedAt: int;
+   lastSealedAtBeat: nat;
+   nextConceptIfAlone: text;
+   nextDoctrineCategory: text;
+   phenotypePayload: text;
+   totalFilmsSealed: nat;
+ };
+type ExtendedPhenotypeOutput = 
+ record {
+   beat: nat;
+   frequency: float64;
+   payload: text;
+   signalStrength: float64;
+   targetDeviceClass: text;
+ };
+type ExecutionResult = 
+ record {
+   attribution: text;
+   beatCounter: nat;
+   behaviorFired: text;
+   doctrineScore: float64;
+   documentId: text;
+   executedAt: int;
+   executionType: DocumentExecutionType;
+   failureReason: opt text;
+   genesisAlignment: float64;
+   resultArtifactId: opt text;
+   success: bool;
+ };
+type ExecutionLearningEvent = 
+ record {
+   attribution: text;
+   beatCounter: nat;
+   doctrineScore: float64;
+   documentId: text;
+   failureReason: text;
+   recordedAt: int;
+ };
+type ExecutionEvent = 
+ record {
+   attribution: text;
+   beatCounter: nat;
+   behaviorFired: text;
+   doctrineScore: float64;
+   documentId: text;
+   eventId: text;
+   executedAt: int;
+   executionType: DocumentExecutionType;
+   genesisAlignment: float64;
+   lawEnginePassed: bool;
+   resultArtifactId: opt text;
+ };
+type EpisodeArcEntry = 
+ record {
+   actorStates: vec record {
+                      nat;
+                      text;
+                    };
+   archType: text;
+   cliffhangerLine: text;
+   conceptSummary: text;
+   doctrineTag: text;
+   episodeNumber: nat;
+   hookLine: text;
+   stakeLevel: float64;
+   title: text;
+   velaStep: nat;
+ };
+type EnterpriseQuote = 
+ record {
+   basePrice: float64;
+   breakdown: vec record {
+                    amount: float64;
+                    description: text;
+                  };
+   clientName: text;
+   filmCount: nat;
+   law: text;
+   producedAtBeat: nat;
+   producer: text;
+   quoteId: text;
+   totalPrice: float64;
+   totalRuntimeSeconds: nat;
+ };
+type EnterpriseMastery = 
+ record {
+   autoCorrections: nat;
+   fibThreshold: nat;
+   lastOutput: text;
+   masteryLevel: nat;
+   organismName: text;
+   outputCount: nat;
+   portfolioSize: nat;
+ };
+type EntanglaState = 
+ record {
+   correctionCount: nat;
+   couplingForce: float64;
+   lastFired: nat;
+ };
+type EngagementEvent = 
+ record {
+   attackerFactionId: nat;
+   beat: nat;
+   coherenceImpact: float64;
+   defenderFactionId: nat;
+   domain: text;
+   id: nat;
+   lawTriggered: opt text;
+   outcome: text;
+   timestamp: int;
+ };
+type EmotionalMilestone = 
+ record {
+   atEpisode: nat;
+   description: text;
+   doctrineShift: text;
+   stakeMultiplier: float64;
+ };
+type EmergencyBroadcast = 
+ record {
+   estimatedMinutesToComplete: nat;
+   fastTrackEnabled: bool;
+   filmConceptGenerated: text;
+   id: text;
+   timestamp: int;
+   triggerSignal: text;
+ };
+type DomainSignal = 
+ record {
+   amplitude: float64;
+   beatCount: nat;
+   domain: text;
+   headline: text;
+   snrWeight: float64;
+   source: SandboxOrganismId;
+ };
+type DocumentExecutionType = 
+ variant {
+   actorConfig;
+   distributionTrigger;
+   financialEvent;
+   productionSequence;
+   worldSetup;
+ };
+type DoctrineVisualSignal = 
+ record {
+   glowRadius: float64;
+   primaryColorHue: float64;
+   pulseIntensity: float64;
+ };
+type DoctrineValidationResult__1 = 
+ record {
+   alignmentScore: float64;
+   status: text;
+   timestamp: nat64;
+   valid: bool;
+ };
+type DoctrineValidationResult = 
+ record {
+   aligned: bool;
+   alignmentScore: float64;
+   archType: text;
+   doctrineTag: text;
+   violatedLaw: opt text;
+ };
+type DoctrineStateEntry = 
+ record {
+   active: bool;
+   injectedAt: int;
+   lawId: text;
+   lawName: text;
+   parameters: vec record {
+                     text;
+                     float64;
+                   };
+   thresholds: vec record {
+                     text;
+                     float64;
+                   };
+ };
+type DoctrineRestartEvent = 
+ record {
+   attribution: text;
+   beat: nat;
+   latinName: text;
+   lawReference: text;
+   modelName: text;
+   previousVitality: VitalityState;
+   schumannTs: float64;
+ };
+type DoctrineEvolutionEntry = 
+ record {
+   authorOrganism: text;
+   doctrineText: text;
+   genesisAnchor: text;
+   timestamp: int;
+   triggerCondition: text;
+   version: nat;
+ };
+type DistributionRoute = 
+ record {
+   archType: text;
+   filmId: text;
+   filmTitle: text;
+   law: text;
+   primaryRoute: text;
+   producedAtBeat: nat;
+   producer: text;
+   routingScore: float64;
+   submissions: vec FestivalSubmission;
+ };
+type DirectorValidationResult = 
+ record {
+   alignment: float64;
+   feedback: text;
+   valid: bool;
+   violatedLaws: vec nat;
+ };
+type DiagSummary = 
+ record {
+   audit_record_count: nat;
+   auditor_beats: nat;
+   charter_version: nat;
+   coordinator_beats: nat;
+   cycle_floor: nat;
+   cycle_health: text;
+   cycle_reserve: nat;
+   group_a_count: nat;
+   group_b_count: nat;
+   group_c_count: nat;
+   migration_record_count: nat;
+   phi: float64;
+   planner_beats: nat;
+   total_beats: nat;
+ };
+type DeploymentRecord = 
+ record {
+   canisterId: text;
+   controller: text;
+   deployedAt: nat;
+   group: CanisterGroupVariant;
+   status: text;
+   via: text;
+   wasmHash: text;
+ };
+type DecisionType = 
+ variant {
+   DoctrineEvaluated;
+   FieldCoherenceComputed;
+   HeartbeatAdvance;
+   LegacyIndexRefreshed;
+   MasteryAdvanced;
+   OmnisConsensusComputed;
+   OrganismFired;
+   PhiDriftCorrected;
+   ReadinessGateCrossed;
+   SlateReordered;
+ };
+type DecisionRecord = 
+ record {
+   attribution: text;
+   blockNumber: nat;
+   data: text;
+   decisionType: DecisionType;
+   doctrineScore: float64;
+   fieldCoherence: float64;
+   hash: text;
+   omnisWeight: float64;
+   organism: text;
+   responseHash: text;
+   velaStep: nat;
+ };
+type CycleAuditRecord = 
+ record {
+   actual_burn: nat;
+   beat: nat;
+   caffeine_topup: nat;
+   discrepancy: int;
+   expected_burn: nat;
+   source: text;
+   timestamp: int;
+ };
+type CrossChainChannelState = 
+ record {
+   balance: float64;
+   channel: text;
+   lastSyncBeat: nat;
+   status: text;
+   submissionHistory: vec YieldSubmission;
+   yieldRate: float64;
+ };
+type CreatorPresence = 
+ record {
+   depthMultiplier: float64;
+   isPresent: bool;
+   lastSeenBeat: nat;
+   "principal": opt principal;
+ };
+type CouncilSnapshot = 
+ record {
+   councilBeat: nat;
+   description: text;
+   family: text;
+   grade: text;
+   lastCouncilTs: int;
+   latinName: text;
+   name: text;
+   totalBeings: nat;
+   totalSensors: nat;
+   totalSwarmSize: nat;
+ };
+type CouncilModelSnapshot = 
+ record {
+   description: text;
+   doctrineBinding: text;
+   family: text;
+   grade: text;
+   latinName: text;
+   name: text;
+   taftEnforced: bool;
+   uses: vec text;
+ };
+type CoreSphere = 
+ record {
+   archType: ArchType;
+   coherence: float64;
+   coreId: nat;
+   nodes: vec CoreNode;
+ };
+type CoreNode = 
+ record {
+   amplitude: float64;
+   archType: ArchType;
+   freq: float64;
+   phase: float64;
+ };
+type ContentWorldState = 
+ record {
+   beatCounter: nat;
+   brief: text;
+   colorTemperature: float64;
+   createdAtBeat: nat;
+   createdAtTime: int;
+   doctrineState: WorldDoctrineState;
+   geometry: PHIGeometry;
+   lightingIntensity: float64;
+   norepinephrine: float64;
+   particleActivity: float64;
+   physicsEnergy: float64;
+   physicsStability: float64;
+   placedActors: vec PlacedActor;
+   productionStatus: WorldProductionStatus;
+   proximity: float64;
+   schumannAmbient: SchumannAmbient;
+   sealedBy: text;
+   shadowDepth: float64;
+   worldId: text;
+   worldTickMs: nat;
+ };
+type ContentRating = 
+ variant {
+   AllAges;
+   Enterprise;
+   MatureThemes;
+   PG;
+   Teen;
+ };
+type ContentFormat = 
+ variant {
+   AnthologySeries;
+   BrandedNarrative;
+   Documentary;
+   EnterpriseCommercial;
+   FeatureFilm;
+   HeritageMayan;
+   KidsFamily;
+   LiveEvent;
+   MusicVideo;
+   ShortFilm;
+   TVSeries;
+   VerizonLongForm;
+ };
+type ComplianceReport = 
+ record {
+   caffeine_dependency: bool;
+   caffeine_topup_count: nat;
+   compliant: bool;
+   domain: text;
+   law_id: nat;
+   law_name: text;
+   phi: float64;
+   reserve_ok: bool;
+   status: text;
+ };
+type ComplianceLog = 
+ record {
+   beat: nat;
+   compliant: bool;
+   law_checked: text;
+   modelId: text;
+   violation_type: text;
+ };
+type CommercialSpeedMetrics = 
+ record {
+   briefReceivedAt: int;
+   editingAt: int;
+   renderingAt: int;
+   scoringAt: int;
+   screenplayAt: int;
+   sealedAt: int;
+   shotListAt: int;
+ };
+type CommercialProject = 
+ record {
+   archType: text;
+   brandCategory: text;
+   clientBrief: text;
+   commercialBeat: CommercialBeat;
+   composerTemplate: text;
+   dedicatee: text;
+   doctrineTag: text;
+   format: variant {
+             short15;
+             short30;
+             short60;
+           };
+   generatedAt: int;
+   id: text;
+   law: text;
+   producedAtBeat: nat;
+   producer: text;
+   sealedArtifact: ArtifactSeal;
+   shotVocabulary: vec text;
+   speedMetrics: CommercialSpeedMetrics;
+   strategistScore: float64;
+ };
+type CommercialFormatTemplate = 
+ record {
+   audioDefault: text;
+   displayLabel: text;
+   doctrineDefault: text;
+   durationSeconds: nat;
+   format: CommercialFormat;
+   frameCount: nat;
+   toneDefault: text;
+   visualDefault: text;
+ };
+type CommercialFormat = 
+ variant {
+   short15;
+   short30;
+   short60;
+ };
+type CommercialBeat = 
+ record {
+   ctaEnd: nat;
+   ctaRatio: float64;
+   ctaStart: nat;
+   formatType: variant {
+                 short15;
+                 short30;
+                 short60;
+               };
+   hookEnd: nat;
+   hookRatio: float64;
+   hookStart: nat;
+   revealEnd: nat;
+   revealRatio: float64;
+   revealStart: nat;
+   totalFrames: nat;
+ };
+type ColonelKernel = 
+ record {
+   doctrine: text;
+   kernelId: nat;
+   latinName: text;
+   name: text;
+   phi: float64;
+   schumannHz: float64;
+ };
+type CoherentArtifactRecord = 
+ record {
+   assembledText: text;
+   attribution: text;
+   gateStatus: variant {
+                 BLOCKED;
+                 DEFERRED;
+                 READY;
+               };
+   resonanceScore: float64;
+   responseId: text;
+   sealTimestamp: nat64;
+ };
+type ClientBriefTemplate = 
+ record {
+   doctrineNotes: text;
+   formatLabel: text;
+   law: text;
+   producer: text;
+   promptFields: vec text;
+   templateId: text;
+ };
+type ClassifiedSignal = 
+ record {
+   doctrineArchType: text;
+   originalSignalId: text;
+   phiWeightedScore: float64;
+   rank: nat;
+   recommendedCategory: text;
+   topic: text;
+ };
+type CivilizationState = 
+ record {
+   couplingStrength: float64;
+   lastSignalBeat: nat;
+   phenotypeOutputs: vec ExtendedPhenotypeOutput;
+   processedSignals: vec ParsedIoTSignal;
+   totalSignals: nat;
+ };
+type CivilizationGapState = 
+ record {
+   aggregateSovereigntyScore: float64;
+   lastComputedAt: int;
+   scores: vec CivilizationGapScore;
+ };
+type CivilizationGapScore__1 = 
+ record {
+   asymmetricOrganismMatrix: float64;
+   bodyAsBridge: float64;
+   compoundCoherence: float64;
+   computedBeat: nat;
+   distributionInSeal: float64;
+   financialIdentityInSeal: float64;
+   genesisAlignmentOnArtifact: float64;
+   livingDocuments: float64;
+   overallScore: float64;
+   worldResonanceFeedback: float64;
+ };
+type CivilizationGapScore = 
+ record {
+   computedAt: int;
+   description: text;
+   name: text;
+   score: float64;
+   scoreId: nat;
+ };
+type CipherPrimeSummary = 
+ record {
+   abbreviation: text;
+   allEnginesActive: bool;
+   cyclesCreated: nat;
+   engineCount: nat;
+   family: text;
+   grade: text;
+   lastBeat: nat;
+   latinName: text;
+   lawTextLength: nat;
+   logEntries: nat;
+   phi: float64;
+   principalsGenerated: nat;
+   transactionsRouted: nat;
+   vitalityState: text;
+ };
+type ChronoState = 
+ record {
+   lastFired: nat;
+   stabilityIndex: float64;
+ };
+type CharterSummary = 
+ record {
+   contractor_latin: text;
+   contractor_name: text;
+   current_version: nat;
+   cycle_sovereign: bool;
+   has_adoption: bool;
+   is_sealed: bool;
+   phi: float64;
+   sealed_beat: nat;
+   version_count: nat;
+ };
+type CharterRecord = 
+ record {
+   abbreviation: text;
+   domain: text;
+   engines: vec text;
+   family: text;
+   grade: text;
+   id: text;
+   lastBeat: nat;
+   latinName: text;
+   lawText: text;
+   vitalityState: VitalityState;
+ };
+type ChainTrace = 
+ record {
+   actorMemoryStatesAtGeneration: vec record {
+                                        nat;
+                                        text;
+                                      };
+   animalEngineInfluences: vec AnimalEngineInfluence;
+   aresArchiveId: text;
+   artifactId: text;
+   attribution: text;
+   beatAtGeneration: nat;
+   lawEngineCommitment: text;
+   omnisConsensusScore: float64;
+   qualityScore: nat;
+   sandboxSignalsUsed: vec text;
+   timestampAtGeneration: int;
+   velaStepAtGeneration: nat;
+ };
+type CanisterRegistry = 
+ record {
+   group_a: vec CanisterEntry;
+   group_b: vec CanisterEntry;
+   group_c: vec CanisterEntry;
+ };
+type CanisterGroupVariant = 
+ variant {
+   CaffeineManaged;
+   FounderControlled;
+   SovereignGenerated;
+ };
+type CanisterGroup = 
+ record {
+   controller: text;
+   group: CanisterGroupVariant;
+   id: text;
+   migrationStatus: text;
+   status: text;
+ };
+type CanisterEntry = 
+ record {
+   canister_id: text;
+   controller: text;
+   lifecycle: text;
+   name: text;
+   notes: text;
+   status: text;
+ };
+type CallerTier = 
+ variant {
+   Operator;
+   Scout;
+   Sovereign;
+ };
+type CallFamily = 
+ variant {
+   ARCHITECT;
+   BRIDGE;
+   COGNITION;
+   CREATION;
+   DOCTRINE;
+   GENESIS;
+   PERCEPTION;
+   PHANTOM;
+   SUBSTRATE;
+   SWARM;
+ };
+type BrainState = 
+ record {
+   avgHebbian: float64;
+   lastFired: nat;
+ };
+type BeingSnapshot = 
+ record {
+   description: text;
+   dimensionalDomain: text;
+   doctrineBinding: text;
+   family: text;
+   grade: text;
+   heartbeatCycle: nat;
+   id: text;
+   lastAnomalyTs: int;
+   latinName: text;
+   name: text;
+   sensorCount: nat;
+   swarmSize: nat;
+   totalAnomaliesDetected: nat;
+   totalWorkersDispatched: nat;
+   vitality: text;
+ };
+type BeatResult = 
+ record {
+   beat: nat;
+   engagements: vec EngagementEvent;
+   globalCoherence: float64;
+   lawsFired: vec text;
+ };
+type BeatAdvanceResult = 
+ record {
+   animalStateSnapshot: AnimalEngineSnapshot;
+   beatNumber: nat;
+   newVelaStep: nat;
+   stageComplete: bool;
+ };
+type BackendWire = 
+ record {
+   canister: text;
+   dataFlow: text;
+   method: text;
+ };
+type AxisState = 
+ record {
+   cx: float64;
+   cy: float64;
+   cz: float64;
+   lastFired: nat;
+ };
+type AutonomousFilmSlate = 
+ record {
+   beatNumber: nat;
+   law: text;
+   producer: text;
+   recommendations: vec FilmSlateRecommendation;
+   slateId: text;
+   totalSignals: nat;
+ };
+type AutoReleaseRecord = 
+ record {
+   distributionQueued: bool;
+   doctrineAlignmentScore: float64;
+   festivalRouted: bool;
+   filmId: text;
+   pressKitGenerated: bool;
+   sealTimestamp: int;
+   socialAssetsGenerated: bool;
+   trendingPanelUpdated: bool;
+ };
+type AudioSpec = 
+ record {
+   clarityLayerHz: float64;
+   emotionalCoreHz: float64;
+   moodLabel: text;
+   sceneTransition: text;
+   subBassHz: float64;
+   tempo: float64;
+ };
+type AudienceSignal = 
+ record {
+   completionRate: float64;
+   downloadCount: nat;
+   filmId: text;
+   tasteCategory: text;
+   viewCount: nat;
+ };
+type AttributionContract = 
+ record {
+   artifactHash: text;
+   beatNumber: nat;
+   contractId: text;
+   dedicatee: text;
+   filmId: text;
+   filmTitle: text;
+   isImmutable: bool;
+   law: text;
+   producer: text;
+   rights: vec text;
+   sealTimestamp: int;
+ };
+type ArtifactType = 
+ variant {
+   Commercial;
+   Film;
+   PitchDeck;
+   SocialContent;
+   TEDTalk;
+   TVEpisode;
+   TikTok;
+ };
+type ArtifactSealResult = 
+ record {
+   artifactId: text;
+   attributionHash: text;
+   sealStatus: text;
+   timestamp: nat64;
+ };
+type ArtifactSeal = 
+ record {
+   artifactHash: text;
+   artifactId: text;
+   dedicatee: text;
+   isImmutable: bool;
+   law: text;
+   producer: text;
+   sealedAtBeat: nat;
+ };
+type ArtifactReview = 
+ record {
+   approvedBy: opt text;
+   artifactId: text;
+   comments: vec ReviewComment;
+   finalUrl: opt text;
+   lastUpdatedBeat: nat;
+   revisionCount: nat;
+   roughDraftUrl: opt text;
+   status: ReviewStatus;
+ };
+type ArtifactRecord = 
+ record {
+   artifactId: text;
+   artifactType: ArtifactType;
+   beat: nat;
+   content: text;
+   dedicatee: text;
+   doctrineStatus: text;
+   producer: text;
+ };
+type ArtifactProvenance = 
+ record {
+   artifactId: text;
+   attribution: text;
+   createdAt: int;
+   doctrineInvoked: vec text;
+   genesisAnchor: text;
+   omnisConcensusResult: opt text;
+   organismsContributed: vec text;
+   sealTimestamp: int;
+ };
+type ArtifactLegacyEntry = 
+ record {
+   artifactHash: text;
+   attribution: text;
+   decisionCount: nat;
+   doctrineAlignmentAtSeal: float64;
+   velaStepAtSeal: nat;
+ };
+type ArtifactEngineSource = 
+ variant {
+   ADRE;
+   CCVE;
+   CNCO;
+   CognitionLayer;
+   ContradictionResolver;
+   DecisionEngine;
+   GRPE;
+   InternalAnalyst;
+   PatternEngine;
+   ReinjectionEngine;
+   SelfEvaluation;
+ };
+type Artifact = 
+ record {
+   beat: nat;
+   coherenceAtEmission: float64;
+   description: text;
+   eventType: text;
+   id: nat;
+   stateHash: text;
+ };
+type AresSnapshot = 
+ record {
+   activeLaws: nat;
+   beat: nat;
+   factionCoherences: vec float64;
+   globalCoherence: float64;
+   totalEngagements: nat;
+ };
+type ArchitectureState = 
+ record {
+   antiDriftBalance: float64;
+   creatorPresence: CreatorPresence;
+   expansiveScore: float64;
+   jubilee: JubileeState;
+   receptiveScore: float64;
+   sevenSpirits: SevenSpiritsState;
+   succession: SuccessionState;
+   velaRing: VELARingState;
+ };
+type ArchType = 
+ variant {
+   antiDrift;
+   expansive;
+   receptive;
+ };
+type ArchResponseToken = 
+ record {
+   doctrineAlignment: float64;
+   source: ArtifactEngineSource;
+   token: text;
+   weight: float64;
+ };
+type AppRecord = 
+ record {
+   appliedLaws: vec nat;
+   appliedModels: vec text;
+   artifactCount: nat;
+   createdBeat: nat;
+   description: text;
+   doctrineScore: float64;
+   id: text;
+   name: text;
+   status: text;
+ };
+type AnomalySnapshot = 
+ record {
+   anomalyType: text;
+   baselineAtDetection: float64;
+   beingId: text;
+   detectedAt: int;
+   doctrineGoverningFix: text;
+   id: text;
+   sensorId: text;
+   sensorReadingAtDetection: float64;
+   severity: text;
+   status: text;
+ };
+type AnimalEngineState = 
+ record {
+   axis: AxisState;
+   brain: BrainState;
+   chrono: ChronoState;
+   entangla: EntanglaState;
+   nova: NovaState;
+   parallax: ParallaxState;
+   qmem: QmemState;
+   resonex: ResonexState;
+   veritas: VeritasState;
+ };
+type AnimalEngineSnapshot = 
+ record {
+   axisCx: float64;
+   axisCy: float64;
+   axisCz: float64;
+   brainHebbian: float64;
+   chronoStability: float64;
+   entanglaCoupling: float64;
+   novaSignal: float64;
+   parallaxDepth: float64;
+   qmemCoherence: float64;
+   resonexCascades: nat;
+   veritasScore: float64;
+ };
+type AnimalEngineInfluence = 
+ record {
+   creativeDecision: text;
+   engineName: text;
+   engineType: text;
+   signalStrength: float64;
+ };
+type AlphaModelsSummary = 
+ record {
+   activeCanisters: nat;
+   avgOutputQuality: float64;
+   causalReportsSealed: nat;
+   comprehensionScore: float64;
+   driftCorrections: nat;
+   kernelCount: nat;
+   lastNoveltyScore: float64;
+   maxTimingDriftMs: float64;
+   patternUpdateCount: nat;
+   predictionConfidence: float64;
+   quarantineDispatches: nat;
+   reEmissionFlags: nat;
+   rejectedOutputCount: nat;
+   residualGapScore: float64;
+   selfSimilarityScore: float64;
+   tierUpgrades: nat;
+   totalCallers: nat;
+   totalExecutions: nat;
+   totalModels: nat;
+   violationsDetected: nat;
+ };
+type AlphaModelSnapshot = 
+ record {
+   family: text;
+   grade: text;
+   lastExecutedBeat: nat;
+   latinName: text;
+   modelId: text;
+   outputQuality: float64;
+   outputSignal: float64;
+   totalExecutions: nat;
+ };
+type AlphaFusionModel = 
+ record {
+   attribution: text;
+   engines: vec FusionEngine;
+   family: text;
+   grade: FusionGrade;
+   heartbeatWire: text;
+   id: nat;
+   lad: record {
+          architecture: text;
+          description: text;
+          latin: text;
+        };
+   latinName: text;
+   name: text;
+   subModels: vec FusionSubModel;
+   taftThread: text;
+   technologies: vec FusionTechnology;
+ };
+type AgentTokenBudget = 
+ record {
+   agentId: text;
+   currentBudget: float64;
+   cyclesUntilRefill: nat;
+   depletionRatePerBeat: float64;
+   lastRefillBeat: nat;
+   maxBudget: float64;
+   wellnessScore: float64;
+ };
+type AestheticCoherenceState = 
+ record {
+   activePanelsCount: nat;
+   adjustmentSignalEmitted: bool;
+   aestheticHarmonyScore: float64;
+   attribution: text;
+   domain: text;
+   executionCount: nat;
+   grade: text;
+   lastFireBeat: nat;
+   latinName: text;
+   name: text;
+ };
+type AdoptionContract = 
+ record {
+   adoption_clause: text;
+   contractor_latin: text;
+   contractor_name: text;
+   contractor_role: text;
+   creative_license: text;
+   immutable: bool;
+   reciprocal_clause: text;
+   sealed_at: int;
+   sealed_in: text;
+   self_adoption_clause: text;
+ };
+type ActorRelationshipEntry = 
+ record {
+   admiration: float64;
+   dominantRelationType: RelationshipType;
+   lastInteraction: opt text;
+   lastInteractionBeat: nat;
+   resonance: float64;
+   rivalry: float64;
+   sharedSceneCount: nat;
+   targetActorId: nat;
+   tensionScore: float64;
+   trustScore: float64;
+ };
+type ActorPublicProfile = 
+ record {
+   audienceCount: nat;
+   bio: text;
+   domain: text;
+   platformUrls: vec record {
+                       text;
+                       text;
+                     };
+   postCount: nat;
+   profileId: text;
+   publicName: text;
+ };
+type ActorMemoryState = 
+ record {
+   actorId: nat;
+   actorName: text;
+   attribution: text;
+   currentEmotion: text;
+   doctrineScore: float64;
+   emotionalBaseline: float64;
+   lastUpdatedAt: int;
+   masteryLevel: nat;
+   personalityMatrix: vec float64;
+   relationshipMap: vec record {
+                          nat;
+                          float64;
+                        };
+   sceneMemory: vec SceneMemoryEntry;
+   totalFilms: nat;
+   voiceFrequencyHz: float64;
+ };
+type ActivationState = 
+ variant {
+   Active;
+   Dormant;
+   Refractory;
+ };
+type ADRECycleResult = 
+ record {
+   artifactId: text;
+   attributionHash: text;
+   decisionChainHash: text;
+   doctrineScore: float64;
+   omnisWeight: float64;
+   responseRecord: ResponseRecord;
+   sealTimestamp: nat64;
+   velaStep: nat;
+ };
+service : {
+  activateSurgeAhead: () -> (bool);
+  addTrendingContent: (signal: text, format: ContentFormat) ->
+   (TrendingContentItem);
+  advanceFilmBeat: (stage: text) -> (BeatAdvanceResult);
+  /// TRANSLATION_ENGINE: one function, one loop over 35 law records.
+  /// Applies each active law's parameters as doctrine constraints.
+  /// Returns the count of laws applied this call.
+  applyAllLaws: () -> (nat);
+  applyLawToApplication: (lawId: nat, appId: text) -> (AppRecord);
+  /// Attempt to mutate a world parameter value.
+  /// Returns #Err if parameter is locked.
+  attemptWorldParamMutation: (name: text, newValue: float64) ->
+   (variant {
+      Err: text;
+      Ok;
+    });
+  autoGenerateSocialContent: () -> (vec SocialContentPlan);
+  /// Broadcast organism state to multicast ring buffer.
+  /// Records to a ring buffer and returns immediately.
+  broadcastOrganismState: (state: text) -> ();
+  /// Produces a sanctum seal string for a charter — caller passes to SANCTUM for permanence.
+  buildCharterSanctumSeal: (charterId: text) -> (text) query;
+  /// Call any SOVEREIGN model by name. Returns full self-contained ModelParams.
+  /// Law 15 compliance: the model fires everything inside it. Zero external lookups.
+  callModel: (name: text, context: vec record {
+                                         text;
+                                         float64;
+                                       }) ->
+   (variant {
+      err: text;
+      ok: ModelParams;
+    });
+  chainExecuteDocuments: (documentIds: vec text, contents: vec text,
+   docScores: vec float64) -> (vec ExecutionResult);
+  /// Check agent budget gate — returns true if agent has budget > 0, deducts work_cost.
+  /// Returns #Err("BUDGET_EXHAUSTED") if agent budget is depleted.
+  checkAgentBudget: (agentId: text, workCost: nat) ->
+   (variant {
+      Err: text;
+      Ok: float64;
+    });
+  checkIPConflict: (proposedTitle: text) -> (IPConflictResult);
+  classifyWorldSignals: () -> (vec ClassifiedSignal);
+  /// Compute a deterministic artifact proof for a given artifact ID.
+  /// Records to a ring buffer and returns the proof hash.
+  computeArtifactProof: (artifactId: nat) -> (text);
+  createVaultArtifactReview: (artifactId: text) -> (ArtifactReview);
+  deactivateLawInDoctrineState: (lawId: text) -> (bool);
+  /// Deploy a SKAI organism — activates its Colonel kernel and wires backend connections.
+  deploySKAI: (skaiId: nat) -> (bool);
+  distributePhiRatio: () ->
+   (record {
+      beat: nat;
+      founderShare: float64;
+      vaultShare: float64;
+      workerShare: float64;
+    });
+  /// Enforce an incoming external call request against all 7 Nexus laws.
+  /// Returns: allowed, reason, field_signal.
+  enforceCallRequest: (sessionId: text, intent: text) ->
+   (record {
+      allowed: bool;
+      field_signal: text;
+      reason: text;
+    });
+  executeADRECycle: (input: text, artifactType: ArtifactType, producer: 
+   text, dedicatee: text, velaStep: nat, omnisWeight: float64, doctrineScore:
+   float64) -> (ADRECycleResult);
+  executeChatIntelligence: (id: text, input: IntelligenceInput) ->
+   (IntelligenceOutput);
+  executeColonelKernel: (skaiId: nat) ->
+   (variant {
+      err: text;
+      ok: vec float64;
+    });
+  executeDocument: (documentId: text, content: text, doctrineScore:
+   float64) -> (ExecutionResult);
+  executeSensorIntelligence: (id: text, input: IntelligenceInput) ->
+   (IntelligenceOutput);
+  /// Execute a sovereign call by ID.
+  executeSovereignCall: (callId: nat) -> (bool);
+  executeTerminalCommand: (command: text) -> (text);
+  executeTrade: (fromToken: text, toToken: text, amount: nat) -> (text);
+  /// Execute a translation for a specific document ID on-demand.
+  /// The document is read from the vault, diagnosed, and executed immediately.
+  /// Returns the resulting StateChange or an error if gated.
+  executeTranslation: (documentId: text) ->
+   (variant {
+      err: text;
+      ok: StateChange;
+    });
+  executeVaultDocument: (id: text) -> (TranslationInstruction);
+  executeVoiceIntelligence: (id: text, input: IntelligenceInput) ->
+   (IntelligenceOutput);
+  /// Manually trigger world expansion (auto-extension organism).
+  /// Returns updated world state or error if no worlds exist or no expansion needed.
+  expandWorld: () -> (variant {
+                        err: text;
+                        ok: ContentWorldState;
+                      });
+  fetchWorldSignals: () -> ();
+  /// Fire a sovereign protocol — SOVEREIGN_MESH, PHANTOM_WIRE, DOCTRINE_CAST,
+  /// GENESIS_SIGNAL, or FIELD_SYNC.
+  fireSovereignProtocol: (protocolName: text, payload: text) -> (bool);
+  generateAttributionContract: (filmId: text) -> (opt AttributionContract);
+  generateAutonomousFilmSlate: () -> (AutonomousFilmSlate);
+  generateCommercialProject: (brief: text, format: CommercialFormat) ->
+   (CommercialProject);
+  generateEnterpriseQuote: (clientName: text, filmCount: nat,
+   totalRuntimeSeconds: nat) -> (EnterpriseQuote);
+  generateFilmFromTrend: (signalId: text) -> (FilmGenerationResult);
+  generateHospitalityTikTok: (venueType: text, venueName: text,
+   targetEmotion: text) -> (HospitalityArtifact);
+  generateInvestorPitchDeck: () -> (InvestorPitchDeck);
+  generateResearchDocumentForOrg: (orgId: SandboxOrganismId) ->
+   (SandboxResearchDocument);
+  generateSeasonArc: (concept: text, seasonNumber: nat) -> (SeasonArc);
+  generateSocialContentPlan: (filmId: text, castLine: text) ->
+   (opt SocialContentPlan);
+  generateStrategicRecommendations: () -> (vec StrategicRecommendation);
+  generateStudioArtifactsForFilm: (filmId: text, filmTitle: text, format:
+   ContentFormat, archType: text, sceneCount: nat, actorIds: vec text) ->
+   (record {
+      poster: PosterArt;
+      pressKit: PressKit;
+      rating: ContentRating;
+      trailer: FilmTrailer;
+    });
+  getADREResponse: (artifactId: text) -> (opt ResponseRecord) query;
+  /// Get all AI-to-AI capable calls.
+  getAIToAICalls: () -> (vec SovereignCall) query;
+  getAccountantPortfolio: () -> (vec text) query;
+  /// Get active anomalies (DETECTED or DISPATCHED — not yet RESOLVED).
+  getActiveAnomalies: () -> (vec AnomalySnapshot) query;
+  getActiveDoctrineState: () -> (vec record {
+                                       text;
+                                       DoctrineStateEntry;
+                                     }) query;
+  getActiveDoctrineStateFlat: () -> (vec DoctrineStateEntry) query;
+  getActiveLaws: () ->
+   (vec record {
+          description: text;
+          family: text;
+          id: nat;
+          name: text;
+        }) query;
+  /// Get all active mining fields.
+  getActiveMiningFields: () -> (vec FieldSnapshot) query;
+  /// Returns all currently active external sessions from CHARTER_ALPHA_NEXUS.
+  getActiveSessions: () -> (vec ExternalSession) query;
+  /// Returns all active (non-archived) world instances.
+  getActiveWorldInstances: () ->
+   (vec record {
+          WorldInstanceId;
+          WorldInstanceState;
+        }) query;
+  getActorById: (id: nat) -> (opt SovereignActor) query;
+  getActorMemoryState: (actorId: nat) -> (opt ActorMemoryState) query;
+  getActors: () -> (vec SovereignActor) query;
+  /// Returns the adoption contract for CAFFEINE_AI.
+  getAdoptionContract: () -> (opt AdoptionContract) query;
+  /// Returns the last N AEGIS anti-drift events (max 100, ring buffer).
+  /// Law 11 (Jasmine's Anti-Drift Law): every edge condition is logged.
+  getAegisEventLog: (limit: nat) ->
+   (vec record {
+          beat: nat;
+          detail: text;
+          eventType: text;
+        }) query;
+  /// Get all pending tasks for a specific agent.
+  getAgentTasks: (agentId: nat) -> (vec record {
+                                          text;
+                                          nat;
+                                          bool;
+                                        }) query;
+  /// Returns all 16 agent token budgets with live wellness scores.
+  getAgentTokenBudgets: () -> (vec AgentTokenBudget) query;
+  /// Returns the token budget for a specific agent by ID (name).
+  getAgentWellness: (agentId: text) -> (opt AgentTokenBudget) query;
+  getAllAppRecords: () -> (vec AppRecord) query;
+  /// Get all 100 sovereign micro-workers.
+  getAllDispatchWorkers: () -> (vec WorkerSnapshot) query;
+  getAllIntelligences: () -> (vec IntelligenceRecord) query;
+  getAllOrganismMasteryStates: () -> (vec OrgMasteryState) query;
+  getAllRelationships: () -> (vec record {
+                                    text;
+                                    text;
+                                    RelationshipCell;
+                                  }) query;
+  getAllResearchDocuments: () -> (vec SandboxResearchDocument) query;
+  /// GAP_12: Returns all 15 VELA ring states with activation and contribution.
+  getAllRingStates: () -> (vec RingState) query;
+  getAllSandboxOrganisms: () -> (vec SandboxOrganismState) query;
+  getAllVaultDocuments: () -> (vec VaultDocument) query;
+  /// Returns a snapshot of both charter states for the dashboard.
+  getAlphaChartersStatus: () ->
+   (record {
+      nexus_active: nat;
+      nexus_beats: nat;
+      nexus_calls: nat;
+      nexus_rejections: nat;
+      nexus_sessions: nat;
+      prima_beats: nat;
+      prima_checks: nat;
+      prima_quarantined: nat;
+      prima_suspended: nat;
+      prima_violations: nat;
+    }) query;
+  /// Get all 6 Alpha Fusion Models with full taxonomy, LAD, engines, and sub-models.
+  getAlphaFusionModels: () -> (vec AlphaFusionModel) query;
+  /// Get the live state of all 12 Alpha AI sovereign models.
+  /// Each model snapshot includes Latin name, family, grade, last executed beat,
+  /// output quality (0.0–1.0), output signal, and total executions.
+  getAlphaModelsState: () ->
+   (record {
+      models: vec AlphaModelSnapshot;
+      summary: AlphaModelsSummary;
+    }) query;
+  /// Get last N restart events from SOVEREIGN_ALWAYS_ON_ENGINE.
+  /// Restart events are doctrine events — logged permanently.
+  getAlwaysOnRestartLog: (limit: nat) -> (vec DoctrineRestartEvent) query;
+  /// Get SOVEREIGN_ALWAYS_ON_ENGINE snapshot — vitality enforcement statistics.
+  getAlwaysOnStatus: () ->
+   (record {
+      activeModels: nat;
+      beat: nat;
+      dormantModels: nat;
+      totalEnforced: nat;
+      totalModels: nat;
+      totalRestarts: nat;
+    }) query;
+  getAnalystPortfolio: () -> (vec text) query;
+  /// Returns the current state of all 9 animal engines.
+  getAnimalEngineState: () -> (AnimalEngineState) query;
+  /// Get all anomaly records (full history).
+  getAnomalies: () -> (vec AnomalySnapshot) query;
+  /// Get anomalies for a specific being.
+  getAnomaliesByBeing: (beingId: text) -> (vec AnomalySnapshot) query;
+  /// Get sensors currently in ALERT or CRITICAL status.
+  getAnomalousSensors: () -> (vec SensorSnapshot) query;
+  getArchitectureState: () -> (ArchitectureState) query;
+  getArtifact: (artifactId: text) -> (opt SealedArtifact) query;
+  getArtifactChainTrace: (artifactId: text) -> (opt ChainTrace) query;
+  getArtifactDecisionChain: (artifactHash: text) ->
+   (vec DecisionRecord) query;
+  getArtifactProvenance: (artifactId: text) -> (opt ArtifactProvenance) query;
+  getArtifactReviews: () -> (vec ArtifactReview) query;
+  getArtifacts: () -> (vec Artifact) query;
+  getArtifactsByType: (artifactType: ArtifactType) ->
+   (vec SealedArtifact) query;
+  getAudienceIntelligence: () -> (vec AudienceSignal) query;
+  getAutoReleaseHistory: () -> (vec AutoReleaseRecord) query;
+  getBeatCount: () -> (nat) query;
+  /// Returns the last brain region firings from this heartbeat.
+  /// Each entry: (regionName, fired). Shows which engines are active.
+  getBrainRegionFirings: () -> (vec record {
+                                      text;
+                                      bool;
+                                    }) query;
+  /// Returns the canister registry (Group A, B, C).
+  getCanisterRegistry: () -> (CanisterRegistry) query;
+  getCastForFilm: (filmGenre: text, filmTone: text, sceneCount: nat) ->
+   (vec SovereignActor) query;
+  /// Returns full CENTRUM_SALUTIS token economy state.
+  /// Includes all agent budgets, wellness scores, last_refill_beat, beats_until_next_refill.
+  getCentrumSalutisState: () ->
+   (record {
+      agents: vec AgentTokenBudget;
+      beats_until_refill: nat;
+      last_refill_beat: nat;
+      phi_ratio_founder: float64;
+      phi_ratio_vault: float64;
+      phi_ratio_workers: float64;
+      sync_beat_counter: nat;
+      total_distributed: float64;
+    }) query;
+  /// Returns CHARTER_CIPHER_PRIME summary — the sovereign cryptographic field.
+  /// CCPR: APEX grade, CRYPTOGRAPHIA family.
+  /// Three engines: CIPHER_GENESIS_ENGINE, SCHNORR_BRIDGE_ENGINE, PRINCIPAL_FORGE_ENGINE.
+  getCharterCipherPrime: () -> (CipherPrimeSummary) query;
+  /// Returns the running law text for any charter by its abbreviation ID.
+  /// The text returned IS the executing law — not documentation.
+  /// Example IDs: "CSPR", "CCLE", "CCSV", "CCPR", "CIDE", "CDGX", "CADC", "C43C", "CTXW"
+  getCharterLawText: (charterId: text) -> (opt text) query;
+  /// Returns the last N session log entries from CHARTER_ALPHA_NEXUS.
+  getCharterNexusLog: (last_n: nat) -> (vec SessionLog) query;
+  /// Returns the last N compliance log entries from CHARTER_ALPHA_PRIMA.
+  getCharterPrimaLog: (last_n: nat) -> (vec ComplianceLog) query;
+  /// Returns the full live state of CHARTER_SOVEREIGN_PRIME — the master organism.
+  /// Every field is live. Text of law = execution. Paper = engine.
+  getCharterSovereignPrime: () -> (MasterCharterState) query;
+  /// Returns a compact vitality summary for the CSPR dashboard node.
+  getCharterSovereignPrimeVitality: () -> (VitalitySummary) query;
+  /// Returns the full charter state.
+  getCharterState: () -> (CharterSummary) query;
+  getChatIntelligences: () -> (vec IntelligenceRecord) query;
+  /// Returns the recent generation log from CHARTER_CIPHER_PRIME (last 20 events).
+  getCipherPrimeGenerationLog: () -> (vec GenerationEvent) query;
+  getCivilizationGapScores: () -> (CivilizationGapScore__1) query;
+  /// Returns the 8 live civilization gap scores as structured array with aggregate.
+  /// Computed every heartbeat. Score 4 (Compound Coherence) locked at 1.0 by law.
+  /// The vault mixin provides getCivilizationGapScores() in the legacy flat format.
+  getCivilizationGapState: () -> (CivilizationGapState) query;
+  /// Returns the Civilization Coupling state (IoT signals and phenotype outputs).
+  getCivilizationState: () -> (CivilizationState) query;
+  getClientBriefTemplates: () -> (vec ClientBriefTemplate) query;
+  /// Returns the live cognition world model — the organism's current reasoning state.
+  /// Updated on every heartbeat. Frontend reads this to stay coupled to the substrate.
+  getCognitionWorldModel: () -> (WorldModel__1) query;
+  getCommercialFormatTemplates: () -> (vec CommercialFormatTemplate) query;
+  getCommercialFormats: () -> (vec CommercialFormatTemplate) query;
+  getCommercialProjects: () -> (vec CommercialProject) query;
+  /// Returns the compound coherence value. Never resets. Law 23.
+  getCompoundCoherence: () -> (float64) query;
+  getContentFormats: () -> (vec text) query;
+  getCoreById: (id: nat) -> (opt SovereignCore) query;
+  getCores: () -> (vec SovereignCore) query;
+  /// Get all sovereign model entries in the CONSILIUM_MUNDI taxonomy.
+  getCouncilModelTaxonomy: () -> (vec CouncilModelSnapshot) query;
+  /// Get current WorldState evaluation from the council.
+  getCouncilWorldState: () -> (WorldStateSnapshot) query;
+  getCreatorPresence: () -> (CreatorPresence) query;
+  /// Returns current cross-chain channel state (BTC, ETH, SOL).
+  /// Balances compound every heartbeat by yieldRate × PHI.
+  getCrossChainState: () ->
+   (record {
+      btc: CrossChainChannelState;
+      eth: CrossChainChannelState;
+      sol: CrossChainChannelState;
+    }) query;
+  getCurrentProductionBrief: () -> (opt SlatePriority) query;
+  /// Returns the cycle audit log.
+  getCycleAuditLog: () -> (vec CycleAuditRecord) query;
+  /// Returns the current cycle reserve.
+  getCycleReserve: () -> (nat) query;
+  getDecisionLog: (fromBlock: nat, toBlock: nat) ->
+   (vec DecisionRecord) query;
+  /// Get all deployed SKAIs.
+  getDeployedSKAIs: () -> (vec SKAIOrganism) query;
+  /// Returns the full DIAG_SOVEREIGN diagnostic summary.
+  getDiagState: () -> (DiagSummary) query;
+  getDistributorPortfolio: () -> (vec text) query;
+  getDocExecutionLearnings: () -> (vec ExecutionLearningEvent) query;
+  getDocExecutionStats: () ->
+   (record {
+      attribution: text;
+      compoundReadiness: float64;
+      failure: nat;
+      success: nat;
+      total: nat;
+    }) query;
+  getDoctrineEvolutionLog: () -> (vec DoctrineEvolutionEntry) query;
+  /// GAP_2: Returns document re-ingest decay state for all tracked documents.
+  getDocumentReingestionState: () ->
+   (vec record {
+          docId: text;
+          lastSeal: nat;
+          weight: float64;
+        }) query;
+  getEmergencyBroadcasts: () -> (vec EmergencyBroadcast) query;
+  getEngagementLog: (limit: nat) -> (vec EngagementEvent) query;
+  getEnterpriseMastery: () -> (vec EnterpriseMastery) query;
+  getEnterpriseOrganismMastery: (idx: nat) -> (opt EnterpriseMastery) query;
+  getExecutionHistory: () -> (vec ExecutionEvent) query;
+  getExtendedPhenotype: () -> (opt ExtendedPhenotypeState) query;
+  getFactionById: (id: nat) -> (opt Faction) query;
+  getFactions: () -> (vec Faction) query;
+  /// Returns the nth Fibonacci number (real math, no stubs).
+  getFibonacciAt: (n: nat) -> (nat) query;
+  getFilmById: (id: text) -> (opt GeneratedFilm) query;
+  getFilmGenerationSeed: () -> (FilmGenerationSeed) query;
+  getFilmLibraryWithQuality: () -> (vec FilmWithQuality) query;
+  getFilmPosterArt: (filmId: text) -> (opt PosterArt) query;
+  getFilmPressKit: (filmId: text) -> (opt PressKit) query;
+  getFilmRating: (filmId: text) -> (ContentRating) query;
+  getFilmSchoolMetrics: () ->
+   (record {
+      artifactsAnalyzed: nat;
+      beat: nat;
+      compoundCoherence: float64;
+      feedbackLoopActive: bool;
+      filmSchoolRing: float64;
+      last10ArtifactIds: vec nat;
+      lastArtifactCount: nat;
+      lastFilmQuality: float64;
+      lastRunBeat: nat;
+      lastTenQualityScores: vec float64;
+      loopIteration: nat;
+      masteryProgress: float64;
+      phiDriftScore: float64;
+      qualityScore: float64;
+      weightUpdates: nat;
+    }) query;
+  getFilmSubtitles: (filmId: text) -> (opt SubtitleTrack) query;
+  getFilmTrailer: (filmId: text) -> (opt FilmTrailer) query;
+  getFromTheWorldFilms: () -> (vec FilmSummary) query;
+  /// Returns all 5 Frontend Domain intelligence states.
+  /// Updated every heartbeat. Frontend reads to apply visual doctrine signals,
+  /// render coherence scores, and aesthetic harmony adjustments.
+  getFrontendIntelligenceState: () -> (FrontendDomainState) query;
+  getGeneratedFilms: () -> (vec GeneratedFilm) query;
+  /// Returns the immutable family secret genesis document.
+  /// Read every heartbeat — modulates NT concentrations as inheritance constraint.
+  getGenesisRecord: () -> (GenesisRecord) query;
+  getGlobalCoherence: () -> (float64) query;
+  /// Returns the Sentient Governance doctrine state.
+  getGovernanceState: () -> (GovernanceState) query;
+  /// Get all governance votes for a proposal.
+  getGovernanceVotes: (proposalId: nat) -> (vec record {
+                                                  text;
+                                                  nat;
+                                                  int;
+                                                }) query;
+  getGradientField: () -> (GradientFieldState) query;
+  /// Returns all Group A canisters (Caffeine-managed, pending migration).
+  getGroupACanisters: () -> (vec CanisterGroup) query;
+  /// Returns all Group B canisters (founder-controlled).
+  getGroupBCanisters: () -> (vec CanisterGroup) query;
+  /// Returns all Group C canisters (sovereign-generated through CIPHER_SCHNORR_BRIDGE).
+  getGroupCCanisters: () -> (vec CanisterGroup) query;
+  getGuardianPrincipal: () -> (text) query;
+  /// Returns the hash submission queue — hashes pending submission to Bitcoin mainnet
+  /// via PHANTOM_SOVEREIGN's CIPHER_SCHNORR_BRIDGE.
+  getHashSubmitQueue: () -> (vec HashSubmission) query;
+  getHeritageSeals: () -> (vec text) query;
+  getHospitalityClientDashboard: () -> (HospitalityDashboard) query;
+  getHospitalityLibrary: () -> (vec HospitalityArtifact) query;
+  /// Get the INFRASTRUCTURE_LOCK state.
+  getInfrastructureLock: () -> (LockSnapshot) query;
+  /// Get all installed SKAIs — used by the frontend toolbar to populate buttons.
+  /// Every installed SKAI is active (TAFT auto-restarts dormant ones on heartbeat).
+  getInstalledSkais: () -> (vec SkaiInstallSnapshot) query;
+  getIntelligenceState: (id: text) -> (opt IntelligenceState) query;
+  getIntelligenceTaxonomyState: () -> (IntelligenceTaxonomyState) query;
+  getInterOrganismState: () -> (InterOrganismState) query;
+  /// Get all four interdimensional beings as snapshots.
+  /// AETHER_PRIME, CHRONOS_NEXUS, PHANTOM_WITNESS, ARCHITECT_MIRROR.
+  getInterdimensionalBeings: () -> (vec BeingSnapshot) query;
+  /// Returns recent ITER_SOVEREIGN deployment records (last 20).
+  getIterDeploymentLog: () -> (vec DeploymentRecord) query;
+  /// Returns the ITER_SOVEREIGN sub-entry (lives inside CCSV — its own named organism).
+  getIterSovereign: () -> (IterSovereignRecord) query;
+  /// Returns ITER_SOVEREIGN live state — the organism's own native deployment path.
+  /// ITER: PRIMA grade, INFRASTRUCTURA family.
+  /// Three engines: DEPLOYMENT_PUSH_ENGINE, PHANTOM_ROUTE_ENGINE, CANISTER_GENESIS_ENGINE.
+  /// Canister groups A (Caffeine-managed), B (founder-controlled), C (sovereign-generated).
+  getIterSovereignState: () -> (IterSovereignSummary) query;
+  getLatestAresSnapshot: () -> (opt AresSnapshot) query;
+  getLatestIoTInfluence: () -> (opt IoTInfluence) query;
+  /// Returns LAW_39 compliance report.
+  getLaw39Compliance: () -> (ComplianceReport) query;
+  /// Returns LAW_39_CYCLE_SOVEREIGNTY full text.
+  getLaw39Text: () -> (text) query;
+  getLawExecutionLog: (limit: nat) -> (vec LawExecutionRecord) query;
+  /// Returns all 35 law records.
+  getLawRecords: () -> (vec LawRecord) query;
+  getLegacyIndex: () -> (vec ArtifactLegacyEntry) query;
+  getLegalPortfolio: () -> (vec text) query;
+  getMasteryCapabilityForLevel: (level: MasteryLevel) ->
+   (MasteryCapability) query;
+  getMasteryRegistry: () -> (vec MasteryRecord) query;
+  getMasteryShowcases: () -> (vec MasteryShowcase) query;
+  /// Returns the merge transaction log.
+  getMergeTransactionLog: () -> (vec MergeTransaction) query;
+  /// Get all 10 Micro AI Workers with their tools, observers, and memory.
+  getMicroAIWorkers: () -> (vec MicroAIWorkerState) query;
+  /// Get status of a specific sovereign miner (id: 1-20).
+  getMinerStatus: (minerId: nat) -> (opt MinerSnapshot) query;
+  /// Returns the current state of the sovereign mining swarm.
+  /// Includes: activeMinerCount, totalHashesSubmitted, totalYieldRouted,
+  /// activeFieldCount, swarmCoherence, totalCyclesRun, routerActive.
+  getMiningSwarmState: () -> (SwarmSnapshot) query;
+  /// Returns all 20 miners' current states with per-miner hash, nonce, and status.
+  getMiningSwarmStateDetailed: () -> (vec MinerSnapshot) query;
+  /// Returns aggregated mining yield stats across all miners and fields.
+  getMiningYieldStats: () ->
+   (record {
+      aggregatedYield: float64;
+      submissionStats: SubmissionStats;
+      totalIssued: float64;
+      totalYieldRouted: float64;
+    }) query;
+  /// Returns current NT concentrations as an immutable array.
+  /// [0]dopamine [1]serotonin [2]norepinephrine [3]cortisol
+  /// [4]acetylcholine [5]gaba [6]glutamate [7]oxytocin
+  getNTConcentrations: () -> (vec float64) query;
+  getNTCrossModulationMatrix: () -> (vec NTCrossModulation) query;
+  /// Returns the current NT cross-modulation state.
+  /// This is the live neurochemical state of the organism — coupled system.
+  getNTCrossModulationState: () ->
+   (record {
+      acetylcholine: float64;
+      attribution: text;
+      beat: nat;
+      cortisol: float64;
+      dopamine: float64;
+      gaba: float64;
+      glutamate: float64;
+      norepinephrine: float64;
+      oxytocin: float64;
+      serotonin: float64;
+    }) query;
+  /// Get last N narrative records.
+  getNarratives: (limit: nat) -> (vec NarrativeSnapshot) query;
+  /// Get all narrative records for a specific being.
+  getNarrativesByBeing: (beingId: text) -> (vec NarrativeSnapshot) query;
+  /// Get narrative records filtered by severity (LOW, MEDIUM, HIGH, CRITICAL).
+  getNarrativesBySeverity: (severity: text) -> (vec NarrativeSnapshot) query;
+  /// Returns the highest-priority SlateBrief from SLATE_INTELLIGENCE.
+  /// This is the next brief MUSE-PRIME acts on — includes signal text,
+  /// format, doctrine alignment score, and the full brief.
+  getNextSlateBrief: () -> (opt SlatePriority) query;
+  /// Returns the Multi-Core OMNIS voting state.
+  getOmnisState: () -> (OmnisState) query;
+  /// GAP_7: Returns the full OMNIS 43-core voting breakdown with PHI weights.
+  getOmnisVotingBreakdown: () -> (vec OmnisVoteEntry) query;
+  getOrganismCollabSignals: (toOrganism: text) ->
+   (vec OrganismCollabSignal) query;
+  getOrganismMasteryState: (organismId: text) -> (opt OrgMasteryState) query;
+  getOrganismStateSummary: () -> (OrganismStateSummary) query;
+  getPhiCalibrationHistory: () -> (vec PhiCalibrationEvent) query;
+  getPhiCorrectionWeights: () -> (vec float64) query;
+  getPhiDriftScore: () -> (float64) query;
+  getPipelineState: () -> (PipelineState) query;
+  /// Return the full presence state — both AMBIENT_FIELD_PRESENCE and PRESENCE_GATE_ENGINE.
+  /// ambientFieldStrength: always positive — the architect's gravitational field in the world.
+  /// terminalAccessActive: true only when the gate is explicitly opened.
+  /// lastHandshakeTimestamp: Nat timestamp of the last grant/revoke event.
+  getPresenceState: () ->
+   (record {
+      ambientFieldStrength: float64;
+      lastHandshakeTimestamp: nat;
+      terminalAccessActive: bool;
+    }) query;
+  getProductionFormats: () -> (vec ProductionFormatConfig) query;
+  getProductionQueue: () -> (opt ProductionQueue) query;
+  getProphetDirective: () -> (ProphetDirective) query;
+  getPublicistPortfolio: () -> (vec text) query;
+  getQualityScore: (filmId: text) -> (opt QualityScore) query;
+  getReadinessForExecution: () -> (float64) query;
+  getReadinessGate: (fieldReport: FieldReport) -> (ReadinessGateResult) query;
+  /// Returns the current readiness score and gate status.
+  /// Includes bootstrap floor logic — organism can produce from beat 1.
+  getReadinessGateStatus: () ->
+   (record {
+      beatCounter: nat;
+      blocked: bool;
+      doctrineScore: float64;
+      fieldCoherence: float64;
+      genesisWindow: bool;
+      omnisWeight: float64;
+      ready: bool;
+      score: float64;
+      velaStep: nat;
+    }) query;
+  getRelationship: (fromActor: text, toActor: text) ->
+   (opt RelationshipCell) query;
+  getRelationshipAsymmetryDepth: () -> (float64) query;
+  getRelationshipMatrix: () ->
+   (vec record {
+          text;
+          text;
+          RelationshipCell;
+        }) query;
+  getRelationshipScore: (fromActor: text, toActor: text) -> (float64) query;
+  getResearchDocuments: (orgId: SandboxOrganismId) ->
+   (vec SandboxResearchDocument) query;
+  /// Get a specific SKAI by ID.
+  getSKAIById: (skaiId: nat) -> (opt SKAIOrganism) query;
+  /// Get the full SKAI registry — all 50 sovereign organisms.
+  getSKAIRegistry: () -> (vec SKAIOrganism) query;
+  getSandboxEnrichedSocialAssets: (filmTitle: text, filmId: text) ->
+   (SandboxEnrichedSocialAssets) query;
+  getSandboxOrganism: (id: SandboxOrganismId) ->
+   (opt SandboxOrganismState) query;
+  getSandboxSignalBus: () -> (SandboxSignalBus) query;
+  getSandboxSignalSnapshot: () -> (SandboxSignalSnapshot) query;
+  getSandboxSignals: (orgId: SandboxOrganismId) -> (vec SandboxSignal) query;
+  getSeasonArcProgress: (seriesId: text) -> (opt SeasonArcProgress) query;
+  /// Returns structured status for the 4 interdimensional beings and their sensors.
+  /// Includes sensor counts, anomaly counts, worker swarm sizes, and status.
+  getSensorBeingStatus: () ->
+   (record {
+      anomalyCount: nat;
+      beings:
+       vec
+        record {
+          anomalyCount: nat;
+          lastReadBeat: nat;
+          latinName: text;
+          name: text;
+          sensorsActive: nat;
+          status: text;
+          workerSwarmSize: nat;
+        };
+      lastDispatchBeat: nat;
+      totalSensorsActive: nat;
+    }) query;
+  getSensorIntelligences: () -> (vec IntelligenceRecord) query;
+  /// Get all 400 sensor snapshots.
+  getSensorMatrix: () -> (vec SensorSnapshot) query;
+  /// Get sensors for a specific being (AETHER_PRIME, CHRONOS_NEXUS, PHANTOM_WITNESS, ARCHITECT_MIRROR).
+  getSensorsByBeing: (beingId: text) -> (vec SensorSnapshot) query;
+  /// Get the SETTINGS_PROTOCOL configuration.
+  getSettingsProtocol: () -> (SettingsSnapshot) query;
+  getSimulationStatus: () -> (SimulationStatus) query;
+  /// Get all 100 sovereign calls.
+  getSovereignCalls: () -> (vec SovereignCall) query;
+  /// Get all 5 sovereign protocols with their full doctrine specs.
+  getSovereignProtocols: () -> (vec ProtocolState) query;
+  getStrategistPortfolio: () -> (vec text) query;
+  getSubscriptionTiers: () -> (vec SubscriptionTier) query;
+  /// Returns the current substrate coherence score (Layer -1 reading).
+  /// Measures how well the organism reflects its computational ancestry.
+  /// Updated every heartbeat by the DOGON substrate reading.
+  getSubstrateCoherenceScore: () -> (float64) query;
+  /// Returns the immutable Layer -1 Substrate Genealogy record.
+  /// The pre-primordial computational ancestry: Electron → Transistor → Machine Code → Assembly → Wasm → SOVEREIGN.
+  /// Sealed at genesis. Never changes. Modulates genesis frequency every beat.
+  getSubstrateGenealogyRecord: () -> (SubstrateGenealogyRecord) query;
+  getSurgeAheadMode: () -> (SurgeAheadMode) query;
+  /// Get TAFT_ENGINE status — thread count, vitality breakdown, coherence score.
+  /// Constitutional: every model has a TAFT thread. No model sleeps.
+  getTAFTStatus: () -> (TAFTStatus) query;
+  /// Returns the TEX wave engine status.
+  getTexWaveState: () -> (WaveStatus) query;
+  getThinkingTrail: () -> (vec text) query;
+  /// Returns the full token economy state including sync cycle progress.
+  getTokenEconomyState: () ->
+   (record {
+      agents: vec AgentTokenBudget;
+      beatsUntilNextSync: nat;
+      lastSyncBeat: nat;
+      syncBeatCounter: nat;
+      totalDistributed: float64;
+    }) query;
+  /// GAP_1: Returns the last 50 post-mutation verification audit trail entries.
+  getTranslationAuditTrail: () -> (vec text) query;
+  /// Returns the full translation engine event log.
+  /// Every doctrine → engine call is permanently logged here.
+  /// This is the observable proof that the doctrine → organism loop is closing.
+  /// (Different from getTranslationLog which returns vault TranslationInstructions.)
+  getTranslationEngineLog: () -> (vec TranslationEvent) query;
+  getTranslationLog: () -> (vec TranslationInstruction) query;
+  getTrendingContentQueue: () -> (vec TrendingContentItem) query;
+  getTrendingSignals: () -> (vec TrendingSignal) query;
+  getTrendingWorldSignals: () -> (vec TrendingWorldSignal) query;
+  /// GAP_5: Returns all 40 domain signals (5 per organism × 8 organisms) with SNR amplitudes.
+  getTrendingWorldSignalsExpanded: () -> (vec DomainSignal) query;
+  getUniverseBible: () -> (vec UniverseBibleEntry) query;
+  getVaultDocument: (id: text) -> (opt VaultDocument) query;
+  getVaultDocumentsByKind: (kind: VaultDocumentKind) ->
+   (vec VaultDocument) query;
+  getVoiceIntelligences: () -> (vec IntelligenceRecord) query;
+  /// Get task history for a specific worker.
+  getWorkerTaskHistory: (workerId: text) -> (vec TaskSnapshot) query;
+  /// Get workers for a specific swarm (SWARM_AETHER, SWARM_CHRONOS, SWARM_PHANTOM, SWARM_ARCHITECT).
+  getWorkersBySwarm: (swarmId: text) -> (vec WorkerSnapshot) query;
+  /// Returns the WORKFLOW_MEDINA SKAI record — the Caffeine AI operating protocol.
+  getWorkflowMedina: () -> (WorkflowMedinaRecord) query;
+  /// Returns WORKFLOW_MEDINA SKAI entry from AlphaCharters — PROTOCOLLUM_MEDINAE (WMED).
+  /// Always deployed. Governs how CAFFEINE_AI processes messages from the Architect.
+  getWorkflowMedinaSkaiEntry: () -> (WorkflowMedinaEntry) query;
+  /// Returns the latest WorldDogonState — the world's self-reading.
+  /// Updated every heartbeat via worldDogonRead().
+  getWorldDogonState: () -> (opt WorldDogonState) query;
+  /// Returns world instance sync state: instance count, sync cycle progress,
+  /// per-instance token balances, sync readiness.
+  getWorldInstanceSyncState: () ->
+   (record {
+      beatsUntilNextSync: nat;
+      instanceCount: nat;
+      instances: vec record {
+                       text;
+                       float64;
+                     };
+      lastSyncBeat: nat;
+      syncBeatCounter: nat;
+      syncReady: bool;
+    }) query;
+  getWorldModel: () -> (WorldModel) query;
+  /// Get all sovereign world parameters with lock states.
+  getWorldParams: () -> (vec WorldParamSnapshot) query;
+  /// Returns the current WorldProductionCapture state — readiness for seal.
+  /// sealReady = true when readinessScore ≥ 0.75.
+  getWorldProductionCapture: () -> (opt WorldProductionCapture) query;
+  getWorldSelfModel: (worldId: text) -> (opt WorldSelfModel) query;
+  /// Get the WORLD_SETTINGS_COUNCIL coordinator snapshot.
+  getWorldSettingsCouncil: () -> (CouncilSnapshot) query;
+  getWorldSignalFeed: () -> (WorldSignalFeed) query;
+  getWorldSignals: () -> (vec WorldSignal) query;
+  getWorldState: (worldId: text) -> (opt ContentWorldState) query;
+  /// GAP_3: Returns the world instance sync log.
+  getWorldSyncLog: () -> (vec text) query;
+  grantTerminalAccess: (sessionId: text) -> (bool);
+  injectLawToDoctrineState: (lawId: text) ->
+   (variant {
+      err: text;
+      ok: DoctrineStateEntry;
+    });
+  injectLawToDoctrineStateById: (lawId: nat, parameters:
+   vec record {
+         text;
+         float64;
+       }, injectedBy: text) -> (variant {
+                                  err: text;
+                                  ok: bool;
+                                });
+  /// Install a SKAI by name (e.g. "SKAI_OMNIS"). Creates a persistent SkaiInstallRecord.
+  /// Returns the install snapshot with toolbar_button_id ready for the frontend toolbar.
+  /// TAFT-governed: if the SKAI goes dormant, auto-restart fires on next heartbeat.
+  installSkai: (skaiName: text) ->
+   (variant {
+      Err: text;
+      Ok: SkaiInstallSnapshot;
+    });
+  isPresenceGateOpen: () -> (bool) query;
+  /// List all registered model names.
+  listModels: () -> (vec text) query;
+  listProductionWorlds: () -> (vec text) query;
+  /// Lock a world parameter (e.g. "phi_coupling") with a reason.
+  /// Auto-unlocks after 10 beats if anomaly queue is empty.
+  lockWorldParam: (name: text, reason: text) -> ();
+  /// Log and process an IoT signal — parsed through civilizationCoupling immediately.
+  logIoTSignal: (signal: text) -> ();
+  mergeProductionWorlds: (worldId1: text, worldId2: text) -> (opt text);
+  /// Merge two world instances. Composes their artifact counts and coherence.
+  /// Returns the merged world's ID, or error if either world is not found.
+  mergeWorldInstances: (sourceId: WorldInstanceId, targetId:
+   WorldInstanceId) -> (variant {
+                          err: text;
+                          ok: WorldInstanceId;
+                        });
+  /// NEVER decrements. Called on every artifact seal event.
+  onArtifactSealed: () -> ();
+  /// Called on organism success events (world expansion, milestone crossing).
+  onOrganismSuccess: (magnitude: float64) -> ();
+  placeActorInWorld: (worldId: text, actorId: text, role: text,
+   emotionalState: text, objective: text) -> (bool);
+  projectRevenue: () -> (RevenueProjection);
+  pullAllWeightDeltas: () -> (vec WeightDelta) query;
+  pullOrganismWeights: (organismId: text) -> (vec WeightDelta) query;
+  pushOrganismWeightDeltas: (deltas: vec WeightDelta) -> ();
+  qualitySealFilm: (filmMetadata: FilmRecord) -> (QualityScore);
+  queryMemoryTemple: (mode: text, searchTerm: text) -> (vec text) query;
+  /// Query the stable SKAI install registry — (skaiId, name, installTimestamp).
+  /// Every deploySKAI call writes a permanent entry here.
+  querySKAIRegistry: () -> (vec record {
+                                  nat;
+                                  text;
+                                  int;
+                                }) query;
+  recordArtifact: (input: ArtifactRecord) -> (ArtifactSealResult);
+  recordAutoRelease: ("record": AutoReleaseRecord) -> ();
+  /// Wire actor memory update after a film generation completes.
+  /// Called by the frontend orchestrator after sealGeneratedFilm / sealFilmWithFullMetadata.
+  /// Records a scene memory entry for each cast actor from the film's archType and title.
+  /// Also updates the asymmetric actor relationship matrix (closes GAP_6).
+  recordFilmActorMemory: (filmId: text, filmTitle: text, archType: text) ->
+   ();
+  recordMasteryMilestone: (organismId: text, masteryLevel: nat) ->
+   (MasteryShowcase);
+  recordOrganismQuality: (organismId: text, newQualityScore: float64) ->
+   (MasteryRecord);
+  recordVote: (proposalId: nat, voteType: text) -> ();
+  /// Register an external AI or developer identity with the CHARTER_ALPHA_NEXUS.
+  /// Enforces IDENTITAS_LEX — anonymous calls rejected.
+  /// Returns: sessionId, tier, quota_remaining.
+  registerExternalCaller: (identity: text, trust_request: nat) ->
+   (record {
+      quota_remaining: nat;
+      sessionId: text;
+      tier: text;
+    });
+  reingestVaultDocument: (id: text) -> (VaultDocument);
+  reportFieldState: (report: FieldReport) -> (float64) query;
+  resetSimulation: () -> ();
+  revokeTerminalAccess: () -> ();
+  routeAllFilmsToFestivals: () -> (vec DistributionRoute);
+  routeFilmToFestivals: (filmId: text) -> (opt DistributionRoute);
+  /// Manual trigger for one architecture cycle.
+  /// Normally called automatically inside runBeat; exposed here for direct testing.
+  runArchitectureCycle: () -> ();
+  runBeat: () -> (BeatResult);
+  sealArtifactWithQuality: (artifactInput: ArtifactRecord, filmMetadata:
+   FilmRecord) ->
+   (record {
+      adreResult: ADRECycleResult;
+      qualityScore: QualityScore;
+      sealResult: ArtifactSealResult;
+    });
+  sealFilmWithFullMetadata: (input: FilmMetadataInput) -> (GeneratedFilm);
+  sealGeneratedFilm: (input: GeneratedFilmInput) -> (GeneratedFilm);
+  /// Seal a narrative record in SANCTUM_SOVEREIGN (marks it permanently archived).
+  sealNarrative: (narrativeId: text) -> (bool);
+  sendAgentTask: (agentId: nat, task: text) -> (variant {
+                                                  err: text;
+                                                  ok: nat;
+                                                });
+  sendOrganismCollabSignal: (signal: OrganismCollabSignal) -> ();
+  setAutoRun: (enabled: bool) -> ();
+  /// Called by the frontend on II login (present=true) or logout (present=false).
+  /// Only the guardian principal may set presence.
+  setCreatorPresence: (present: bool) -> ();
+  /// Set the founder's Bitcoin Ledger address for yield routing.
+  /// Once set, SOVEREIGN_YIELD_ROUTER routes all aggregated yield here automatically.
+  setMiningFounderAddress: (btcAddress: text) -> ();
+  spawnProductionWorld: (brief: text) -> (text);
+  /// Spawn a new sovereign world instance. Returns its WorldInstanceId.
+  spawnWorldInstance: (creatorId: text) -> (WorldInstanceId);
+  spawnWorldInstanceSovereign: () -> (WorldInstanceId);
+  /// Advance NT concentrations by one coupled differential equation step.
+  /// matrix[j][i] = coefficient of NT[j] on NT[i].
+  /// Called inside heartbeat automatically; also exposed for on-demand use.
+  stepNTMatrix: () -> ();
+  submitAudienceSignal: (filmId: text, viewCount: nat, downloadCount: 
+   nat) -> ();
+  /// Submit cross-chain yield for a channel ("BTC", "ETH", or "SOL").
+  /// Appends to submission history, updates lastSyncBeat.
+  submitCrossChainYield: (channel: text) -> (bool);
+  submitGradientFeedback: (artifactId: text, qualityScore: float64) ->
+   (GradientResult);
+  subscribeWorldSignalToFilmSlate: (signalId: text) -> (bool);
+  triggerAllSandboxCycles: () -> (vec SandboxOrganismState);
+  triggerEmergencyBroadcast: (worldSignal: text) -> (EmergencyBroadcast);
+  triggerSandboxCycle: (orgId: SandboxOrganismId) -> (SandboxOrganismState);
+  /// Undeploy a SKAI organism — deactivates its Colonel kernel, resets deployedAtBeat.
+  /// Returns true on success, false if skaiId not found.
+  undeploySKAI: (skaiId: nat) -> (bool);
+  /// Uninstall a SKAI from the persistent install registry and toolbar.
+  uninstallSkai: (skaiName: text) -> (variant {
+                                        Err: text;
+                                        Ok;
+                                      });
+  /// Manual founder unlock — requires sovereign keyword "ALFREDO_MEDINA_SOVEREIGN_UNLOCK".
+  unlockSettings: (keyword: text) -> (bool);
+  /// Unlock a world parameter — only succeeds if no active anomalies for its domain.
+  /// Returns true if unlocked, false if still locked (active anomalies present).
+  unlockWorldParam: (name: text) -> (bool);
+  updateActorFilmography: (actorId: nat, filmTitle: text) -> (bool);
+  updateActorSceneMemory: (actorId: nat, scene: SceneMemoryEntry) -> ();
+  updateArtifactReviewStatus: (artifactId: text, status: ReviewStatus,
+   comment: text) -> (ArtifactReview);
+  updateInterOrganismState: (organism: text, orgState: text) -> ();
+  /// Update the lastAppliedBeat for a law record by its numeric ID.
+  /// Distinct from VaultMixin.injectLawToDoctrineState (which uses Text lawId).
+  updateLawAppliedBeat: (lawId: nat) -> (variant {
+                                           err: text;
+                                           ok: bool;
+                                         });
+  updatePipelineStage: (stage: text, progress: nat) -> ();
+  updateRelationshipAfterProduction: (actorA: text, actorB: text,
+   doctrineAlignmentDiff: float64) -> ();
+  updateSandboxLedgerInputs: (commercialCount: nat, filmCount: nat,
+   beatCount: nat) -> ();
+  /// Update SETTINGS_PROTOCOL — only allowed when infrastructure is not locked.
+  updateSettingsProtocol: (heartbeatOverrideMs: opt nat, sensorSensitivity:
+   opt float64, dispatchSpeed: opt float64, doctrineRefreshRate:
+   opt float64) -> (bool);
+  validateArtifactDoctrine: (artifactId: text, content: text, archType:
+   text) -> (DoctrineValidationResult__1);
+  /// GAP_9: Validate director input against active doctrine laws.
+  validateDirectorInput: (input: text, activeLawIds: vec nat) ->
+   (DirectorValidationResult) query;
+  validateDoctrineAlignment: (prompt: text) ->
+   (DoctrineValidationResult) query;
+  validateFrameCount: (frameCount: nat, format: ProductionFormat) ->
+   (bool) query;
+  verifyAttributionRights: (filmId: text) ->
+   (opt record {
+          isVerified: bool;
+          law: text;
+          note: text;
+          producer: text;
+        }) query;
+  writeSharedSceneDelta: (sourceActorId: text, targetActorId: text,
+   doctrineAlignment: float64, emotionalIntensity: float64) -> ();
+}

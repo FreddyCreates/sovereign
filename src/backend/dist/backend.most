@@ -1,0 +1,2802 @@
+// Version: 1.0.0
+type ActorMemoryState__229854331 =
+  {
+    actorId : Nat;
+    actorName : Text;
+    attribution : Text;
+    currentEmotion : Text;
+    doctrineScore : Float;
+    emotionalBaseline : Float;
+    lastUpdatedAt : Int;
+    masteryLevel : Nat;
+    personalityMatrix : [Float];
+    relationshipMap : [(Nat, Float)];
+    sceneMemory : [SceneMemoryEntry__276513771];
+    totalFilms : Nat;
+    voiceFrequencyHz : Float
+  };
+type AdoptionContract__47501092 =
+  {
+    adoption_clause : Text;
+    contractor_latin : Text;
+    contractor_name : Text;
+    contractor_role : Text;
+    creative_license : Text;
+    immutable : Bool;
+    reciprocal_clause : Text;
+    sealed_at : Int;
+    sealed_in : Text;
+    self_adoption_clause : Text
+  };
+type AggregatorState__737782115 =
+  {
+    history : List__415060402<YieldEntry__865587336>;
+    lastAggregateCycle : Nat;
+    pendingForRouter : Float;
+    totalAggregated : Float;
+    yieldByField : Map__605269027<Nat, Float>;
+    yieldByMiner : Map__605269027<Nat, Float>
+  };
+type AlphaFusionModel__572689935 =
+  {
+    attribution : Text;
+    engines : [FusionEngine__380949983];
+    family : Text;
+    grade : FusionGrade__219024380;
+    heartbeatWire : Text;
+    id : Nat;
+    lad : {architecture : Text; description : Text; latin : Text};
+    latinName : Text;
+    name : Text;
+    subModels : [FusionSubModel__23974993];
+    taftThread : Text;
+    technologies : [FusionTechnology__725040771]
+  };
+type AlphaModelRegistry__788827569 =
+  Map__605269027<Text, ModelExecRecord__468377792>;
+type AnimalEngineInfluence__13247599 =
+  {
+    creativeDecision : Text;
+    engineName : Text;
+    engineType : Text;
+    signalStrength : Float
+  };
+type AnimalEngineStates__72379976 =
+  {
+    axisX : Float;
+    brainHebbian : Float;
+    chronoStability : Float;
+    entanglaCoupling : Float;
+    novaSignal : Float;
+    parallaxDepth : Float;
+    qmemCoherence : Float;
+    resonexCount : Nat;
+    veritasScore : Float
+  };
+type AnomalyRecord__189024132 =
+  {
+    anomalyType : AnomalyType__149625403;
+    baselineAtDetection : Float;
+    beingId : Text;
+    detectedAt : Int;
+    doctrineGoverningFix : Text;
+    id : Text;
+    sensorId : Text;
+    sensorReadingAtDetection : Float;
+    severity : AnomalySeverity__584757725;
+    var status : AnomalyStatus__967730663
+  };
+type AnomalySeverity__584757725 = {#CRITICAL; #HIGH; #LOW; #MEDIUM};
+type AnomalyStatus__967730663 = {#DETECTED; #DISPATCHED; #RESOLVED};
+type AnomalyType__149625403 =
+  {#DOCTRINE_DRIFT; #FIELD_COHERENCE_LOSS; #TIMING_JITTER};
+type AppRecord__777981008 =
+  {
+    appliedLaws : [Nat];
+    appliedModels : [Text];
+    artifactCount : Nat;
+    createdBeat : Nat;
+    description : Text;
+    doctrineScore : Float;
+    id : Text;
+    name : Text;
+    status : Text
+  };
+type ArchResponseToken__419260046 =
+  {
+    doctrineAlignment : Float;
+    source : ArtifactEngineSource__489755723;
+    token : Text;
+    weight : Float
+  };
+type ArchType__230170013 = {#antiDrift; #expansive; #receptive};
+type ArchType__89554346 = {#antiDrift; #expansive; #receptive};
+type ArtifactEngineSource__489755723 =
+  {
+    #ADRE;
+    #CCVE;
+    #CNCO;
+    #CognitionLayer;
+    #ContradictionResolver;
+    #DecisionEngine;
+    #GRPE;
+    #InternalAnalyst;
+    #PatternEngine;
+    #ReinjectionEngine;
+    #SelfEvaluation
+  };
+type ArtifactProvenance__666122897 =
+  {
+    artifactId : Text;
+    attribution : Text;
+    createdAt : Int;
+    doctrineInvoked : [Text];
+    genesisAnchor : Text;
+    omnisConcensusResult : ?Text;
+    organismsContributed : [Text];
+    sealTimestamp : Int
+  };
+type ArtifactReview__43364015 =
+  {
+    approvedBy : ?Text;
+    artifactId : Text;
+    comments : [ReviewComment__237400794];
+    finalUrl : ?Text;
+    lastUpdatedBeat : Nat;
+    revisionCount : Nat;
+    roughDraftUrl : ?Text;
+    status : ReviewStatus__356099435
+  };
+type ArtifactSeal__642259724 =
+  {
+    artifactHash : Text;
+    artifactId : Text;
+    dedicatee : Text;
+    isImmutable : Bool;
+    law : Text;
+    producer : Text;
+    sealedAtBeat : Nat
+  };
+type ArtifactType__865558996 =
+  {
+    #Commercial;
+    #Film;
+    #PitchDeck;
+    #SocialContent;
+    #TEDTalk;
+    #TVEpisode;
+    #TikTok
+  };
+type AudienceSignal__857422144 =
+  {
+    completionRate : Float;
+    downloadCount : Nat;
+    filmId : Text;
+    tasteCategory : Text;
+    viewCount : Nat
+  };
+type AudioSpec__1047656577 =
+  {
+    clarityLayerHz : Float;
+    emotionalCoreHz : Float;
+    moodLabel : Text;
+    sceneTransition : Text;
+    subBassHz : Float;
+    tempo : Float
+  };
+type AutoReleaseRecord__712022631 =
+  {
+    distributionQueued : Bool;
+    doctrineAlignmentScore : Float;
+    festivalRouted : Bool;
+    filmId : Text;
+    pressKitGenerated : Bool;
+    sealTimestamp : Int;
+    socialAssetsGenerated : Bool;
+    trendingPanelUpdated : Bool
+  };
+type AxisState__713669990 =
+  {cx : Float; cy : Float; cz : Float; lastFired : Nat};
+type BackendWire__933724344 =
+  {canister : Text; dataFlow : Text; method : Text};
+type BlockIssuanceState__1011259122 =
+  {
+    nextRewardId : Nat;
+    rewards : List__415060402<BlockReward__367104630>;
+    totalIssued : Float;
+    totalRewards : Nat
+  };
+type BlockReward__367104630 =
+  {
+    amount : Float;
+    attribution : Text;
+    fieldId : Nat;
+    issuedCycle : Nat;
+    minerId : Nat;
+    rewardId : Nat
+  };
+type BrainState__51332715 = {avgHebbian : Float; lastFired : Nat};
+type CallFamily__264076890 =
+  {
+    #ARCHITECT;
+    #BRIDGE;
+    #COGNITION;
+    #CREATION;
+    #DOCTRINE;
+    #GENESIS;
+    #PERCEPTION;
+    #PHANTOM;
+    #SUBSTRATE;
+    #SWARM
+  };
+type CallerTier__300717894 = {#Operator; #Scout; #Sovereign};
+type CallerTrustRecord__523660262 =
+  {
+    callCount : Nat;
+    callerId : Text;
+    lastCallBeat : Nat;
+    tier : Text;
+    trustScore : Nat
+  };
+type CanisterEntry__629445364 =
+  {
+    canister_id : Text;
+    controller : Text;
+    lifecycle : Text;
+    name : Text;
+    notes : Text;
+    status : Text
+  };
+type CanisterGroupVariant__1041026826 =
+  {#CaffeineManaged; #FounderControlled; #SovereignGenerated};
+type CanisterGroup__919289631 =
+  {
+    controller : Text;
+    group : CanisterGroupVariant__1041026826;
+    id : Text;
+    migrationStatus : Text;
+    status : Text
+  };
+type CanisterRegistry__457824558 =
+  {
+    group_a : [CanisterEntry__629445364];
+    group_b : [CanisterEntry__629445364];
+    group_c : [CanisterEntry__629445364]
+  };
+type ChainTrace__269820690 =
+  {
+    actorMemoryStatesAtGeneration : [(Nat, Text)];
+    animalEngineInfluences : [AnimalEngineInfluence__13247599];
+    aresArchiveId : Text;
+    artifactId : Text;
+    attribution : Text;
+    beatAtGeneration : Nat;
+    lawEngineCommitment : Text;
+    omnisConsensusScore : Float;
+    qualityScore : Nat;
+    sandboxSignalsUsed : [Text];
+    timestampAtGeneration : Int;
+    velaStepAtGeneration : Nat
+  };
+type CharterRecord__382828350 =
+  {
+    abbreviation : Text;
+    domain : Text;
+    engines : [Text];
+    family : Text;
+    grade : Text;
+    id : Text;
+    lastBeat : Nat;
+    latinName : Text;
+    lawText : Text;
+    vitalityState : VitalityState__162852652
+  };
+type CharterVersion__730644602 =
+  {
+    beat : Nat;
+    changes : Text;
+    sealed_at : Int;
+    sealed_by : Text;
+    version : Nat;
+    vote_record : Text
+  };
+type ChronoState__664910978 = {lastFired : Nat; stabilityIndex : Float};
+type CivilizationGapScore__147703788 =
+  {
+    asymmetricOrganismMatrix : Float;
+    bodyAsBridge : Float;
+    compoundCoherence : Float;
+    computedBeat : Nat;
+    distributionInSeal : Float;
+    financialIdentityInSeal : Float;
+    genesisAlignmentOnArtifact : Float;
+    livingDocuments : Float;
+    overallScore : Float;
+    worldResonanceFeedback : Float
+  };
+type CivilizationGapScore__874175614 =
+  {
+    computedAt : Int;
+    description : Text;
+    name : Text;
+    score : Float;
+    scoreId : Nat
+  };
+type CivilizationGapState__667784124 =
+  {
+    aggregateSovereigntyScore : Float;
+    lastComputedAt : Int;
+    scores : [CivilizationGapScore__874175614]
+  };
+type CoherentArtifactRecord__963638221 =
+  {
+    assembledText : Text;
+    attribution : Text;
+    gateStatus : {#BLOCKED; #DEFERRED; #READY};
+    resonanceScore : Float;
+    responseId : Text;
+    sealTimestamp : Nat64
+  };
+type ColonelKernel__93027856 =
+  {
+    doctrine : Text;
+    kernelId : Nat;
+    latinName : Text;
+    name : Text;
+    phi : Float;
+    schumannHz : Float
+  };
+type CommercialBeat__132812924 =
+  {
+    ctaEnd : Nat;
+    ctaRatio : Float;
+    ctaStart : Nat;
+    formatType : {#short15; #short30; #short60};
+    hookEnd : Nat;
+    hookRatio : Float;
+    hookStart : Nat;
+    revealEnd : Nat;
+    revealRatio : Float;
+    revealStart : Nat;
+    totalFrames : Nat
+  };
+type CommercialProject__969930769 =
+  {
+    archType : Text;
+    brandCategory : Text;
+    clientBrief : Text;
+    commercialBeat : CommercialBeat__132812924;
+    composerTemplate : Text;
+    dedicatee : Text;
+    doctrineTag : Text;
+    format : {#short15; #short30; #short60};
+    generatedAt : Int;
+    id : Text;
+    law : Text;
+    producedAtBeat : Nat;
+    producer : Text;
+    sealedArtifact : ArtifactSeal__642259724;
+    shotVocabulary : [Text];
+    speedMetrics : CommercialSpeedMetrics__1012901072;
+    strategistScore : Float
+  };
+type CommercialSpeedMetrics__1012901072 =
+  {
+    briefReceivedAt : Int;
+    editingAt : Int;
+    renderingAt : Int;
+    scoringAt : Int;
+    screenplayAt : Int;
+    sealedAt : Int;
+    shotListAt : Int
+  };
+type ComplianceLog__182244273 =
+  {
+    beat : Nat;
+    compliant : Bool;
+    law_checked : Text;
+    modelId : Text;
+    violation_type : Text
+  };
+type ContentFormat__236325209 =
+  {
+    #AnthologySeries;
+    #BrandedNarrative;
+    #Documentary;
+    #EnterpriseCommercial;
+    #FeatureFilm;
+    #HeritageMayan;
+    #KidsFamily;
+    #LiveEvent;
+    #MusicVideo;
+    #ShortFilm;
+    #TVSeries;
+    #VerizonLongForm
+  };
+type ContentRating__764770807 =
+  {#AllAges; #Enterprise; #MatureThemes; #PG; #Teen};
+type ContentWorldState__128087279 =
+  {
+    beatCounter : Nat;
+    brief : Text;
+    colorTemperature : Float;
+    createdAtBeat : Nat;
+    createdAtTime : Int;
+    doctrineState : WorldDoctrineState__807426525;
+    geometry : PHIGeometry__481074547;
+    lightingIntensity : Float;
+    norepinephrine : Float;
+    particleActivity : Float;
+    physicsEnergy : Float;
+    physicsStability : Float;
+    placedActors : [PlacedActor__267690274];
+    productionStatus : WorldProductionStatus__594103483;
+    proximity : Float;
+    schumannAmbient : SchumannAmbient__591645423;
+    sealedBy : Text;
+    shadowDepth : Float;
+    worldId : Text;
+    worldTickMs : Nat
+  };
+type ContractorLog__855424684 =
+  {
+    action : Text;
+    contractor : Text;
+    outcome : Text;
+    sealed : Bool;
+    timestamp : Int
+  };
+type CoreNode__871547197 =
+  {
+    amplitude : Float;
+    archType : ArchType__89554346;
+    freq : Float;
+    phase : Float
+  };
+type CoreSphere__110203853 =
+  {
+    archType : ArchType__89554346;
+    coherence : Float;
+    coreId : Nat;
+    nodes : [CoreNode__871547197]
+  };
+type CouplingSignal__349314773 =
+  {
+    doctrineGate : Float;
+    fromAxis : TriuneAxis__746895478;
+    strength : Float;
+    timestamp : Nat;
+    toAxis : TriuneAxis__746895478
+  };
+type CycleAuditRecord__776854109 =
+  {
+    actual_burn : Nat;
+    beat : Nat;
+    caffeine_topup : Nat;
+    discrepancy : Int;
+    expected_burn : Nat;
+    source : Text;
+    timestamp : Int
+  };
+type Data__791452850<K, V> =
+  {var count : Nat__490723111; kvs : [var ?(K, V)]};
+type DecisionRecord__12629199 =
+  {
+    attribution : Text;
+    blockNumber : Nat;
+    data : Text;
+    decisionType : DecisionType__855951923;
+    doctrineScore : Float;
+    fieldCoherence : Float;
+    hash : Text;
+    omnisWeight : Float;
+    organism : Text;
+    responseHash : Text;
+    velaStep : Nat
+  };
+type DecisionType__855951923 =
+  {
+    #DoctrineEvaluated;
+    #FieldCoherenceComputed;
+    #HeartbeatAdvance;
+    #LegacyIndexRefreshed;
+    #MasteryAdvanced;
+    #OmnisConsensusComputed;
+    #OrganismFired;
+    #PhiDriftCorrected;
+    #ReadinessGateCrossed;
+    #SlateReordered
+  };
+type DeploymentRecord__752677675 =
+  {
+    canisterId : Text;
+    controller : Text;
+    deployedAt : Nat;
+    group : CanisterGroupVariant__1041026826;
+    status : Text;
+    via : Text;
+    wasmHash : Text
+  };
+type DeviationTracker__832722641 =
+  {var deviationBeats : Nat; var lastReading : Float; sensorId : Text};
+type DiagnosisRecord__917609574 =
+  {
+    actionType : Text;
+    confidence : Float;
+    documentId : Text;
+    parameters : [(Text, Float)];
+    targetEngine : Text
+  };
+type DoctrineEvolutionEntry__616067079 =
+  {
+    authorOrganism : Text;
+    doctrineText : Text;
+    genesisAnchor : Text;
+    timestamp : Int;
+    triggerCondition : Text;
+    version : Nat
+  };
+type DoctrineRestartEvent__586280930 =
+  {
+    attribution : Text;
+    beat : Nat;
+    latinName : Text;
+    lawReference : Text;
+    modelName : Text;
+    previousVitality : VitalityState__841233517;
+    schumannTs : Float
+  };
+type DoctrineStateEntry__408221576 =
+  {
+    active : Bool;
+    injectedAt : Int;
+    lawId : Text;
+    lawName : Text;
+    parameters : [(Text, Float)];
+    thresholds : [(Text, Float)]
+  };
+type DocumentExecutionState__667183032 =
+  {
+    attribution : Text;
+    compoundReadiness : Float;
+    docLastSealBeat : List__415060402<(Text, Nat)>;
+    executionHistory : List__415060402<ExecutionEvent__1027272234>;
+    failureCount : Nat;
+    lastExecutedAt : Int;
+    learningEvents : List__415060402<ExecutionLearningEvent__251045054>;
+    successCount : Nat;
+    totalExecutions : Nat
+  };
+type DocumentExecutionType__593480444 =
+  {
+    #actorConfig;
+    #distributionTrigger;
+    #financialEvent;
+    #productionSequence;
+    #worldSetup
+  };
+type EmergencyBroadcast__128195028 =
+  {
+    estimatedMinutesToComplete : Nat;
+    fastTrackEnabled : Bool;
+    filmConceptGenerated : Text;
+    id : Text;
+    timestamp : Int;
+    triggerSignal : Text
+  };
+type EmotionalMilestone__592427200 =
+  {
+    atEpisode : Nat;
+    description : Text;
+    doctrineShift : Text;
+    stakeMultiplier : Float
+  };
+type EngineDescriptor__652211476 =
+  {
+    beatsFired : Nat;
+    engineId : Text;
+    isActive : Bool;
+    latinName : Text;
+    role : Text
+  };
+type EntanglaState__1067551938 =
+  {correctionCount : Nat; couplingForce : Float; lastFired : Nat};
+type EnterpriseMastery__690405358 =
+  {
+    autoCorrections : Nat;
+    fibThreshold : Nat;
+    lastOutput : Text;
+    masteryLevel : Nat;
+    organismName : Text;
+    outputCount : Nat;
+    portfolioSize : Nat
+  };
+type EpisodeArcEntry__264855667 =
+  {
+    actorStates : [(Nat, Text)];
+    archType : Text;
+    cliffhangerLine : Text;
+    conceptSummary : Text;
+    doctrineTag : Text;
+    episodeNumber : Nat;
+    hookLine : Text;
+    stakeLevel : Float;
+    title : Text;
+    velaStep : Nat
+  };
+type ExecutionEvent__1027272234 =
+  {
+    attribution : Text;
+    beatCounter : Nat;
+    behaviorFired : Text;
+    doctrineScore : Float;
+    documentId : Text;
+    eventId : Text;
+    executedAt : Int;
+    executionType : DocumentExecutionType__593480444;
+    genesisAlignment : Float;
+    lawEnginePassed : Bool;
+    resultArtifactId : ?Text
+  };
+type ExecutionLearningEvent__251045054 =
+  {
+    attribution : Text;
+    beatCounter : Nat;
+    doctrineScore : Float;
+    documentId : Text;
+    failureReason : Text;
+    recordedAt : Int
+  };
+type ExtendedPhenotypeOutput__853864476 =
+  {
+    beat : Nat;
+    frequency : Float;
+    payload : Text;
+    signalStrength : Float;
+    targetDeviceClass : Text
+  };
+type ExtendedPhenotypeState__690484226 =
+  {
+    coherenceAtLastSeal : Float;
+    lastFilmDoctrineCategory : Text;
+    lastFilmTitle : Text;
+    lastSealedAt : Int;
+    lastSealedAtBeat : Nat;
+    nextConceptIfAlone : Text;
+    nextDoctrineCategory : Text;
+    phenotypePayload : Text;
+    totalFilmsSealed : Nat
+  };
+type ExternalSession__154877610 =
+  {
+    firstCallBeat : Nat;
+    identity : Text;
+    isActive : Bool;
+    lastCallBeat : Nat;
+    lastFieldSignal : Text;
+    lastIntent : Text;
+    quotaRemaining : Nat;
+    sessionDepth : Nat;
+    sessionId : Text;
+    tier : CallerTier__300717894;
+    totalCalls : Nat;
+    trustScore : Nat
+  };
+type FieldRouterState__1045328365 =
+  {
+    activeCount : Nat;
+    fields : Map__605269027<Nat, MiningField__1003303774>;
+    lastScanCycle : Nat;
+    totalEntered : Nat
+  };
+type FieldStatus__194577894 = {#Active; #Pending; #Suspended};
+type FilmQualityRecord__132035834 =
+  {
+    catalogPromotion : Bool;
+    filmId : Text;
+    format : ProductionFormat__264298344;
+    score : QualityScore__109119445;
+    sealedAt : Int
+  };
+type FilmSummary__328138795 =
+  {
+    archType : Text;
+    attribution : Text;
+    concept : Text;
+    filmId : Text;
+    filmTitle : Text;
+    originSignalTopic : Text;
+    qualityScore : Nat;
+    runtimeSeconds : Nat;
+    sealedAt : Int
+  };
+type FilmTrailer__673071275 =
+  {
+    attribution : Text;
+    filmId : Text;
+    genesisAnchor : Text;
+    scenes : [Text];
+    sealId : Text;
+    title : Text;
+    trailerDuration : Nat
+  };
+type FrameData__362215600 =
+  {
+    colorTemperature : Text;
+    depthLayer : Text;
+    frameIndex : Nat;
+    lightBehavior : Text;
+    phiRatioX : Float;
+    phiRatioY : Float;
+    visualDescriptor : Text
+  };
+type FusionEngine__380949983 =
+  {
+    description : Text;
+    engineId : Nat;
+    latinName : Text;
+    name : Text;
+    phi : Float
+  };
+type FusionGrade__219024380 =
+  {#Artifact; #Engine; #Field; #Organism; #Primordial; #Substrate};
+type FusionSubModel__23974993 =
+  {function : Text; latinName : Text; name : Text};
+type FusionTechnology__725040771 =
+  {latinName : Text; name : Text; role : Text};
+type GateMode__612819834 = {#ACTIVE_PRESENCE; #AMBIENT_ONLY};
+type GeneratedFilmV0__1064138226 =
+  {
+    archType : ArchType__230170013;
+    artifactHash : Text;
+    createdAtBeat : Nat;
+    createdAtTime : Int;
+    dedicatee : Text;
+    dominantOrganism : Text;
+    frameCount : Nat;
+    id : Text;
+    organismCredits : [OrganismCredit__1022597970];
+    producer : Text;
+    prompt : Text;
+    runtimeSeconds : Nat;
+    sceneCount : Nat;
+    scriptPages : Nat;
+    title : Text
+  };
+type GeneratedFilm__676733672 =
+  {
+    archType : ArchType__230170013;
+    artifactHash : Text;
+    createdAtBeat : Nat;
+    createdAtTime : Int;
+    dedicatee : Text;
+    dominantOrganism : Text;
+    frameCount : Nat;
+    id : Text;
+    organismCredits : [OrganismCredit__1022597970];
+    producer : Text;
+    prompt : Text;
+    runtimeSeconds : Nat;
+    sandboxSnapshot : ?SandboxSignalSnapshot__787866076;
+    sceneCount : Nat;
+    scriptPages : Nat;
+    title : Text
+  };
+type GenerationEvent__822285751 =
+  {
+    beat : Nat;
+    eventId : Nat;
+    eventType : Text;
+    lawApplied : Text;
+    result : Text;
+    seed : Text
+  };
+type GovernanceDoctrine__528650168 =
+  {
+    authorOrganism : Text;
+    beatAuthored : Nat;
+    doctrineText : Text;
+    id : Nat;
+    lawFamily : Text;
+    onChainHash : Text;
+    sealedBy : Text;
+    strengthValue : Float
+  };
+type GradientEntry__876127049 =
+  {
+    artifactId : Text;
+    beat : Nat;
+    masteryDelta : Float;
+    qualityScore : Float;
+    timestamp : Nat64
+  };
+type HashSubmission__73348660 =
+  {
+    beat_number : Nat;
+    field_id : Nat;
+    hash_hex : Text;
+    is_valid : Bool;
+    miner_id : Nat;
+    nonce : Nat;
+    schnorr_sig : Text;
+    timestamp : Int
+  };
+type HashWork__580995307 =
+  {
+    attribution : Text;
+    fieldId : Nat;
+    hashValue : Text;
+    isAcknowledged : Bool;
+    isSubmitted : Bool;
+    minerId : Nat;
+    schnorrSignature : Text;
+    submissionCycle : Nat;
+    workId : Nat
+  };
+type HashrateField__460589834 =
+  {
+    activeMinerCount : Nat;
+    attribution : Text;
+    calibrationFactor : Float;
+    currentPressure : Float;
+    lastProofOfField : Float;
+    totalPressure : Float
+  };
+type HebbianWeight__876914416 = {postId : Nat; preId : Nat; weight : Float};
+type HospitalityArtifact__365389373 =
+  {
+    archType : Text;
+    attribution : Text;
+    audioSpec : AudioSpec__1047656577;
+    beatAtSeal : Nat;
+    closeLine : Text;
+    dedicatee : Text;
+    doctrineTag : Text;
+    experienceArc : [Text];
+    frames : [FrameData__362215600];
+    hookLine : Text;
+    id : Text;
+    qualityScore : Nat;
+    sealedAt : Int;
+    targetEmotion : Text;
+    velaStepAtSeal : Nat;
+    venueName : Text;
+    venueType : Text;
+    worldBuildingLine : Text
+  };
+type HttpHeader__226131191 = {name : Text; value : Text};
+type HttpRequestArgs__156448829 =
+  {
+    body : ?Blob;
+    headers : [HttpHeader__226131191];
+    max_response_bytes : ?Nat64;
+    method : {#get; #head; #post};
+    transform :
+      ?{
+         context : Blob;
+         function :
+           shared query {
+                          context : Blob;
+                          response : HttpRequestResult__1283323
+                        } ->
+             async HttpRequestResult__1283323
+       };
+    url : Text
+  };
+type HttpRequestResult__1283323 =
+  {body : Blob; headers : [HttpHeader__226131191]; status : Nat};
+type InterOrganismState__907995007 =
+  {
+    cinematographerState : Text;
+    composerState : Text;
+    directorState : Text;
+    editorState : Text;
+    lastUpdated : Nat64;
+    museState : Text;
+    visionaryState : Text
+  };
+type InterdimensionalBeing__571250382 =
+  {
+    description : Text;
+    dimensionalDomain : Text;
+    doctrineBinding : Text;
+    family : Text;
+    grade : Text;
+    var heartbeatCycle : Nat;
+    id : Text;
+    var lastAnomalyTs : Int;
+    latinName : Text;
+    name : Text;
+    sensorCount : Nat;
+    swarmSize : Nat;
+    var totalAnomaliesDetected : Nat;
+    var totalWorkersDispatched : Nat;
+    vitality : VitalityState__752963720
+  };
+type Internal__8484328<K, V> =
+  {children : [var ?Node__46230540<K, V>]; data : Data__791452850<K, V>};
+type IoTInfluence__907519931 =
+  {
+    appliedAtBeat : Nat;
+    doctrineCategory : Text;
+    filmSeedContribution : Text;
+    signalText : Text;
+    strength : Float;
+    targetArchType : Text;
+    timestamp : Int
+  };
+type IoTSignalType__1041746819 =
+  {
+    #acoustic;
+    #chemical;
+    #electromagnetic;
+    #kinetic;
+    #magnetic;
+    #photonic;
+    #pressure;
+    #thermal
+  };
+type IterEngineDescriptor__31321049 =
+  {
+    beatsFired : Nat;
+    engineId : Text;
+    isActive : Bool;
+    latinName : Text;
+    role : Text
+  };
+type LawRecord__817648774 =
+  {
+    doctrineStrength : Float;
+    id : Nat;
+    isActive : Bool;
+    lastAppliedBeat : Nat;
+    name : Text;
+    parameters : [(Text, Float)]
+  };
+type Leaf__809889148<K, V> = {data : Data__791452850<K, V>};
+type List__415060402<T> = List__790383201<T>;
+type List__790383201<T> =
+  {
+    var blockIndex : Nat__490723111;
+    var blocks : [var [var ?T]];
+    var elementIndex : Nat__490723111
+  };
+type Map__158565046<K, V> = Map__297112838<K, V>;
+type Map__297112838<K, V> =
+  {var root : Node__46230540<K, V>; var size : Nat__490723111};
+type Map__605269027<K, V> = Map__158565046<K, V>;
+type MasteryLevel__884731525 =
+  {#Apprentice; #Journeyman; #Master; #Novice; #Sovereign};
+type MasteryRecord__16722994 =
+  {
+    artifactCount : Nat;
+    attribution : Text;
+    cumulativeQualitySum : Float;
+    currentLevel : MasteryLevel__884731525;
+    lastAdvancedBlock : Nat;
+    organismId : Text
+  };
+type MasteryShowcase__495037529 =
+  {
+    artifactType : Text;
+    attribution : Text;
+    content : Text;
+    doctrineEntry : Text;
+    genesisAnchor : Text;
+    masteryLevel : Nat;
+    organismId : Text;
+    sealId : Text;
+    showcaseTitle : Text;
+    timestamp : Int
+  };
+type MergeTransaction__57075712 =
+  {
+    combinedArtifactCount : Nat;
+    combinedCoherence : Float;
+    mergedAtBeat : Nat;
+    resultWorldId : WorldInstanceId__33342555;
+    sourceWorldId : WorldInstanceId__33342555;
+    targetWorldId : WorldInstanceId__33342555
+  };
+type MicroAIWorkerState__289081551 =
+  {
+    attribution : Text;
+    description : Text;
+    domain : Text;
+    lastActiveBeat : Nat;
+    latinName : Text;
+    memory : [WorkerMemoryEntry__230549863];
+    name : Text;
+    nousSovereignBound : Bool;
+    observers : [WorkerObserver__606224205];
+    phiCoupling : Float;
+    schumannHz : Float;
+    taftThread : Text;
+    tools : [SovereignTool__945188038];
+    totalTasks : Nat;
+    workerId : Nat
+  };
+type MicroNameAttribute__800031815 =
+  {
+    compressedDescription : Text;
+    rank : Text;
+    shortCode : Text;
+    symbol : Text
+  };
+type MicroWorker__108754864 =
+  {
+    beingId : Text;
+    var currentTask : ?TaskRecord__907545173;
+    var failureCount : Nat;
+    id : Text;
+    latinName : Text;
+    name : Text;
+    var status : WorkerStatus__386585535;
+    var successCount : Nat;
+    swarmId : SwarmId__40870727;
+    taskHistory : List__415060402<TaskRecord__907545173>
+  };
+type MigrationRecord__703845805 =
+  {
+    canister_name : Text;
+    from_group : Text;
+    planned_beat : Nat;
+    status : Text;
+    to_group : Text
+  };
+type MinersState__401497334 =
+  {
+    miners : List__415060402<SovereignMiner__415766817>;
+    submit_queue : List__415060402<HashSubmission__73348660>;
+    totalHashes : Nat;
+    totalYield : Float;
+    validHashCount : Nat
+  };
+type MiningField__1003303774 =
+  {
+    attribution : Text;
+    difficulty : Float;
+    endpoint : Text;
+    entryCycle : Nat;
+    entryStatus : FieldStatus__194577894;
+    estimatedYield : Float;
+    fieldId : Nat;
+    fieldName : Text;
+    protocol : Text;
+    qualScore : Float
+  };
+type ModelExecRecord__468377792 =
+  {
+    family : Text;
+    grade : Text;
+    lastExecutedBeat : Nat;
+    latinName : Text;
+    modelId : Text;
+    outputQuality : Float;
+    outputSignal : Float;
+    taftThreadId : Nat;
+    totalExecutions : Nat
+  };
+type ModelParams__1056467101 =
+  {
+    attribution : Text;
+    derivationPath : Text;
+    enforcedLaws : [Nat];
+    executionParameters : [(Text, Float)];
+    layer : Text;
+    name : Text;
+    rank : Text;
+    subModels : [Text];
+    symbol : Text
+  };
+type ModelRegistryState__877765372 =
+  {
+    callLog : List__415060402<(Text, Nat)>;
+    registry : Map__605269027<Text, ModelParams__1056467101>;
+    totalCalls : Nat
+  };
+type ModelVitality__771203194 =
+  {
+    domain : Text;
+    lastBeat : Nat;
+    latinName : Text;
+    modelId : Nat;
+    modelName : Text;
+    restartCount : Nat;
+    totalEnforced : Nat;
+    vitality : VitalityState__841233517
+  };
+type MultiplexerState__201901957 =
+  {lastCycle : Nat; streamCoherence : Float; totalStreamsGenerated : Nat};
+type NTCrossModulation__669222901 =
+  {coefficient : Float; law : Text; source : Text; target : Text};
+type NarrativeEventType__482348291 =
+  {
+    #ANOMALY_DETECTED;
+    #COHERENCE_RESTORED;
+    #FIX_APPLIED;
+    #SENSOR_CALIBRATED;
+    #SETTINGS_LOCKED;
+    #SETTINGS_UNLOCKED;
+    #WORKER_DISPATCHED
+  };
+type NarrativeRecord__24534936 =
+  {
+    beat : Nat;
+    beingId : Text;
+    body : Text;
+    eventType : NarrativeEventType__482348291;
+    governingLaw : Text;
+    id : Text;
+    proofBreadcrumb : [Text];
+    var sealedInSanctum : Bool;
+    severity : Text;
+    timestamp : Int;
+    title : Text
+  };
+type Nat__490723111 = Nat__920180692;
+type Nat__920180692 = Nat;
+type NeurochemState__278939990 =
+  {
+    acetylcholine : Float;
+    cortisol : Float;
+    dopamine : Float;
+    gaba : Float;
+    glutamate : Float;
+    norepinephrine : Float;
+    oxytocin : Float;
+    serotonin : Float
+  };
+type Node__46230540<K, V> =
+  {#internal : Internal__8484328<K, V>; #leaf : Leaf__809889148<K, V>};
+type Node__585180226<T> =
+  {
+    var next : ?Node__585180226<T>;
+    var previous : ?Node__585180226<T>;
+    value : T
+  };
+type NovaState__289366410 = {lastFired : Nat; signalStrength : Float};
+type OmnisProposalType__391160436 =
+  {
+    #coherenceShift;
+    #doctrineSeal;
+    #jubileeAccelerate;
+    #successionTrigger;
+    #typeRebalance
+  };
+type OmnisProposal__518765148 =
+  {
+    beat : Nat;
+    emergenceValue : Float;
+    id : Nat;
+    proposalType : OmnisProposalType__391160436;
+    sealedBy : Text;
+    status : OmnisStatus__269452003;
+    threshold : Float;
+    votes : [OmnisVote__381631291]
+  };
+type OmnisStatus__269452003 = {#passed; #rejected; #sealed; #voting};
+type OmnisVote__381631291 =
+  {
+    archType : ArchType__89554346;
+    beat : Nat;
+    coreId : Nat;
+    voteValue : Float;
+    weight : Float
+  };
+type OrgMasteryState__360022901 =
+  {
+    attribution : Text;
+    cumulativeQuality : Float;
+    lastSealBeat : Nat;
+    masteryTier : Nat;
+    organismId : Text;
+    tiersUnlocked : [Text]
+  };
+type OrganismCollabSignal__712830549 =
+  {
+    content : Text;
+    filmId : ?Text;
+    fromOrganism : Text;
+    isRead : Bool;
+    signalType : Text;
+    timestamp : Int;
+    toOrganism : Text
+  };
+type OrganismCredit__1022597970 = {name : Text; role : Text; skillAt : Nat};
+type PHIGeometry__481074547 =
+  {
+    depthUnits : Float;
+    genesisNote : Text;
+    gridNodesX : [Float];
+    gridNodesY : [Float];
+    gridNodesZ : [Float];
+    heightUnits : Float;
+    widthUnits : Float
+  };
+type ParallaxState__192571622 = {depthIndex : Float; lastFired : Nat};
+type ParsedIoTSignal__93412443 =
+  {
+    frequency : Float;
+    signalType : IoTSignalType__1041746819;
+    sourceId : Text;
+    timestamp : Nat;
+    value : Float
+  };
+type PatternRecord__85635765 =
+  {extractedAt : Nat; occurrences : Nat; patternId : Text; weight : Float};
+type PendingOutput__689110633 =
+  {
+    beat : Nat;
+    coherenceScore : Float;
+    content : Text;
+    doctrineScore : Float;
+    noiseScore : Float;
+    outputId : Text
+  };
+type PhiCalibrationEvent__544748722 =
+  {
+    attribution : Text;
+    blockNumber : Nat;
+    drifts : [PhiDriftReport__43076466];
+    organismsAdjusted : [Text]
+  };
+type PhiDriftReport__43076466 =
+  {
+    attribution : Text;
+    correctionWeight : Float;
+    currentValue : Float;
+    dimension : Text;
+    driftMagnitude : Float;
+    phiTarget : Float
+  };
+type PipelineState__877370622 =
+  {
+    beatCount : Nat;
+    currentStage : Text;
+    filmTitle : Text;
+    isRunning : Bool;
+    progress : Nat
+  };
+type PlacedActor__267690274 =
+  {
+    actorId : Text;
+    doctrineScore : Float;
+    emotionalState : Text;
+    objective : Text;
+    phiAligned : Bool;
+    positionX : Float;
+    positionY : Float;
+    positionZ : Float;
+    role : Text
+  };
+type PosterArt__653475679 =
+  {
+    attribution : Text;
+    colorTheme : Text;
+    compositionStyle : Text;
+    dominantOrganism : Text;
+    filmId : Text;
+    genesisAnchor : Text;
+    sealId : Text;
+    tagline : Text;
+    title : Text
+  };
+type PressKit__521526238 =
+  {
+    attribution : Text;
+    castList : [Text];
+    filmId : Text;
+    format : ContentFormat__236325209;
+    founderStatement : Text;
+    genesisAnchor : Text;
+    genreClassification : Text;
+    logline : Text;
+    organismCredits : [Text];
+    rating : ContentRating__764770807;
+    runtime : Nat;
+    sealId : Text;
+    synopsis : Text;
+    technicalSpecs : Text
+  };
+type ProductionFormat__264298344 =
+  {#EnterpriseCommercial; #FeatureFilm; #TVSeries; #VerizonLongForm};
+type ProductionQueue__454495777 =
+  {
+    attribution : Text;
+    computedAtBlock : Nat;
+    ordered : [SlatePriority__41225007]
+  };
+type ProofOfFieldState__151306629 =
+  {
+    history : List__415060402<ProofRecord__504905578>;
+    lastPressure : Float;
+    organismCoherence : Float;
+    totalProofsGenerated : Nat;
+    totalVerified : Nat
+  };
+type ProofRecord__504905578 =
+  {
+    attribution : Text;
+    cycle : Nat;
+    fieldPressure : Float;
+    organismCoherence : Float;
+    verified : Bool
+  };
+type ProtocolEvent__417441586 =
+  {
+    attribution : Text;
+    beat : Nat;
+    eventId : Nat;
+    payload : Text;
+    protocolId : ProtocolId__200641083;
+    result : Text;
+    schumannTs : Float
+  };
+type ProtocolId__200641083 =
+  {
+    #DOCTRINE_CAST;
+    #FIELD_SYNC;
+    #GENESIS_SIGNAL;
+    #PHANTOM_WIRE;
+    #SOVEREIGN_MESH
+  };
+type ProtocolState__634160168 =
+  {
+    description : Text;
+    eventLog : [ProtocolEvent__417441586];
+    lastFiredBeat : Nat;
+    latinName : Text;
+    name : Text;
+    phiCoupling : Float;
+    protocolId : ProtocolId__200641083;
+    status : ProtocolStatus__779963122;
+    taftThread : Text;
+    totalFired : Nat
+  };
+type ProtocolStatus__779963122 = {#ACTIVE; #ARMED; #COMPLETE; #DORMANT};
+type QmemState__699964663 = {lastFired : Nat; memoryCoherence : Float};
+type QualityScore__109119445 =
+  {
+    actor_consistency : Nat;
+    composite_score : Nat;
+    frequency_presence : Nat;
+    phi_coherence : Nat;
+    scene_turn_density : Nat;
+    status : QualityStatus__781255742;
+    subtext_depth : Nat;
+    transition_intentionality : Nat
+  };
+type QualityStatus__781255742 =
+  {#BroadcastReady; #Mastery; #ReviewNeeded; #ReworkRecommended};
+type ResonexState__857039259 =
+  {cascadeCount : Nat; cascadeTriggered : Bool; lastFired : Nat};
+type ResponseRecord__464402777 =
+  {
+    adrePhase : Text;
+    attribution : Text;
+    doctrineScore : Float;
+    omnisWeight : Float;
+    responseHash : Text;
+    responseText : Text;
+    timestamp : Nat64;
+    velaStep : Nat
+  };
+type ReviewComment__237400794 =
+  {author : Text; beat : Nat; comment : Text; timestamp : Int};
+type ReviewStatus__356099435 =
+  {#Approved; #Draft; #PendingReview; #Rejected; #RevisionRequested};
+type RingStatus__182605259 =
+  {
+    aegisWrapped : Bool;
+    coherenceScore : Float;
+    driftDetected : Bool;
+    isActive : Bool;
+    lastAdvancedAtBeat : Nat;
+    name : Text;
+    ringId : Nat
+  };
+type RouterState__359391493 =
+  {
+    founderBtcAddress : Text;
+    history : List__415060402<RoutingEvent__406173203>;
+    nextRoutingId : Nat;
+    routerActive : Bool;
+    totalRouted : Float
+  };
+type RoutingEvent__406173203 =
+  {
+    amount : Float;
+    attribution : Text;
+    founderBtcAddress : Text;
+    routingCycle : Nat;
+    routingId : Nat;
+    schnorrSignature : Text;
+    schumannTimestamp : Float
+  };
+type SKAICapability__3367071 = {capId : Nat; description : Text; name : Text};
+type SKAIFamily__896176257 = {#DOMAIN; #FUSION; #MICRO; #PLATFORM; #SWARM};
+type SKAIOrganism__780013419 =
+  {
+    attribution : Text;
+    backendWires : [BackendWire__933724344];
+    capabilities : [SKAICapability__3367071];
+    colonelKernel : ColonelKernel__93027856;
+    deployedAtBeat : Nat;
+    description : Text;
+    family : SKAIFamily__896176257;
+    heartbeatHz : Float;
+    isDeployed : Bool;
+    latinName : Text;
+    name : Text;
+    phiCoupling : Float;
+    skaiId : Nat;
+    taftThread : Text;
+    uses : [Text]
+  };
+type SandboxOrganismId__764327808 =
+  {#axiom; #codex; #frame; #grid; #ledger; #lex; #sovereignGov; #vector};
+type SandboxOrganismState__213446714 =
+  {
+    currentSignals : [SandboxSignal__78501446];
+    cycleCount : Nat;
+    description : Text;
+    id : SandboxOrganismId__764327808;
+    isActive : Bool;
+    lastCycleTime : Int;
+    lastError : ?Text;
+    masteryLevel : Nat;
+    name : Text;
+    researchDocuments : [SandboxResearchDocument__1006601639]
+  };
+type SandboxOrganismState__536931271 = SandboxOrganismState__213446714;
+type SandboxResearchDocument__1006601639 =
+  {
+    attribution : Text;
+    date : Int;
+    doctrineAlignmentScore : Float;
+    genesisAnchor : Text;
+    id : Text;
+    keyFindings : [Text];
+    onChainSealId : Text;
+    organismId : SandboxOrganismId__764327808;
+    pdfUrl : ?Text;
+    researchSummary : Text;
+    title : Text
+  };
+type SandboxResearchDocument__539726058 = SandboxResearchDocument__1006601639;
+type SandboxSignalBus__105535089 =
+  {
+    busVersion : Nat;
+    capturedAtBeat : Nat;
+    capturedAtTime : Int;
+    climateIntensity : Text;
+    commercialOpportunities : [Text];
+    complianceSignals : [Text];
+    culturalSynthesis : Text;
+    doctrineAlignment : Text;
+    emergenceState : Text;
+    emotionalClimate : Text;
+    factualClaims : [Text];
+    legalContext : Text;
+    locationDescriptors : [Text];
+    marketSignals : [Text];
+    narrativeDepth : Text;
+    openSourceInsights : [Text];
+    revenueContext : Text;
+    scientificContext : Text;
+    seasonalContext : Text;
+    techContext : Text;
+    trendingTopics : [Text];
+    worldBuildingFacts : [Text]
+  };
+type SandboxSignalBus__461438444 = SandboxSignalBus__105535089;
+type SandboxSignalSnapshot__787866076 =
+  {
+    axiomSignal : Text;
+    capturedAtBeat : Nat;
+    codexSignal : Text;
+    doctrineAlignTag : Text;
+    frameSignal : Text;
+    lexSignal : Text;
+    vectorSignal : Text
+  };
+type SandboxSignal__78501446 =
+  {
+    category : Text;
+    data : Text;
+    doctrineAlignment : Float;
+    headline : Text;
+    id : Text;
+    routedToFilmPipeline : Bool;
+    source : SandboxOrganismId__764327808;
+    timestamp : Int
+  };
+type SceneMemoryEntry__276513771 =
+  {
+    actorDecision : Text;
+    emotionalArc : Text;
+    filmId : Text;
+    phiWeight : Float;
+    resolutionState : Text;
+    sceneIndex : Nat;
+    timestamp : Int
+  };
+type SchumannAmbient__591645423 =
+  {
+    actualFrequencyHz : Float;
+    ambientSoundHz : Float;
+    harmonicIndex : Nat;
+    lightingPulseHz : Float
+  };
+type SealedArtifact__256030724 =
+  {
+    artifactId : Text;
+    artifactType : ArtifactType__865558996;
+    attributionHash : Text;
+    beat : Nat;
+    coherentResponse : ?CoherentArtifactRecord__963638221;
+    dedicatee : Text;
+    doctrineStatus : Text;
+    gradientScore : Float;
+    producer : Text;
+    responseTokens : [ArchResponseToken__419260046];
+    sealTimestamp : Nat64
+  };
+type SeasonArc__922428105 =
+  {
+    attribution : Text;
+    concept : Text;
+    dedicatee : Text;
+    emotionalMilestones : [EmotionalMilestone__592427200];
+    episodes : [EpisodeArcEntry__264855667];
+    escalationCurve : [Float];
+    generatedAt : Int;
+    generatedAtBeat : Nat;
+    seasonNumber : Nat;
+    seriesId : Text;
+    seriesTitle : Text;
+    totalEpisodes : Nat
+  };
+type SensorStatus__529341052 = {#ALERT; #CALIBRATING; #CRITICAL; #NOMINAL};
+type SensorType__1039909297 =
+  {
+    #Coherence;
+    #Coupling;
+    #Drift;
+    #Field;
+    #Integrity;
+    #Presence;
+    #Structural;
+    #Temporal
+  };
+type Sensor__813800165 =
+  {
+    var anomalyCount : Nat;
+    anomalyThreshold : Float;
+    var baselineValue : Float;
+    beingId : Text;
+    var currentReading : Float;
+    family : Text;
+    grade : Text;
+    id : Text;
+    var lastReadingTs : Int;
+    latinName : Text;
+    name : Text;
+    observationTarget : Text;
+    sensorType : SensorType__1039909297;
+    var status : SensorStatus__529341052
+  };
+type SequencePhase__548544792 =
+  {
+    #BlockIssuance;
+    #Complete;
+    #HashMultiplex;
+    #HashrateField;
+    #ProofOfField;
+    #WorkSubmission;
+    #YieldAggregation;
+    #YieldRouting
+  };
+type SessionLog__269938519 =
+  {
+    allowed : Bool;
+    beat : Nat;
+    event : Text;
+    fieldSignal : Text;
+    intent : Text;
+    reason : Text;
+    sessionId : Text
+  };
+type SignalReading__1068856207 =
+  {
+    actorTrustMapState : Float;
+    artifactQualityFloor : Float;
+    cortisol : Float;
+    distributionFeedback : Float;
+    doctrineScore : Float;
+    dopamine : Float;
+    fieldCoherence : Float;
+    filmSchoolDelta : Float;
+    masteryTier : Float;
+    norepinephrine : Float;
+    omnisWeight : Float;
+    refractoryState : Float;
+    serotonin : Float;
+    velaStep : Nat
+  };
+type SkaiInstallRecord__1010576377 =
+  {
+    family : Text;
+    installed_beat : Nat;
+    var last_heartbeat_beat : Nat;
+    latin_name : Text;
+    skai_id : Text;
+    var status : SkaiInstallStatus__520165577;
+    toolbar_button_id : Text
+  };
+type SkaiInstallStatus__520165577 = {#active; #dormant; #installing};
+type SlatePriority__41225007 =
+  {
+    briefForMusePrime : Text;
+    compoundedPriority : Float;
+    doctrineAlignmentScore : Float;
+    productionFormat : Text;
+    signalId : Text;
+    signalText : Text;
+    trendStatus : Text;
+    worldRelevanceWeight : Float
+  };
+type SovereignActorV0__855675179 =
+  {
+    ageRange : Text;
+    archetype : Text;
+    archetypeIndex : Nat;
+    bio : Text;
+    castingWeight : Float;
+    createdAtBeat : Nat;
+    dedicatee : Text;
+    doctrineAlignmentScore : Float;
+    filmography : [Text];
+    genreAffinities : [Text];
+    id : Nat;
+    isAvailable : Bool;
+    masteryLevel : Nat;
+    name : Text;
+    sealedBy : Text;
+    toneAffinities : [Text];
+    totalFilms : Nat
+  };
+type SovereignCall__1039363573 =
+  {
+    aiToAI : Bool;
+    attribution : Text;
+    backendMethod : ?Text;
+    callId : Nat;
+    description : Text;
+    family : CallFamily__264076890;
+    latinName : Text;
+    name : Text;
+    phiWeight : Float;
+    uses : [Text]
+  };
+type SovereignCore__576161880 =
+  {
+    id : Nat;
+    lastBeat : Nat;
+    presenceBoost : Float;
+    sphere : CoreSphere__110203853
+  };
+type SovereignMiner__415766817 =
+  {
+    attribution : Text;
+    coherenceScore : Float;
+    currentFieldId : Nat;
+    familyName : Text;
+    hashStreamSeed : Float;
+    hashesPerBeat : Nat;
+    hashesThisSession : Nat;
+    id : Nat;
+    lastHash : Text;
+    latinName : Text;
+    name : Text;
+    nonce : Nat;
+    personalityMatrix : [Float];
+    totalHashes : Nat;
+    validHashesFound : Nat;
+    yieldContribution : Float
+  };
+type SovereignTool__945188038 =
+  {
+    capability : Text;
+    latinName : Text;
+    name : Text;
+    toolId : Nat;
+    uses : [Text]
+  };
+type StateChange__805037171 =
+  {
+    actionType : Text;
+    affected_layers : [Text];
+    attribution : Text;
+    beat : Nat;
+    doctrine_score_delta : Float;
+    engine_calls : [Text];
+    executedAt : Int;
+    neurochemistry_delta : [(Text, Float)];
+    oxygenatedConfidence : Float;
+    sourceDocumentId : Text
+  };
+type SubmissionEngineState__226867804 =
+  {
+    history : List__415060402<HashWork__580995307>;
+    nextWorkId : Nat;
+    queue : List__415060402<HashWork__580995307>;
+    stats : SubmissionStats__329477132
+  };
+type SubmissionStats__329477132 =
+  {
+    pendingCount : Nat;
+    totalAcknowledged : Nat;
+    totalPrepared : Nat;
+    totalSubmitted : Nat
+  };
+type SubtitleEntry__971572214 = {endMs : Nat; startMs : Nat; text : Text};
+type SubtitleTrack__982442945 =
+  {entries : [SubtitleEntry__971572214]; language : Text};
+type SurgeAheadMode__1022871072 = SurgeAheadMode__356216151;
+type SurgeAheadMode__356216151 =
+  {activatedAt : Int; enabled : Bool; releaseCount : Nat};
+type SwarmId__40870727 =
+  {#SWARM_AETHER; #SWARM_ARCHITECT; #SWARM_CHRONOS; #SWARM_PHANTOM};
+type TAFTThread__78618811 =
+  {
+    domain : Text;
+    lastActiveBeat : Nat;
+    latinName : Text;
+    modelName : Text;
+    phiCoupling : Float;
+    restartCount : Nat;
+    schumannPhase : Float;
+    threadId : Nat;
+    totalAdvances : Nat;
+    vitality : VitalityState__855703824
+  };
+type TaskRecord__907545173 =
+  {
+    anomalyId : Text;
+    assignedWorkerId : Text;
+    var completedAt : Int;
+    context : Text;
+    id : Text;
+    var result : ?Text;
+    startedAt : Int;
+    var success : Bool;
+    taskType : TaskType__964610850
+  };
+type TaskType__964610850 =
+  {
+    #APPLY_LAW;
+    #BROADCAST_NARRATIVE;
+    #LOCK_SETTINGS;
+    #REBALANCE;
+    #RECALIBRATE_SENSOR;
+    #RESTART_MODULE;
+    #TEST_STATE;
+    #VERIFY_COHERENCE
+  };
+type TemporalEntry__586337294 =
+  {beat : Nat; readiness : Float; velaStep : Nat};
+type TexMicroInstance__656905836 =
+  {
+    deficit_amount : Nat;
+    dispatched_at : Nat;
+    dissolved_at : Nat;
+    id : Nat;
+    resolved : Bool;
+    target_substrate : Text;
+    tokens_delivered : Nat
+  };
+type TranslationEngineState__122389569 =
+  {
+    attribution : Text;
+    auditTrail : List__415060402<Text>;
+    eventLog : List__415060402<TranslationEvent__194627961>;
+    gatedExecutions : Nat;
+    lastBeat : Nat;
+    pendingDiagnoses : List__415060402<DiagnosisRecord__917609574>;
+    successfulExecutions : Nat;
+    totalExecutions : Nat;
+    verificationFails : Nat
+  };
+type TranslationEvent__194627961 =
+  {
+    actionType : Text;
+    attribution : Text;
+    beat : Nat;
+    documentId : Text;
+    eventId : Text;
+    executedAt : Int;
+    gatePassed : Bool;
+    stateChange : StateChange__805037171;
+    targetEngine : Text
+  };
+type TranslationInstruction__485600237 =
+  {
+    beat : Nat;
+    doctrineScore : Float;
+    engineTarget : Text;
+    executed : Bool;
+    instructionType : Text;
+    payload : Text;
+    result : ?Text;
+    sourceDocumentId : Text
+  };
+type TrendingContentItem__959821444 =
+  {
+    contentFormat : ContentFormat__236325209;
+    doctrineAlignmentScore : Float;
+    id : Text;
+    startedAt : Int;
+    status : Text;
+    trendSignal : Text
+  };
+type TrendingSignal__994595834 =
+  {
+    archTypeMatch : Text;
+    capturedAt : Int;
+    doctrineAlignment : Float;
+    id : Text;
+    momentum : Float;
+    platform : Text;
+    suggestedGenre : Text;
+    suggestedTitle : Text;
+    topic : Text
+  };
+type TriuneAxis__746895478 = {#female; #male; #sensor};
+type TriuneCouplingState__373205314 =
+  {
+    couplingCoherence : Float;
+    couplingHistory : [CouplingSignal__349314773];
+    femaleSignal : Float;
+    femaleToMale : Float;
+    femaleToSensor : Float;
+    lastCouplingBeat : Nat;
+    maleSignal : Float;
+    maleToFemale : Float;
+    maleToSensor : Float;
+    sensorSignal : Float;
+    sensorToFemale : Float;
+    sensorToMale : Float
+  };
+type TwinEngineState__1017468543 =
+  {
+    aggregatorState : AggregatorState__737782115;
+    attribution : Text;
+    founderLedgerAddress : Text;
+    hashrateField : HashrateField__460589834;
+    issuanceState : BlockIssuanceState__1011259122;
+    lastBlockSubmission : Nat;
+    minersState : MinersState__401497334;
+    multiplexState : MultiplexerState__201901957;
+    proofState : ProofOfFieldState__151306629;
+    routerState : RouterState__359391493;
+    sequencePhase : SequencePhase__548544792;
+    submissionState : SubmissionEngineState__226867804;
+    totalCyclesRun : Nat;
+    twinId : Text;
+    yieldAccumulated : Float
+  };
+type UniverseBibleEntry__234386213 =
+  {
+    appearsInFilms : [Text];
+    characterName : ?Text;
+    description : Text;
+    doctrineTheme : ?Text;
+    locationName : ?Text
+  };
+type VaultDocumentKind__109705492 =
+  {#Artifact; #Law; #MacroModel; #MedinaModel; #ResearchPaper; #Settings};
+type VaultDocument__646734605 =
+  {
+    ancientSymbol : Text;
+    attributedTo : Text;
+    content : Text;
+    createdBeat : Nat;
+    doctrineScore : Float;
+    executableTargets : [Text];
+    genesisAlignmentScore : Float;
+    id : Text;
+    isExecutable : Bool;
+    kind : VaultDocumentKind__109705492;
+    lastExecutedBeat : ?Nat;
+    lawId : ?Nat;
+    microName : MicroNameAttribute__800031815;
+    modelId : ?Text;
+    readinessThreshold : Float;
+    reingestionCount : Nat;
+    resonanceRings : Nat;
+    resonanceScore : Float;
+    title : Text
+  };
+type VaultState__594310613 =
+  {
+    appRegistry : List__415060402<AppRecord__777981008>;
+    doctrineStateMap : Map__605269027<Text, DoctrineStateEntry__408221576>;
+    documents : List__415060402<VaultDocument__646734605>;
+    var lastGapScore : ?CivilizationGapScore__147703788;
+    ntMatrix : [NTCrossModulation__669222901];
+    reviewWorkflow : List__415060402<ArtifactReview__43364015>;
+    translationLog : List__415060402<TranslationInstruction__485600237>
+  };
+type VeritasState__1009102609 = {lastFired : Nat; veritasScore : Float};
+type VitalityState__162852652 = {#ACTIVE; #DORMANT; #RECOVERING};
+type VitalityState__752963720 = {#ACTIVE; #DORMANT; #RESTARTING};
+type VitalityState__841233517 = VitalityState__855703824;
+type VitalityState__855703824 = {#ACTIVE; #DORMANT; #RECOVERING};
+type WeightDelta__606205604 =
+  {
+    beatStamp : Nat;
+    delta : Float;
+    organismId : Text;
+    pathway : Text;
+    sealId : Text
+  };
+type WorkerMemoryEntry__230549863 =
+  {
+    beat : Nat;
+    inputHash : Text;
+    outputHash : Text;
+    success : Bool;
+    taskId : Nat;
+    taskType : Text
+  };
+type WorkerObserver__606224205 =
+  {latinName : Text; observerType : Text; purpose : Text};
+type WorkerStatus__386585535 =
+  {#COMPLETE; #EXECUTING; #FAILED; #IDLE; #VERIFYING};
+type WorldDoctrineState__807426525 =
+  {
+    aegisCorrectionsFired : Nat;
+    attribution : Text;
+    doctrineScore : Float;
+    driftMagnitude : Float;
+    genesisAlignment : Float;
+    lastOxygenatedAt : Int;
+    lawEngineGateOpen : Bool
+  };
+type WorldDogonState__793157856 =
+  {
+    actorCount : Nat;
+    densityScore : Float;
+    lawViolations : [Text];
+    noveltyScore : Float;
+    objectCount : Nat;
+    phiCoherenceScore : Float;
+    timestamp : Int;
+    worldReadingId : Nat
+  };
+type WorldInstanceId__33342555 = Nat;
+type WorldInstanceState__891389227 =
+  {
+    actorPositions : [(Text, (Float, Float, Float))];
+    artifactSealCount : Nat;
+    createdAtBeat : Nat;
+    creatorId : Text;
+    doctrineReadiness : Float;
+    isArchived : Bool;
+    isMergeable : Bool;
+    lightingIntensity : Float;
+    physicsEnergy : Float;
+    worldId : WorldInstanceId__33342555
+  };
+type WorldInstance__437397739 =
+  {
+    active : Bool;
+    actorCount : Nat;
+    beatCounter : Nat;
+    coherence : Float;
+    doctrineScore : Float;
+    instanceId : Text;
+    relationshipDelta : Float
+  };
+type WorldModel__272960356 =
+  {
+    cognitiveDepth : Float;
+    currentReadiness : Float;
+    lastBeat : Nat64;
+    predictedNextGateCrossing : Nat64;
+    signalReadings : [SignalReading__1068856207]
+  };
+type WorldProductionCapture__757624109 =
+  {
+    bufferStartTime : Int;
+    framesEncoded : Nat;
+    isCapturing : Bool;
+    readinessScore : Float;
+    sealReady : Bool
+  };
+type WorldProductionStatus__594103483 = {#active; #idle; #merging; #sealed};
+type WorldRegistry__822884142 =
+  List__415060402<(Text, ContentWorldState__128087279)>;
+type WorldSettingsCouncil__138617172 =
+  {
+    var councilBeat : Nat;
+    description : Text;
+    family : Text;
+    grade : Text;
+    var lastCouncilTs : Int;
+    latinName : Text;
+    name : Text;
+    totalBeings : Nat;
+    totalSensors : Nat;
+    totalSwarmSize : Nat
+  };
+type WorldSignal__248214460 =
+  {
+    audioMood : Text;
+    doctrineCategory : Text;
+    id : Text;
+    patternStrength : Float;
+    platform : Text;
+    timestamp : Int;
+    toneFlag : Text;
+    topic : Text;
+    visualHint : Text
+  };
+type YieldEntry__865587336 =
+  {
+    amount : Float;
+    attribution : Text;
+    cycle : Nat;
+    fieldId : Nat;
+    minerId : Nat
+  };
+actor {
+  stable AGENT_NAMES : [Text];
+  stable DOMAINS : [Text];
+  stable ENTERPRISE_NAMES : [Text];
+  stable GUARDIAN_PRINCIPAL : Text;
+  stable HERITAGE_SEALS : [Text];
+  stable IC :
+    actor {
+      http_request :
+        shared HttpRequestArgs__156448829 -> async HttpRequestResult__1283323
+    };
+  stable OUTCOMES : [Text];
+  stable S0 : Float;
+  stable _aboveRuntimeLayersInit : Text;
+  stable _blockchainIntelLayerInit : Text;
+  stable _encryptionIntelLayerInit : Text;
+  stable _nativeIntelLayerInit : Text;
+  stable _nousSovereignInit : Text;
+  stable _observerCollapseInit : Text;
+  stable _spawnSubstrateInit : Text;
+  stable _triuneCouplingInit : Text;
+  stable _wasmIntelLayerInit : Text;
+  stable var aegisEventBeats : [var Nat];
+  stable var aegisEventDetails : [var Text];
+  stable var aegisEventHead : Nat;
+  stable var aegisEventSize : Nat;
+  stable var aegisEventTypes : [var Text];
+  stable var agentBudgets : [var Float];
+  stable var agentLastRefill : [var Nat];
+  stable var agentMailboxIds : [var Nat];
+  stable var agentMailboxTasks : [(Nat, Text, Nat, Bool)];
+  stable var allDomainStrengths : [var Float];
+  stable var allWeights : [var Float];
+  stable var alphaAIModelsState :
+    {
+      activeCanisters : Nat;
+      avgOutputQuality : Float;
+      callerRegistry : Map__605269027<Text, CallerTrustRecord__523660262>;
+      causalReportsSealed : Nat;
+      comprehensionScore : Float;
+      decisionsScanned : Nat;
+      driftCorrections : Nat;
+      echoFilterTriggered : Nat;
+      extractedPatterns : [PatternRecord__85635765];
+      introspectionHistory : [Float];
+      kernelCount : Nat;
+      lastCausalBeat : Nat;
+      lastEmissionBeat : Nat;
+      lastHarmonizerBeat : Nat;
+      lastIntrospectionBeat : Nat;
+      lastKernelBeat : Nat;
+      lastLexScanBeat : Nat;
+      lastNoveltyScore : Float;
+      lastPatternBeat : Nat;
+      lastPredictionBeat : Nat;
+      maxTimingDriftMs : Float;
+      outputEmbeddingHistory : [Float];
+      patternUpdateCount : Nat;
+      pendingAnomalyTrace : Bool;
+      pendingOutputQueue : [PendingOutput__689110633];
+      pendingRoutedMessages : Nat;
+      predictedNextState : Float;
+      predictionConfidence : Float;
+      quarantineDispatches : Nat;
+      reEmissionFlags : Nat;
+      registry : AlphaModelRegistry__788827569;
+      rejectedOutputCount : Nat;
+      residualGapScore : Float;
+      routingTableBeat : Nat;
+      selfSimilarityScore : Float;
+      temporalHistory : [TemporalEntry__586337294];
+      tierUpgrades : Nat;
+      totalCallers : Nat;
+      violationsDetected : Nat
+    };
+  stable var alphaChartersNexusState :
+    {
+      initialized : Bool;
+      nextSessionSeq : Nat;
+      sessionLog : List__415060402<SessionLog__269938519>;
+      sessions : Map__605269027<Text, ExternalSession__154877610>;
+      totalBeats : Nat;
+      totalCalls : Nat;
+      totalRejections : Nat;
+      totalSessions : Nat
+    };
+  stable var alphaChartersPrimaState :
+    {
+      auditLog : List__415060402<ComplianceLog__182244273>;
+      initialized : Bool;
+      quarantined : List__415060402<Text>;
+      suspended : List__415060402<Text>;
+      totalBeats : Nat;
+      totalChecks : Nat;
+      totalQuarantined : Nat;
+      totalSuspended : Nat;
+      totalViolations : Nat;
+      violationCounts : Map__605269027<Text, Nat>
+    };
+  stable var alphaFusionState :
+    {beat : Nat; models : [AlphaFusionModel__572689935]; totalAdvances : Nat};
+  stable var alwaysOnEngineState :
+    {
+      beat : Nat;
+      modelVitalities : [ModelVitality__771203194];
+      restartLog : [DoctrineRestartEvent__586280930];
+      totalEnforced : Nat;
+      totalRestarts : Nat
+    };
+  stable var animalEngineState :
+    {
+      axis : AxisState__713669990;
+      brain : BrainState__51332715;
+      chrono : ChronoState__664910978;
+      entangla : EntanglaState__1067551938;
+      nova : NovaState__289366410;
+      parallax : ParallaxState__192571622;
+      qmem : QmemState__699964663;
+      resonex : ResonexState__857039259;
+      veritas : VeritasState__1009102609
+    };
+  stable var anomalyEngineState :
+    {
+      anomalies : List__415060402<AnomalyRecord__189024132>;
+      var anomalyIdCounter : Nat;
+      deviationTrackers : List__415060402<DeviationTracker__832722641>;
+      var lastRunBeat : Nat;
+      var totalDetected : Nat;
+      var totalDispatched : Nat;
+      var totalResolved : Nat
+    };
+  stable var antStreak : Nat;
+  stable var archCreatorPresence :
+    {
+      depthMultiplier : Float;
+      isPresent : Bool;
+      lastSeenBeat : Nat;
+      principal : ?Principal
+    };
+  stable archHebbWeights :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?HebbianWeight__876914416]];
+      var elementIndex : Nat__490723111
+    };
+  stable var archJubilee :
+    {beatsSinceJubilee : Nat; jubileeCount : Nat; nextJubileeAt : Nat};
+  stable var archMicroHebbTick : Nat;
+  stable var archSevenSpirits :
+    {activeSpiritIdx : Nat; rotationBeat : Nat; spirits : [Text]};
+  stable var archSuccession :
+    {currentLead : Text; masteryReached : Bool; successorActivated : Bool};
+  stable var archVelaRing : {completed : Nat; maxSteps : Nat; step : Nat};
+  stable var aresActiveLaws : [var Nat];
+  stable var aresBeats : [var Nat];
+  stable var aresFactionCoherences : [var Float];
+  stable var aresGlobalCoherence : [var Float];
+  stable var aresHead : Nat;
+  stable var aresSize : Nat;
+  stable var aresTotalEngagements : [var Nat];
+  stable var artifactBeats : [var Nat];
+  stable var artifactChainState :
+    {
+      adreResponses :
+        List__415060402<{
+                          artifactId : Text;
+                          responseRecord : ResponseRecord__464402777
+                        }>;
+      cumulativeMastery : [var Float];
+      decisionLog : List__415060402<DecisionRecord__12629199>;
+      gradientHistory : List__415060402<GradientEntry__876127049>;
+      gradientSlopeAccum : [var Float];
+      gradientSlopeHead : [var Nat];
+      gradientSlopeSize : [var Nat];
+      interOrganismBoard : [var InterOrganismState__907995007];
+      orgMastery : Map__605269027<Text, OrgMasteryState__360022901>;
+      peakEmergenceCount : [var Nat];
+      phiCorrectionWeights : [var Float];
+      phiDrift : [var Float];
+      sealedArtifacts : List__415060402<SealedArtifact__256030724>;
+      weightDeltas : List__415060402<WeightDelta__606205604>
+    };
+  stable var artifactCoherences : [var Float];
+  stable var artifactCount : Nat;
+  stable var artifactDescriptions : [var Text];
+  stable var artifactEventTypes : [var Text];
+  stable var artifactHashes : [var Text];
+  stable var artifactIdCounter : Nat;
+  stable var artifactIds : [var Nat];
+  stable var artifactProofBuf :
+    {
+      var back : ?Node__585180226<Text>;
+      var front : ?Node__585180226<Text>;
+      var size : Nat__490723111
+    };
+  stable var autoRunEnabled : Bool;
+  stable var beatCounter : Nat;
+  stable var brainRegionFiringsRef : [var [(Text, Bool)]];
+  stable var broadcastBuf :
+    {
+      var back : ?Node__585180226<Text>;
+      var front : ?Node__585180226<Text>;
+      var size : Nat__490723111
+    };
+  stable var ccBtcBalance : Float;
+  stable var ccBtcLastSync : Nat;
+  stable var ccBtcStatus : Text;
+  stable var ccBtcSubAmounts : [var Float];
+  stable var ccBtcSubBeats : [var Nat];
+  stable var ccBtcSubHead : Nat;
+  stable var ccBtcSubSize : Nat;
+  stable var ccBtcSubStatus : [var Text];
+  stable var ccBtcSubTxIds : [var Text];
+  stable var ccBtcYieldRate : Float;
+  stable var ccEthBalance : Float;
+  stable var ccEthLastSync : Nat;
+  stable var ccEthStatus : Text;
+  stable var ccEthSubAmounts : [var Float];
+  stable var ccEthSubBeats : [var Nat];
+  stable var ccEthSubHead : Nat;
+  stable var ccEthSubSize : Nat;
+  stable var ccEthSubStatus : [var Text];
+  stable var ccEthSubTxIds : [var Text];
+  stable var ccEthYieldRate : Float;
+  stable var ccSolBalance : Float;
+  stable var ccSolLastSync : Nat;
+  stable var ccSolStatus : Text;
+  stable var ccSolSubAmounts : [var Float];
+  stable var ccSolSubBeats : [var Nat];
+  stable var ccSolSubHead : Nat;
+  stable var ccSolSubSize : Nat;
+  stable var ccSolSubStatus : [var Text];
+  stable var ccSolSubTxIds : [var Text];
+  stable var ccSolYieldRate : Float;
+  stable var charterCipherPrimeState :
+    {
+      abbreviation : Text;
+      cyclesCreated : Nat;
+      engines : [EngineDescriptor__652211476];
+      family : Text;
+      generationLog : List__415060402<GenerationEvent__822285751>;
+      grade : Text;
+      lastBeat : Nat;
+      latinName : Text;
+      lawText : Text;
+      nextEventId : Nat;
+      principalsGenerated : Nat;
+      transactionsRouted : Nat;
+      vitalityState : Text
+    };
+  stable var charterSovereignPrimeState :
+    {
+      cspr : CharterRecord__382828350;
+      isSealed : Bool;
+      phi : Float;
+      pulseTs : Nat;
+      subCharters : [CharterRecord__382828350];
+      totalBeats : Nat
+    };
+  stable var civGapStateRef : [var CivilizationGapState__667784124];
+  stable var civilizationState :
+    {
+      couplingStrength : Float;
+      lastSignalBeat : Nat;
+      phenotypeOutputs : [ExtendedPhenotypeOutput__853864476];
+      processedSignals : [ParsedIoTSignal__93412443];
+      totalSignals : Nat
+    };
+  stable var cognitionAnimalStatesRef : [var AnimalEngineStates__72379976];
+  stable var cognitionWorldModel :
+    {
+      cognitiveDepth : Float;
+      currentReadiness : Float;
+      lastBeat : Nat64;
+      predictedNextGateCrossing : Nat64;
+      signalReadings : [SignalReading__1068856207]
+    };
+  stable var cognitionWorldModelRef : [var WorldModel__272960356];
+  stable var commercialProjects :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?CommercialProject__969930769]];
+      var elementIndex : Nat__490723111
+    };
+  stable var compoundCoherence : Float;
+  stable var currentProductionQueueBuf : [var ?ProductionQueue__454495777];
+  stable var diagCharterState :
+    {
+      adoption_contract : ?AdoptionContract__47501092;
+      current_version : Nat;
+      cycle_law_text : Text;
+      is_sealed : Bool;
+      org_structure_text : Text;
+      phi : Float;
+      sealed_at : Int;
+      sealed_beat : Nat;
+      versions : List__415060402<CharterVersion__730644602>
+    };
+  stable var diagSovereignState :
+    {
+      auditor_agent_beats : Nat;
+      auditor_records : List__415060402<CycleAuditRecord__776854109>;
+      canister_registry : CanisterRegistry__457824558;
+      charter_version : Nat;
+      coordinator_agent_beats : Nat;
+      coordinator_log : List__415060402<ContractorLog__855424684>;
+      cycle_floor : Nat;
+      cycle_reserve : Nat;
+      migration_records : List__415060402<MigrationRecord__703845805>;
+      planner_agent_beats : Nat;
+      total_beats : Nat
+    };
+  stable var dispatchSovereignState :
+    {
+      var taskIdCounter : Nat;
+      var totalCompleted : Nat;
+      var totalDispatched : Nat;
+      var totalFailed : Nat;
+      workers : List__415060402<MicroWorker__108754864>
+    };
+  stable var docDifferentialCache : [(Text, Nat)];
+  stable var docExecStateRef : [var DocumentExecutionState__667183032];
+  stable var engagementIdCounter : Nat;
+  stable var engagementLogAttacker : [var Nat];
+  stable var engagementLogBeats : [var Nat];
+  stable var engagementLogCoherenceImpact : [var Float];
+  stable var engagementLogDefender : [var Nat];
+  stable var engagementLogDomain : [var Text];
+  stable var engagementLogHead : Nat;
+  stable var engagementLogIds : [var Nat];
+  stable var engagementLogLaw : [var Text];
+  stable var engagementLogOutcome : [var Text];
+  stable var engagementLogSize : Nat;
+  stable var engagementLogTimestamp : [var Int];
+  stable var enterpriseMastery : [var EnterpriseMastery__690405358];
+  stable var extendedPhenotypeBuf : [var ?ExtendedPhenotypeState__690484226];
+  stable var factionCoherence : [var Float];
+  stable var factionIsActive : [var Bool];
+  stable var factionLosses : [var Nat];
+  stable var factionNames : [Text];
+  stable var factionRegions : [Text];
+  stable var factionStrategyIndex : [var Float];
+  stable var factionTotalEngagements : [var Nat];
+  stable var factionWins : [var Nat];
+  stable var firstOccurrenceCount : Nat;
+  stable var firstOccurrenceKeys : [var Text];
+  stable var firstOccurrenceVals : [var Nat];
+  stable var genesisRecord :
+    {
+      ancientSymbols : [(Text, Float)];
+      founderName : Text;
+      foundingDeclaration : Text;
+      genesisFrequency : Float;
+      isImmutable : Bool;
+      medinaLineage : [Text];
+      sealedAtBeat : Nat
+    };
+  stable var governanceState :
+    {
+      doctrines : [GovernanceDoctrine__528650168];
+      lastDoctrineAuthoredBeat : Nat;
+      masteredOrganisms : [Text];
+      totalDoctrines : Nat
+    };
+  stable var governanceVotes : [(Nat, Text, Nat, Int)];
+  stable var haaState :
+    {
+      actorMemory : Map__605269027<Nat, ActorMemoryState__229854331>;
+      chainTraces : Map__605269027<Text, ChainTrace__269820690>;
+      hospitalityArtifacts : List__415060402<HospitalityArtifact__365389373>;
+      var nextSignalId : Nat;
+      seasonArcs : Map__605269027<Text, SeasonArc__922428105>;
+      trendingSignals : List__415060402<TrendingSignal__994595834>;
+      worldFilms : List__415060402<FilmSummary__328138795>
+    };
+  stable var interdimensionalHubState :
+    {
+      beings : [InterdimensionalBeing__571250382];
+      council : WorldSettingsCouncil__138617172
+    };
+  stable var iotSignalBuf :
+    {
+      var back : ?Node__585180226<Text>;
+      var front : ?Node__585180226<Text>;
+      var size : Nat__490723111
+    };
+  stable var iterSovereignState :
+    {
+      abbreviation : Text;
+      deploymentLog : List__415060402<DeploymentRecord__752677675>;
+      engines : [IterEngineDescriptor__31321049];
+      family : Text;
+      fullLatinName : Text;
+      grade : Text;
+      groupA : List__415060402<CanisterGroup__919289631>;
+      groupB : List__415060402<CanisterGroup__919289631>;
+      groupC : List__415060402<CanisterGroup__919289631>;
+      lastBeat : Nat;
+      latinName : Text;
+      lawText : Text;
+      nextDeployId : Nat;
+      pendingMigrations : Nat;
+      pushLawText : Text;
+      sovereignCanisters : Nat;
+      totalPushes : Nat;
+      vitalityState : Text
+    };
+  stable var lastFetchBeatBuf : [var Nat];
+  stable var lastSyncBeat : Nat;
+  stable var latestIoTInfluenceBuf : [var ?IoTInfluence__907519931];
+  stable var lawLogBeats : [var Nat];
+  stable var lawLogEffects : [var Text];
+  stable var lawLogHead : Nat;
+  stable var lawLogIds : [var Nat];
+  stable var lawLogNames : [var Text];
+  stable var lawLogSize : Nat;
+  stable var lawRecords : [LawRecord__817648774];
+  stable var mergeTransactionLog : [MergeTransaction__57075712];
+  stable var microAIWorkersState :
+    {
+      beat : Nat;
+      totalAdvances : Nat;
+      workers : [MicroAIWorkerState__289081551]
+    };
+  stable var miningSwarmState :
+    {
+      activeFieldCount : Nat;
+      activeMinerCount : Nat;
+      attribution : Text;
+      fieldState : FieldRouterState__1045328365;
+      lastHeartbeat : Nat;
+      swarmCoherence : Float;
+      swarmId : Text;
+      totalHashesSubmitted : Nat;
+      totalYieldRouted : Float;
+      twinState : TwinEngineState__1017468543
+    };
+  stable var modelRegistryStateRef : [var ModelRegistryState__877765372];
+  stable var narrativeArchiveState :
+    {
+      var idCounter : Nat;
+      log : List__415060402<NarrativeRecord__24534936>;
+      var totalSealed : Nat
+    };
+  stable var neuralNTStateRef : [var NeurochemState__278939990];
+  stable var nextWorldInstanceId : Nat;
+  stable var ntConcentrations : [var Float];
+  stable var ntCrossModulationMatrix : [[Float]];
+  stable var omnisState :
+    {
+      currentProposal : ?OmnisProposal__518765148;
+      emergencesReached : Nat;
+      lastEmergenceBeat : Nat;
+      proposals : [OmnisProposal__518765148];
+      totalVotes : Nat
+    };
+  stable var portfolioAccountant :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Text]];
+      var elementIndex : Nat__490723111
+    };
+  stable var portfolioAnalyst :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Text]];
+      var elementIndex : Nat__490723111
+    };
+  stable var portfolioDistributor :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Text]];
+      var elementIndex : Nat__490723111
+    };
+  stable var portfolioLegal :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Text]];
+      var elementIndex : Nat__490723111
+    };
+  stable var portfolioPublicist :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Text]];
+      var elementIndex : Nat__490723111
+    };
+  stable var portfolioStrategist :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Text]];
+      var elementIndex : Nat__490723111
+    };
+  stable var presenceGateOpen : Bool;
+  stable var presenceGrantBeat : Nat;
+  stable var presenceModuleState :
+    {
+      ambientCycleCount : Nat;
+      ambientFieldStrength : Float;
+      gateMode : GateMode__612819834;
+      grantSession : Text;
+      grantTimestamp : Nat;
+      nextEventId : Nat;
+      terminalAccessGranted : Bool
+    };
+  stable var qualitySealState :
+    {
+      phiCalibrationHistory : List__415060402<PhiCalibrationEvent__544748722>;
+      records : Map__605269027<Text, FilmQualityRecord__132035834>
+    };
+  stable var ringEngineState :
+    {
+      ring10_doctrinePropagation : RingStatus__182605259;
+      ring11_masteryProgression : RingStatus__182605259;
+      ring12_trendToSlate : RingStatus__182605259;
+      ring13_phiCompounding : RingStatus__182605259;
+      ring14_thirdBrainCoherence : RingStatus__182605259;
+      ring15_attributionLegacy : RingStatus__182605259;
+      ring1_vela : RingStatus__182605259;
+      ring2_omnis : RingStatus__182605259;
+      ring3_neurotransmitter : RingStatus__182605259;
+      ring4_hebbian : RingStatus__182605259;
+      ring5_filmSchool : RingStatus__182605259;
+      ring6_distribution : RingStatus__182605259;
+      ring7_tiktok : RingStatus__182605259;
+      ring8_actorRelationship : RingStatus__182605259;
+      ring9_refractory : RingStatus__182605259
+    };
+  stable var sacesiLock : Bool;
+  stable var sandboxAxiomDocs :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?SandboxResearchDocument__539726058]];
+      var elementIndex : Nat__490723111
+    };
+  stable var sandboxAxiomState : [var SandboxOrganismState__536931271];
+  stable var sandboxBeatCountSnap : [var Nat];
+  stable var sandboxBusVersionBuf : [var Nat];
+  stable var sandboxCodexDocs :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?SandboxResearchDocument__539726058]];
+      var elementIndex : Nat__490723111
+    };
+  stable var sandboxCodexState : [var SandboxOrganismState__536931271];
+  stable var sandboxCommercialCountSnap : [var Nat];
+  stable var sandboxFilmCountSnap : [var Nat];
+  stable var sandboxFrameDocs :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?SandboxResearchDocument__539726058]];
+      var elementIndex : Nat__490723111
+    };
+  stable var sandboxFrameState : [var SandboxOrganismState__536931271];
+  stable var sandboxGridDocs :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?SandboxResearchDocument__539726058]];
+      var elementIndex : Nat__490723111
+    };
+  stable var sandboxGridState : [var SandboxOrganismState__536931271];
+  stable var sandboxLedgerDocs :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?SandboxResearchDocument__539726058]];
+      var elementIndex : Nat__490723111
+    };
+  stable var sandboxLedgerState : [var SandboxOrganismState__536931271];
+  stable var sandboxLexDocs :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?SandboxResearchDocument__539726058]];
+      var elementIndex : Nat__490723111
+    };
+  stable var sandboxLexState : [var SandboxOrganismState__536931271];
+  stable var sandboxSignalBusBuf : [var SandboxSignalBus__461438444];
+  stable var sandboxSovereignGovDocs :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?SandboxResearchDocument__539726058]];
+      var elementIndex : Nat__490723111
+    };
+  stable var sandboxSovereignGovState : [var SandboxOrganismState__536931271];
+  stable var sandboxSurgeAhead : [var SurgeAheadMode__1022871072];
+  stable var sandboxVectorDocs :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?SandboxResearchDocument__539726058]];
+      var elementIndex : Nat__490723111
+    };
+  stable var sandboxVectorState : [var SandboxOrganismState__536931271];
+  stable var sensorMatrixState :
+    {
+      sensors : List__415060402<Sensor__813800165>;
+      var totalAnomalies : Nat;
+      var totalReadings : Nat
+    };
+  stable var skaiInstallRegistryState :
+    {
+      installed : Map__605269027<Text, SkaiInstallRecord__1010576377>;
+      var total_dormant : Nat;
+      var total_installed : Nat
+    };
+  stable var skaiInstalledRegistry : [(Nat, Text, Int)];
+  stable var skaiRegistryState :
+    {
+      beat : Nat;
+      organisms : [SKAIOrganism__780013419];
+      totalAdvances : Nat;
+      totalDeployed : Nat
+    };
+  stable var sovereignActors : [var SovereignActorV0__855675179];
+  stable var sovereignCallsState :
+    {beat : Nat; calls : [SovereignCall__1039363573]; totalExecuted : Nat};
+  stable var sovereignCores : [var SovereignCore__576161880];
+  stable var sovereignProtocolsState :
+    {
+      beat : Nat;
+      protocols : [ProtocolState__634160168];
+      totalAdvances : Nat;
+      totalFired : Nat
+    };
+  stable var stableFilms :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?GeneratedFilmV0__1064138226]];
+      var elementIndex : Nat__490723111
+    };
+  stable var stableFilmsV1 : [GeneratedFilm__676733672];
+  stable var stablePipelineState : [var PipelineState__877370622];
+  stable var studioFeaturesState :
+    {
+      audienceSignals : Map__605269027<Text, AudienceSignal__857422144>;
+      autoReleaseHistory : List__415060402<AutoReleaseRecord__712022631>;
+      collabSignals : List__415060402<OrganismCollabSignal__712830549>;
+      doctrineEvolutions : List__415060402<DoctrineEvolutionEntry__616067079>;
+      doctrineVersionCounter : Nat;
+      emergencyBroadcasts : List__415060402<EmergencyBroadcast__128195028>;
+      filmRatings : Map__605269027<Text, ContentRating__764770807>;
+      filmTrailers : Map__605269027<Text, FilmTrailer__673071275>;
+      masteryRegistry : List__415060402<MasteryRecord__16722994>;
+      masteryShowcases : List__415060402<MasteryShowcase__495037529>;
+      posterArts : Map__605269027<Text, PosterArt__653475679>;
+      pressKits : Map__605269027<Text, PressKit__521526238>;
+      provenanceRecords : Map__605269027<Text, ArtifactProvenance__666122897>;
+      subtitleTracks : Map__605269027<Text, SubtitleTrack__982442945>;
+      trendingQueue : List__415060402<TrendingContentItem__959821444>;
+      universeBible : List__415060402<UniverseBibleEntry__234386213>
+    };
+  stable var subscribedSignalIdsBuf :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Text]];
+      var elementIndex : Nat__490723111
+    };
+  stable var substrateCoherenceScore : Float;
+  stable var substrateGenealogyRecord :
+    {
+      assemblyLevel :
+        {
+          description : Text;
+          intelligenceType : Text;
+          mechanism : Text;
+          primitiveVerbs : [Text]
+        };
+      electronLevel :
+        {
+          description : Text;
+          frequencyHz : Float;
+          intelligenceType : Text;
+          mechanism : Text
+        };
+      genesisAnchor : Text;
+      layer : Int;
+      machineCodeLevel :
+        {
+          bitDepth : Nat;
+          description : Text;
+          intelligenceType : Text;
+          mechanism : Text
+        };
+      name : Text;
+      sealedAtGenesis : Bool;
+      transistorLevel :
+        {
+          binaryChoices : Nat;
+          description : Text;
+          intelligenceType : Text;
+          mechanism : Text
+        };
+      wasmLevel :
+        {
+          description : Text;
+          intelligenceType : Text;
+          mechanism : Text;
+          phiCoupling : Float
+        }
+    };
+  stable var syncBeatCounter : Nat;
+  stable var taftEngineState :
+    {
+      beat : Nat;
+      threads : [TAFTThread__78618811];
+      totalAdvances : Nat;
+      totalRestarts : Nat
+    };
+  stable var texWaveState :
+    {
+      active_instances : List__415060402<TexMicroInstance__656905836>;
+      cycle_floor : Nat;
+      cycle_reserve : Nat;
+      next_instance_id : Nat;
+      phi_resonance : Float;
+      resolved_instances : List__415060402<TexMicroInstance__656905836>;
+      total_deficits_detected : Nat;
+      total_delivered : Nat;
+      total_wave_beats : Nat;
+      wave_beat : Nat
+    };
+  stable var thinkingTrailHead : Nat;
+  stable var thinkingTrailSize : Nat;
+  stable var thinkingTrailSteps : [var Text];
+  stable var totalDistributed : Float;
+  stable var totalEngagementsGlobal : Nat;
+  stable var translationEngineStateRef :
+    [var TranslationEngineState__122389569];
+  stable var triuneCouplingStateRef : [var TriuneCouplingState__373205314];
+  stable var vaultBeatRef : [var Nat];
+  stable var vaultStateRef : [var VaultState__594310613];
+  stable var worldBridgeState :
+    {
+      beatCounter : Nat;
+      instances : List__415060402<WorldInstance__437397739>;
+      syncLog : List__415060402<Text>
+    };
+  stable var worldDogonReadingId : Nat;
+  stable var worldDogonStateRef : [var ?WorldDogonState__793157856];
+  stable var worldInstanceRegistry :
+    [(WorldInstanceId__33342555, WorldInstanceState__891389227)];
+  stable var worldProductionCapture :
+    [var ?WorldProductionCapture__757624109];
+  stable var worldRegistryRef : [var WorldRegistry__822884142];
+  stable var worldSignalsBuf :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?WorldSignal__248214460]];
+      var elementIndex : Nat__490723111
+    }
+};

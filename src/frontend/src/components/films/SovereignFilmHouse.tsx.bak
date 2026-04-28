@@ -1,0 +1,1259 @@
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { useCallback, useEffect, useRef, useState } from "react";
+import type {
+  EngagementEvent,
+  Faction,
+  SimulationStatus,
+} from "../../backend.d";
+import { useCOMPOSER } from "./useCOMPOSER";
+import { buildShotList } from "./useDIRECTOR";
+import { editSequence } from "./useEDITOR";
+import { useExternalImages } from "./useExternalImages";
+import { useFilmEngine } from "./useFilmEngine";
+import { useFilmSchool } from "./useFilmSchool";
+import type { OrganismName } from "./useFilmSchool";
+import { useMUSEPrime } from "./useMUSEPrime";
+import { useSimDataInjector } from "./useSimDataInjector";
+import { useVISIONARY } from "./useVISIONARY";
+
+// ─── Types ────────────────────────────────────────────────────────────────
+
+interface Props {
+  factions: Faction[];
+  status: SimulationStatus | undefined;
+  engagements: EngagementEvent[];
+  onClose: () => void;
+}
+
+type NodeStatus = "IDLE" | "FIRING" | "COMPLETE" | "SEALED";
+type PanelView = "pipeline" | "school";
+
+interface PipelineNode {
+  id: string;
+  name: string;
+  tier: string;
+  description: string;
+}
+
+const PIPELINE_NODES: PipelineNode[] = [
+  {
+    id: "muse_prime",
+    name: "MUSE-PRIME",
+    tier: "NARRATIVE INTELLIGENCE",
+    description: "Semantic + Heritage tiers · Script elevation",
+  },
+  {
+    id: "director",
+    name: "DIRECTOR",
+    tier: "SCENE STRUCTURE",
+    description: "Shot list generation · Scene sequencing",
+  },
+  {
+    id: "visionary",
+    name: "VISIONARY",
+    tier: "IMAGE GENERATION",
+    description: "19 cinematic render types · Full spectrum",
+  },
+  {
+    id: "cinematographer",
+    name: "CINEMATOGRAPHER",
+    tier: "CAMERA LANGUAGE",
+    description: "Depth · light · motion vectors",
+  },
+  {
+    id: "composer",
+    name: "COMPOSER",
+    tier: "SONIC ARCHITECTURE",
+    description: "Web Audio API · Score captured in .webm",
+  },
+  {
+    id: "editor",
+    name: "EDITOR",
+    tier: "SEQUENCE ASSEMBLY",
+    description: "Cut · hold · breath · sequence",
+  },
+  {
+    id: "archivist",
+    name: "ARCHIVIST",
+    tier: "ON-CHAIN SEAL",
+    description: "ARES artifact · Attribution · Download",
+  },
+];
+
+const FILM_TITLES = [
+  { id: 1, label: "01 · SOVEREIGN INFRASTRUCTURE" },
+  { id: 2, label: "02 · THE LAW OF MEDINA" },
+  { id: 3, label: "03 · ORO & EMERGENT CORE" },
+  { id: 4, label: "04 · WORKFORCE OF NATIVE MINDS" },
+  { id: 5, label: "05 · THE COMPANY · FOUNDER · STORY" },
+];
+
+// ─── Sub-components ─────────────────────────────────────────────────────
+
+function NodeStatusBadge({ status }: { status: NodeStatus }) {
+  const styles: Record<NodeStatus, string> = {
+    IDLE: "text-white/30 border-white/10",
+    FIRING: "text-cyan-400 border-cyan-400/60 animate-pulse",
+    COMPLETE: "text-yellow-400 border-yellow-400/60",
+    SEALED: "text-yellow-400 border-yellow-400",
+  };
+  return (
+    <span
+      className={`font-mono text-[8px] tracking-widest border px-1.5 py-0.5 ${styles[status]}`}
+    >
+      {status}
+    </span>
+  );
+}
+
+function ConnectorLine({ active }: { active: boolean }) {
+  return (
+    <div className="flex items-center justify-center h-4">
+      <div
+        className={`w-px h-full transition-colors duration-500 ${active ? "bg-cyan-400/70" : "bg-white/10"}`}
+      />
+    </div>
+  );
+}
+
+function PipelineNodeCard({
+  node,
+  status,
+  skillLevel,
+}: { node: PipelineNode; status: NodeStatus; skillLevel?: number }) {
+  const borderStyle =
+    status === "FIRING"
+      ? "border-cyan-400/80 shadow-[0_0_12px_rgba(0,229,255,0.25)]"
+      : status === "COMPLETE" || status === "SEALED"
+        ? "border-yellow-400/60"
+        : "border-white/10";
+
+  return (
+    <div
+      className={`border px-3 py-2 transition-all duration-500 ${borderStyle}`}
+    >
+      <div className="flex items-center justify-between mb-0.5">
+        <div className="flex items-center gap-2">
+          {(status === "COMPLETE" || status === "SEALED") && (
+            <span className="text-yellow-400 text-[10px]">✓</span>
+          )}
+          {status === "FIRING" && (
+            <span className="text-cyan-400 text-[10px] animate-pulse">●</span>
+          )}
+          {status === "IDLE" && (
+            <span className="text-white/20 text-[10px]">○</span>
+          )}
+          <span
+            className={`font-mono text-[11px] font-bold tracking-widest ${
+              status === "FIRING"
+                ? "text-cyan-400"
+                : status === "COMPLETE" || status === "SEALED"
+                  ? "text-yellow-400"
+                  : "text-white/50"
+            }`}
+          >
+            {node.name}
+          </span>
+        </div>
+        <div className="flex items-center gap-2">
+          {skillLevel !== undefined && (
+            <span
+              className={`font-mono text-[7px] tracking-widest ${
+                skillLevel >= 95
+                  ? "text-yellow-400"
+                  : skillLevel >= 70
+                    ? "text-cyan-400/70"
+                    : "text-white/25"
+              }`}
+            >
+              {skillLevel >= 95 ? "★ MASTER" : `LVL ${skillLevel}`}
+            </span>
+          )}
+          <NodeStatusBadge status={status} />
+        </div>
+      </div>
+      <div className="font-mono text-[8px] text-white/30 tracking-wider">
+        {node.tier}
+      </div>
+      <div className="font-mono text-[8px] text-white/20 tracking-wider mt-0.5">
+        {node.description}
+      </div>
+      {skillLevel !== undefined && skillLevel < 95 && (
+        <div className="mt-1 h-0.5 bg-white/5 rounded-full overflow-hidden">
+          <div
+            className="h-full bg-cyan-400/50 transition-all duration-700"
+            style={{ width: `${skillLevel}%` }}
+          />
+        </div>
+      )}
+    </div>
+  );
+}
+
+function CogTraceEntry({
+  trace,
+}: {
+  trace: {
+    tier: "semantic" | "heritage";
+    input: string;
+    output: string;
+    law: string;
+    timestamp: number;
+  };
+}) {
+  const isHeritage = trace.tier === "heritage";
+  return (
+    <div
+      className={`border-b border-white/5 py-1.5 px-2 font-mono ${isHeritage ? "bg-yellow-400/[0.03]" : "bg-cyan-400/[0.03]"}`}
+    >
+      <div className="flex items-center justify-between mb-0.5">
+        <span
+          className={`text-[8px] tracking-widest font-bold ${isHeritage ? "text-yellow-400" : "text-cyan-400"}`}
+        >
+          [{isHeritage ? "HERITAGE" : "SEMANTIC"}]
+        </span>
+        <span className="text-[7px] text-white/20">
+          {new Date(trace.timestamp).toISOString().slice(11, 23)}
+        </span>
+      </div>
+      <div className="text-[8px] text-white/50 mb-0.5 truncate">
+        IN: {trace.input}
+      </div>
+      <div
+        className={`text-[8px] mb-0.5 truncate ${isHeritage ? "text-yellow-400/70" : "text-cyan-400/70"}`}
+      >
+        OUT: {trace.output}
+      </div>
+      <div className="text-[7px] text-white/25 truncate">⚖ {trace.law}</div>
+    </div>
+  );
+}
+
+function FrameThumbnail({
+  frame,
+  onExpand,
+}: {
+  frame: {
+    index: number;
+    imageData: string;
+    sceneDescription: string;
+    lawFired: string;
+    renderType?: string;
+  };
+  onExpand: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      className="border border-white/10 hover:border-cyan-400/40 transition-colors overflow-hidden relative group"
+      onClick={onExpand}
+    >
+      <img
+        src={frame.imageData}
+        alt={frame.sceneDescription}
+        className="w-full block"
+        style={{ aspectRatio: "16/9" }}
+      />
+      <div className="absolute bottom-0 left-0 right-0 bg-black/70 py-0.5 px-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        <p className="font-mono text-[6px] text-white/60 truncate">
+          {frame.renderType ?? frame.sceneDescription}
+        </p>
+      </div>
+      <div className="absolute top-0.5 right-0.5 font-mono text-[6px] text-white/30">
+        {String(frame.index + 1).padStart(2, "0")}
+      </div>
+    </button>
+  );
+}
+
+// ─── Film School Panel ─────────────────────────────────────────────────────
+
+function FilmSchoolPanel() {
+  const school = useFilmSchool();
+
+  return (
+    <div className="flex flex-col h-full overflow-hidden">
+      {/* Header */}
+      <div className="px-4 py-2 border-b border-white/5 flex-shrink-0 flex items-center justify-between">
+        <div>
+          <div className="font-mono text-[9px] tracking-widest text-cyan-400/60 mb-0.5">
+            SOVEREIGN FILM SCHOOL · ORGANISM MASTERY ENGINE
+          </div>
+          <div className="font-mono text-[8px] text-white/20 tracking-wider">
+            Masters execute at full capacity. Others learn until they do.
+          </div>
+        </div>
+        <div className="text-right">
+          <div className="font-mono text-[8px] text-white/30 tracking-wider">
+            GLOBAL MASTERY
+          </div>
+          <div
+            className={`font-mono text-[14px] font-bold ${
+              school.globalMasteryScore >= 90
+                ? "text-yellow-400"
+                : school.globalMasteryScore >= 70
+                  ? "text-cyan-400"
+                  : "text-white/50"
+            }`}
+          >
+            {school.globalMasteryScore}
+            <span className="text-[9px] text-white/30">/100</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Actions */}
+      <div className="px-4 py-2 border-b border-white/5 flex-shrink-0 flex gap-2">
+        <button
+          type="button"
+          className={`flex-1 font-mono text-[9px] font-bold tracking-widest py-2 border transition-all ${
+            school.isRunningSession
+              ? "border-cyan-400/40 text-cyan-400/40 cursor-not-allowed"
+              : "border-yellow-400/50 text-yellow-400 hover:border-yellow-400 hover:bg-yellow-400/5"
+          }`}
+          onClick={school.runLearningSession}
+          disabled={school.isRunningSession}
+        >
+          {school.isRunningSession
+            ? "● SESSION RUNNING..."
+            : "▶ RUN LEARNING SESSION"}
+        </button>
+        <button
+          type="button"
+          className="font-mono text-[9px] tracking-widest py-2 px-3 border border-white/10 text-white/30 hover:border-white/30 hover:text-white/50 transition-all"
+          onClick={school.resetSchool}
+        >
+          RESET
+        </button>
+      </div>
+
+      {/* Organisms */}
+      <ScrollArea className="flex-1">
+        <div className="px-4 py-2 space-y-2">
+          {school.organisms.map((org) => (
+            <div
+              key={org.name}
+              className={`border p-3 transition-all ${
+                org.isMaster
+                  ? "border-yellow-400/40 bg-yellow-400/[0.03]"
+                  : org.isLearning
+                    ? "border-cyan-400/50 bg-cyan-400/[0.03]"
+                    : "border-white/8"
+              }`}
+            >
+              <div className="flex items-start justify-between mb-1">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={`font-mono text-[10px] font-bold tracking-widest ${
+                        org.isMaster
+                          ? "text-yellow-400"
+                          : org.isLearning
+                            ? "text-cyan-400"
+                            : "text-white/60"
+                      }`}
+                    >
+                      {org.name}
+                    </span>
+                    {org.isMaster && (
+                      <span className="font-mono text-[7px] text-yellow-400 border border-yellow-400/50 px-1">
+                        ★ MASTER
+                      </span>
+                    )}
+                    {org.isLearning && !org.isMaster && (
+                      <span className="font-mono text-[7px] text-cyan-400 animate-pulse">
+                        ● LEARNING
+                      </span>
+                    )}
+                  </div>
+                  <div className="font-mono text-[8px] text-white/25 tracking-wider mt-0.5">
+                    {org.discipline}
+                  </div>
+                </div>
+                <div className="text-right flex-shrink-0">
+                  <div
+                    className={`font-mono text-[13px] font-bold ${
+                      org.isMaster
+                        ? "text-yellow-400"
+                        : org.skillLevel >= 70
+                          ? "text-cyan-400"
+                          : "text-white/40"
+                    }`}
+                  >
+                    {org.skillLevel}
+                    <span className="text-[8px] text-white/20">/100</span>
+                  </div>
+                  <button
+                    type="button"
+                    className="font-mono text-[7px] tracking-widest text-white/25 border border-white/8 px-1 py-0.5 hover:text-cyan-400/70 hover:border-cyan-400/30 transition-colors mt-0.5"
+                    onClick={() =>
+                      school.accelerateOrganism(org.name as OrganismName)
+                    }
+                    disabled={org.isMaster}
+                  >
+                    ACCELERATE
+                  </button>
+                </div>
+              </div>
+
+              {/* Skill bar */}
+              <div className="h-1 bg-white/5 rounded-full overflow-hidden mb-1">
+                <div
+                  className={`h-full rounded-full transition-all duration-700 ${
+                    org.isMaster
+                      ? "bg-yellow-400"
+                      : org.skillLevel >= 70
+                        ? "bg-cyan-400/70"
+                        : "bg-cyan-400/40"
+                  }`}
+                  style={{ width: `${org.skillLevel}%` }}
+                />
+              </div>
+
+              {/* Current lesson */}
+              {org.isMaster ? (
+                <div className="font-mono text-[7px] text-yellow-400/60 tracking-wider">
+                  Executing at full sovereign capacity · No restrictions
+                </div>
+              ) : org.currentLesson ? (
+                <div className="font-mono text-[7px] text-white/30 tracking-wider">
+                  NEXT: {org.currentLesson}
+                  <span className="text-white/15 ml-1">
+                    ({org.lessonsCompleted}/{org.totalLessons} complete)
+                  </span>
+                </div>
+              ) : null}
+
+              {/* Last insight */}
+              {org.learningLog.length > 0 && (
+                <div
+                  className={`mt-1 font-mono text-[7px] tracking-wider ${
+                    org.learningLog[org.learningLog.length - 1].tier ===
+                    "sovereign"
+                      ? "text-yellow-400/50"
+                      : org.learningLog[org.learningLog.length - 1].tier ===
+                          "advanced"
+                        ? "text-cyan-400/50"
+                        : "text-white/20"
+                  }`}
+                >
+                  “
+                  {org.learningLog[org.learningLog.length - 1].insight.slice(
+                    0,
+                    90,
+                  )}
+                  …”
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Session log */}
+        {school.sessionLog.length > 0 && (
+          <div className="px-4 py-2 border-t border-white/5 mt-2">
+            <div className="font-mono text-[8px] text-white/20 tracking-widest mb-1">
+              SESSION LOG
+            </div>
+            {school.sessionLog
+              .slice(-5)
+              .reverse()
+              .map((entry) => (
+                <div
+                  key={entry.timestamp + entry.organism}
+                  className="border-b border-white/5 py-1 font-mono"
+                >
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={`text-[7px] font-bold ${
+                        entry.tier === "sovereign"
+                          ? "text-yellow-400"
+                          : entry.tier === "advanced"
+                            ? "text-cyan-400"
+                            : "text-white/40"
+                      }`}
+                    >
+                      {entry.organism}
+                    </span>
+                    <span className="text-[7px] text-white/20">→</span>
+                    <span className="text-[7px] text-white/40 truncate">
+                      {entry.lesson}
+                    </span>
+                    <span className="text-[7px] text-cyan-400/60 flex-shrink-0">
+                      +{entry.skillGain}
+                    </span>
+                  </div>
+                </div>
+              ))}
+          </div>
+        )}
+      </ScrollArea>
+    </div>
+  );
+}
+
+// ─── Main Component ───────────────────────────────────────────────────────
+
+export function SovereignFilmHouse({
+  factions,
+  status,
+  engagements,
+  onClose,
+}: Props) {
+  const [selectedFilm, setSelectedFilm] = useState(1);
+  const [panelView, setPanelView] = useState<PanelView>("pipeline");
+  const [nodeStatuses, setNodeStatuses] = useState<Record<string, NodeStatus>>(
+    Object.fromEntries(PIPELINE_NODES.map((n) => [n.id, "IDLE"])) as Record<
+      string,
+      NodeStatus
+    >,
+  );
+  const [isRunning, setIsRunning] = useState(false);
+  const [isComplete, setIsComplete] = useState(false);
+  const [expandedFrame, setExpandedFrame] = useState<{
+    imageData: string;
+    sceneDescription: string;
+  } | null>(null);
+
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const audioCtxRef = useRef<AudioContext | null>(null);
+
+  const muse = useMUSEPrime();
+  const visionary = useVISIONARY();
+  const filmEngine = useFilmEngine();
+  const filmSchool = useFilmSchool();
+  const { skillMap } = filmSchool;
+  const {
+    images,
+    isLoading: imagesLoading,
+    loadedCount,
+    totalCount,
+  } = useExternalImages();
+  const simData = useSimDataInjector(factions, status, engagements);
+
+  // DIRECTOR and EDITOR are called inline during pipeline (not as always-on hooks)
+  // because they need pipeline output as input. We keep refs for their results.
+  const shotListRef = useRef<import("./useDIRECTOR").ShotDescriptor[]>([]);
+  const editedFramesRef = useRef<import("./useEDITOR").EditedFrame[]>([]);
+
+  // Composer skill from live skillMap
+  const composerSkill = skillMap.COMPOSER ?? 75;
+  const composer = useCOMPOSER(composerSkill);
+
+  const scrollToTraceEnd = useCallback((node: HTMLDivElement | null) => {
+    if (node) node.scrollIntoView({ behavior: "smooth" });
+  }, []);
+
+  const setNodeStatus = useCallback((nodeId: string, status: NodeStatus) => {
+    setNodeStatuses((prev) => ({ ...prev, [nodeId]: status }));
+  }, []);
+
+  // Archivist seal state
+  const [archivistSeal, setArchivistSeal] = useState<{
+    filmTitle: string;
+    beat: number;
+    coherence: number;
+  } | null>(null);
+
+  const runPipeline = useCallback(async () => {
+    if (isRunning) return;
+    setIsRunning(true);
+    setIsComplete(false);
+    setArchivistSeal(null);
+    muse.reset();
+    visionary.reset();
+    shotListRef.current = [];
+    editedFramesRef.current = [];
+    setNodeStatuses(
+      Object.fromEntries(PIPELINE_NODES.map((n) => [n.id, "IDLE"])) as Record<
+        string,
+        NodeStatus
+      >,
+    );
+
+    // Helper: wait for a condition to become true, polling every 100ms
+    const waitFor = (check: () => boolean, timeoutMs = 15000): Promise<void> =>
+      new Promise<void>((res, rej) => {
+        const start = Date.now();
+        const poll = () => {
+          if (check()) return res();
+          if (Date.now() - start > timeoutMs) return rej(new Error("timeout"));
+          setTimeout(poll, 100);
+        };
+        poll();
+      });
+
+    // Start COMPOSER immediately — score begins while pipeline fires
+    const AudioContextClass =
+      window.AudioContext ??
+      (window as unknown as { webkitAudioContext: typeof AudioContext })
+        .webkitAudioContext;
+    const audioCtx = new AudioContextClass();
+    audioCtxRef.current = audioCtx;
+    composer.startScore(selectedFilm, audioCtx);
+
+    // ── 1. MUSE-PRIME ────────────────────────────────────────────────
+    setNodeStatus("muse_prime", "FIRING");
+    const museSkill = skillMap["MUSE-PRIME"] ?? 62;
+    // Skill gates: higher skill = richer cognitive trace emission
+    void museSkill; // used by generate internally via classifyLine pacing
+    muse.generate(selectedFilm);
+    // Wait for MUSE-PRIME to complete (currentTier becomes 'complete')
+    await waitFor(() => muse.currentTier === "complete" || !muse.isGenerating);
+    setNodeStatus("muse_prime", "COMPLETE");
+
+    const lines = muse.generatedScript;
+    const cues = muse.cinematicCues;
+
+    // Pipe first few cues to COMPOSER
+    for (let i = 0; i < Math.min(cues.length, 5); i++) {
+      const cue = cues[i];
+      if (cue) composer.receiveCue(cue);
+    }
+
+    // ── 2. DIRECTOR ──────────────────────────────────────────────────
+    setNodeStatus("director", "FIRING");
+    const directorSkill = skillMap.DIRECTOR ?? 55;
+    // DIRECTOR builds shot list synchronously from lines + cues
+    const { shotList } = buildShotList(lines, cues, directorSkill);
+    shotListRef.current = shotList;
+    setNodeStatus("director", "COMPLETE");
+
+    // ── 3. VISIONARY + CINEMATOGRAPHER (camera in render loop) ───────
+    setNodeStatus("visionary", "FIRING");
+    setNodeStatus("cinematographer", "FIRING");
+    const visionarySkill = skillMap.VISIONARY ?? 48;
+    const globalCoherence = status?.globalCoherence ?? 0.7;
+
+    const workingLines =
+      lines.length > 0
+        ? lines
+        : [
+            {
+              timeMs: 0,
+              durationMs: 3000,
+              text: "Sovereign Intelligence Infrastructure",
+              style: "sovereign" as const,
+              pacingWeight: 0.9,
+            },
+            {
+              timeMs: 3200,
+              durationMs: 2800,
+              text: "The Law of Medina",
+              style: "emphasis" as const,
+              pacingWeight: 0.85,
+            },
+            {
+              timeMs: 6200,
+              durationMs: 2600,
+              text: "Bringing the Future Now",
+              style: "title" as const,
+              pacingWeight: 0.9,
+            },
+          ];
+
+    visionary.generate(
+      workingLines,
+      cues,
+      shotListRef.current,
+      factions,
+      selectedFilm,
+      images,
+      simData,
+      visionarySkill,
+      globalCoherence,
+    );
+
+    // Wait for VISIONARY to complete
+    await waitFor(() => !visionary.isGenerating, 30000);
+    setNodeStatus("visionary", "COMPLETE");
+    setNodeStatus("cinematographer", "COMPLETE");
+
+    // ── 4. COMPOSER — pipe remaining cues ────────────────────────────
+    setNodeStatus("composer", "FIRING");
+    for (let i = 5; i < cues.length; i += 4) {
+      const cue = cues[i];
+      if (cue) composer.receiveCue(cue);
+    }
+    setNodeStatus("composer", "COMPLETE");
+
+    // ── 5. EDITOR — sequence with transitions ────────────────────────
+    setNodeStatus("editor", "FIRING");
+    const { editedFrames } = editSequence(
+      visionary.frames,
+      shotListRef.current,
+    );
+    editedFramesRef.current = editedFrames;
+    setNodeStatus("editor", "COMPLETE");
+
+    // ── 6. ARCHIVIST — seal artifact ─────────────────────────────────
+    setNodeStatus("archivist", "FIRING");
+    const beatNum = Number(status?.beat ?? 0);
+    const cohVal = status?.globalCoherence ?? 0;
+    setArchivistSeal({
+      filmTitle:
+        selectedFilm === 1
+          ? "SOVEREIGN INTELLIGENCE INFRASTRUCTURE"
+          : selectedFilm === 2
+            ? "THE LAW OF MEDINA"
+            : selectedFilm === 3
+              ? "ORO & THE EMERGENT CORE"
+              : selectedFilm === 4
+                ? "A WORKFORCE OF NATIVE MINDS"
+                : "THE COMPANY · THE FOUNDER · THE STORY",
+      beat: beatNum,
+      coherence: cohVal,
+    });
+    setNodeStatus("archivist", "SEALED");
+
+    setIsRunning(false);
+    setIsComplete(true);
+  }, [
+    isRunning,
+    selectedFilm,
+    factions,
+    muse,
+    visionary,
+    composer,
+    setNodeStatus,
+    images,
+    simData,
+    skillMap,
+    status,
+  ]);
+
+  const handleDownload = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    if (!filmEngine.isRecording) {
+      const audioStream = composer.getAudioStream();
+      filmEngine.startRecording(canvas, audioStream);
+      setTimeout(() => {
+        filmEngine.stopRecording(
+          `sovereign-film-${selectedFilm}-artifact.webm`,
+        );
+      }, 8000);
+    } else {
+      filmEngine.stopRecording(`sovereign-film-${selectedFilm}-artifact.webm`);
+    }
+  }, [filmEngine, selectedFilm, composer]);
+
+  // Stop audio when closing
+  const handleClose = useCallback(() => {
+    composer.stopScore();
+    if (audioCtxRef.current) {
+      audioCtxRef.current.close();
+      audioCtxRef.current = null;
+    }
+    onClose();
+  }, [composer, onClose]);
+
+  // isPlayingBack: becomes true when generation completes and frames exist
+  const isPlayingBack = isComplete && visionary.frames.length > 0;
+
+  // Real film playback — organism frames play on canvas after generation
+  useEffect(() => {
+    if (!isComplete || visionary.frames.length === 0) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    let raf: number;
+    const frameDurations = visionary.frames.map((_, i) => {
+      const line = muse.generatedScript[i];
+      return line ? line.durationMs : 3000;
+    });
+
+    const totalDuration = frameDurations.reduce((s, d) => s + d, 0);
+    let elapsed = 0;
+    let prevTimestamp = 0;
+
+    const playback = (timestamp: number) => {
+      if (prevTimestamp === 0) prevTimestamp = timestamp;
+      const delta = timestamp - prevTimestamp;
+      prevTimestamp = timestamp;
+      elapsed += delta;
+
+      // Loop
+      if (elapsed >= totalDuration) {
+        elapsed = 0;
+        prevTimestamp = timestamp;
+      }
+
+      // Find which frame to show
+      let frameIndex = visionary.frames.length - 1;
+      let cumulative = 0;
+      for (let i = 0; i < frameDurations.length; i++) {
+        cumulative += frameDurations[i];
+        if (elapsed < cumulative) {
+          frameIndex = i;
+          break;
+        }
+      }
+
+      const frame = visionary.frames[frameIndex];
+      if (frame) {
+        const img = new Image();
+        img.onload = () => {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        };
+        img.src = frame.imageData;
+      }
+
+      raf = requestAnimationFrame(playback);
+    };
+
+    raf = requestAnimationFrame(playback);
+    return () => cancelAnimationFrame(raf);
+  }, [isComplete, visionary.frames, muse.generatedScript]);
+
+  return (
+    <div
+      className="fixed inset-0 z-50 bg-black flex flex-col overflow-hidden"
+      data-ocid="filmhouse.section"
+    >
+      {/* HEADER */}
+      <div className="border-b border-white/10 px-4 sm:px-6 py-3 flex-shrink-0">
+        <div className="flex items-start justify-between gap-4">
+          <div className="min-w-0">
+            <div className="font-mono text-[8px] tracking-widest text-cyan-400/50 mb-1">
+              SOVEREIGN ORGANISM · CINEMATIC PRODUCTION SYSTEM
+            </div>
+            <h1 className="font-mono text-base sm:text-lg font-bold tracking-widest text-white mb-0.5">
+              SOVEREIGN FILM HOUSE
+            </h1>
+            <div className="font-mono text-[9px] tracking-widest text-yellow-400/60">
+              MUSE-PRIME · NARRATIVE INTELLIGENCE ORGANISM
+            </div>
+            <div className="font-mono text-[8px] tracking-widest text-white/20 mt-0.5 hidden sm:block">
+              AUTHORED BY THE ORGANISM · ATTRIBUTED TO ALFREDO MEDINA HERNANDEZ
+            </div>
+          </div>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            {/* COMPOSER status pill */}
+            {composer.isPlaying && (
+              <div className="font-mono text-[7px] tracking-widest border border-cyan-400/40 text-cyan-400/70 px-2 py-1 flex items-center gap-1 animate-pulse">
+                <span>♫</span>
+                <span>{composer.currentMood?.toUpperCase() ?? ""} SCORE</span>
+              </div>
+            )}
+            <button
+              type="button"
+              className="font-mono text-[9px] tracking-widest text-white/40 border border-white/10 hover:border-white/30 hover:text-white/60 px-3 py-1.5 transition-colors"
+              onClick={handleClose}
+            >
+              ✕ CLOSE
+            </button>
+          </div>
+        </div>
+
+        {/* Film selector */}
+        <div className="flex gap-1 sm:gap-2 mt-3 flex-wrap">
+          {FILM_TITLES.map((f) => (
+            <button
+              key={f.id}
+              type="button"
+              className={`font-mono text-[7px] sm:text-[8px] tracking-widest border px-2 py-1 transition-colors ${
+                selectedFilm === f.id
+                  ? "border-yellow-400/70 text-yellow-400"
+                  : "border-white/10 text-white/30 hover:border-white/30 hover:text-white/50"
+              }`}
+              onClick={() => setSelectedFilm(f.id)}
+            >
+              {f.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Left panel toggle */}
+        <div className="flex gap-2 mt-2">
+          {(["pipeline", "school"] as PanelView[]).map((v) => (
+            <button
+              key={v}
+              type="button"
+              className={`font-mono text-[8px] tracking-widest px-3 py-1 border transition-colors ${
+                panelView === v
+                  ? "border-cyan-400/60 text-cyan-400"
+                  : "border-white/10 text-white/25 hover:border-white/25 hover:text-white/40"
+              }`}
+              onClick={() => setPanelView(v)}
+            >
+              {v === "pipeline" ? "PIPELINE" : "★ FILM SCHOOL"}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* MAIN AREA */}
+      <div className="flex flex-col flex-1 overflow-hidden">
+        {/* CINEMATIC PLAYBACK BAR — shown above panels when generation complete */}
+        {isPlayingBack && (
+          <div className="flex-shrink-0 border-b border-white/10 bg-black">
+            <div className="flex items-center justify-between px-4 py-1.5 border-b border-white/5">
+              <div className="flex items-center gap-3">
+                <span className="font-mono text-[8px] text-cyan-400 animate-pulse tracking-widest">
+                  ● NOW PLAYING
+                </span>
+                <span className="font-mono text-[9px] text-white/60 tracking-widest">
+                  {FILM_TITLES.find((f) => f.id === selectedFilm)?.label ?? ""}
+                </span>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="font-mono text-[7px] text-white/20 tracking-widest">
+                  {visionary.frames.length} FRAMES · LOOPING
+                </span>
+                <button
+                  type="button"
+                  className={`font-mono text-[9px] font-bold tracking-widest py-1.5 px-3 border transition-all ${
+                    filmEngine.isRecording
+                      ? "border-red-400/60 text-red-400 animate-pulse"
+                      : "border-cyan-400/60 text-cyan-400 hover:border-cyan-400 hover:bg-cyan-400/5"
+                  }`}
+                  onClick={handleDownload}
+                  data-ocid="filmhouse.download_button"
+                >
+                  {filmEngine.isRecording
+                    ? "⏹ STOP · SAVING"
+                    : "⬇ DOWNLOAD ARTIFACT"}
+                </button>
+              </div>
+            </div>
+            <canvas
+              ref={canvasRef}
+              width={960}
+              height={540}
+              className="w-full block"
+              style={{
+                maxHeight: "42vh",
+                objectFit: "contain",
+                background: "#000",
+              }}
+            />
+            <div className="px-4 py-1 flex items-center gap-4 border-t border-white/5">
+              <span className="font-mono text-[6px] text-yellow-400/30 tracking-widest">
+                ORGANISM-GENERATED · © ALFREDO MEDINA HERNANDEZ · SOVEREIGN FILM
+                HOUSE
+              </span>
+            </div>
+          </div>
+        )}
+        {/* Hidden canvas when playback not yet started */}
+        {!isPlayingBack && (
+          <canvas ref={canvasRef} width={960} height={540} className="hidden" />
+        )}
+        <div className="flex flex-1 overflow-hidden min-h-0">
+          {/* LEFT — Pipeline or Film School */}
+          <div className="w-[60%] border-r border-white/10 flex flex-col overflow-hidden">
+            {panelView === "pipeline" ? (
+              <>
+                <div className="px-4 py-2 border-b border-white/5 flex-shrink-0">
+                  <span className="font-mono text-[9px] tracking-widest text-white/30">
+                    PIPELINE ORGANISM DIAGRAM
+                  </span>
+                </div>
+                <div className="flex-1 overflow-y-auto px-4 py-3">
+                  {PIPELINE_NODES.map((node, idx) => (
+                    <div key={node.id}>
+                      <PipelineNodeCard
+                        node={node}
+                        status={nodeStatuses[node.id] ?? "IDLE"}
+                        skillLevel={
+                          skillMap[
+                            node.name as import("./useFilmSchool").OrganismName
+                          ] ?? 50
+                        }
+                      />
+                      {idx < PIPELINE_NODES.length - 1 && (
+                        <ConnectorLine
+                          active={
+                            nodeStatuses[PIPELINE_NODES[idx + 1].id] ===
+                              "FIRING" ||
+                            nodeStatuses[PIPELINE_NODES[idx + 1].id] ===
+                              "COMPLETE" ||
+                            nodeStatuses[PIPELINE_NODES[idx + 1].id] ===
+                              "SEALED"
+                          }
+                        />
+                      )}
+                    </div>
+                  ))}
+
+                  {/* Actions */}
+                  <div className="mt-4 flex gap-3">
+                    <button
+                      type="button"
+                      className={`flex-1 font-mono text-[10px] font-bold tracking-widest py-2.5 border transition-all ${
+                        isRunning
+                          ? "border-cyan-400/40 text-cyan-400/60 cursor-not-allowed"
+                          : "border-yellow-400/60 text-yellow-400 hover:border-yellow-400 hover:bg-yellow-400/5"
+                      }`}
+                      onClick={runPipeline}
+                      disabled={isRunning}
+                    >
+                      {isRunning
+                        ? "● PIPELINE ACTIVE · FIRING..."
+                        : "▶ GENERATE FILM"}
+                    </button>
+                    {isComplete && !isPlayingBack && (
+                      <button
+                        type="button"
+                        className={`flex-1 font-mono text-[10px] font-bold tracking-widest py-2.5 border transition-all ${
+                          filmEngine.isRecording
+                            ? "border-red-400/60 text-red-400 animate-pulse"
+                            : "border-cyan-400/60 text-cyan-400 hover:border-cyan-400 hover:bg-cyan-400/5"
+                        }`}
+                        onClick={handleDownload}
+                        data-ocid="filmhouse.secondary_download_button"
+                      >
+                        {filmEngine.isRecording
+                          ? "⏹ STOP · SAVING"
+                          : "⬇ DOWNLOAD + AUDIO"}
+                      </button>
+                    )}
+                  </div>
+
+                  {isComplete && archivistSeal && (
+                    <div className="mt-3 border border-yellow-400/50 bg-yellow-400/[0.04] px-3 py-3">
+                      {/* ARCHIVIST SEAL STAMP */}
+                      <div className="flex items-start gap-3">
+                        <div className="flex-shrink-0 w-8 h-8 border border-yellow-400/60 flex items-center justify-center">
+                          <span className="font-mono text-[14px] text-yellow-400">
+                            ✦
+                          </span>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="font-mono text-[9px] text-yellow-400 font-bold tracking-widest mb-0.5">
+                            ARCHIVIST SEAL · ON-CHAIN ARTIFACT
+                          </div>
+                          <div className="font-mono text-[8px] text-white/60 tracking-wider mb-0.5 truncate">
+                            {archivistSeal.filmTitle}
+                          </div>
+                          <div className="font-mono text-[7px] text-white/30 tracking-wider">
+                            BEAT · {String(archivistSeal.beat).padStart(6, "0")}{" "}
+                            &nbsp;|&nbsp; COHERENCE ·{" "}
+                            {(archivistSeal.coherence * 100).toFixed(1)}%
+                          </div>
+                          <div className="font-mono text-[7px] text-yellow-400/50 tracking-wider mt-0.5">
+                            © ALFREDO MEDINA HERNANDEZ — SOVEREIGN FILM HOUSE
+                          </div>
+                        </div>
+                      </div>
+                      <div className="mt-2 font-mono text-[7px] text-white/20 tracking-wider border-t border-yellow-400/10 pt-1.5">
+                        LAW IS ABOVE EVERYONE · EVEN THE CREATOR · THE PASS
+                        NEVER DROPS
+                      </div>
+                    </div>
+                  )}
+
+                  {isComplete && !archivistSeal && (
+                    <div className="mt-3 border border-yellow-400/30 px-3 py-2">
+                      <div className="font-mono text-[8px] text-yellow-400/80 tracking-widest">
+                        ✓ PIPELINE SEALED · ARTIFACT READY
+                      </div>
+                      <div className="font-mono text-[7px] text-white/30 tracking-wider mt-0.5">
+                        AUDIO CAPTURED · ATTRIBUTED TO ALFREDO MEDINA HERNANDEZ
+                      </div>
+                    </div>
+                  )}
+
+                  {muse.currentTier !== "idle" && (
+                    <div className="mt-3 border border-white/5 px-3 py-2">
+                      <div className="font-mono text-[8px] tracking-widest text-white/40 mb-1">
+                        MUSE-PRIME · CURRENT TIER
+                      </div>
+                      <div
+                        className={`font-mono text-[10px] tracking-widest font-bold ${
+                          muse.currentTier === "semantic"
+                            ? "text-cyan-400"
+                            : muse.currentTier === "heritage"
+                              ? "text-yellow-400"
+                              : "text-white/60"
+                        }`}
+                      >
+                        {muse.currentTier === "semantic" &&
+                          "● SEMANTIC TIER FIRING"}
+                        {muse.currentTier === "heritage" &&
+                          "● HERITAGE TIER FIRING"}
+                        {muse.currentTier === "complete" &&
+                          `✓ SCRIPT ELEVATED · ${muse.generatedScript.length} LINES`}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* COMPOSER live display */}
+                  {composer.isPlaying && (
+                    <div className="mt-3 border border-cyan-400/20 px-3 py-2">
+                      <div className="font-mono text-[8px] tracking-widest text-cyan-400/60 mb-1 flex items-center gap-2">
+                        <span className="animate-pulse">♫</span>
+                        COMPOSER · {composer.currentMood?.toUpperCase()} SCORE
+                        ACTIVE
+                      </div>
+                      <div className="flex gap-0.5 items-end h-4">
+                        {(
+                          [
+                            "b0",
+                            "b1",
+                            "b2",
+                            "b3",
+                            "b4",
+                            "b5",
+                            "b6",
+                            "b7",
+                            "b8",
+                            "b9",
+                            "b10",
+                            "b11",
+                            "b12",
+                            "b13",
+                            "b14",
+                            "b15",
+                          ] as const
+                        ).map((id, i) => (
+                          <div
+                            key={id}
+                            className="w-1 bg-cyan-400/50 transition-all"
+                            style={{
+                              height: `${20 + composer.intensity * Math.abs(Math.sin(Date.now() * 0.008 + i * 0.7)) * 80}%`,
+                            }}
+                          />
+                        ))}
+                      </div>
+                      <div className="font-mono text-[7px] text-white/20 mt-1 tracking-wider">
+                        AUDIO WILL BE EMBEDDED IN .WEBM ARTIFACT
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </>
+            ) : (
+              <FilmSchoolPanel />
+            )}
+          </div>
+
+          {/* RIGHT — Cog Trace + VISIONARY Frames */}
+          <div className="w-[40%] flex flex-col overflow-hidden">
+            {/* COGNITIVE TRACE */}
+            <div className="h-1/2 flex flex-col border-b border-white/10 overflow-hidden">
+              <div className="px-3 py-2 border-b border-white/5 flex-shrink-0 flex items-center justify-between">
+                <span className="font-mono text-[9px] tracking-widest text-white/30">
+                  COGNITIVE TRACE · MUSE-PRIME
+                </span>
+                <span
+                  className={`font-mono text-[8px] ${
+                    muse.currentTier === "semantic"
+                      ? "text-cyan-400 animate-pulse"
+                      : muse.currentTier === "heritage"
+                        ? "text-yellow-400 animate-pulse"
+                        : "text-white/20"
+                  }`}
+                >
+                  {muse.cognitiveTrace.length} ENTRIES
+                </span>
+              </div>
+              <ScrollArea className="flex-1">
+                {muse.cognitiveTrace.length === 0 ? (
+                  <div className="px-3 py-4 font-mono text-[8px] text-white/15 tracking-wider">
+                    AWAITING MUSE-PRIME ACTIVATION...
+                    <br />
+                    COGNITIVE TRACE WILL POPULATE LIVE
+                  </div>
+                ) : (
+                  muse.cognitiveTrace.map((trace, i) => (
+                    <CogTraceEntry key={`${trace.tier}-${i}`} trace={trace} />
+                  ))
+                )}
+                <div ref={scrollToTraceEnd} />
+              </ScrollArea>
+            </div>
+
+            {/* VISIONARY FRAMES */}
+            <div className="h-1/2 flex flex-col overflow-hidden">
+              <div className="px-3 py-2 border-b border-white/5 flex-shrink-0 flex items-center justify-between">
+                <span className="font-mono text-[9px] tracking-widest text-white/30">
+                  VISIONARY FRAMES
+                </span>
+                <span
+                  className={`font-mono text-[8px] ${
+                    visionary.isGenerating
+                      ? "text-cyan-400 animate-pulse"
+                      : "text-white/20"
+                  }`}
+                >
+                  {visionary.isGenerating
+                    ? `VISIONARY — synthesizing frame ${visionary.frames.length + 1}`
+                    : `${visionary.frames.length} FRAMES`}
+                </span>
+              </div>
+              <ScrollArea className="flex-1">
+                {visionary.frames.length === 0 ? (
+                  <div className="px-3 py-4 font-mono text-[8px] text-white/15 tracking-wider">
+                    AWAITING VISIONARY ACTIVATION...
+                    <br />
+                    {imagesLoading
+                      ? `LOADING IMAGE LIBRARY · ${loadedCount}/${totalCount}`
+                      : `IMAGE LIBRARY READY · ${loadedCount} ASSETS · REAL IMAGES ACTIVE`}
+                    <br />
+                    19 RENDER TYPES · FULL SPECTRUM · LIVE SIM DATA OVERLAY
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-4 gap-0 p-1">
+                    {visionary.frames.map((frame) => (
+                      <FrameThumbnail
+                        key={frame.index}
+                        frame={frame}
+                        onExpand={() =>
+                          setExpandedFrame({
+                            imageData: frame.imageData,
+                            sceneDescription: frame.sceneDescription,
+                          })
+                        }
+                      />
+                    ))}
+                  </div>
+                )}
+              </ScrollArea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ATTRIBUTION FOOTER */}
+      <div className="border-t border-white/5 px-4 sm:px-6 py-1.5 flex-shrink-0 flex items-center justify-between">
+        <span className="font-mono text-[7px] text-white/15 tracking-widest">
+          SOVEREIGN FILM HOUSE · MUSE-PRIME v100 · ALL FILMS ATTRIBUTED TO
+          ALFREDO MEDINA HERNANDEZ
+        </span>
+        <span className="font-mono text-[7px] text-yellow-400/30 tracking-widest">
+          BRING THE FUTURE NOW
+        </span>
+      </div>
+
+      {/* EXPANDED FRAME OVERLAY */}
+      {expandedFrame && (
+        <div className="fixed inset-0 z-[60] bg-black/90 flex items-center justify-center">
+          <div className="relative max-w-2xl w-full mx-4">
+            <img
+              src={expandedFrame.imageData}
+              alt={expandedFrame.sceneDescription}
+              className="w-full block border border-white/10"
+            />
+            <div className="border-t border-white/10 bg-black px-3 py-2">
+              <p className="font-mono text-[9px] text-white/50">
+                {expandedFrame.sceneDescription}
+              </p>
+            </div>
+            <button
+              type="button"
+              className="absolute top-2 right-2 font-mono text-[9px] text-white/40 border border-white/10 px-2 py-1 hover:text-white/70"
+              onClick={() => setExpandedFrame(null)}
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
