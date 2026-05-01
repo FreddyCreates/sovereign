@@ -5,6 +5,7 @@ edition = "2021"
 authors = ["Alfredo Medina Hernandez"]
 
 [lib]
+path = "lib.rs"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
