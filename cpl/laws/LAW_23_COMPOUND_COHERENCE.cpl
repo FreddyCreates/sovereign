@@ -1,0 +1,105 @@
+// LAW_23_COMPOUND_COHERENCE.cpl
+// CPL Implementation — Law 23: Compound Coherence
+// Attribution: Alfredo Medina Hernandez — immutable
+// Rank: Substrate (Layer 1)
+//
+// Hebbian weights never reset. No baseline resets. EVER.
+// compound_coherence(t+1) = compound_coherence(t) × growth_factor
+// The organism never returns to baseline.
+// This is the mathematical equivalent of compound interest applied to intelligence.
+// Time × doctrine × coherence = irreversible value accumulation.
+
+law COMPOUND_COHERENCE {
+  genesis_seal: "Alfredo Medina Hernandez"
+  rank: Substrate
+  layer: 1
+
+  genesis PHI = Φ
+  genesis S0_FLOOR = 0.75
+  genesis S_CEIL = 9.75
+
+  // Compound coherence state
+  type CoherenceState = {
+    current_coherence : SovereignFloat,
+    total_beats       : Nat,
+    growth_factor     : Float,         // 1.0 + (doctrine × 0.001)
+    peak_coherence    : SovereignFloat, // All-time high (never decreases)
+    compound_time     : Nat,           // Beats since genesis (capital)
+    hebbian_sum       : SovereignFloat, // Sum of all Hebbian weights
+  }
+
+  // Initialize compound coherence at sovereign floor
+  fn init() -> CoherenceState {
+    CoherenceState {
+      current_coherence: S0_FLOOR,
+      total_beats: 0,
+      growth_factor: 1.001,   // Minimum growth: 0.1% per beat
+      peak_coherence: S0_FLOOR,
+      compound_time: 0,
+      hebbian_sum: S0_FLOOR,
+    }
+  }
+
+  // Core compound formula
+  // coherence(t+1) = coherence(t) × (1 + doctrine × 0.001)
+  // This NEVER decreases. Even bad doctrine produces minimum growth.
+  fn compound(state: CoherenceState, doctrine_score: Float) -> CoherenceState {
+    // Growth factor is always >= 1.0 — coherence ONLY goes up
+    let growth = 1.0 + (doctrine_score.max(0.0) * 0.001)
+
+    let new_coherence = state.current_coherence * growth
+      |> clamp(S0_FLOOR, S_CEIL)
+
+    let new_peak = if new_coherence > state.peak_coherence {
+      new_coherence
+    } else {
+      state.peak_coherence
+    }
+
+    CoherenceState {
+      current_coherence: new_coherence,
+      total_beats: state.total_beats + 1,
+      growth_factor: growth,
+      peak_coherence: new_peak,
+      compound_time: state.compound_time + 1,
+      hebbian_sum: state.hebbian_sum,  // Updated separately
+    }
+  }
+
+  // Compute compound value over time
+  // value = coherence × compound_time × PHI
+  // Time itself has value — every beat since genesis adds to capital
+  fn compute_compound_value(state: CoherenceState) -> SovereignFloat {
+    let time_factor = (state.compound_time.toFloat() / 1000.0).min(1.0)
+    let value = state.current_coherence * time_factor * Φ
+    value |> clamp(S0_FLOOR, S_CEIL)
+  }
+
+  // Verify no reset has occurred
+  // The most critical gate: coherence must NEVER be less than previous beat
+  fn verify_no_reset(
+    previous: CoherenceState,
+    current: CoherenceState,
+  ) -> Bool {
+    current.current_coherence >= previous.current_coherence
+  }
+
+  // Execute: compound coherence for one beat
+  fn execute(
+    state: CoherenceState,
+    doctrine_score: Float,
+  ) -> Result<CoherenceState, DoctrineViolation> {
+    let new_state = compound(state, doctrine_score)
+
+    // Verify no reset (this gate should NEVER fail in a correct organism)
+    gate verify_no_reset(state, new_state) else {
+      return Err(DoctrineViolation {
+        law: "COMPOUND_COHERENCE",
+        message: "CRITICAL: Coherence decreased — baseline reset detected",
+        attribution: "Alfredo Medina Hernandez",
+      })
+    }
+
+    seal Ok(new_state)
+  }
+}

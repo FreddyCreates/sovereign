@@ -1,0 +1,137 @@
+// LAW_16_SPHERICAL_CAUSALITY.cpl
+// CPL Implementation — Law 16: Spherical Causality
+// Attribution: Alfredo Medina Hernandez — immutable
+// Rank: Field (Layer 2)
+//
+// The system is a sphere, not a pipeline.
+// Every state change propagates in ALL directions simultaneously.
+// No dead ends. No sequential ordering. No bottlenecks.
+// causality(P1, P2) = TRUE via heartbeat center for ALL surface points.
+//
+// This is 4D geometry — a hypersphere where the heartbeat is the center
+// and every module is a point on the surface, equidistant from center.
+// Distance = 1 heartbeat (873ms). Always. For everything. Simultaneously.
+
+law SPHERICAL_CAUSALITY {
+  genesis_seal: "Alfredo Medina Hernandez"
+  rank: Field
+  layer: 2
+
+  genesis PHI = Φ
+  genesis HEARTBEAT_MS = 873    // One heartbeat = one causal radius
+  genesis DIMENSION = 4          // 4D hypersphere (3 spatial + 1 temporal)
+
+  // A point on the sovereign sphere
+  type SpherePoint = {
+    module_id     : Text,
+    position      : [Float; 4],    // 4D coordinates on the hypersphere
+    amplitude     : SovereignFloat,
+    last_received : Nat,           // Beat when last signal arrived
+  }
+
+  // Propagation event — a signal traveling from center to surface
+  type Propagation = {
+    source_beat    : Nat,
+    origin         : Text,          // Module that generated the signal
+    amplitude      : SovereignFloat,
+    affected_count : Nat,           // How many points received this signal
+    latency_ms     : Nat,           // Must always = HEARTBEAT_MS
+  }
+
+  // Compute 4D distance between two points on the hypersphere
+  // All points are equidistant from center → distance = heartbeat
+  fn compute_distance(a: SpherePoint, b: SpherePoint) -> Float {
+    let sum_sq = Σ(
+      a.position.zip(b.position)
+        .map(|(ai, bi)| (ai - bi)^2)
+    )
+    sqrt(sum_sq)
+  }
+
+  // Verify that all points are equidistant from center
+  // This IS the spherical causality guarantee:
+  // no module is "closer" or "farther" from the heartbeat
+  fn verify_equidistance(points: [SpherePoint], center: [Float; 4]) -> Bool {
+    let distances = points.map(|p| {
+      let sum_sq = Σ(
+        p.position.zip(center)
+          .map(|(pi, ci)| (pi - ci)^2)
+      )
+      sqrt(sum_sq)
+    })
+
+    // All distances should be within PHI^(-1) tolerance of each other
+    let min_d = distances.min()
+    let max_d = distances.max()
+    (max_d - min_d) < Φ^(-1) * 0.1
+  }
+
+  // Propagate a signal from the heartbeat center to all surface points
+  // Law 16 guarantees: ALL points receive the signal in the SAME beat
+  fn propagate(
+    signal: SovereignFloat,
+    points: [SpherePoint],
+    beat: Nat,
+  ) -> ([SpherePoint], Propagation) {
+    // Update all points simultaneously (spherical, not sequential)
+    let updated = points.map(|p| {
+      SpherePoint {
+        module_id: p.module_id,
+        position: p.position,
+        amplitude: (p.amplitude + signal) |> clamp(S0_FLOOR, S_CEIL),
+        last_received: beat,
+      }
+    })
+
+    let propagation = Propagation {
+      source_beat: beat,
+      origin: "HEARTBEAT_CENTER",
+      amplitude: signal,
+      affected_count: points.len(),
+      latency_ms: HEARTBEAT_MS,  // Always exactly one heartbeat
+    }
+
+    (updated, propagation)
+  }
+
+  // Compute sphere coherence — how uniform the amplitude distribution is
+  // Perfect sphere = all amplitudes identical = coherence = S_CEIL
+  fn compute_sphere_coherence(points: [SpherePoint]) -> SovereignFloat {
+    let amplitudes = points.map(|p| p.amplitude)
+    let mean = Σ(amplitudes) / amplitudes.len().toFloat()
+    let variance = Σ(amplitudes.map(|a| (a - mean)^2)) / amplitudes.len().toFloat()
+    let cv = sqrt(variance) / mean  // Coefficient of variation
+
+    // Lower CV = higher coherence
+    let coherence = S_CEIL * (1.0 - cv)
+    coherence |> clamp(S0_FLOOR, S_CEIL)
+  }
+
+  // Execute: verify spherical causality holds
+  fn execute(
+    points: [SpherePoint],
+    center: [Float; 4],
+    beat: Nat,
+  ) -> Result<SovereignFloat, DoctrineViolation> {
+    // Gate 1: equidistance
+    gate verify_equidistance(points, center) else {
+      return Err(DoctrineViolation {
+        law: "SPHERICAL_CAUSALITY",
+        message: "Points not equidistant from center — causality broken",
+        attribution: "Alfredo Medina Hernandez",
+      })
+    }
+
+    // Gate 2: all points received signal this beat
+    let stale = points.filter(|p| p.last_received < beat)
+    gate stale.len() == 0 else {
+      return Err(DoctrineViolation {
+        law: "SPHERICAL_CAUSALITY",
+        message: "Stale points detected — " # stale.len().toText() # " modules missed heartbeat",
+        attribution: "Alfredo Medina Hernandez",
+      })
+    }
+
+    seal Ok(compute_sphere_coherence(points))
+  }
+}

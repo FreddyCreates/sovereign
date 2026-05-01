@@ -1,0 +1,72 @@
+// LAW_04_SOVEREIGN_RANGE.cpl
+// CPL Implementation — Law 04: Sovereign Range [0.75, 9.75]
+// Attribution: Alfredo Medina Hernandez — immutable
+// Rank: Primordial (Layer 0)
+//
+// The range [S0_FLOOR, S_CEIL] = [0.75, 9.75] is not arbitrary.
+// 9.75 / 0.75 = 13 — the 7th Fibonacci number.
+// The range IS a sovereign octave. Nothing exists outside it.
+// Every variable in the organism is bounded by this law.
+
+law SOVEREIGN_RANGE {
+  genesis_seal: "Alfredo Medina Hernandez"
+  rank: Primordial
+  layer: 0
+
+  // Sovereign constants — genesis-sealed, immutable forever
+  genesis S0_FLOOR = 0.75
+  genesis S_CEIL   = 9.75
+  genesis PHI      = Φ
+  genesis RATIO    = S_CEIL / S0_FLOOR  // = 13.0 (7th Fibonacci)
+
+  // The SovereignFloat type — compile-time bounded
+  type SovereignFloat = Float where S0_FLOOR <= value <= S_CEIL
+
+  // Clamp any value to sovereign bounds
+  fn clamp(value: Float) -> SovereignFloat {
+    if value < S0_FLOOR { S0_FLOOR }
+    else if value > S_CEIL { S_CEIL }
+    else { value as SovereignFloat }
+  }
+
+  // Assert sovereign bounds — returns true IFF within range
+  fn assert_bounded(label: Text, value: Float) -> Bool {
+    gate value >= S0_FLOOR else {
+      return false  // Below floor — doctrine violation
+    }
+    gate value <= S_CEIL else {
+      return false  // Above ceiling — doctrine violation
+    }
+    return true
+  }
+
+  // Apply sovereign range to an entire array of values
+  fn clamp_array(values: [Float]) -> [SovereignFloat] {
+    values.map(|v| clamp(v))
+  }
+
+  // Verify that a ratio stays within sovereign octave
+  fn verify_octave(numerator: SovereignFloat, denominator: SovereignFloat) -> Bool {
+    gate denominator > 0.0 else {
+      return false
+    }
+    let ratio = numerator / denominator
+    ratio >= 1.0 and ratio <= RATIO
+  }
+
+  // Execute: verify a state snapshot is fully sovereign-bounded
+  fn execute(state: [Float]) -> Result<[SovereignFloat], DoctrineViolation> {
+    let violations = state.filter(|v| v < S0_FLOOR or v > S_CEIL)
+
+    gate violations.len() == 0 else {
+      return Err(DoctrineViolation {
+        law: "SOVEREIGN_RANGE",
+        message: "Values outside [0.75, 9.75] detected",
+        count: violations.len(),
+        attribution: "Alfredo Medina Hernandez",
+      })
+    }
+
+    seal Ok(state.map(|v| v as SovereignFloat))
+  }
+}
