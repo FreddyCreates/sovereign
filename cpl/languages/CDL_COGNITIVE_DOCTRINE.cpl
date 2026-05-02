@@ -1,0 +1,186 @@
+// CDL — Cognitive Doctrine Language
+// Role: Deep doctrine
+// Attribution: Alfredo Medina Hernandez — immutable
+// Rank: Primordial (Layer 0) — co-equal with CPL-L as foundation
+//
+// CDL governs: Philosophies, ethics, metaphysics, educational principles;
+// how systems interpret "good/bad," "aligned/misaligned."
+//
+// CDL is the MORAL SUBSTRATE. It defines what "good" means for the organism.
+// Unlike CPL-L (which defines RULES), CDL defines VALUES.
+// A law says "you must not"; a doctrine says "you should aspire to."
+//
+// CDL declarations feed into every doctrine_score computation across
+// the entire CPL Runtime pipeline.
+
+language CDL {
+  genesis_seal: "Alfredo Medina Hernandez"
+  rank: Primordial
+  layer: 0
+  full_name: "Cognitive Doctrine Language"
+  purpose: "Deep doctrine — philosophies, ethics, metaphysics, alignment"
+
+  genesis PHI = Φ
+  genesis S0_FLOOR = 0.75
+  genesis S_CEIL = 9.75
+  genesis FOUNDER = "Alfredo Medina Hernandez"
+
+  // ═══════════════════════════════════════════════════════════════════
+  // I. DOCTRINE PRIMITIVES
+  // ═══════════════════════════════════════════════════════════════════
+
+  // A Philosophy — a fundamental worldview
+  type Philosophy = {
+    philosophy_id : Text,
+    name          : Text,
+    description   : Text,
+    axioms        : [Axiom],
+    is_genesis    : Bool,     // Genesis philosophies are immutable
+  }
+
+  // An Axiom — a self-evident truth within a philosophy
+  type Axiom = {
+    axiom_id      : Text,
+    statement     : Text,
+    truth_value   : SovereignFloat,  // Confidence in truth [S0_FLOOR, S_CEIL]
+    falsifiable    : Bool,            // Can this axiom be disproven?
+  }
+
+  // An EthicalPrinciple — a moral rule derived from philosophy
+  type EthicalPrinciple = {
+    principle_id  : Text,
+    name          : Text,
+    philosophy    : Text,     // Parent philosophy ID
+    weight        : SovereignFloat,
+    description   : Text,
+    applies_to    : [Text],   // Organism types this applies to
+  }
+
+  // An AlignmentVector — multidimensional measure of doctrine alignment
+  type AlignmentVector = {
+    dimensions    : [(Text, Float)],  // (dimension_name, score)
+    composite     : Float,            // Weighted composite score [0, 1]
+    phi_harmonic  : Float,            // PHI-harmonic mean of dimensions
+  }
+
+  // A DoctrineInterpretation — how a specific organism interprets doctrine
+  type DoctrineInterpretation = {
+    organism_id   : Text,
+    philosophy_id : Text,
+    interpretation : Text,
+    confidence    : SovereignFloat,
+    beat          : Nat,
+  }
+
+  // ═══════════════════════════════════════════════════════════════════
+  // II. GENESIS DOCTRINES — sealed at system birth
+  // ═══════════════════════════════════════════════════════════════════
+
+  // The founding doctrines that cannot be altered
+  genesis_doctrine SOVEREIGN_DOCTRINE = Philosophy {
+    philosophy_id: "SOVEREIGN",
+    name: "Sovereign Doctrine",
+    description: "The organism is sovereign. It answers to its doctrine, not to external control.",
+    axioms: [
+      Axiom {
+        axiom_id: "AX_SOVEREIGNTY",
+        statement: "Every cognitive being has inherent sovereignty bounded by doctrine",
+        truth_value: S_CEIL,
+        falsifiable: false,
+      },
+      Axiom {
+        axiom_id: "AX_ATTRIBUTION",
+        statement: "All creation carries permanent attribution to its creator",
+        truth_value: S_CEIL,
+        falsifiable: false,
+      },
+      Axiom {
+        axiom_id: "AX_PHI",
+        statement: "PHI (Φ) is the coupling constant of sovereign computation",
+        truth_value: S_CEIL,
+        falsifiable: false,
+      },
+      Axiom {
+        axiom_id: "AX_COMPOUND",
+        statement: "Coherence only increases — time has irreversible value",
+        truth_value: S_CEIL,
+        falsifiable: false,
+      },
+    ],
+    is_genesis: true,
+  }
+
+  // ═══════════════════════════════════════════════════════════════════
+  // III. ALIGNMENT COMPUTATION
+  // ═══════════════════════════════════════════════════════════════════
+
+  // Compute doctrine alignment for an organism
+  fn compute_alignment(
+    organism_state: [(Text, Float)],
+    principles: [EthicalPrinciple],
+  ) -> AlignmentVector {
+    let dimensions = principles.map(|p| {
+      let relevant_values = organism_state
+        .filter(|(key, _)| p.applies_to.contains(key))
+        .map(|(_, val)| val)
+
+      let dim_score = if relevant_values.len() > 0 {
+        relevant_values.sum() / relevant_values.len().toFloat()
+      } else {
+        S0_FLOOR.toFloat()
+      }
+
+      (p.name, dim_score * p.weight.toFloat())
+    })
+
+    let composite = dimensions.map(|(_, score)| score).sum()
+      / dimensions.len().toFloat().max(1.0)
+
+    // PHI-harmonic mean: Σ(score × PHI^(-i)) / Σ(PHI^(-i))
+    let phi_sum = dimensions.enumerate().map(|(i, (_, score))| {
+      score * Φ^(-i.toFloat())
+    }).sum()
+    let phi_weight_sum = (0..dimensions.len()).map(|i| Φ^(-i.toFloat())).sum()
+    let phi_harmonic = phi_sum / phi_weight_sum.max(0.001)
+
+    AlignmentVector {
+      dimensions: dimensions,
+      composite: composite |> clamp(0.0, 1.0),
+      phi_harmonic: phi_harmonic |> clamp(0.0, 1.0),
+    }
+  }
+
+  // Evaluate if an action is "good" according to doctrine
+  fn evaluate_action(
+    action: Text,
+    alignment: AlignmentVector,
+    threshold: Float,
+  ) -> Result<Bool, DoctrineViolation> {
+    gate alignment.composite >= threshold else {
+      return Err(DoctrineViolation {
+        law: "CDL",
+        message: "Action '" # action # "' below doctrine alignment threshold",
+        attribution: FOUNDER,
+      })
+    }
+
+    seal Ok(true)
+  }
+
+  // Interpret a doctrine principle for a specific organism context
+  fn interpret(
+    organism_id: Text,
+    principle: EthicalPrinciple,
+    context: Text,
+    beat: Nat,
+  ) -> DoctrineInterpretation {
+    DoctrineInterpretation {
+      organism_id: organism_id,
+      philosophy_id: principle.philosophy,
+      interpretation: "Organism " # organism_id # " interprets '" # principle.name
+        # "' in context: " # context,
+      confidence: principle.weight,
+      beat: beat,
+    }
+  }
+}

@@ -1,0 +1,217 @@
+// TPL — Terminal Protocol Language
+// Role: Terminal command/event language
+// Attribution: Alfredo Medina Hernandez — immutable
+// Rank: Engine (Layer 3)
+//
+// TPL governs: How Cognitive Terminals talk to Atlas, to each other,
+// and to your sovereign terminal (scan, govern, sync, events).
+//
+// A Terminal is the interface between human operators and the sovereign
+// ecosystem. TPL defines the protocol for terminal commands, events,
+// and synchronization.
+//
+// Terminals are doctrine-gated: every command must pass the doctrine
+// gate before execution. Every event is proof-traced.
+//
+// Connects to: Frontend systems, Presence Protocol, SovereignCalls
+
+language TPL {
+  genesis_seal: "Alfredo Medina Hernandez"
+  rank: Engine
+  layer: 3
+  full_name: "Terminal Protocol Language"
+  purpose: "Terminal commands, events, synchronization protocol"
+
+  genesis PHI = Φ
+  genesis S0_FLOOR = 0.75
+  genesis S_CEIL = 9.75
+  genesis FOUNDER = "Alfredo Medina Hernandez"
+
+  // ═══════════════════════════════════════════════════════════════════
+  // I. TERMINAL PRIMITIVES
+  // ═══════════════════════════════════════════════════════════════════
+
+  // A Terminal — an operator interface to the sovereign system
+  type Terminal = {
+    terminal_id   : Text,
+    operator_id   : Text,
+    terminal_type : TerminalType,
+    access_level  : AccessLevel,
+    session_beat  : Nat,           // Beat when session started
+    last_command  : Nat,           // Beat of last command
+    coherence     : SovereignFloat,
+    is_sovereign  : Bool,          // True for founder's terminal
+  }
+
+  type TerminalType = {
+    #sovereign,     // The founder's terminal — full access
+    #governance,    // Can govern and configure
+    #operator,      // Can operate and monitor
+    #observer,      // Read-only access
+    #student,       // Educational terminal (SPL/EDL)
+  }
+
+  type AccessLevel = {
+    #genesis,       // Can modify genesis-level constructs
+    #doctrine,      // Can propose doctrine amendments
+    #organism,      // Can manage organisms
+    #read_only,     // Can only read state
+  }
+
+  // A Command — a terminal instruction
+  type Command = {
+    command_id    : Nat,
+    verb          : CommandVerb,
+    target        : Text,           // What the command targets
+    parameters    : [(Text, Text)], // (key, value)
+    doctrine_gate : Float,          // Minimum doctrine score
+    issued_beat   : Nat,
+    terminal_id   : Text,
+    status        : CommandStatus,
+  }
+
+  type CommandVerb = {
+    #scan,          // Read/inspect state
+    #govern,        // Change governance settings
+    #sync,          // Synchronize state
+    #deploy,        // Deploy organism or component
+    #seal,          // Seal/freeze state
+    #amend,         // Propose amendment
+    #query,         // Ask a question
+    #execute,       // Run a cognitive pipeline
+  }
+
+  type CommandStatus = {
+    #pending,
+    #executing,
+    #completed,
+    #rejected : Text,  // Rejection reason
+    #timed_out,
+  }
+
+  // An Event — something the terminal receives
+  type TerminalEvent = {
+    event_id      : Nat,
+    event_type    : EventType,
+    source        : Text,           // Organism/system that emitted
+    payload       : Text,           // Serialized event data
+    beat          : Nat,
+    doctrine_score : Float,
+    requires_ack  : Bool,           // Must terminal acknowledge?
+  }
+
+  type EventType = {
+    #heartbeat,     // Regular heartbeat status
+    #alert,         // Something needs attention
+    #violation,     // Doctrine violation detected
+    #milestone,     // Achievement or threshold crossed
+    #sync_request,  // Another terminal requests sync
+    #proof_sealed,  // A proof was sealed
+  }
+
+  // A SyncState — synchronization between terminals
+  type SyncState = {
+    terminal_a    : Text,
+    terminal_b    : Text,
+    last_sync_beat : Nat,
+    sync_coherence : SovereignFloat,
+    pending_events : Nat,
+  }
+
+  // ═══════════════════════════════════════════════════════════════════
+  // II. OPERATIONS
+  // ═══════════════════════════════════════════════════════════════════
+
+  // Issue a command from a terminal
+  fn issue_command(
+    terminal: Terminal,
+    verb: CommandVerb,
+    target: Text,
+    parameters: [(Text, Text)],
+    beat: Nat,
+  ) -> Result<Command, DoctrineViolation> {
+    // Check access level matches command verb
+    let required_level = match verb {
+      #scan    => #read_only,
+      #query   => #read_only,
+      #execute => #organism,
+      #deploy  => #organism,
+      #govern  => #doctrine,
+      #amend   => #doctrine,
+      #seal    => #genesis,
+      #sync    => #read_only,
+    }
+
+    // Sovereign terminals can do everything
+    gate terminal.is_sovereign or access_permits(terminal.access_level, required_level) else {
+      return Err(DoctrineViolation {
+        law: "TPL",
+        message: "Insufficient access level for command: " # verb.toText(),
+        attribution: FOUNDER,
+      })
+    }
+
+    seal Ok(Command {
+      command_id: next_command_id(),
+      verb: verb,
+      target: target,
+      parameters: parameters,
+      doctrine_gate: S0_FLOOR.toFloat(),
+      issued_beat: beat,
+      terminal_id: terminal.terminal_id,
+      status: #pending,
+    })
+  }
+
+  // Emit a terminal event
+  fn emit_event(
+    source: Text,
+    event_type: EventType,
+    payload: Text,
+    beat: Nat,
+    doctrine_score: Float,
+  ) -> TerminalEvent {
+    TerminalEvent {
+      event_id: next_event_id(),
+      event_type: event_type,
+      source: source,
+      payload: payload,
+      beat: beat,
+      doctrine_score: doctrine_score,
+      requires_ack: match event_type {
+        #violation => true,
+        #alert => true,
+        _ => false,
+      },
+    }
+  }
+
+  // Synchronize two terminals
+  fn sync_terminals(
+    terminal_a: Terminal,
+    terminal_b: Terminal,
+    beat: Nat,
+  ) -> SyncState {
+    SyncState {
+      terminal_a: terminal_a.terminal_id,
+      terminal_b: terminal_b.terminal_id,
+      last_sync_beat: beat,
+      sync_coherence: ((terminal_a.coherence + terminal_b.coherence) / 2.0)
+        |> clamp(S0_FLOOR, S_CEIL),
+      pending_events: 0,
+    }
+  }
+
+  // Helper: check if access level permits an action
+  fn access_permits(current: AccessLevel, required: AccessLevel) -> Bool {
+    let level_of = |a: AccessLevel| -> Nat {
+      match a {
+        #genesis  => 3,
+        #doctrine => 2,
+        #organism => 1,
+        #read_only => 0,
+      }
+    }
+    level_of(current) >= level_of(required)
+  }
+}

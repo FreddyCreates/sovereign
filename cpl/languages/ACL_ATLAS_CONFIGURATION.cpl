@@ -1,0 +1,242 @@
+// ACL — Atlas Configuration Language
+// Role: Ontology/config language
+// Attribution: Alfredo Medina Hernandez — immutable
+// Rank: Substrate (Layer 1)
+//
+// ACL governs: Entities, archetypes, relationships, governance bindings
+// for Atlas and its registries.
+//
+// Atlas is the WORLD MAP — the ontological registry of everything
+// that exists in the sovereign ecosystem. ACL is the language
+// that configures Atlas: what entities exist, how they relate,
+// what archetypes they follow, and how governance binds to them.
+//
+// Connects to: Architecture types, World Organism Bridge,
+// Content World Engine, the full registry infrastructure.
+
+language ACL {
+  genesis_seal: "Alfredo Medina Hernandez"
+  rank: Substrate
+  layer: 1
+  full_name: "Atlas Configuration Language"
+  purpose: "Ontology, entity registry, archetype definition, governance binding"
+
+  genesis PHI = Φ
+  genesis S0_FLOOR = 0.75
+  genesis S_CEIL = 9.75
+  genesis FOUNDER = "Alfredo Medina Hernandez"
+
+  // ═══════════════════════════════════════════════════════════════════
+  // I. ONTOLOGY PRIMITIVES
+  // ═══════════════════════════════════════════════════════════════════
+
+  // An Archetype — a template for entities
+  type Archetype = {
+    archetype_id  : Text,
+    name          : Text,
+    latin_name    : Text,
+    layer         : Nat,           // 0=Primordial, 1=Substrate, 2=Organism, 3=Engine
+    properties    : [PropertyDef],
+    invariants    : [Text],        // Invariant IDs from CPL Runtime
+    parent        : ?Text,         // Parent archetype (inheritance)
+  }
+
+  type PropertyDef = {
+    prop_name     : Text,
+    prop_type     : PropType,
+    default_value : ?Text,
+    is_required   : Bool,
+    sovereign_bounded : Bool,     // Must be in [S0_FLOOR, S_CEIL]
+  }
+
+  type PropType = {
+    #sovereign_float,
+    #natural,
+    #text,
+    #boolean,
+    #reference : Text,   // Reference to another entity type
+    #list : Text,        // List of a type
+  }
+
+  // An Entity — a registered thing in Atlas
+  type AtlasEntity = {
+    entity_id     : Text,
+    archetype_id  : Text,
+    name          : Text,
+    realm_id      : ?Text,         // Which realm it lives in
+    properties    : [(Text, Text)], // (key, serialized_value)
+    governance    : GovernanceBinding,
+    created_beat  : Nat,
+    last_updated  : Nat,
+    coherence     : SovereignFloat,
+    attribution   : Text,
+  }
+
+  // A Relationship — a connection between entities
+  type Relationship = {
+    relationship_id : Text,
+    rel_type        : RelationType,
+    source_id       : Text,
+    target_id       : Text,
+    weight          : SovereignFloat,  // PHI-weighted relationship strength
+    bidirectional   : Bool,
+    created_beat    : Nat,
+  }
+
+  type RelationType = {
+    #parent_child,
+    #peer,
+    #depends_on,
+    #governs,
+    #flows_to,
+    #resonates_with,
+    #spawned_from,
+  }
+
+  // A GovernanceBinding — how an entity is governed
+  type GovernanceBinding = {
+    constitution_id : Text,        // CPL-L constitution
+    contract_id     : ?Text,       // CPL-C contract (if organism)
+    charter_id      : ?Text,       // OCL charter (if single organism)
+    doctrine_laws   : [Nat],       // Law IDs that apply
+    enforce_level   : EnforceLevel,
+  }
+
+  // ═══════════════════════════════════════════════════════════════════
+  // II. ATLAS REGISTRY
+  // ═══════════════════════════════════════════════════════════════════
+
+  type AtlasRegistry = {
+    registry_id   : Text,
+    archetypes    : [Archetype],
+    entities      : [AtlasEntity],
+    relationships : [Relationship],
+    total_coherence : SovereignFloat,
+    last_beat     : Nat,
+  }
+
+  // ═══════════════════════════════════════════════════════════════════
+  // III. OPERATIONS
+  // ═══════════════════════════════════════════════════════════════════
+
+  // Register a new archetype
+  fn register_archetype(
+    registry: AtlasRegistry,
+    name: Text,
+    latin_name: Text,
+    layer: Nat,
+    properties: [PropertyDef],
+    parent: ?Text,
+  ) -> Result<(AtlasRegistry, Archetype), DoctrineViolation> {
+    gate layer <= 3 else {
+      return Err(DoctrineViolation {
+        law: "ACL",
+        message: "Invalid archetype layer (must be 0-3)",
+        attribution: FOUNDER,
+      })
+    }
+
+    // If parent exists, it must be registered
+    match parent {
+      Some(parent_id) => {
+        gate registry.archetypes.any(|a| a.archetype_id == parent_id) else {
+          return Err(DoctrineViolation {
+            law: "ACL",
+            message: "Parent archetype not found in registry",
+            attribution: FOUNDER,
+          })
+        }
+      },
+      None => {},
+    }
+
+    let archetype = Archetype {
+      archetype_id: "ARCH_" # name,
+      name: name,
+      latin_name: latin_name,
+      layer: layer,
+      properties: properties,
+      invariants: ["SOVEREIGN_RANGE", "ATTRIBUTION_REQUIRED"],
+      parent: parent,
+    }
+
+    seal Ok((
+      AtlasRegistry { ...registry, archetypes: registry.archetypes ++ [archetype] },
+      archetype,
+    ))
+  }
+
+  // Instantiate an entity from an archetype
+  fn create_entity(
+    registry: AtlasRegistry,
+    archetype_id: Text,
+    name: Text,
+    realm_id: ?Text,
+    governance: GovernanceBinding,
+    beat: Nat,
+  ) -> Result<(AtlasRegistry, AtlasEntity), DoctrineViolation> {
+    // Archetype must exist
+    gate registry.archetypes.any(|a| a.archetype_id == archetype_id) else {
+      return Err(DoctrineViolation {
+        law: "ACL",
+        message: "Archetype not found: " # archetype_id,
+        attribution: FOUNDER,
+      })
+    }
+
+    let entity = AtlasEntity {
+      entity_id: "ENTITY_" # name # "_" # beat.toText(),
+      archetype_id: archetype_id,
+      name: name,
+      realm_id: realm_id,
+      properties: [],
+      governance: governance,
+      created_beat: beat,
+      last_updated: beat,
+      coherence: S0_FLOOR,
+      attribution: FOUNDER,
+    }
+
+    seal Ok((
+      AtlasRegistry { ...registry, entities: registry.entities ++ [entity] },
+      entity,
+    ))
+  }
+
+  // Create a relationship between entities
+  fn relate(
+    registry: AtlasRegistry,
+    source_id: Text,
+    target_id: Text,
+    rel_type: RelationType,
+    weight: SovereignFloat,
+    beat: Nat,
+  ) -> Result<AtlasRegistry, DoctrineViolation> {
+    gate registry.entities.any(|e| e.entity_id == source_id) else {
+      return Err(DoctrineViolation {
+        law: "ACL",
+        message: "Source entity not found: " # source_id,
+        attribution: FOUNDER,
+      })
+    }
+    gate registry.entities.any(|e| e.entity_id == target_id) else {
+      return Err(DoctrineViolation {
+        law: "ACL",
+        message: "Target entity not found: " # target_id,
+        attribution: FOUNDER,
+      })
+    }
+
+    let rel = Relationship {
+      relationship_id: "REL_" # source_id # "_" # target_id,
+      rel_type: rel_type,
+      source_id: source_id,
+      target_id: target_id,
+      weight: weight,
+      bidirectional: rel_type == #peer or rel_type == #resonates_with,
+      created_beat: beat,
+    }
+
+    seal Ok(AtlasRegistry { ...registry, relationships: registry.relationships ++ [rel] })
+  }
+}

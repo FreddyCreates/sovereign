@@ -1,0 +1,213 @@
+// RSL — Realm Script Language
+// Role: World/physics language
+// Attribution: Alfredo Medina Hernandez — immutable
+// Rank: Engine (Layer 3)
+//
+// RSL governs: Simulations, virtual worlds, ecologies, rules of a Realm
+// (psyche-sim, learning worlds, etc.).
+//
+// A Realm is a bounded simulation environment where organisms live.
+// RSL defines the PHYSICS of that realm — what is possible,
+// what costs energy, what compounds over time.
+//
+// Every Realm has its own RSL script that defines its rules.
+// Realms can be nested (a world within a world).
+// All Realms share the sovereign range [S0_FLOOR, S_CEIL] as a universal constant.
+//
+// Connects to: ContentWorldEngine (contentWorldEngine.mo),
+// World Settings (world-settings/), Sandbox Organisms (sandboxOrganisms.mo)
+
+language RSL {
+  genesis_seal: "Alfredo Medina Hernandez"
+  rank: Engine
+  layer: 3
+  full_name: "Realm Script Language"
+  purpose: "World physics, simulation rules, ecology definition"
+
+  genesis PHI = Φ
+  genesis S0_FLOOR = 0.75
+  genesis S_CEIL = 9.75
+
+  // ═══════════════════════════════════════════════════════════════════
+  // I. REALM PRIMITIVES
+  // ═══════════════════════════════════════════════════════════════════
+
+  // A RealmPhysics — the fundamental rules of a world
+  type RealmPhysics = {
+    realm_id      : Text,
+    name          : Text,
+    description   : Text,
+
+    // Physical constants (all within sovereign range)
+    gravity       : SovereignFloat,   // Resistance to change
+    entropy       : SovereignFloat,   // Rate of decay without input
+    phi_coupling  : SovereignFloat,   // How strongly PHI affects the realm
+    time_scale    : Float,            // Beats per realm-second
+
+    // Boundaries
+    max_entities  : Nat,
+    max_depth     : Nat,              // Nesting depth for sub-realms
+    sovereign_floor : SovereignFloat, // Always S0_FLOOR
+    sovereign_ceiling : SovereignFloat, // Always S_CEIL
+  }
+
+  // A RealmEntity — something that exists in the realm
+  type RealmEntity = {
+    entity_id     : Text,
+    entity_type   : EntityType,
+    position      : RealmPosition,
+    energy        : SovereignFloat,
+    coherence     : SovereignFloat,
+    owner         : ?Text,            // Organism that owns this entity
+  }
+
+  type EntityType = {
+    #organism,      // A cognitive being
+    #resource,      // Consumable/generative resource
+    #structure,     // Built environment
+    #signal,        // Ephemeral signal/event
+    #portal,        // Connection to another realm
+  }
+
+  type RealmPosition = {
+    x : Float,
+    y : Float,
+    z : Float,
+    realm_id : Text,
+  }
+
+  // A RealmRule — a specific physics rule
+  type RealmRule = {
+    rule_id       : Text,
+    name          : Text,
+    description   : Text,
+    trigger       : RuleTrigger,
+    effect        : RuleEffect,
+    phi_weight    : SovereignFloat,
+  }
+
+  type RuleTrigger = {
+    #every_beat,
+    #on_collision,
+    #on_entry,
+    #on_exit,
+    #threshold : Float,       // When a value crosses threshold
+    #periodic : Nat,          // Every N beats
+  }
+
+  type RuleEffect = {
+    #energy_transfer : Float,
+    #coherence_change : Float,
+    #spawn_entity : EntityType,
+    #destroy_entity,
+    #signal_emit : Text,
+    #realm_shift : Text,      // Move to another realm
+  }
+
+  // An Ecology — the network of interactions in a realm
+  type Ecology = {
+    realm_id      : Text,
+    entities      : [RealmEntity],
+    rules         : [RealmRule],
+    total_energy  : SovereignFloat,
+    total_coherence : SovereignFloat,
+    beat          : Nat,
+  }
+
+  // ═══════════════════════════════════════════════════════════════════
+  // II. OPERATIONS
+  // ═══════════════════════════════════════════════════════════════════
+
+  // Define a new realm with its physics
+  fn define_realm(
+    name: Text,
+    gravity: SovereignFloat,
+    entropy: SovereignFloat,
+    phi_coupling: SovereignFloat,
+  ) -> Result<RealmPhysics, DoctrineViolation> {
+    // All physics constants must be in sovereign range
+    gate gravity >= S0_FLOOR and gravity <= S_CEIL else {
+      return Err(DoctrineViolation {
+        law: "RSL",
+        message: "Gravity outside sovereign range",
+        attribution: "Alfredo Medina Hernandez",
+      })
+    }
+
+    seal Ok(RealmPhysics {
+      realm_id: "REALM_" # name,
+      name: name,
+      description: "Realm: " # name,
+      gravity: gravity,
+      entropy: entropy |> clamp(S0_FLOOR, S_CEIL),
+      phi_coupling: phi_coupling |> clamp(S0_FLOOR, S_CEIL),
+      time_scale: 1.0,
+      max_entities: 1000,
+      max_depth: 3,
+      sovereign_floor: S0_FLOOR,
+      sovereign_ceiling: S_CEIL,
+    })
+  }
+
+  // Simulate one beat in a realm
+  fn simulate_beat(
+    ecology: Ecology,
+    physics: RealmPhysics,
+  ) -> Ecology {
+    // Apply entropy (energy decay)
+    let decayed_entities = ecology.entities.map(|e| {
+      RealmEntity {
+        ...e,
+        energy: (e.energy - physics.entropy * 0.001) |> clamp(S0_FLOOR, S_CEIL),
+      }
+    })
+
+    // Apply PHI coupling (coherence growth)
+    let coupled_entities = decayed_entities.map(|e| {
+      RealmEntity {
+        ...e,
+        coherence: (e.coherence + physics.phi_coupling * Φ * 0.0001)
+          |> clamp(S0_FLOOR, S_CEIL),
+      }
+    })
+
+    // Recompute totals
+    let total_energy = coupled_entities.map(|e| e.energy).sum()
+      |> clamp(S0_FLOOR, S_CEIL)
+    let total_coherence = coupled_entities.map(|e| e.coherence).sum()
+      / coupled_entities.len().toFloat().max(1.0)
+      |> clamp(S0_FLOOR, S_CEIL)
+
+    Ecology {
+      ...ecology,
+      entities: coupled_entities,
+      total_energy: total_energy,
+      total_coherence: total_coherence,
+      beat: ecology.beat + 1,
+    }
+  }
+
+  // Spawn a sub-realm (nested world)
+  fn spawn_sub_realm(
+    parent: RealmPhysics,
+    name: Text,
+  ) -> Result<RealmPhysics, DoctrineViolation> {
+    gate parent.max_depth > 0 else {
+      return Err(DoctrineViolation {
+        law: "RSL",
+        message: "Maximum realm nesting depth reached",
+        attribution: "Alfredo Medina Hernandez",
+      })
+    }
+
+    seal Ok(RealmPhysics {
+      ...parent,
+      realm_id: parent.realm_id # "_SUB_" # name,
+      name: parent.name # "/" # name,
+      max_depth: parent.max_depth - 1,
+      // Sub-realm inherits parent physics scaled by PHI^(-1)
+      gravity: (parent.gravity * Φ^(-1)) |> clamp(S0_FLOOR, S_CEIL),
+      entropy: (parent.entropy * Φ^(-1)) |> clamp(S0_FLOOR, S_CEIL),
+    })
+  }
+}

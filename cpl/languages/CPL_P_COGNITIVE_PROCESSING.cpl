@@ -1,0 +1,221 @@
+// CPL-P — Cognitive Processing Language
+// Role: Thought/flow language
+// Attribution: Alfredo Medina Hernandez — immutable
+// Rank: Engine (Layer 3) — operates within CPL-L constitutions and CPL-C contracts
+//
+// CPL-P governs: Cognitive pipelines, decision graphs, escalation rules,
+// how a mind processes inputs into outputs.
+//
+// CPL-P is the THOUGHT LANGUAGE. It defines how organisms THINK.
+// Every cognitive pipeline — from sensory input to decision output —
+// is expressed as a CPL-P flow graph.
+//
+// Compiles to: CPLTypes.PolicyAtom chains + PulseEntry scheduling
+// The PULSE scheduler (Pass 2) executes CPL-P pipelines in φ-weighted order.
+
+language CPL_P {
+  genesis_seal: "Alfredo Medina Hernandez"
+  rank: Engine
+  layer: 3
+  full_name: "Cognitive Processing Language"
+  purpose: "Thought pipelines, decision graphs, escalation rules"
+
+  genesis PHI = Φ
+  genesis S0_FLOOR = 0.75
+  genesis S_CEIL = 9.75
+
+  // ═══════════════════════════════════════════════════════════════════
+  // I. COGNITIVE PIPELINE PRIMITIVES
+  // ═══════════════════════════════════════════════════════════════════
+
+  // A CognitiveNode — one step in a thought pipeline
+  type CognitiveNode = {
+    node_id     : Text,
+    node_type   : NodeType,
+    input_ports : [Port],
+    output_ports : [Port],
+    phi_weight  : SovereignFloat,
+    doctrine_gate : Float,
+    process     : fn(Signal) -> Signal,  // The transformation function
+  }
+
+  // Node types — the primitives of thought
+  type NodeType = {
+    #sense,       // Read input from world model (ADRE: Sense)
+    #filter,      // Doctrine-gated filter (ADRE: Discriminate)
+    #transform,   // PHI-weighted transformation (ADRE: Reason)
+    #decide,      // Binary or multi-path decision
+    #escalate,    // Push to higher authority / longer timeframe
+    #emit,        // Produce output signal (ADRE: Execute)
+    #compound,    // Feed back into cumulative state (Law 23)
+    #branch,      // Parallel split
+    #merge,       // Parallel join (PHI-weighted merge)
+  }
+
+  // A Signal flowing through the pipeline
+  type Signal = {
+    signal_id   : Nat,
+    value       : SovereignFloat,
+    source      : Text,
+    doctrine_score : Float,
+    beat        : Nat,
+    metadata    : [(Text, Text)],
+  }
+
+  // A Port — connection point on a node
+  type Port = {
+    port_id     : Text,
+    direction   : { #input, #output },
+    signal_type : Text,
+  }
+
+  // An Edge — connection between nodes
+  type Edge = {
+    edge_id     : Text,
+    from_node   : Text,
+    from_port   : Text,
+    to_node     : Text,
+    to_port     : Text,
+    phi_weight  : Float,     // PHI-weighted signal propagation
+  }
+
+  // ═══════════════════════════════════════════════════════════════════
+  // II. DECISION GRAPHS
+  // ═══════════════════════════════════════════════════════════════════
+
+  // A DecisionGraph — a complete thought pipeline
+  type DecisionGraph = {
+    graph_id    : Text,
+    name        : Text,
+    nodes       : [CognitiveNode],
+    edges       : [Edge],
+    entry_node  : Text,      // Where signals enter
+    exit_nodes  : [Text],    // Where decisions emerge
+    escalation  : ?EscalationRule,
+  }
+
+  // An EscalationRule — when to push decisions up
+  type EscalationRule = {
+    trigger     : EscalationTrigger,
+    target      : Text,      // Organism or authority to escalate to
+    timeout_beats : Nat,     // How long before auto-escalation
+    doctrine_floor : Float,  // Minimum doctrine score for self-resolution
+  }
+
+  type EscalationTrigger = {
+    #low_confidence,         // Decision confidence below threshold
+    #high_risk,              // Risk classification exceeds tolerance
+    #doctrine_conflict,      // Multiple doctrines in conflict
+    #timeout,                // Decision exceeds time limit
+    #manual_request,         // Organism requests escalation
+  }
+
+  // ═══════════════════════════════════════════════════════════════════
+  // III. OPERATIONS
+  // ═══════════════════════════════════════════════════════════════════
+
+  // Create a cognitive pipeline from node chain
+  fn build_pipeline(
+    name: Text,
+    node_chain: [CognitiveNode],
+  ) -> Result<DecisionGraph, DoctrineViolation> {
+    gate node_chain.len() >= 2 else {
+      return Err(DoctrineViolation {
+        law: "CPL_P",
+        message: "Pipeline must have at least 2 nodes (input + output)",
+        attribution: "Alfredo Medina Hernandez",
+      })
+    }
+
+    // Auto-wire sequential edges
+    let edges = node_chain.windows(2).map(|pair| {
+      Edge {
+        edge_id: pair[0].node_id # "_to_" # pair[1].node_id,
+        from_node: pair[0].node_id,
+        from_port: "out",
+        to_node: pair[1].node_id,
+        to_port: "in",
+        phi_weight: Φ^(-1),
+      }
+    })
+
+    seal Ok(DecisionGraph {
+      graph_id: "GRAPH_" # name,
+      name: name,
+      nodes: node_chain,
+      edges: edges,
+      entry_node: node_chain[0].node_id,
+      exit_nodes: [node_chain[node_chain.len() - 1].node_id],
+      escalation: null,
+    })
+  }
+
+  // Execute one signal through a pipeline
+  fn process_signal(
+    graph: DecisionGraph,
+    input: Signal,
+  ) -> Result<Signal, DoctrineViolation> {
+    // Doctrine gate at entry
+    gate input.doctrine_score >= S0_FLOOR else {
+      return Err(DoctrineViolation {
+        law: "CPL_P",
+        message: "Input signal below doctrine gate",
+        attribution: "Alfredo Medina Hernandez",
+      })
+    }
+
+    // Traverse graph from entry node through edges
+    let current_signal = input
+    for node in graph.nodes {
+      // Each node's phi_weight modulates the signal
+      current_signal = node.process(current_signal)
+      current_signal.value = current_signal.value * node.phi_weight
+        |> clamp(S0_FLOOR, S_CEIL)
+    }
+
+    seal Ok(current_signal)
+  }
+
+  // The ADRE cycle as a standard CPL-P pipeline pattern
+  // Every organism's thought process follows: Sense → Discriminate → Reason → Execute
+  fn standard_adre_pipeline(organism_id: Text) -> DecisionGraph {
+    build_pipeline(organism_id # "_ADRE", [
+      CognitiveNode {
+        node_id: "SENSE",
+        node_type: #sense,
+        input_ports: [Port { port_id: "in", direction: #input, signal_type: "world_state" }],
+        output_ports: [Port { port_id: "out", direction: #output, signal_type: "raw_input" }],
+        phi_weight: S0_FLOOR,
+        doctrine_gate: 0.0,
+        process: |s| s,  // Pass-through at sense stage
+      },
+      CognitiveNode {
+        node_id: "DISCRIMINATE",
+        node_type: #filter,
+        input_ports: [Port { port_id: "in", direction: #input, signal_type: "raw_input" }],
+        output_ports: [Port { port_id: "out", direction: #output, signal_type: "filtered" }],
+        phi_weight: Φ^(-1),
+        doctrine_gate: S0_FLOOR,
+        process: |s| Signal { ...s, value: s.value * Φ^(-1) |> clamp(S0_FLOOR, S_CEIL) },
+      },
+      CognitiveNode {
+        node_id: "REASON",
+        node_type: #transform,
+        input_ports: [Port { port_id: "in", direction: #input, signal_type: "filtered" }],
+        output_ports: [Port { port_id: "out", direction: #output, signal_type: "reasoned" }],
+        phi_weight: Φ,
+        doctrine_gate: S0_FLOOR,
+        process: |s| Signal { ...s, value: s.value * Φ |> clamp(S0_FLOOR, S_CEIL) },
+      },
+      CognitiveNode {
+        node_id: "EXECUTE",
+        node_type: #emit,
+        input_ports: [Port { port_id: "in", direction: #input, signal_type: "reasoned" }],
+        output_ports: [Port { port_id: "out", direction: #output, signal_type: "action" }],
+        phi_weight: 1.0,
+        doctrine_gate: S0_FLOOR,
+        process: |s| s,  // Final output
+      },
+    ]).unwrap()
+  }
+}

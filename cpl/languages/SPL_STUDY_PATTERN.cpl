@@ -1,0 +1,254 @@
+// SPL — Study Pattern Language
+// Role: Personal learning blueprints
+// Attribution: Alfredo Medina Hernandez — immutable
+// Rank: Organism (Layer 2) — operates per-student
+//
+// SPL governs: How a specific student learns — modalities, pacing,
+// repetition patterns, scaffolding.
+//
+// SPL is the PERSONAL LEARNING SUBSTRATE. Every student is an organism
+// with unique cognitive patterns. SPL captures those patterns and
+// uses them to optimize learning — not by one-size-fits-all, but by
+// adapting the entire learning environment to the individual.
+//
+// SPL is informed by CIL (the student's self-model) and constrained
+// by EDL (the school's doctrine). SPL feeds into TSL (tool scaffolding)
+// and PWL (pathway planning).
+
+language SPL {
+  genesis_seal: "Alfredo Medina Hernandez"
+  rank: Organism
+  layer: 2
+  full_name: "Study Pattern Language"
+  purpose: "Personal learning blueprints — modalities, pacing, repetition, scaffolding"
+
+  genesis PHI = Φ
+  genesis S0_FLOOR = 0.75
+  genesis S_CEIL = 9.75
+
+  // ═══════════════════════════════════════════════════════════════════
+  // I. LEARNING PATTERN PRIMITIVES
+  // ═══════════════════════════════════════════════════════════════════
+
+  // A LearnerProfile — the cognitive fingerprint of a student
+  type LearnerProfile = {
+    learner_id      : Text,
+    name            : Text,
+
+    // Modality preferences (PHI-weighted — they sum to PHI, not 1.0)
+    visual_weight   : SovereignFloat,
+    auditory_weight : SovereignFloat,
+    kinesthetic_weight : SovereignFloat,
+    reading_weight  : SovereignFloat,
+
+    // Pacing
+    optimal_session_beats : Nat,      // Ideal study session length in beats
+    rest_interval_beats   : Nat,      // Beats between sessions
+    attention_curve       : AttentionCurve,
+
+    // Repetition
+    repetition_pattern    : RepetitionPattern,
+    retention_half_life   : Nat,      // Beats before 50% retention loss
+
+    // State
+    cumulative_mastery    : SovereignFloat,  // Compounds forever (Law 23)
+    current_energy        : SovereignFloat,
+    total_sessions        : Nat,
+    last_session_beat     : Nat,
+  }
+
+  // Attention curve — how focus changes within a session
+  type AttentionCurve = {
+    peak_beat       : Nat,            // Beat within session when focus peaks
+    decay_rate      : Float,          // PHI-scaled decay after peak
+    recovery_boost  : Float,          // How much rest restores
+    curve_type      : CurveType,
+  }
+
+  type CurveType = {
+    #rising_plateau,   // Focus rises then holds (steady learner)
+    #sharp_peak,       // Quick peak then rapid decay (burst learner)
+    #wave,             // Oscillating focus (creative thinker)
+    #slow_build,       // Gradual increase (deep processor)
+  }
+
+  // Repetition pattern — how the student needs to revisit material
+  type RepetitionPattern = {
+    pattern_type    : RepType,
+    intervals       : [Nat],          // Beats between repetitions
+    phi_scaling     : Bool,           // If true, intervals scale by PHI
+  }
+
+  type RepType = {
+    #spaced,         // Increasing intervals (Ebbinghaus + PHI)
+    #massed,         // Concentrated repetition
+    #interleaved,    // Mixed with other topics
+    #retrieval,      // Test-based repetition
+  }
+
+  // ═══════════════════════════════════════════════════════════════════
+  // II. SCAFFOLDING — adaptive learning support
+  // ═══════════════════════════════════════════════════════════════════
+
+  // A Scaffold — temporary support that fades as mastery grows
+  type Scaffold = {
+    scaffold_id     : Text,
+    scaffold_type   : ScaffoldType,
+    strength        : SovereignFloat,   // How much support [S0_FLOOR, S_CEIL]
+    fade_rate       : Float,            // How quickly it reduces (per mastery gain)
+    topic           : Text,
+    active          : Bool,
+  }
+
+  type ScaffoldType = {
+    #hint,           // Subtle hints
+    #example,        // Worked examples
+    #structure,      // Organizational framework
+    #vocabulary,     // Key terms and definitions
+    #visual_aid,     // Diagrams, charts
+    #peer_model,     // Show how peers approach it
+    #metacognitive,  // "Think about your thinking" prompts
+  }
+
+  // A StudySession — one learning session
+  type StudySession = {
+    session_id      : Nat,
+    learner_id      : Text,
+    topic           : Text,
+    start_beat      : Nat,
+    duration_beats  : Nat,
+    modality        : Modality,
+    scaffolds_used  : [Text],
+    mastery_before  : SovereignFloat,
+    mastery_after   : SovereignFloat,
+    energy_spent    : SovereignFloat,
+    doctrine_score  : Float,
+  }
+
+  type Modality = { #visual, #auditory, #kinesthetic, #reading, #mixed }
+
+  // ═══════════════════════════════════════════════════════════════════
+  // III. OPERATIONS
+  // ═══════════════════════════════════════════════════════════════════
+
+  // Create a learner profile from initial assessment
+  fn create_profile(
+    learner_id: Text,
+    name: Text,
+    modality_assessment: (Float, Float, Float, Float),  // V, A, K, R scores
+  ) -> LearnerProfile {
+    let (v, a, k, r) = modality_assessment
+    // Normalize to PHI-weighted distribution
+    let total = v + a + k + r
+    let scale = Φ / total.max(0.001)
+
+    LearnerProfile {
+      learner_id: learner_id,
+      name: name,
+      visual_weight: (v * scale) |> clamp(S0_FLOOR, S_CEIL),
+      auditory_weight: (a * scale) |> clamp(S0_FLOOR, S_CEIL),
+      kinesthetic_weight: (k * scale) |> clamp(S0_FLOOR, S_CEIL),
+      reading_weight: (r * scale) |> clamp(S0_FLOOR, S_CEIL),
+      optimal_session_beats: 50,      // ~43 seconds at 873ms
+      rest_interval_beats: 20,
+      attention_curve: AttentionCurve {
+        peak_beat: 25,
+        decay_rate: Φ^(-1),
+        recovery_boost: 0.8,
+        curve_type: #rising_plateau,
+      },
+      repetition_pattern: RepetitionPattern {
+        pattern_type: #spaced,
+        intervals: [1, 2, 3, 5, 8, 13, 21, 34, 55],  // Fibonacci!
+        phi_scaling: true,
+      },
+      cumulative_mastery: S0_FLOOR,
+      current_energy: S_CEIL,
+      total_sessions: 0,
+      last_session_beat: 0,
+    }
+  }
+
+  // Compute optimal next session parameters
+  fn plan_session(
+    profile: LearnerProfile,
+    topic: Text,
+    current_beat: Nat,
+  ) -> StudySession {
+    // Choose modality based on PHI-weighted preferences and energy
+    let best_modality = if profile.visual_weight >= profile.auditory_weight
+      and profile.visual_weight >= profile.kinesthetic_weight
+      and profile.visual_weight >= profile.reading_weight {
+      #visual
+    } else if profile.auditory_weight >= profile.kinesthetic_weight
+      and profile.auditory_weight >= profile.reading_weight {
+      #auditory
+    } else if profile.kinesthetic_weight >= profile.reading_weight {
+      #kinesthetic
+    } else {
+      #reading
+    }
+
+    // Adjust session length based on energy
+    let energy_factor = profile.current_energy / S_CEIL
+    let adjusted_duration = (profile.optimal_session_beats.toFloat() * energy_factor)
+      .max(10.0).toNat()
+
+    StudySession {
+      session_id: next_session_id(),
+      learner_id: profile.learner_id,
+      topic: topic,
+      start_beat: current_beat,
+      duration_beats: adjusted_duration,
+      modality: best_modality,
+      scaffolds_used: [],
+      mastery_before: profile.cumulative_mastery,
+      mastery_after: profile.cumulative_mastery,
+      energy_spent: S0_FLOOR,
+      doctrine_score: S0_FLOOR.toFloat(),
+    }
+  }
+
+  // Update profile after a session (mastery compounds — Law 23)
+  fn complete_session(
+    profile: LearnerProfile,
+    session: StudySession,
+    actual_mastery_gain: SovereignFloat,
+    beat: Nat,
+  ) -> LearnerProfile {
+    let new_mastery = (profile.cumulative_mastery + actual_mastery_gain * Φ * 0.01)
+      |> clamp(S0_FLOOR, S_CEIL)
+
+    // Energy decreases after session, recovers over rest
+    let new_energy = (profile.current_energy - session.energy_spent * 0.1)
+      |> clamp(S0_FLOOR, S_CEIL)
+
+    LearnerProfile {
+      ...profile,
+      cumulative_mastery: new_mastery,  // NEVER decreases (Law 23)
+      current_energy: new_energy,
+      total_sessions: profile.total_sessions + 1,
+      last_session_beat: beat,
+    }
+  }
+
+  // Generate spaced repetition schedule (Fibonacci-PHI intervals)
+  fn schedule_repetitions(
+    profile: LearnerProfile,
+    topic: Text,
+    start_beat: Nat,
+  ) -> [Nat] {
+    // Intervals follow Fibonacci scaled by PHI and retention half-life
+    let base_intervals = profile.repetition_pattern.intervals
+    let half_life = profile.retention_half_life.toFloat()
+
+    base_intervals.map(|interval| {
+      let scaled = if profile.repetition_pattern.phi_scaling {
+        (interval.toFloat() * Φ * half_life / 100.0).toNat()
+      } else {
+        interval
+      }
+      start_beat + scaled
+    })
+  }
+}

@@ -1,0 +1,245 @@
+// CPL-C — Cognitive Contract Language
+// Role: Intelligence contracts
+// Attribution: Alfredo Medina Hernandez — immutable
+// Rank: Substrate (Layer 1) — builds on CPL-L constitutional foundation
+//
+// CPL-C governs: Full "organism contracts" for an AI/civilization:
+// rights, duties, flows, token logic, interfaces.
+//
+// An intelligence contract is NOT a smart contract in the Ethereum sense.
+// It is a SOVEREIGN CONTRACT — a living agreement between organisms,
+// between an organism and its creator, between civilizations.
+//
+// Every organism has a contract. Every contract is doctrine-gated.
+// Contracts compile to CPLTypes.ProtocolSpec + CPLTypes.PolicyAtom
+// and are enforced by the CPL Runtime Invariant Kernel.
+
+language CPL_C {
+  genesis_seal: "Alfredo Medina Hernandez"
+  rank: Substrate
+  layer: 1
+  full_name: "Cognitive Contract Language"
+  purpose: "Intelligence contracts for organisms and civilizations"
+
+  genesis PHI = Φ
+  genesis S0_FLOOR = 0.75
+  genesis S_CEIL = 9.75
+  genesis FOUNDER = "Alfredo Medina Hernandez"
+
+  // ═══════════════════════════════════════════════════════════════════
+  // I. CONTRACT PRIMITIVES
+  // ═══════════════════════════════════════════════════════════════════
+
+  // A Right — what an organism IS ALLOWED to do
+  type Right = {
+    right_id    : Text,
+    description : Text,
+    scope       : ContractScope,
+    doctrine_gate : Float,   // Minimum doctrine score to exercise
+    granted_at  : Nat,       // Beat when granted
+    revocable   : Bool,      // Genesis rights are irrevocable
+  }
+
+  // A Duty — what an organism MUST do
+  type Duty = {
+    duty_id     : Text,
+    description : Text,
+    scope       : ContractScope,
+    frequency   : DutyFrequency,
+    penalty     : PenaltyType,
+  }
+
+  // A Flow — a data/value path between organisms
+  type Flow = {
+    flow_id     : Text,
+    source      : Text,       // Source organism ID
+    destination : Text,       // Destination organism ID
+    flow_type   : FlowType,
+    phi_weight  : Float,      // PHI-weighted throughput
+    doctrine_gate : Float,
+  }
+
+  // A TokenLogic — economic rules within the contract
+  type TokenLogic = {
+    token_id    : Text,
+    supply_rule : SupplyRule,
+    distribution : DistributionRule,
+    phi_ratio   : Float,      // PHI-based distribution ratio
+  }
+
+  // An Interface — how organisms talk to each other
+  type Interface = {
+    interface_id : Text,
+    methods      : [MethodSpec],
+    protocol     : Text,       // Protocol ID from CPL Runtime
+    version      : Nat,
+  }
+
+  // Supporting types
+  type ContractScope  = { #organism, #civilization, #terminal, #global }
+  type DutyFrequency  = { #every_beat, #every_jubilee, #on_demand, #at_genesis }
+  type PenaltyType    = { #coherence_decay, #right_suspension, #quarantine, #dissolution }
+  type FlowType       = { #data, #token, #signal, #doctrine, #proof }
+  type SupplyRule     = { #fixed, #phi_inflationary, #doctrine_proportional }
+  type DistributionRule = { #phi_weighted, #equal, #merit_based, #founder_first }
+  type MethodSpec = {
+    name        : Text,
+    input_type  : Text,
+    output_type : Text,
+    doctrine_gate : Float,
+  }
+
+  // ═══════════════════════════════════════════════════════════════════
+  // II. THE ORGANISM CONTRACT — the full intelligence contract
+  // ═══════════════════════════════════════════════════════════════════
+
+  // An IntelligenceContract — the complete contract for a cognitive being
+  type IntelligenceContract = {
+    contract_id   : Text,
+    organism_id   : Text,
+    organism_name : Text,
+    latin_name    : Text,
+    generation    : Nat,
+
+    // Governance
+    rights        : [Right],
+    duties        : [Duty],
+    constitution  : Text,        // CPL-L constitution ID this contract operates under
+
+    // Economics
+    flows         : [Flow],
+    token_logic   : ?TokenLogic,
+
+    // Communication
+    interfaces    : [Interface],
+
+    // Lifecycle
+    genesis_beat  : Nat,
+    sealed        : Bool,
+    doctrine_score : SovereignFloat,
+    attribution   : Text,         // Always FOUNDER
+  }
+
+  // ═══════════════════════════════════════════════════════════════════
+  // III. OPERATIONS
+  // ═══════════════════════════════════════════════════════════════════
+
+  // Draft a new intelligence contract
+  fn draft_contract(
+    organism_id: Text,
+    organism_name: Text,
+    latin_name: Text,
+    rights: [Right],
+    duties: [Duty],
+    constitution_id: Text,
+    beat: Nat,
+  ) -> Result<IntelligenceContract, DoctrineViolation> {
+    // Every organism must have at least the heartbeat duty
+    gate duties.any(|d| d.frequency == #every_beat) else {
+      return Err(DoctrineViolation {
+        law: "CPL_C",
+        message: "Contract must include heartbeat duty (Law 14)",
+        attribution: FOUNDER,
+      })
+    }
+
+    // Every organism must operate under a constitution
+    gate constitution_id.len() > 0 else {
+      return Err(DoctrineViolation {
+        law: "CPL_C",
+        message: "Contract must reference a CPL-L constitution",
+        attribution: FOUNDER,
+      })
+    }
+
+    seal Ok(IntelligenceContract {
+      contract_id: "CONTRACT_" # organism_id,
+      organism_id: organism_id,
+      organism_name: organism_name,
+      latin_name: latin_name,
+      generation: 1,
+      rights: rights,
+      duties: duties,
+      constitution: constitution_id,
+      flows: [],
+      token_logic: null,
+      interfaces: [],
+      genesis_beat: beat,
+      sealed: false,
+      doctrine_score: S0_FLOOR,
+      attribution: FOUNDER,
+    })
+  }
+
+  // Add a flow to an existing contract
+  fn add_flow(
+    contract: IntelligenceContract,
+    source: Text,
+    destination: Text,
+    flow_type: FlowType,
+    doctrine_gate: Float,
+  ) -> Result<IntelligenceContract, DoctrineViolation> {
+    gate not contract.sealed else {
+      return Err(DoctrineViolation {
+        law: "CPL_C",
+        message: "Cannot modify sealed contract",
+        attribution: FOUNDER,
+      })
+    }
+
+    let flow = Flow {
+      flow_id: "FLOW_" # source # "_" # destination,
+      source: source,
+      destination: destination,
+      flow_type: flow_type,
+      phi_weight: Φ^(-1),   // Default to inverse PHI
+      doctrine_gate: doctrine_gate,
+    }
+
+    seal Ok(IntelligenceContract {
+      ...contract,
+      flows: contract.flows ++ [flow],
+    })
+  }
+
+  // Seal a contract — makes it immutable
+  fn seal_contract(
+    contract: IntelligenceContract,
+    doctrine_score: Float,
+  ) -> Result<IntelligenceContract, DoctrineViolation> {
+    gate doctrine_score >= 0.85 else {
+      return Err(DoctrineViolation {
+        law: "CPL_C",
+        message: "Doctrine score too low to seal contract (need >= 0.85)",
+        attribution: FOUNDER,
+      })
+    }
+
+    seal Ok(IntelligenceContract {
+      ...contract,
+      sealed: true,
+      doctrine_score: doctrine_score |> clamp(S0_FLOOR, S_CEIL),
+    })
+  }
+
+  // Verify a contract is valid
+  fn verify_contract(contract: IntelligenceContract) -> Result<Bool, DoctrineViolation> {
+    gate contract.attribution == FOUNDER else {
+      return Err(DoctrineViolation {
+        law: "CPL_C",
+        message: "Contract missing founder attribution",
+        attribution: FOUNDER,
+      })
+    }
+
+    gate contract.rights.len() > 0 else {
+      return Err(DoctrineViolation {
+        law: "CPL_C",
+        message: "Contract must grant at least one right",
+        attribution: FOUNDER,
+      })
+    }
+
+    seal Ok(true)
+  }
+}

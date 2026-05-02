@@ -1,0 +1,266 @@
+// TSL — Tool Scaffold Language
+// Role: Personal tool-builder language
+// Attribution: Alfredo Medina Hernandez — immutable
+// Rank: Engine (Layer 3) — builds tools around learners
+//
+// TSL governs: How the system designs custom tools (flashcards,
+// simulators, planners) around a student.
+//
+// TSL is the TOOL GENERATION language. It takes a learner's SPL profile,
+// the EDL curriculum requirements, and the PWL pathway, then generates
+// personalized learning tools calibrated to that specific student.
+//
+// Every tool is an organism — it has a charter (OCL), a heartbeat,
+// and a closed-loop intelligence cycle (Law 30). Tools adapt to
+// the learner over time; their effectiveness compounds (Law 23).
+//
+// Informed by: SPL (learner profile), EDL (standards), PWL (pathway)
+// Constrained by: OCL (tool charter), CPL-C (contract)
+
+language TSL {
+  genesis_seal: "Alfredo Medina Hernandez"
+  rank: Engine
+  layer: 3
+  full_name: "Tool Scaffold Language"
+  purpose: "Personal tool generation — flashcards, simulators, planners, adaptive tools"
+
+  genesis PHI = Φ
+  genesis S0_FLOOR = 0.75
+  genesis S_CEIL = 9.75
+
+  // ═══════════════════════════════════════════════════════════════════
+  // I. TOOL PRIMITIVES
+  // ═══════════════════════════════════════════════════════════════════
+
+  // A ToolSpec — the specification for a learning tool
+  type ToolSpec = {
+    tool_id       : Text,
+    name          : Text,
+    tool_type     : ToolType,
+    target_topic  : Text,
+    target_standard : ?Text,          // EDL standard this tool supports
+
+    // Personalization
+    learner_id    : Text,
+    modality      : Modality,         // Primary modality (from SPL)
+    difficulty    : SovereignFloat,    // Calibrated to learner level
+    scaffold_level : SovereignFloat,  // How much scaffolding to include
+
+    // Adaptation
+    adaptation_rate : Float,          // How quickly it adapts (PHI-scaled)
+    effectiveness  : SovereignFloat,  // Measured effectiveness (compounds)
+    total_uses     : Nat,
+    last_use_beat  : Nat,
+
+    // Tool content parameters
+    parameters    : [(Text, Text)],   // Tool-specific config
+    attribution   : Text,
+  }
+
+  type ToolType = {
+    #flashcard_deck,    // Spaced-repetition flashcards
+    #simulator,         // Interactive simulation
+    #planner,           // Schedule/plan builder
+    #quiz,              // Self-assessment quiz
+    #concept_map,       // Visual concept mapper
+    #practice_set,      // Exercise set with feedback
+    #writing_prompt,    // Guided writing tool
+    #peer_connector,    // Connect with study peers
+    #metacognitive,     // "Think about thinking" tool
+    #custom,            // Custom tool type
+  }
+
+  type Modality = { #visual, #auditory, #kinesthetic, #reading, #mixed }
+
+  // A ToolInstance — a generated tool ready for use
+  type ToolInstance = {
+    instance_id   : Text,
+    spec          : ToolSpec,
+    content       : ToolContent,
+    state         : ToolState,
+    created_beat  : Nat,
+  }
+
+  type ToolContent = {
+    items         : [ContentItem],
+    total_items   : Nat,
+    difficulty_curve : [SovereignFloat],  // Difficulty per item
+  }
+
+  type ContentItem = {
+    item_id       : Nat,
+    content       : Text,
+    difficulty    : SovereignFloat,
+    scaffold_hint : ?Text,
+    mastery_weight : Float,
+  }
+
+  type ToolState = {
+    items_completed  : Nat,
+    items_correct    : Nat,
+    current_item     : Nat,
+    session_mastery  : SovereignFloat,
+    cumulative_effectiveness : SovereignFloat,  // Compounds (Law 23)
+  }
+
+  // ═══════════════════════════════════════════════════════════════════
+  // II. TOOL GENERATION
+  // ═══════════════════════════════════════════════════════════════════
+
+  // A ToolRecipe — how to generate a specific tool type
+  type ToolRecipe = {
+    recipe_id     : Text,
+    tool_type     : ToolType,
+    input_requirements : [Text],      // What info is needed
+    generation_steps : [GenStep],
+    phi_calibration : Float,          // PHI-based difficulty calibration
+  }
+
+  type GenStep = {
+    step_id       : Nat,
+    description   : Text,
+    input         : Text,
+    output        : Text,
+    phi_weight    : Float,
+  }
+
+  // ═══════════════════════════════════════════════════════════════════
+  // III. OPERATIONS
+  // ═══════════════════════════════════════════════════════════════════
+
+  // Generate a tool for a specific learner and topic
+  fn generate_tool(
+    learner_id: Text,
+    topic: Text,
+    tool_type: ToolType,
+    learner_mastery: SovereignFloat,
+    modality: Modality,
+    standard_id: ?Text,
+    beat: Nat,
+  ) -> Result<ToolSpec, DoctrineViolation> {
+    // Calibrate difficulty to learner level using PHI
+    // Difficulty = mastery × PHI^(-1) — slightly below current level (zone of proximal development)
+    let calibrated_difficulty = (learner_mastery * Φ^(-1))
+      |> clamp(S0_FLOOR, S_CEIL)
+
+    // Scaffold level inverse to mastery — more scaffolding for lower mastery
+    let scaffold_level = (S_CEIL - learner_mastery + S0_FLOOR)
+      |> clamp(S0_FLOOR, S_CEIL)
+
+    seal Ok(ToolSpec {
+      tool_id: "TOOL_" # learner_id # "_" # topic # "_" # tool_type.toText(),
+      name: topic # " " # tool_type.toText(),
+      tool_type: tool_type,
+      target_topic: topic,
+      target_standard: standard_id,
+      learner_id: learner_id,
+      modality: modality,
+      difficulty: calibrated_difficulty,
+      scaffold_level: scaffold_level,
+      adaptation_rate: Φ^(-1),   // Adapt at inverse-PHI rate
+      effectiveness: S0_FLOOR,    // Starts at floor, compounds over use
+      total_uses: 0,
+      last_use_beat: 0,
+      parameters: [],
+      attribution: "Alfredo Medina Hernandez",
+    })
+  }
+
+  // Use a tool (one session) — returns updated tool with adapted parameters
+  fn use_tool(
+    tool: ToolSpec,
+    session_result: SovereignFloat,   // How well the student did [S0_FLOOR, S_CEIL]
+    beat: Nat,
+  ) -> ToolSpec {
+    // Effectiveness compounds — never decreases (Law 23)
+    let effectiveness_gain = session_result * Φ * 0.001
+    let new_effectiveness = (tool.effectiveness + effectiveness_gain)
+      |> clamp(S0_FLOOR, S_CEIL)
+
+    // Adapt difficulty based on performance (closed-loop — Law 30)
+    let error = session_result - tool.difficulty
+    let correction = error * Φ^(-1) * tool.adaptation_rate
+    let new_difficulty = (tool.difficulty + correction)
+      |> clamp(S0_FLOOR, S_CEIL)
+
+    // Reduce scaffolding as effectiveness grows
+    let new_scaffold = (tool.scaffold_level - new_effectiveness * 0.01)
+      |> clamp(S0_FLOOR, S_CEIL)
+
+    ToolSpec {
+      ...tool,
+      difficulty: new_difficulty,
+      scaffold_level: new_scaffold,
+      effectiveness: new_effectiveness,
+      total_uses: tool.total_uses + 1,
+      last_use_beat: beat,
+    }
+  }
+
+  // Generate a flashcard deck (most common tool)
+  fn generate_flashcard_deck(
+    learner_id: Text,
+    topic: Text,
+    concepts: [(Text, Text)],         // (front, back) pairs
+    learner_mastery: SovereignFloat,
+    beat: Nat,
+  ) -> ToolInstance {
+    let spec = generate_tool(
+      learner_id, topic, #flashcard_deck,
+      learner_mastery, #visual, null, beat,
+    ).unwrap()
+
+    let items = concepts.enumerate().map(|(i, (front, back))| {
+      // Difficulty scales by PHI across the deck
+      let item_difficulty = (spec.difficulty * Φ^(i.toFloat() / concepts.len().toFloat()))
+        |> clamp(S0_FLOOR, S_CEIL)
+      ContentItem {
+        item_id: i,
+        content: front # " | " # back,
+        difficulty: item_difficulty,
+        scaffold_hint: if spec.scaffold_level > (S0_FLOOR + S_CEIL) / 2.0 {
+          Some("Hint: Think about " # topic)
+        } else { null },
+        mastery_weight: 1.0 / concepts.len().toFloat(),
+      }
+    })
+
+    ToolInstance {
+      instance_id: spec.tool_id # "_INST_" # beat.toText(),
+      spec: spec,
+      content: ToolContent {
+        items: items,
+        total_items: items.len(),
+        difficulty_curve: items.map(|i| i.difficulty),
+      },
+      state: ToolState {
+        items_completed: 0,
+        items_correct: 0,
+        current_item: 0,
+        session_mastery: S0_FLOOR,
+        cumulative_effectiveness: S0_FLOOR,
+      },
+      created_beat: beat,
+    }
+  }
+
+  // Select the best tool type for a learner + topic combination
+  fn recommend_tool_type(
+    modality: Modality,
+    competency_level: CompetencyLevel,
+  ) -> ToolType {
+    match (modality, competency_level) {
+      (#visual, #foundational)    => #concept_map,
+      (#visual, #developing)      => #flashcard_deck,
+      (#visual, #proficient)      => #simulator,
+      (#visual, _)                => #practice_set,
+      (#auditory, #foundational)  => #flashcard_deck,
+      (#auditory, _)              => #peer_connector,
+      (#kinesthetic, _)           => #simulator,
+      (#reading, #foundational)   => #flashcard_deck,
+      (#reading, #developing)     => #writing_prompt,
+      (#reading, _)               => #practice_set,
+      (#mixed, _)                 => #quiz,
+    }
+  }
+}

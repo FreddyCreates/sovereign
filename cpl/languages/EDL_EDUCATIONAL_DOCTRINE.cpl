@@ -1,0 +1,213 @@
+// EDL — Educational Doctrine Language
+// Role: School/subject doctrine
+// Attribution: Alfredo Medina Hernandez — immutable
+// Rank: Substrate (Layer 1) — institutional-level governance
+//
+// EDL governs: What a school/system requires — standards, competencies,
+// graduation paths, constraints.
+//
+// EDL is the INSTITUTIONAL DOCTRINE for education. It defines what
+// must be learned, to what standard, and by what path — the "what"
+// that constrains the "how" of SPL.
+//
+// EDL is a specialization of CDL (Cognitive Doctrine Language)
+// applied to educational contexts. EDL declarations are enforced
+// by the CPL Runtime just like any other doctrine.
+//
+// EDL constrains SPL (what must be learned), informs PWL (valid paths),
+// and provides standards for TSL (tool requirements).
+
+language EDL {
+  genesis_seal: "Alfredo Medina Hernandez"
+  rank: Substrate
+  layer: 1
+  full_name: "Educational Doctrine Language"
+  purpose: "School doctrine — standards, competencies, graduation paths, constraints"
+  parent: CDL
+
+  genesis PHI = Φ
+  genesis S0_FLOOR = 0.75
+  genesis S_CEIL = 9.75
+  genesis FOUNDER = "Alfredo Medina Hernandez"
+
+  // ═══════════════════════════════════════════════════════════════════
+  // I. EDUCATIONAL PRIMITIVES
+  // ═══════════════════════════════════════════════════════════════════
+
+  // A Standard — a required learning outcome
+  type Standard = {
+    standard_id   : Text,
+    name          : Text,
+    description   : Text,
+    domain        : Text,             // Subject area
+    level         : CompetencyLevel,
+    mastery_threshold : SovereignFloat, // Minimum mastery to pass
+    assessment    : AssessmentType,
+    prerequisites : [Text],           // Standard IDs that must be met first
+  }
+
+  type CompetencyLevel = {
+    #foundational,    // Basic awareness
+    #developing,      // Working knowledge
+    #proficient,      // Can apply independently
+    #advanced,        // Can teach and innovate
+    #mastery,         // Deep expertise (PHI-level)
+  }
+
+  type AssessmentType = {
+    #demonstration,   // Show you can do it
+    #portfolio,       // Collection of evidence
+    #examination,     // Formal test
+    #peer_review,     // Reviewed by peers
+    #self_assessment, // CIL-based self-evaluation
+    #project,         // Complete a project
+  }
+
+  // A Competency — a measurable skill or knowledge area
+  type Competency = {
+    competency_id : Text,
+    name          : Text,
+    standards     : [Text],          // Standard IDs that compose this competency
+    weight        : SovereignFloat,  // Importance in the curriculum
+    phi_growth    : Float,           // Expected PHI-compound growth rate
+  }
+
+  // A Curriculum — the complete learning structure
+  type Curriculum = {
+    curriculum_id : Text,
+    name          : Text,
+    institution   : Text,
+    competencies  : [Competency],
+    graduation_requirements : [GraduationReq],
+    total_standards : Nat,
+    doctrine_alignment : Float,     // How aligned with sovereign doctrine
+    attribution   : Text,
+  }
+
+  // A GraduationReq — what must be achieved to graduate
+  type GraduationReq = {
+    req_id        : Text,
+    description   : Text,
+    competency_ids : [Text],
+    minimum_level : CompetencyLevel,
+    minimum_mastery : SovereignFloat,
+    time_limit_beats : ?Nat,        // Optional time constraint
+  }
+
+  // A Constraint — institutional rules
+  type Constraint = {
+    constraint_id : Text,
+    description   : Text,
+    constraint_type : ConstraintType,
+    applies_to    : [Text],          // Standard/competency IDs
+    enforce_level : EnforceLevel,
+  }
+
+  type ConstraintType = {
+    #prerequisite_order,  // Must learn A before B
+    #concurrent_limit,    // Max N topics at once
+    #time_bound,          // Must complete in N beats
+    #mastery_floor,       // Cannot progress below threshold
+    #modality_required,   // Must use specific modality
+    #assessment_required, // Must pass specific assessment
+  }
+
+  // ═══════════════════════════════════════════════════════════════════
+  // II. OPERATIONS
+  // ═══════════════════════════════════════════════════════════════════
+
+  // Define a curriculum
+  fn define_curriculum(
+    name: Text,
+    institution: Text,
+    competencies: [Competency],
+    graduation_reqs: [GraduationReq],
+  ) -> Result<Curriculum, DoctrineViolation> {
+    // Must have at least one competency
+    gate competencies.len() > 0 else {
+      return Err(DoctrineViolation {
+        law: "EDL",
+        message: "Curriculum must define at least one competency",
+        attribution: FOUNDER,
+      })
+    }
+
+    // All mastery thresholds must be in sovereign range
+    for comp in competencies {
+      gate comp.weight >= S0_FLOOR and comp.weight <= S_CEIL else {
+        return Err(DoctrineViolation {
+          law: "EDL",
+          message: "Competency weight outside sovereign range: " # comp.name,
+          attribution: FOUNDER,
+        })
+      }
+    }
+
+    seal Ok(Curriculum {
+      curriculum_id: "CURRICULUM_" # name,
+      name: name,
+      institution: institution,
+      competencies: competencies,
+      graduation_requirements: graduation_reqs,
+      total_standards: competencies.flat_map(|c| c.standards).len(),
+      doctrine_alignment: S0_FLOOR.toFloat(),
+      attribution: FOUNDER,
+    })
+  }
+
+  // Evaluate a student's progress against a curriculum
+  fn evaluate_progress(
+    curriculum: Curriculum,
+    student_mastery: [(Text, SovereignFloat)],  // (standard_id, mastery)
+  ) -> ProgressReport {
+    let total_competencies = curriculum.competencies.len()
+    let met_competencies = curriculum.competencies.filter(|comp| {
+      let comp_mastery = comp.standards.map(|sid| {
+        student_mastery.find(|(id, _)| id == sid)
+          .map(|(_, m)| m)
+          .unwrap_or(S0_FLOOR)
+      })
+      let avg = comp_mastery.sum() / comp_mastery.len().toFloat().max(1.0)
+      avg >= comp.weight
+    }).len()
+
+    ProgressReport {
+      total_competencies: total_competencies,
+      met_competencies: met_competencies,
+      progress_ratio: met_competencies.toFloat() / total_competencies.toFloat().max(1.0),
+      phi_progress: (met_competencies.toFloat() * Φ) / (total_competencies.toFloat() * Φ),
+      ready_for_graduation: check_graduation(curriculum, student_mastery),
+    }
+  }
+
+  type ProgressReport = {
+    total_competencies   : Nat,
+    met_competencies     : Nat,
+    progress_ratio       : Float,
+    phi_progress         : Float,
+    ready_for_graduation : Bool,
+  }
+
+  // Check if graduation requirements are met
+  fn check_graduation(
+    curriculum: Curriculum,
+    student_mastery: [(Text, SovereignFloat)],
+  ) -> Bool {
+    curriculum.graduation_requirements.all(|req| {
+      req.competency_ids.all(|cid| {
+        let comp = curriculum.competencies.find(|c| c.competency_id == cid)
+        match comp {
+          Some(c) => {
+            let mastery = c.standards.map(|sid| {
+              student_mastery.find(|(id, _)| id == sid)
+                .map(|(_, m)| m)
+                .unwrap_or(S0_FLOOR)
+            }).sum() / c.standards.len().toFloat().max(1.0)
+            mastery >= req.minimum_mastery
+          },
+          None => false,
+        }
+      })
+    })
+  }
+}

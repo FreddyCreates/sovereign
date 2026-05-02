@@ -1,0 +1,245 @@
+// PWL — Pathway Language
+// Role: Life/education path language
+// Attribution: Alfredo Medina Hernandez — immutable
+// Rank: Engine (Layer 3) — planning and navigation
+//
+// PWL governs: Multi-year trajectories — courses, projects, colleges,
+// careers, branching options.
+//
+// PWL is the NAVIGATION language. It maps the space of possible
+// futures for a student and finds PHI-optimal paths through it.
+// Unlike EDL (which defines what must be learned), PWL defines
+// HOW TO GET THERE — the trajectory through time.
+//
+// PWL pathways are DAGs (directed acyclic graphs) where nodes are
+// milestones and edges are transitions. Each path is PHI-weighted
+// to favor golden-ratio balance between breadth and depth.
+//
+// Constrained by: EDL (institutional requirements)
+// Informed by: SPL (learner capabilities), CIL (learner self-model)
+// Feeds into: TSL (tool needs along the path)
+
+language PWL {
+  genesis_seal: "Alfredo Medina Hernandez"
+  rank: Engine
+  layer: 3
+  full_name: "Pathway Language"
+  purpose: "Life and education trajectories — courses, projects, careers, branching"
+
+  genesis PHI = Φ
+  genesis S0_FLOOR = 0.75
+  genesis S_CEIL = 9.75
+
+  // ═══════════════════════════════════════════════════════════════════
+  // I. PATHWAY PRIMITIVES
+  // ═══════════════════════════════════════════════════════════════════
+
+  // A Milestone — a point on the path
+  type Milestone = {
+    milestone_id  : Text,
+    name          : Text,
+    description   : Text,
+    milestone_type : MilestoneType,
+    requirements  : [Text],            // Standard/competency IDs from EDL
+    estimated_beats : Nat,             // Time to reach from previous milestone
+    phi_value     : SovereignFloat,    // How valuable this milestone is
+    achieved      : Bool,
+    achieved_beat : ?Nat,
+  }
+
+  type MilestoneType = {
+    #course_completion,
+    #project_delivery,
+    #certification,
+    #skill_acquisition,
+    #portfolio_milestone,
+    #career_entry,
+    #college_admission,
+    #graduation,
+    #life_event,
+  }
+
+  // A Transition — an edge between milestones
+  type Transition = {
+    transition_id : Text,
+    from_milestone : Text,
+    to_milestone   : Text,
+    difficulty     : SovereignFloat,   // How hard the transition is
+    phi_weight     : Float,            // PHI-weighted desirability
+    prerequisites  : [Text],           // What must be true to take this path
+    is_optional    : Bool,
+  }
+
+  // A Branch — a decision point with multiple paths
+  type Branch = {
+    branch_id     : Text,
+    at_milestone  : Text,              // Where the branch occurs
+    options       : [BranchOption],
+  }
+
+  type BranchOption = {
+    option_id     : Text,
+    description   : Text,
+    target_milestone : Text,
+    phi_score     : SovereignFloat,    // PHI-weighted score for this option
+    risk          : SovereignFloat,    // Risk level [S0_FLOOR, S_CEIL]
+    reward        : SovereignFloat,    // Potential reward
+  }
+
+  // ═══════════════════════════════════════════════════════════════════
+  // II. THE PATHWAY — a complete trajectory
+  // ═══════════════════════════════════════════════════════════════════
+
+  type Pathway = {
+    pathway_id    : Text,
+    learner_id    : Text,
+    name          : Text,
+
+    // The DAG
+    milestones    : [Milestone],
+    transitions   : [Transition],
+    branches      : [Branch],
+
+    // Current position
+    current_milestone : Text,
+    completed_milestones : [Text],
+    total_beats_elapsed : Nat,
+
+    // Metrics
+    progress_ratio    : Float,         // [0, 1]
+    phi_alignment     : Float,         // How PHI-optimal the path is
+    estimated_remaining_beats : Nat,
+
+    // Doctrine
+    doctrine_score    : SovereignFloat,
+    attribution       : Text,
+  }
+
+  // ═══════════════════════════════════════════════════════════════════
+  // III. OPERATIONS
+  // ═══════════════════════════════════════════════════════════════════
+
+  // Create a new pathway for a learner
+  fn create_pathway(
+    learner_id: Text,
+    name: Text,
+    milestones: [Milestone],
+    transitions: [Transition],
+    start_milestone: Text,
+  ) -> Result<Pathway, DoctrineViolation> {
+    gate milestones.len() >= 2 else {
+      return Err(DoctrineViolation {
+        law: "PWL",
+        message: "Pathway must have at least 2 milestones (start + goal)",
+        attribution: "Alfredo Medina Hernandez",
+      })
+    }
+
+    // Verify start milestone exists
+    gate milestones.any(|m| m.milestone_id == start_milestone) else {
+      return Err(DoctrineViolation {
+        law: "PWL",
+        message: "Start milestone not found in milestone list",
+        attribution: "Alfredo Medina Hernandez",
+      })
+    }
+
+    // Compute PHI alignment — ratio of milestone values should approximate PHI
+    let values = milestones.map(|m| m.phi_value)
+    let phi_alignment = compute_phi_alignment(values)
+
+    seal Ok(Pathway {
+      pathway_id: "PATH_" # learner_id # "_" # name,
+      learner_id: learner_id,
+      name: name,
+      milestones: milestones,
+      transitions: transitions,
+      branches: [],
+      current_milestone: start_milestone,
+      completed_milestones: [],
+      total_beats_elapsed: 0,
+      progress_ratio: 0.0,
+      phi_alignment: phi_alignment,
+      estimated_remaining_beats: milestones.map(|m| m.estimated_beats).sum(),
+      doctrine_score: S0_FLOOR,
+      attribution: "Alfredo Medina Hernandez",
+    })
+  }
+
+  // Advance along the pathway (complete a milestone)
+  fn complete_milestone(
+    pathway: Pathway,
+    milestone_id: Text,
+    beat: Nat,
+  ) -> Result<Pathway, DoctrineViolation> {
+    gate pathway.milestones.any(|m| m.milestone_id == milestone_id) else {
+      return Err(DoctrineViolation {
+        law: "PWL",
+        message: "Milestone not found: " # milestone_id,
+        attribution: "Alfredo Medina Hernandez",
+      })
+    }
+
+    let updated_milestones = pathway.milestones.map(|m| {
+      if m.milestone_id == milestone_id {
+        Milestone { ...m, achieved: true, achieved_beat: Some(beat) }
+      } else { m }
+    })
+
+    let completed = pathway.completed_milestones ++ [milestone_id]
+    let progress = completed.len().toFloat() / pathway.milestones.len().toFloat()
+
+    // Find next milestone via transitions
+    let next = pathway.transitions
+      .filter(|t| t.from_milestone == milestone_id)
+      .sort_by(|t| -t.phi_weight)  // Highest PHI-weight first
+      .first()
+      .map(|t| t.to_milestone)
+      .unwrap_or(milestone_id)
+
+    seal Ok(Pathway {
+      ...pathway,
+      milestones: updated_milestones,
+      current_milestone: next,
+      completed_milestones: completed,
+      progress_ratio: progress,
+      total_beats_elapsed: pathway.total_beats_elapsed + (beat - pathway.total_beats_elapsed),
+    })
+  }
+
+  // Evaluate a branch decision
+  fn evaluate_branch(
+    branch: Branch,
+    learner_mastery: SovereignFloat,
+    risk_tolerance: SovereignFloat,
+  ) -> BranchOption {
+    // PHI-weighted scoring: balance reward and risk using golden ratio
+    let scored = branch.options.map(|opt| {
+      let score = (opt.reward * Φ - opt.risk * Φ^(-1)) * learner_mastery
+        |> clamp(S0_FLOOR, S_CEIL)
+      (opt, score)
+    })
+
+    // Pick highest-scored option within risk tolerance
+    scored
+      .filter(|(opt, _)| opt.risk <= risk_tolerance)
+      .sort_by(|(_, score)| -score)
+      .first()
+      .map(|(opt, _)| opt)
+      .unwrap_or(branch.options[0])
+  }
+
+  // Compute PHI alignment of a value sequence
+  // Checks how close consecutive ratios are to PHI
+  fn compute_phi_alignment(values: [SovereignFloat]) -> Float {
+    if values.len() < 2 { return 0.0 }
+
+    let ratios = values.windows(2).map(|pair| {
+      if pair[0] > 0.001 { pair[1] / pair[0] } else { 0.0 }
+    })
+
+    let avg_deviation = ratios.map(|r| (r - Φ).abs()).sum() / ratios.len().toFloat()
+    let alignment = 1.0 - avg_deviation.min(1.0)
+    alignment |> clamp(0.0, 1.0)
+  }
+}
