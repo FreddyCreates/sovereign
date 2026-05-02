@@ -91,6 +91,8 @@ import DiagCharterPrimeLib  "diag/DiagCharterPrime";
 import DiagLaw39Lib         "diag/DiagLaw39";
 import CharterCipherPrimeLib "charters/CharterCipherPrime";
 import IterSovereignLib      "charters/IterSovereign";
+import CPLRuntimeLib         "lib/cplRuntime";
+import CPLTypes              "types/cplRuntime";
 
 
 
@@ -458,6 +460,16 @@ actor SovereignWarSim {
   stable var antStreak : Nat = 0;
   stable var engagementIdCounter : Nat = 0;
   stable var artifactIdCounter : Nat = 0;
+
+  // ── CPL/PULSE RUNTIME — PERMANENT FOUNDATION STATE ─────────────────
+  // The CPL Runtime is the permanent foundation through which ALL operations flow.
+  // Tracks enforcement, proofs, memory, and coherence across all beats.
+  // This is NOT optional — it is the constitutional substrate.
+  stable var cplRuntimeState : CPLTypes.CPLRuntimeState = CPLRuntimeLib.initState();
+  // Proof trace ring buffer — last 100 proofs for audit queries
+  var cplProofTrail : [CPLTypes.ProofRecord] = [];
+  // Violation log — last 50 violations for diagnostics
+  var cplViolationLog : [CPLTypes.InvariantViolation] = [];
 
   stable var factionNames : [Text] = [
     "North America", "Europe/NATO", "Russia/Eurasia", "China/East Asia",
@@ -2171,6 +2183,23 @@ actor SovereignWarSim {
     beatCounter += 1;
     let beat = beatCounter;
 
+    // ══════════════════════════════════════════════════════════════════════
+    // CPL/PULSE RUNTIME — BEAT OPEN (Pass 1-3: Schema → Schedule → Enforce)
+    // The permanent foundation opens every beat. All operations flow through CPL.
+    // ══════════════════════════════════════════════════════════════════════
+    let nowCPL = Time.now();
+    let doctrineForCPL : Float = if (governanceState.totalDoctrines > 0) {
+      let docs = governanceState.doctrines;
+      if (docs.size() > 0) { Float.max(0.0, Float.min(1.0, docs[docs.size() - 1].strengthValue)) } else { 0.75 }
+    } else { 0.75 };
+    let (cplAfterOpen, beatOpenProof) = CPLRuntimeLib.openBeat(cplRuntimeState, beat, doctrineForCPL, nowCPL);
+    cplRuntimeState := cplAfterOpen;
+    // Append beat-open proof to trail (ring buffer: keep last 100)
+    if (cplProofTrail.size() >= 100) {
+      cplProofTrail := Array.tabulate(99, func(i : Nat) : CPLTypes.ProofRecord { cplProofTrail[i + 1] });
+    };
+    cplProofTrail := cplProofTrail.concat([beatOpenProof]);
+
     // ── AMBIENT_FIELD_PRESENCE — advances every heartbeat (always-on) ─────
     // Law 40: the loop closes at every beat — the ambient field is always alive.
     // The architect's gravitational presence in the organism's world never goes to zero.
@@ -2349,17 +2378,60 @@ actor SovereignWarSim {
 
     // 2. OMNIS vote every 50 beats (VELA-synchronized)
     if (beat % 50 == 0) {
+      // CPL ENFORCEMENT: OMNIS vote is a governance mutation — enforce before write
+      let (cplAfterOmnis, omnisEnforcement) = CPLRuntimeLib.enforceBeforeWrite(
+        cplRuntimeState, "OMNIS_VOTE", doctrineForCPL, compoundCoherence, beat, nowCPL
+      );
+      cplRuntimeState := cplAfterOmnis;
+      switch (omnisEnforcement) {
+        case (#blocked(violation)) {
+          // Log violation but allow OMNIS (sovereign vote cannot be blocked)
+          cplViolationLog := cplViolationLog.concat([violation]);
+          if (cplViolationLog.size() > 50) {
+            cplViolationLog := Array.tabulate(49, func(i : Nat) : CPLTypes.InvariantViolation { cplViolationLog[i + 1] });
+          };
+        };
+        case _ {};
+      };
       omnisState := OmnisLib.runOmnisVote(omnisState, sovereignCores, beat);
+      // CPL PROOF: record OMNIS vote completion
+      let (cplAfterOmnisProof, omnisProof) = CPLRuntimeLib.writeProofTrace(
+        cplRuntimeState, "OMNIS_VOTE", doctrineForCPL, compoundCoherence, beat,
+        ["DOCTRINE_GATE", "COMPOUND_COHERENCE"], nowCPL
+      );
+      cplRuntimeState := cplAfterOmnisProof;
+      cplProofTrail := cplProofTrail.concat([omnisProof]);
     };
 
     // 3. Governance cycle every 50 beats
     if (beat % 50 == 0) {
+      // CPL ENFORCEMENT: governance mutation — enforce before write
+      let (cplAfterGov, govEnforcement) = CPLRuntimeLib.enforceBeforeWrite(
+        cplRuntimeState, "GOVERNANCE_CYCLE", doctrineForCPL, compoundCoherence, beat, nowCPL
+      );
+      cplRuntimeState := cplAfterGov;
+      switch (govEnforcement) {
+        case (#blocked(violation)) {
+          cplViolationLog := cplViolationLog.concat([violation]);
+          if (cplViolationLog.size() > 50) {
+            cplViolationLog := Array.tabulate(49, func(i : Nat) : CPLTypes.InvariantViolation { cplViolationLog[i + 1] });
+          };
+        };
+        case _ {};
+      };
       let archState = ArchLib.assembleState(
         coresSnap, newVela, newJubilee, archCreatorPresence, newSpirits, newSuccession
       );
       governanceState := GovLib.runGovernanceCycle(
         governanceState, newSuccession, newSpirits, archState, beat
       );
+      // CPL PROOF: governance cycle sealed
+      let (cplAfterGovProof, govProof) = CPLRuntimeLib.writeProofTrace(
+        cplRuntimeState, "GOVERNANCE_CYCLE", doctrineForCPL, compoundCoherence, beat,
+        ["DOCTRINE_GATE", "SOVEREIGN_RANGE", "COMPOUND_COHERENCE"], nowCPL
+      );
+      cplRuntimeState := cplAfterGovProof;
+      cplProofTrail := cplProofTrail.concat([govProof]);
     };
 
     // 4. Civilization coupling cycle — drain IoT buffer
@@ -3434,6 +3506,21 @@ actor SovereignWarSim {
     thinkingTrailSteps[thinkingTrailHead] := trailStep;
     thinkingTrailHead := (thinkingTrailHead + 1) % 10;
     if (thinkingTrailSize < 10) { thinkingTrailSize += 1 };
+
+    // ══════════════════════════════════════════════════════════════════════
+    // CPL/PULSE RUNTIME — BEAT CLOSE (Pass 4-5: Proof Trace → Memory)
+    // Compounds runtime coherence. Seals proof. Writes memory. Law 23.
+    // ══════════════════════════════════════════════════════════════════════
+    let nowCPLClose = Time.now();
+    let (cplAfterClose, beatCloseProof) = CPLRuntimeLib.closeBeat(
+      cplRuntimeState, beat, doctrineForCPL, globalCoherence, nowCPLClose
+    );
+    cplRuntimeState := cplAfterClose;
+    // Append beat-close proof to trail
+    if (cplProofTrail.size() >= 100) {
+      cplProofTrail := Array.tabulate(99, func(i : Nat) : CPLTypes.ProofRecord { cplProofTrail[i + 1] });
+    };
+    cplProofTrail := cplProofTrail.concat([beatCloseProof]);
 
     { beat; engagements = newEngagements.toArray(); lawsFired; globalCoherence }
   };
@@ -5560,6 +5647,34 @@ actor SovereignWarSim {
   /// Returns the WORKFLOW_MEDINA SKAI record — the Caffeine AI operating protocol.
   public query func getWorkflowMedina() : async CharterSovereignPrimeLib.WorkflowMedinaRecord {
     CharterSovereignPrimeLib.WORKFLOW_MEDINA
+  };
+
+  // ── CPL/PULSE RUNTIME — PUBLIC QUERY API ─────────────────────────────────
+  // The permanent foundation exposes its state for audit, diagnostics, and proof.
+
+  /// Returns full CPL Runtime diagnostics — enforcement counts, proofs, coherence.
+  public query func getCPLRuntimeDiagnostics() : async CPLTypes.CPLDiagnostics {
+    CPLRuntimeLib.getDiagnostics(cplRuntimeState)
+  };
+
+  /// Returns the proof trail — last 100 proof records for audit.
+  public query func getCPLProofTrail() : async [CPLTypes.ProofRecord] {
+    cplProofTrail
+  };
+
+  /// Returns the violation log — last 50 violations for diagnostics.
+  public query func getCPLViolationLog() : async [CPLTypes.InvariantViolation] {
+    cplViolationLog
+  };
+
+  /// Returns the default invariants that apply to ALL operations.
+  public query func getCPLInvariants() : async [CPLTypes.Invariant] {
+    CPLRuntimeLib.getDefaultInvariants()
+  };
+
+  /// Returns the runtime coherence — compounds every beat (Law 23). Never decreases.
+  public query func getCPLRuntimeCoherence() : async Float {
+    cplRuntimeState.runtimeCoherence
   };
 
 }
