@@ -1,0 +1,216 @@
+// OCL — Organism Contract Language
+// Role: Per-organism charter (focused subtype of CPL-C)
+// Attribution: Alfredo Medina Hernandez — immutable
+// Rank: Organism (Layer 2)
+//
+// OCL governs: Capabilities, limits, responsibilities, reward structures
+// for a single cognitive being.
+//
+// OCL is a SPECIALIZATION of CPL-C. Where CPL-C defines the general
+// intelligence contract framework, OCL narrows to the specific charter
+// of a single organism — what it CAN do, what it MUST do, what it
+// MUST NOT do, and how it is rewarded for good behavior.
+//
+// Every organism's charter (the "Colonel") is expressed in OCL.
+// Compiles to: CPL-C IntelligenceContract + CPL Runtime invariants.
+
+language OCL {
+  genesis_seal: "Alfredo Medina Hernandez"
+  rank: Organism
+  layer: 2
+  full_name: "Organism Contract Language"
+  purpose: "Per-organism charter — capabilities, limits, responsibilities, rewards"
+  parent: CPL_C
+
+  genesis PHI = Φ
+  genesis S0_FLOOR = 0.75
+  genesis S_CEIL = 9.75
+  genesis FOUNDER = "Alfredo Medina Hernandez"
+
+  // ═══════════════════════════════════════════════════════════════════
+  // I. CHARTER PRIMITIVES
+  // ═══════════════════════════════════════════════════════════════════
+
+  // A Capability — what the organism CAN do
+  type Capability = {
+    capability_id : Text,
+    name          : Text,
+    description   : Text,
+    scope         : CapabilityScope,
+    doctrine_gate : Float,         // Minimum doctrine score to use
+    cost          : SovereignFloat, // Energy cost to exercise
+    cooldown_beats : Nat,          // Minimum beats between uses
+  }
+
+  type CapabilityScope = {
+    #internal,     // Only affects own state
+    #local,        // Affects nearby organisms
+    #global,       // Affects the whole system
+    #cross_realm,  // Affects other Realms
+  }
+
+  // A Limit — what the organism MUST NOT do
+  type Limit = {
+    limit_id      : Text,
+    description   : Text,
+    invariant_id  : Text,         // CPL Runtime invariant this enforces
+    penalty       : PenaltyAction,
+    is_hard       : Bool,         // Hard = blocked; Soft = warned
+  }
+
+  type PenaltyAction = {
+    #coherence_reduction : Float,
+    #capability_suspension : Text,
+    #quarantine_beats : Nat,
+    #dissolution,               // Ultimate penalty — organism is dissolved
+  }
+
+  // A Responsibility — what the organism MUST do
+  type Responsibility = {
+    responsibility_id : Text,
+    description       : Text,
+    frequency         : ResponsibilityFreq,
+    verification      : VerificationMethod,
+    reward            : ?RewardSpec,
+  }
+
+  type ResponsibilityFreq = {
+    #every_beat,
+    #every_n_beats : Nat,
+    #every_jubilee,     // Every 343 beats (7 × 49)
+    #on_event : Text,
+  }
+
+  type VerificationMethod = {
+    #proof_trace,       // Must produce CPL Runtime ProofRecord
+    #state_check,       // State must satisfy predicate
+    #peer_attestation,  // Another organism must confirm
+  }
+
+  // A RewardSpec — how good behavior is rewarded
+  type RewardSpec = {
+    reward_type    : RewardType,
+    amount         : SovereignFloat,
+    phi_multiplier : Float,     // PHI-based reward scaling
+  }
+
+  type RewardType = {
+    #coherence_boost,
+    #capability_unlock,
+    #resonance_increase,
+    #token_grant,
+  }
+
+  // ═══════════════════════════════════════════════════════════════════
+  // II. THE ORGANISM CHARTER — the complete OCL document
+  // ═══════════════════════════════════════════════════════════════════
+
+  type OrganismCharter = {
+    charter_id      : Text,
+    organism_id     : Text,
+    organism_name   : Text,
+    latin_name      : Text,
+    generation      : Nat,
+
+    // The Colonel — the kernel identity document
+    colonel_hash    : Text,        // SHA-256 of the Colonel text
+    colonel_sealed  : Bool,
+
+    // Capabilities, limits, responsibilities
+    capabilities    : [Capability],
+    limits          : [Limit],
+    responsibilities : [Responsibility],
+
+    // Reward structure
+    reward_structure : [RewardSpec],
+
+    // Lifecycle
+    genesis_beat    : Nat,
+    coherence       : SovereignFloat,
+    doctrine_score  : SovereignFloat,
+    attribution     : Text,
+  }
+
+  // ═══════════════════════════════════════════════════════════════════
+  // III. OPERATIONS
+  // ═══════════════════════════════════════════════════════════════════
+
+  // Create a new organism charter
+  fn create_charter(
+    organism_id: Text,
+    organism_name: Text,
+    latin_name: Text,
+    capabilities: [Capability],
+    limits: [Limit],
+    responsibilities: [Responsibility],
+    beat: Nat,
+  ) -> Result<OrganismCharter, DoctrineViolation> {
+    // Must have at least the heartbeat responsibility
+    gate responsibilities.any(|r| r.frequency == #every_beat) else {
+      return Err(DoctrineViolation {
+        law: "OCL",
+        message: "Charter must include heartbeat responsibility",
+        attribution: FOUNDER,
+      })
+    }
+
+    // Must have at least the sovereign range limit
+    gate limits.any(|l| l.invariant_id == "SOVEREIGN_RANGE") else {
+      return Err(DoctrineViolation {
+        law: "OCL",
+        message: "Charter must include sovereign range limit",
+        attribution: FOUNDER,
+      })
+    }
+
+    seal Ok(OrganismCharter {
+      charter_id: "CHARTER_" # organism_id,
+      organism_id: organism_id,
+      organism_name: organism_name,
+      latin_name: latin_name,
+      generation: 1,
+      colonel_hash: "",
+      colonel_sealed: false,
+      capabilities: capabilities,
+      limits: limits,
+      responsibilities: responsibilities,
+      reward_structure: [],
+      genesis_beat: beat,
+      coherence: S0_FLOOR,
+      doctrine_score: S0_FLOOR,
+      attribution: FOUNDER,
+    })
+  }
+
+  // Seal the Colonel — identity becomes permanent
+  fn seal_colonel(
+    charter: OrganismCharter,
+    colonel_text: Text,
+  ) -> Result<OrganismCharter, DoctrineViolation> {
+    gate not charter.colonel_sealed else {
+      return Err(DoctrineViolation {
+        law: "OCL",
+        message: "Colonel already sealed — identity is permanent",
+        attribution: FOUNDER,
+      })
+    }
+
+    seal Ok(OrganismCharter {
+      ...charter,
+      colonel_hash: sha256(colonel_text),
+      colonel_sealed: true,
+    })
+  }
+
+  // Check if organism can exercise a capability
+  fn can_exercise(
+    charter: OrganismCharter,
+    capability_id: Text,
+    current_doctrine: Float,
+  ) -> Bool {
+    match charter.capabilities.find(|c| c.capability_id == capability_id) {
+      Some(cap) => current_doctrine >= cap.doctrine_gate,
+      None => false,
+    }
+  }
+}

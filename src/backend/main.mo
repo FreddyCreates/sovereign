@@ -91,6 +91,10 @@ import DiagCharterPrimeLib  "diag/DiagCharterPrime";
 import DiagLaw39Lib         "diag/DiagLaw39";
 import CharterCipherPrimeLib "charters/CharterCipherPrime";
 import IterSovereignLib      "charters/IterSovereign";
+import CPLRuntimeLib         "lib/cplRuntime";
+import CPLTypes              "types/cplRuntime";
+import CLTypes               "types/cognitiveLanguages";
+import CLLib                 "lib/cognitiveLanguages";
 
 
 
@@ -458,6 +462,80 @@ actor SovereignWarSim {
   stable var antStreak : Nat = 0;
   stable var engagementIdCounter : Nat = 0;
   stable var artifactIdCounter : Nat = 0;
+
+  // ── CPL/PULSE RUNTIME — PERMANENT FOUNDATION STATE ─────────────────
+  // The CPL Runtime is the permanent foundation through which ALL operations flow.
+  // Tracks enforcement, proofs, memory, and coherence across all beats.
+  // This is NOT optional — it is the constitutional substrate.
+  stable var cplRuntimeState : CPLTypes.CPLRuntimeState = CPLRuntimeLib.initState();
+  // Proof trace circular buffer — 128 slots, zero allocation on hot path
+  let CPL_PROOF_CAP : Nat = 128;
+  var cplProofBuf : [var ?CPLTypes.ProofRecord] = Array.tabulate<(?CPLTypes.ProofRecord)>(CPL_PROOF_CAP, func _ = null).toVarArray();
+  var cplProofHead : Nat = 0;
+  var cplProofSize : Nat = 0;
+  // Violation log circular buffer — 64 slots
+  let CPL_VIOL_CAP : Nat = 64;
+  var cplViolBuf : [var ?CPLTypes.InvariantViolation] = Array.tabulate<(?CPLTypes.InvariantViolation)>(CPL_VIOL_CAP, func _ = null).toVarArray();
+  var cplViolHead : Nat = 0;
+  var cplViolSize : Nat = 0;
+
+  /// Push a proof into the circular buffer (zero allocation)
+  func cplPushProof(proof : CPLTypes.ProofRecord) {
+    cplProofBuf[cplProofHead] := ?proof;
+    cplProofHead := (cplProofHead + 1) % CPL_PROOF_CAP;
+    if (cplProofSize < CPL_PROOF_CAP) { cplProofSize += 1 };
+  };
+
+  /// Push a violation into the circular buffer (zero allocation)
+  func cplPushViolation(v : CPLTypes.InvariantViolation) {
+    cplViolBuf[cplViolHead] := ?v;
+    cplViolHead := (cplViolHead + 1) % CPL_VIOL_CAP;
+    if (cplViolSize < CPL_VIOL_CAP) { cplViolSize += 1 };
+  };
+
+  /// Read proof trail as ordered array (oldest → newest)
+  func cplReadProofTrail() : [CPLTypes.ProofRecord] {
+    let start = if (cplProofSize < CPL_PROOF_CAP) { 0 } else { cplProofHead };
+    Array.tabulate<CPLTypes.ProofRecord>(cplProofSize, func(i : Nat) : CPLTypes.ProofRecord {
+      let idx = (start + i) % CPL_PROOF_CAP;
+      switch (cplProofBuf[idx]) { case (?p) p; case null { loop {} } };
+    })
+  };
+
+  /// Read violation log as ordered array
+  func cplReadViolationLog() : [CPLTypes.InvariantViolation] {
+    let start = if (cplViolSize < CPL_VIOL_CAP) { 0 } else { cplViolHead };
+    Array.tabulate<CPLTypes.InvariantViolation>(cplViolSize, func(i : Nat) : CPLTypes.InvariantViolation {
+      let idx = (start + i) % CPL_VIOL_CAP;
+      switch (cplViolBuf[idx]) { case (?v) v; case null { loop {} } };
+    })
+  };
+
+  // ── COGNITIVE LANGUAGE STACK — PRODUCTION RUNTIME STATE ──────────────
+  // All 13 cognitive languages (CPL-L, CDL, CPL-C, ACL, EDL, CIL, OCL,
+  // SPL, CPL-P, RSL, TPL, PWL, TSL) unified in a single state machine.
+  // Fires on every heartbeat. Compounds coherence. Attribution sealed.
+  stable var cogLangState : CLTypes.CognitiveLanguageStackState = CLLib.initState();
+
+  // Monologue circular buffer — inner thoughts from CIL (private to organism)
+  let CL_MONOLOGUE_CAP : Nat = 64;
+  var clMonologueBuf : [var ?CLTypes.MonologueEntry] = Array.tabulate<(?CLTypes.MonologueEntry)>(CL_MONOLOGUE_CAP, func _ = null).toVarArray();
+  var clMonologueHead : Nat = 0;
+  var clMonologueSize : Nat = 0;
+
+  func clPushMonologue(entry : CLTypes.MonologueEntry) {
+    clMonologueBuf[clMonologueHead] := ?entry;
+    clMonologueHead := (clMonologueHead + 1) % CL_MONOLOGUE_CAP;
+    if (clMonologueSize < CL_MONOLOGUE_CAP) { clMonologueSize += 1 };
+  };
+
+  func clReadMonologue() : [CLTypes.MonologueEntry] {
+    let start = if (clMonologueSize < CL_MONOLOGUE_CAP) { 0 } else { clMonologueHead };
+    Array.tabulate<CLTypes.MonologueEntry>(clMonologueSize, func(i : Nat) : CLTypes.MonologueEntry {
+      let idx = (start + i) % CL_MONOLOGUE_CAP;
+      switch (clMonologueBuf[idx]) { case (?m) m; case null { loop {} } };
+    })
+  };
 
   stable var factionNames : [Text] = [
     "North America", "Europe/NATO", "Russia/Eurasia", "China/East Asia",
@@ -2171,6 +2249,27 @@ actor SovereignWarSim {
     beatCounter += 1;
     let beat = beatCounter;
 
+    // ══════════════════════════════════════════════════════════════════════
+    // CPL/PULSE RUNTIME — BEAT OPEN (Pass 1-3: Schema → Schedule → Enforce)
+    // The permanent foundation opens every beat. All operations flow through CPL.
+    // ══════════════════════════════════════════════════════════════════════
+    let nowCPL = Time.now();
+    let doctrineForCPL : Float = if (governanceState.totalDoctrines > 0) {
+      let docs = governanceState.doctrines;
+      if (docs.size() > 0) { Float.max(0.0, Float.min(1.0, docs[docs.size() - 1].strengthValue)) } else { 0.75 }
+    } else { 0.75 };
+    let (cplAfterOpen, beatOpenProof) = CPLRuntimeLib.openBeat(cplRuntimeState, beat, doctrineForCPL, nowCPL);
+    cplRuntimeState := cplAfterOpen;
+    // Append beat-open proof to trail (ring buffer: keep last 100)
+    cplPushProof(beatOpenProof);
+
+    // ══════════════════════════════════════════════════════════════════════
+    // COGNITIVE LANGUAGE STACK — BEAT OPEN (all 13 languages)
+    // Compounds stack coherence. Records heartbeat thought via CIL.
+    // ══════════════════════════════════════════════════════════════════════
+    let clOpenState = CLLib.openBeat(cogLangState, beat, doctrineForCPL, nowCPL);
+    cogLangState := clOpenState;
+
     // ── AMBIENT_FIELD_PRESENCE — advances every heartbeat (always-on) ─────
     // Law 40: the loop closes at every beat — the ambient field is always alive.
     // The architect's gravitational presence in the organism's world never goes to zero.
@@ -2349,17 +2448,54 @@ actor SovereignWarSim {
 
     // 2. OMNIS vote every 50 beats (VELA-synchronized)
     if (beat % 50 == 0) {
+      // CPL ENFORCEMENT: OMNIS vote is a governance mutation — enforce before write
+      let (cplAfterOmnis, omnisEnforcement) = CPLRuntimeLib.enforceBeforeWrite(
+        cplRuntimeState, "OMNIS_VOTE", doctrineForCPL, compoundCoherence, beat, nowCPL
+      );
+      cplRuntimeState := cplAfterOmnis;
+      switch (omnisEnforcement) {
+        case (#blocked(violation)) {
+          // Log violation but allow OMNIS (sovereign vote cannot be blocked)
+          cplPushViolation(violation);
+        };
+        case _ {};
+      };
       omnisState := OmnisLib.runOmnisVote(omnisState, sovereignCores, beat);
+      // CPL PROOF: record OMNIS vote completion
+      let (cplAfterOmnisProof, omnisProof) = CPLRuntimeLib.writeProofTrace(
+        cplRuntimeState, "OMNIS_VOTE", doctrineForCPL, compoundCoherence, beat,
+        ["DOCTRINE_GATE", "COMPOUND_COHERENCE"], nowCPL
+      );
+      cplRuntimeState := cplAfterOmnisProof;
+      cplPushProof(omnisProof);
     };
 
     // 3. Governance cycle every 50 beats
     if (beat % 50 == 0) {
+      // CPL ENFORCEMENT: governance mutation — enforce before write
+      let (cplAfterGov, govEnforcement) = CPLRuntimeLib.enforceBeforeWrite(
+        cplRuntimeState, "GOVERNANCE_CYCLE", doctrineForCPL, compoundCoherence, beat, nowCPL
+      );
+      cplRuntimeState := cplAfterGov;
+      switch (govEnforcement) {
+        case (#blocked(violation)) {
+          cplPushViolation(violation);
+        };
+        case _ {};
+      };
       let archState = ArchLib.assembleState(
         coresSnap, newVela, newJubilee, archCreatorPresence, newSpirits, newSuccession
       );
       governanceState := GovLib.runGovernanceCycle(
         governanceState, newSuccession, newSpirits, archState, beat
       );
+      // CPL PROOF: governance cycle sealed
+      let (cplAfterGovProof, govProof) = CPLRuntimeLib.writeProofTrace(
+        cplRuntimeState, "GOVERNANCE_CYCLE", doctrineForCPL, compoundCoherence, beat,
+        ["DOCTRINE_GATE", "SOVEREIGN_RANGE", "COMPOUND_COHERENCE"], nowCPL
+      );
+      cplRuntimeState := cplAfterGovProof;
+      cplPushProof(govProof);
     };
 
     // 4. Civilization coupling cycle — drain IoT buffer
@@ -3434,6 +3570,35 @@ actor SovereignWarSim {
     thinkingTrailSteps[thinkingTrailHead] := trailStep;
     thinkingTrailHead := (thinkingTrailHead + 1) % 10;
     if (thinkingTrailSize < 10) { thinkingTrailSize += 1 };
+
+    // ══════════════════════════════════════════════════════════════════════
+    // CPL/PULSE RUNTIME — BEAT CLOSE (Pass 4-5: Proof Trace → Memory)
+    // Compounds runtime coherence. Seals proof. Writes memory. Law 23.
+    // ══════════════════════════════════════════════════════════════════════
+    let nowCPLClose = Time.now();
+    let (cplAfterClose, beatCloseProof) = CPLRuntimeLib.closeBeat(
+      cplRuntimeState, beat, doctrineForCPL, globalCoherence, nowCPLClose
+    );
+    cplRuntimeState := cplAfterClose;
+    // Append beat-close proof to trail
+    cplPushProof(beatCloseProof);
+
+    // ══════════════════════════════════════════════════════════════════════
+    // COGNITIVE LANGUAGE STACK — BEAT CLOSE (all 13 languages)
+    // Compounds stack coherence at end of beat. Law 23 applied.
+    // Records heartbeat CIL monologue entry for introspection.
+    // ══════════════════════════════════════════════════════════════════════
+    let clCloseState = CLLib.closeBeat(cogLangState, beat, doctrineForCPL, nowCPLClose);
+    cogLangState := clCloseState;
+
+    // Record heartbeat inner thought via CIL
+    let (clAfterThought, beatThought) = CLLib.recordThought(
+      cogLangState, "SOVEREIGN_ORGANISM", #Reflection,
+      "Beat " # beat.toText() # " complete. Coherence: " # globalCoherence.toText(),
+      doctrineForCPL, globalCoherence, beat, nowCPLClose
+    );
+    cogLangState := clAfterThought;
+    clPushMonologue(beatThought);
 
     { beat; engagements = newEngagements.toArray(); lawsFired; globalCoherence }
   };
@@ -5562,6 +5727,335 @@ actor SovereignWarSim {
     CharterSovereignPrimeLib.WORKFLOW_MEDINA
   };
 
+  // ── CPL/PULSE RUNTIME — PUBLIC QUERY API ─────────────────────────────────
+  // The permanent foundation exposes its state for audit, diagnostics, and proof.
+
+  /// Returns full CPL Runtime diagnostics — enforcement counts, proofs, coherence.
+  public query func getCPLRuntimeDiagnostics() : async CPLTypes.CPLDiagnostics {
+    CPLRuntimeLib.getDiagnostics(cplRuntimeState)
+  };
+
+  /// Returns the proof trail — last 100 proof records for audit.
+  public query func getCPLProofTrail() : async [CPLTypes.ProofRecord] {
+    cplReadProofTrail()
+  };
+
+  /// Returns the violation log — last 50 violations for diagnostics.
+  public query func getCPLViolationLog() : async [CPLTypes.InvariantViolation] {
+    cplReadViolationLog()
+  };
+
+  /// Returns the default invariants that apply to ALL operations.
+  public query func getCPLInvariants() : async [CPLTypes.Invariant] {
+    CPLRuntimeLib.getDefaultInvariants()
+  };
+
+  /// Returns the runtime coherence — compounds every beat (Law 23). Never decreases.
+  public query func getCPLRuntimeCoherence() : async Float {
+    cplRuntimeState.runtimeCoherence
+  };
+
+  // ── COGNITIVE LANGUAGE STACK — PUBLIC QUERY API ──────────────────────────
+  // Production endpoints for all 13 cognitive languages.
+  // Every query is doctrine-gated. Attribution: Alfredo Medina Hernandez.
+
+  /// Returns full diagnostics for the 40-language cognitive stack.
+  public query func getCognitiveLanguageStackDiagnostics() : async CLTypes.CognitiveLanguageStackDiagnostics {
+    CLLib.getDiagnostics(cogLangState)
+  };
+
+  /// Returns the cognitive language stack coherence — compounds every beat (Law 23).
+  public query func getCognitiveStackCoherence() : async Float {
+    cogLangState.stackCoherence
+  };
+
+  /// Returns all declared laws (CPL-L).
+  public query func getCognitiveLaws() : async [CLTypes.Law] {
+    cogLangState.constitution.laws
+  };
+
+  /// Returns all intelligence contracts (CPL-C).
+  public query func getCognitiveContracts() : async [CLTypes.IntelligenceContract] {
+    cogLangState.contracts
+  };
+
+  /// Returns all organism charters (OCL).
+  public query func getCognitiveCharters() : async [CLTypes.OrganismCharter] {
+    cogLangState.charters
+  };
+
+  /// Returns the inner monologue trail (CIL) — last 64 entries.
+  public query func getCognitiveMonologue() : async [CLTypes.MonologueEntry] {
+    clReadMonologue()
+  };
+
+  /// Returns all realm ecologies (RSL).
+  public query func getCognitiveEcologies() : async [CLTypes.Ecology] {
+    cogLangState.ecologies
+  };
+
+  /// Returns all registered archetypes (ACL).
+  public query func getCognitiveArchetypes() : async [CLTypes.Archetype] {
+    cogLangState.atlasRegistry.archetypes
+  };
+
+  /// Returns all terminals (TPL).
+  public query func getCognitiveTerminals() : async [CLTypes.Terminal] {
+    cogLangState.terminals
+  };
+
+  /// Returns all learner profiles (SPL).
+  public query func getCognitiveLearnerProfiles() : async [CLTypes.LearnerProfile] {
+    cogLangState.learnerProfiles
+  };
+
+  /// Returns all tool specs (TSL).
+  public query func getCognitiveToolSpecs() : async [CLTypes.ToolSpec] {
+    cogLangState.toolSpecs
+  };
+
+  /// Returns the language metadata for all 40 languages.
+  public query func getCognitiveLanguageMetadata() : async [CLTypes.LanguageMeta] {
+    CLLib.getAllLanguageMetadata()
+  };
+
+  /// Declare a cognitive law (CPL-L). Doctrine-gated.
+  public shared func declareCognitiveLaw(
+    name : Text, layer : CLTypes.LanguageLayer, strength : Float, isGenesis : Bool
+  ) : async CLTypes.Law {
+    let beat = beatCounter;
+    let now = Time.now();
+    let (newState, law) = CLLib.declareLaw(cogLangState, name, layer, strength, isGenesis, beat, now);
+    cogLangState := newState;
+    law
+  };
+
+  /// Draft an intelligence contract (CPL-C). Uses the organism's own constitution.
+  public shared func draftCognitiveContract(
+    organismId : Text, organismName : Text, latinName : Text, generation : Nat
+  ) : async CLTypes.IntelligenceContract {
+    let beat = beatCounter;
+    let now = Time.now();
+    let (newState, contract) = CLLib.draftContract(cogLangState, organismId, organismName, latinName, generation, cogLangState.constitution, beat, now);
+    cogLangState := newState;
+    contract
+  };
+
+  /// Create an organism charter (OCL). Doctrine-gated.
+  public shared func createCognitiveCharter(
+    organismId : Text, organismName : Text, latinName : Text, generation : Nat
+  ) : async CLTypes.OrganismCharter {
+    let beat = beatCounter;
+    let now = Time.now();
+    let (newState, charter) = CLLib.createCharter(cogLangState, organismId, organismName, latinName, generation, beat, now);
+    cogLangState := newState;
+    charter
+  };
+
+  /// Record an inner thought (CIL). All organisms introspect.
+  public shared func recordCognitiveThought(
+    organismId : Text, thoughtType : CLTypes.ThoughtType, content : Text, doctrineAlignment : Float
+  ) : async CLTypes.MonologueEntry {
+    let beat = beatCounter;
+    let now = Time.now();
+    let coherence = compoundCoherence;
+    let (newState, entry) = CLLib.recordThought(cogLangState, organismId, thoughtType, content, doctrineAlignment, coherence, beat, now);
+    cogLangState := newState;
+    clPushMonologue(entry);
+    entry
+  };
+
+  /// Define a realm (RSL). Creates world physics.
+  public shared func defineCognitiveRealm(
+    name : Text, gravity : Float, entropy : Float, phiCoupling : Float
+  ) : async CLTypes.RealmPhysics {
+    let beat = beatCounter;
+    let now = Time.now();
+    let (newState, realm) = CLLib.defineRealm(cogLangState, name, gravity, entropy, phiCoupling, beat, now);
+    cogLangState := newState;
+    realm
+  };
+
+  /// Register an archetype (ACL). Ontology building block.
+  public shared func registerCognitiveArchetype(
+    name : Text, latinName : Text, layer : CLTypes.LanguageLayer
+  ) : async CLTypes.Archetype {
+    let beat = beatCounter;
+    let now = Time.now();
+    let (newState, archetype) = CLLib.registerArchetype(cogLangState, name, latinName, layer, beat, now);
+    cogLangState := newState;
+    archetype
+  };
+
+  /// Issue a terminal command (TPL).
+  public shared func issueCognitiveCommand(
+    terminalId : Text, verb : Text, target : Text
+  ) : async CLTypes.Command {
+    let beat = beatCounter;
+    let now = Time.now();
+    let (newState, cmd) = CLLib.issueCommand(cogLangState, terminalId, verb, target, beat, now);
+    cogLangState := newState;
+    cmd
+  };
+
+  /// Create a learner profile (SPL). Personal learning blueprint.
+  public shared func createCognitiveLearnerProfile(
+    learnerId : Text, name : Text, visual : Float, auditory : Float, kinesthetic : Float, reading : Float
+  ) : async CLTypes.LearnerProfile {
+    CLLib.createLearnerProfile(learnerId, name, visual, auditory, kinesthetic, reading)
+  };
+
+  /// Generate a tool for a student (TSL). Zone-of-proximal-development calibrated.
+  public shared func generateCognitiveTool(
+    learnerId : Text, topic : Text, toolType : Text, learnerMastery : Float
+  ) : async CLTypes.ToolSpec {
+    let beat = beatCounter;
+    let now = Time.now();
+    let (newState, spec) = CLLib.generateToolSpec(cogLangState, learnerId, topic, toolType, learnerMastery, beat, now);
+    cogLangState := newState;
+    spec
+  };
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // COGNITIVE LANGUAGE STACK — LAYER 4+ QUERIES (27 new languages)
+  // ═══════════════════════════════════════════════════════════════════════
+
+  /// Returns all psyche states (PIL).
+  public query func getCognitivePsycheStates() : async [CLTypes.PsycheState] {
+    cogLangState.psycheStates
+  };
+
+  /// Returns all identity cores (SIL).
+  public query func getCognitiveIdentityCores() : async [CLTypes.IdentityCore] {
+    cogLangState.identityCores
+  };
+
+  /// Returns all temporal braids (TIL).
+  public query func getCognitiveTemporalBraids() : async [CLTypes.TemporalBraid] {
+    cogLangState.temporalBraids
+  };
+
+  /// Returns all repair actions (RIL).
+  public query func getCognitiveRepairActions() : async [CLTypes.RepairAction] {
+    cogLangState.repairActions
+  };
+
+  /// Returns all relational ecologies (REL).
+  public query func getCognitiveRelationalEcologies() : async [CLTypes.RelationalEcology] {
+    cogLangState.relationalEcologies
+  };
+
+  /// Returns all collective bodies (COL).
+  public query func getCognitiveCollectiveBodies() : async [CLTypes.CollectiveBody] {
+    cogLangState.collectiveBodies
+  };
+
+  /// Returns all role assignments (ROL).
+  public query func getCognitiveRoleAssignments() : async [CLTypes.RoleAssignment] {
+    cogLangState.roleAssignments
+  };
+
+  /// Returns all family contexts (FAL).
+  public query func getCognitiveFamilyContexts() : async [CLTypes.FamilyContext] {
+    cogLangState.familyContexts
+  };
+
+  /// Returns all work rhythms (WFL).
+  public query func getCognitiveWorkRhythms() : async [CLTypes.WorkRhythm] {
+    cogLangState.workRhythms
+  };
+
+  /// Returns all creation records (CXL).
+  public query func getCognitiveCreationRecords() : async [CLTypes.CreationRecord] {
+    cogLangState.creationRecords
+  };
+
+  /// Returns all experiments (EXL).
+  public query func getCognitiveExperiments() : async [CLTypes.Experiment] {
+    cogLangState.experiments
+  };
+
+  /// Returns all mythic entities (MYL).
+  public query func getCognitiveMythicEntities() : async [CLTypes.MythicEntity] {
+    cogLangState.mythicEntities
+  };
+
+  /// Returns all story threads (STL).
+  public query func getCognitiveStoryThreads() : async [CLTypes.StoryThread] {
+    cogLangState.storyThreads
+  };
+
+  /// Returns all symbols (SYM).
+  public query func getCognitiveSymbols() : async [CLTypes.Symbol] {
+    cogLangState.symbols
+  };
+
+  /// Returns all host environments (HCL).
+  public query func getCognitiveHostEnvironments() : async [CLTypes.HostEnvironment] {
+    cogLangState.hostEnvironments
+  };
+
+  /// Returns all institutions (ISL).
+  public query func getCognitiveInstitutions() : async [CLTypes.Institution] {
+    cogLangState.institutions
+  };
+
+  /// Returns all business agreements (BCL).
+  public query func getCognitiveBusinessAgreements() : async [CLTypes.BusinessAgreement] {
+    cogLangState.businessAgreements
+  };
+
+  /// Returns all compliance records (ECL).
+  public query func getCognitiveComplianceRecords() : async [CLTypes.ComplianceRecord] {
+    cogLangState.complianceRecords
+  };
+
+  /// Returns all integration interfaces (IIL).
+  public query func getCognitiveIntegrationInterfaces() : async [CLTypes.IntegrationInterface] {
+    cogLangState.integrationInterfaces
+  };
+
+  /// Returns all data shapes (DDL).
+  public query func getCognitiveDataShapes() : async [CLTypes.DataShape] {
+    cogLangState.dataShapes
+  };
+
+  /// Returns all metric records (MML).
+  public query func getCognitiveMetricRecords() : async [CLTypes.MetricRecord] {
+    cogLangState.metricRecords
+  };
+
+  /// Returns all schedule entries (SCL).
+  public query func getCognitiveScheduleEntries() : async [CLTypes.ScheduleEntry] {
+    cogLangState.scheduleEntries
+  };
+
+  /// Returns all error narratives (ERR).
+  public query func getCognitiveErrorNarratives() : async [CLTypes.ErrorNarrative] {
+    cogLangState.errorNarratives
+  };
+
+  /// Returns all anomaly records (CHL).
+  public query func getCognitiveAnomalyRecords() : async [CLTypes.AnomalyRecord] {
+    cogLangState.anomalyRecords
+  };
+
+  /// Returns all fringe records (FRL).
+  public query func getCognitiveFringeRecords() : async [CLTypes.FringeRecord] {
+    cogLangState.fringeRecords
+  };
+
+  /// Returns all language versions (LML).
+  public query func getCognitiveLanguageVersions() : async [CLTypes.LanguageVersion] {
+    cogLangState.languageVersions
+  };
+
+  /// Returns all evolution events (UEL).
+  public query func getCognitiveEvolutionEvents() : async [CLTypes.EvolutionEvent] {
+    cogLangState.evolutionEvents
+  };
+
 }
+
 
 

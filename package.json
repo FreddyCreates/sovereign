@@ -14,6 +14,7 @@
     "bindgen": "caffeine-bindgen --did-file ./src/backend/dist/backend.did --out-dir ./src/frontend/src --actor-interface-file --force"
   },
   "devDependencies": {
+    "ic-mops": "^2.13.1",
     "sharp": "^0.34.4"
   },
   "dependencies": {

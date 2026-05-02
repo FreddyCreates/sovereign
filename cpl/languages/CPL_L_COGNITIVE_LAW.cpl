@@ -1,0 +1,196 @@
+// CPL-L — Cognitive Law Language
+// Role: Constitutions and doctrine
+// Attribution: Alfredo Medina Hernandez — immutable
+// Rank: Primordial (Layer 0) — the foundation of all other languages
+//
+// CPL-L governs: Who can change what, immutability, upgrade paths,
+// safety rails for beings, terminals, civilizations.
+//
+// CPL-L is the CONSTITUTIONAL substrate. Every other cognitive language
+// inherits its governance model from CPL-L declarations.
+// Laws written in CPL-L are sealed at genesis and cannot be revoked —
+// only extended via doctrine-gated amendment.
+//
+// Relationship to CPL Runtime:
+//   CPL-L declarations compile to CPLTypes.DoctrineRef + CPLTypes.Invariant
+//   enforced at runtime by the Invariant Kernel (Pass 3).
+
+language CPL_L {
+  genesis_seal: "Alfredo Medina Hernandez"
+  rank: Primordial
+  layer: 0
+  full_name: "Cognitive Law Language"
+  purpose: "Constitutions and doctrine for sovereign organisms"
+
+  genesis PHI = Φ
+  genesis S0_FLOOR = 0.75
+  genesis S_CEIL = 9.75
+  genesis FOUNDER = "Alfredo Medina Hernandez"
+
+  // ═══════════════════════════════════════════════════════════════════
+  // I. PRIMITIVES — types available in CPL-L
+  // ═══════════════════════════════════════════════════════════════════
+
+  // A Law is the root governance construct
+  type Law = {
+    id              : Nat,
+    name            : Text,
+    layer           : Nat,              // 0=Primordial, 1=Substrate, 2=Organism, 3=Engine
+    doctrine_strength : SovereignFloat, // [S0_FLOOR, S_CEIL]
+    is_genesis      : Bool,             // True = sealed forever
+    attribution     : Text,             // Always FOUNDER
+    amendment_gate  : Float,            // Minimum doctrine score to amend [0.85, 1.0]
+  }
+
+  // An Amendment extends a law without revoking it
+  type Amendment = {
+    parent_law_id   : Nat,
+    amendment_id    : Nat,
+    description     : Text,
+    doctrine_score  : Float,            // Must exceed parent's amendment_gate
+    proposer        : Text,
+    beat            : Nat,
+    sealed          : Bool,
+  }
+
+  // A Constitution is an ordered collection of Laws
+  type Constitution = {
+    name            : Text,
+    laws            : [Law],
+    amendments      : [Amendment],
+    genesis_beat    : Nat,
+    sealed          : Bool,
+  }
+
+  // An ImmutabilityGrade defines what can change
+  type ImmutabilityGrade = {
+    #genesis_sealed,    // NEVER changes (Layer 0 laws)
+    #doctrine_gated,    // Changes only with doctrine score >= amendment_gate
+    #organism_mutable,  // Organism can modify within its charter
+    #terminal_volatile, // Terminal-scoped, ephemeral
+  }
+
+  // A SafetyRail prevents sovereign violations
+  type SafetyRail = {
+    rail_id         : Text,
+    description     : Text,
+    target_entity   : Text,             // "being", "terminal", "civilization"
+    invariant       : Text,             // Invariant ID from CPL Runtime
+    enforce_level   : EnforceLevel,     // #block | #warn | #audit
+  }
+
+  // ═══════════════════════════════════════════════════════════════════
+  // II. OPERATIONS — what CPL-L can do
+  // ═══════════════════════════════════════════════════════════════════
+
+  // Declare a new law (genesis-only for Layer 0)
+  fn declare_law(
+    name: Text,
+    layer: Nat,
+    strength: SovereignFloat,
+    is_genesis: Bool,
+  ) -> Result<Law, DoctrineViolation> {
+    gate strength >= S0_FLOOR else {
+      return Err(DoctrineViolation {
+        law: "CPL_L",
+        message: "Law strength below sovereign floor",
+        attribution: FOUNDER,
+      })
+    }
+
+    gate layer <= 3 else {
+      return Err(DoctrineViolation {
+        law: "CPL_L",
+        message: "Invalid law layer (must be 0-3)",
+        attribution: FOUNDER,
+      })
+    }
+
+    seal Ok(Law {
+      id: next_law_id(),
+      name: name,
+      layer: layer,
+      doctrine_strength: strength,
+      is_genesis: is_genesis,
+      attribution: FOUNDER,
+      amendment_gate: if is_genesis { 1.0 } else { 0.85 },
+    })
+  }
+
+  // Propose an amendment to a non-genesis law
+  fn propose_amendment(
+    law: Law,
+    description: Text,
+    doctrine_score: Float,
+    proposer: Text,
+    beat: Nat,
+  ) -> Result<Amendment, DoctrineViolation> {
+    // Genesis laws cannot be amended
+    gate not law.is_genesis else {
+      return Err(DoctrineViolation {
+        law: "CPL_L",
+        message: "Cannot amend genesis-sealed law",
+        attribution: FOUNDER,
+      })
+    }
+
+    // Doctrine score must exceed the amendment gate
+    gate doctrine_score >= law.amendment_gate else {
+      return Err(DoctrineViolation {
+        law: "CPL_L",
+        message: "Doctrine score below amendment gate",
+        attribution: FOUNDER,
+      })
+    }
+
+    seal Ok(Amendment {
+      parent_law_id: law.id,
+      amendment_id: next_amendment_id(),
+      description: description,
+      doctrine_score: doctrine_score,
+      proposer: proposer,
+      beat: beat,
+      sealed: true,
+    })
+  }
+
+  // Install a safety rail on an entity
+  fn install_safety_rail(
+    entity_type: Text,
+    invariant_id: Text,
+    enforce_level: EnforceLevel,
+  ) -> SafetyRail {
+    SafetyRail {
+      rail_id: "RAIL_" # entity_type # "_" # invariant_id,
+      description: "Safety rail for " # entity_type # " enforcing " # invariant_id,
+      target_entity: entity_type,
+      invariant: invariant_id,
+      enforce_level: enforce_level,
+    }
+  }
+
+  // Verify a constitution is internally consistent
+  fn verify_constitution(constitution: Constitution) -> Result<Bool, DoctrineViolation> {
+    // All genesis laws must have strength >= S0_FLOOR
+    for law in constitution.laws {
+      gate law.doctrine_strength >= S0_FLOOR else {
+        return Err(DoctrineViolation {
+          law: "CPL_L",
+          message: "Constitution contains law below sovereign floor: " # law.name,
+          attribution: FOUNDER,
+        })
+      }
+
+      // All laws must carry founder attribution
+      gate law.attribution == FOUNDER else {
+        return Err(DoctrineViolation {
+          law: "CPL_L",
+          message: "Law missing founder attribution: " # law.name,
+          attribution: FOUNDER,
+        })
+      }
+    }
+
+    seal Ok(true)
+  }
+}

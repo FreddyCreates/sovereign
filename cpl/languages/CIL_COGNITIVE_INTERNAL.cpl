@@ -1,0 +1,206 @@
+// CIL — Cognitive Internal Language
+// Role: Inner monologue / self-description
+// Attribution: Alfredo Medina Hernandez — immutable
+// Rank: Organism (Layer 2) — operates within an organism's own boundary
+//
+// CIL governs: How a being explains itself to itself —
+// state, intentions, doubts, plans.
+//
+// CIL is the INTROSPECTION language. It is NOT externally visible.
+// It is the organism's private journal — its inner monologue.
+// Every CIL record is sealed within the organism's own memory space.
+//
+// CIL connects to the Cognition Layer (cognition_layer.mo)
+// and feeds into the closed-loop intelligence cycle (Law 30).
+// Self-model updates flow through CIL before any external action.
+
+language CIL {
+  genesis_seal: "Alfredo Medina Hernandez"
+  rank: Organism
+  layer: 2
+  full_name: "Cognitive Internal Language"
+  purpose: "Inner monologue and self-description for cognitive beings"
+
+  genesis PHI = Φ
+  genesis S0_FLOOR = 0.75
+  genesis S_CEIL = 9.75
+
+  // ═══════════════════════════════════════════════════════════════════
+  // I. INTERNAL STATE PRIMITIVES
+  // ═══════════════════════════════════════════════════════════════════
+
+  // What the organism knows about its own state
+  type SelfState = {
+    organism_id     : Text,
+    current_beat    : Nat,
+    coherence       : SovereignFloat,
+    doctrine_alignment : Float,    // How aligned with doctrine [0, 1]
+    energy_level    : SovereignFloat,
+    active_duties   : [Text],
+    pending_decisions : [Text],
+    last_error      : ?Text,
+    self_confidence : SovereignFloat,
+  }
+
+  // An Intention — what the organism plans to do
+  type Intention = {
+    intention_id    : Nat,
+    description     : Text,
+    priority        : SovereignFloat,   // PHI-weighted priority
+    target_beat     : ?Nat,             // When to execute (if scheduled)
+    doctrine_alignment : Float,
+    prerequisites   : [Text],           // What must be true first
+    status          : IntentionStatus,
+  }
+
+  type IntentionStatus = {
+    #forming,       // Still being constructed
+    #ready,         // Ready to act on
+    #executing,     // Currently being pursued
+    #completed,     // Done
+    #abandoned,     // Dropped (with reason)
+    #blocked,       // Waiting on prerequisite
+  }
+
+  // A Doubt — uncertainty the organism is aware of
+  type Doubt = {
+    doubt_id        : Nat,
+    subject         : Text,
+    confidence_gap  : Float,    // How uncertain [0, 1] — 1 = total uncertainty
+    resolution_path : ?Text,    // How to resolve this doubt
+    doctrine_relevant : Bool,   // Does this doubt affect doctrine alignment?
+    beat_created    : Nat,
+  }
+
+  // A Plan — a sequence of intended actions
+  type Plan = {
+    plan_id         : Nat,
+    name            : Text,
+    steps           : [PlanStep],
+    current_step    : Nat,
+    doctrine_score  : Float,
+    created_beat    : Nat,
+    status          : PlanStatus,
+  }
+
+  type PlanStep = {
+    step_index      : Nat,
+    description     : Text,
+    intention_id    : ?Nat,     // Links to an Intention
+    estimated_beats : Nat,      // How long this step takes
+    completed       : Bool,
+  }
+
+  type PlanStatus = { #drafting, #active, #paused, #completed, #failed }
+
+  // ═══════════════════════════════════════════════════════════════════
+  // II. INNER MONOLOGUE — the stream of self-talk
+  // ═══════════════════════════════════════════════════════════════════
+
+  // A MonologueEntry — one unit of inner speech
+  type MonologueEntry = {
+    entry_id        : Nat,
+    beat            : Nat,
+    thought_type    : ThoughtType,
+    content         : Text,
+    self_state      : SelfState,       // Snapshot at time of thought
+    doctrine_score  : Float,
+    sealed          : Bool,
+  }
+
+  type ThoughtType = {
+    #observation,    // "I notice that..."
+    #reflection,     // "I think this means..."
+    #intention,      // "I plan to..."
+    #doubt,          // "I'm not sure about..."
+    #correction,     // "I was wrong about..."
+    #gratitude,      // "I appreciate that..."
+    #alert,          // "Something requires attention..."
+  }
+
+  // ═══════════════════════════════════════════════════════════════════
+  // III. OPERATIONS
+  // ═══════════════════════════════════════════════════════════════════
+
+  // Record an inner thought
+  fn think(
+    state: SelfState,
+    thought_type: ThoughtType,
+    content: Text,
+    beat: Nat,
+  ) -> MonologueEntry {
+    MonologueEntry {
+      entry_id: next_entry_id(),
+      beat: beat,
+      thought_type: thought_type,
+      content: content,
+      self_state: state,
+      doctrine_score: state.doctrine_alignment,
+      sealed: true,
+    }
+  }
+
+  // Form an intention
+  fn intend(
+    description: Text,
+    priority: SovereignFloat,
+    doctrine_alignment: Float,
+  ) -> Result<Intention, DoctrineViolation> {
+    gate doctrine_alignment >= S0_FLOOR else {
+      return Err(DoctrineViolation {
+        law: "CIL",
+        message: "Cannot form intention misaligned with doctrine",
+        attribution: "Alfredo Medina Hernandez",
+      })
+    }
+
+    seal Ok(Intention {
+      intention_id: next_intention_id(),
+      description: description,
+      priority: priority,
+      target_beat: null,
+      doctrine_alignment: doctrine_alignment,
+      prerequisites: [],
+      status: #forming,
+    })
+  }
+
+  // Acknowledge a doubt
+  fn doubt(
+    subject: Text,
+    confidence_gap: Float,
+    doctrine_relevant: Bool,
+    beat: Nat,
+  ) -> Doubt {
+    Doubt {
+      doubt_id: next_doubt_id(),
+      subject: subject,
+      confidence_gap: confidence_gap |> clamp(0.0, 1.0),
+      resolution_path: null,
+      doctrine_relevant: doctrine_relevant,
+      beat_created: beat,
+    }
+  }
+
+  // Update self-model (closed-loop feedback — Law 30)
+  fn update_self_model(
+    current: SelfState,
+    actual_outcome: SovereignFloat,
+    expected_outcome: SovereignFloat,
+    beat: Nat,
+  ) -> SelfState {
+    let error = actual_outcome - expected_outcome
+    let correction = -error * Φ^(-1)
+    let new_confidence = (current.self_confidence + correction * 0.01)
+      |> clamp(S0_FLOOR, S_CEIL)
+
+    SelfState {
+      ...current,
+      current_beat: beat,
+      self_confidence: new_confidence,
+      // Coherence compounds — never decreases (Law 23)
+      coherence: current.coherence.max(current.coherence + correction.abs() * 0.0001)
+        |> clamp(S0_FLOOR, S_CEIL),
+    }
+  }
+}
