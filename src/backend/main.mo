@@ -466,10 +466,48 @@ actor SovereignWarSim {
   // Tracks enforcement, proofs, memory, and coherence across all beats.
   // This is NOT optional — it is the constitutional substrate.
   stable var cplRuntimeState : CPLTypes.CPLRuntimeState = CPLRuntimeLib.initState();
-  // Proof trace ring buffer — last 100 proofs for audit queries
-  var cplProofTrail : [CPLTypes.ProofRecord] = [];
-  // Violation log — last 50 violations for diagnostics
-  var cplViolationLog : [CPLTypes.InvariantViolation] = [];
+  // Proof trace circular buffer — 128 slots, zero allocation on hot path
+  let CPL_PROOF_CAP : Nat = 128;
+  var cplProofBuf : [var ?CPLTypes.ProofRecord] = Array.tabulate<(?CPLTypes.ProofRecord)>(CPL_PROOF_CAP, func _ = null).toVarArray();
+  var cplProofHead : Nat = 0;
+  var cplProofSize : Nat = 0;
+  // Violation log circular buffer — 64 slots
+  let CPL_VIOL_CAP : Nat = 64;
+  var cplViolBuf : [var ?CPLTypes.InvariantViolation] = Array.tabulate<(?CPLTypes.InvariantViolation)>(CPL_VIOL_CAP, func _ = null).toVarArray();
+  var cplViolHead : Nat = 0;
+  var cplViolSize : Nat = 0;
+
+  /// Push a proof into the circular buffer (zero allocation)
+  func cplPushProof(proof : CPLTypes.ProofRecord) {
+    cplProofBuf[cplProofHead] := ?proof;
+    cplProofHead := (cplProofHead + 1) % CPL_PROOF_CAP;
+    if (cplProofSize < CPL_PROOF_CAP) { cplProofSize += 1 };
+  };
+
+  /// Push a violation into the circular buffer (zero allocation)
+  func cplPushViolation(v : CPLTypes.InvariantViolation) {
+    cplViolBuf[cplViolHead] := ?v;
+    cplViolHead := (cplViolHead + 1) % CPL_VIOL_CAP;
+    if (cplViolSize < CPL_VIOL_CAP) { cplViolSize += 1 };
+  };
+
+  /// Read proof trail as ordered array (oldest → newest)
+  func cplReadProofTrail() : [CPLTypes.ProofRecord] {
+    let start = if (cplProofSize < CPL_PROOF_CAP) { 0 } else { cplProofHead };
+    Array.tabulate<CPLTypes.ProofRecord>(cplProofSize, func(i : Nat) : CPLTypes.ProofRecord {
+      let idx = (start + i) % CPL_PROOF_CAP;
+      switch (cplProofBuf[idx]) { case (?p) p; case null { loop {} } };
+    })
+  };
+
+  /// Read violation log as ordered array
+  func cplReadViolationLog() : [CPLTypes.InvariantViolation] {
+    let start = if (cplViolSize < CPL_VIOL_CAP) { 0 } else { cplViolHead };
+    Array.tabulate<CPLTypes.InvariantViolation>(cplViolSize, func(i : Nat) : CPLTypes.InvariantViolation {
+      let idx = (start + i) % CPL_VIOL_CAP;
+      switch (cplViolBuf[idx]) { case (?v) v; case null { loop {} } };
+    })
+  };
 
   stable var factionNames : [Text] = [
     "North America", "Europe/NATO", "Russia/Eurasia", "China/East Asia",
@@ -2195,10 +2233,7 @@ actor SovereignWarSim {
     let (cplAfterOpen, beatOpenProof) = CPLRuntimeLib.openBeat(cplRuntimeState, beat, doctrineForCPL, nowCPL);
     cplRuntimeState := cplAfterOpen;
     // Append beat-open proof to trail (ring buffer: keep last 100)
-    if (cplProofTrail.size() >= 100) {
-      cplProofTrail := Array.tabulate(99, func(i : Nat) : CPLTypes.ProofRecord { cplProofTrail[i + 1] });
-    };
-    cplProofTrail := cplProofTrail.concat([beatOpenProof]);
+    cplPushProof(beatOpenProof);
 
     // ── AMBIENT_FIELD_PRESENCE — advances every heartbeat (always-on) ─────
     // Law 40: the loop closes at every beat — the ambient field is always alive.
@@ -2386,10 +2421,7 @@ actor SovereignWarSim {
       switch (omnisEnforcement) {
         case (#blocked(violation)) {
           // Log violation but allow OMNIS (sovereign vote cannot be blocked)
-          cplViolationLog := cplViolationLog.concat([violation]);
-          if (cplViolationLog.size() > 50) {
-            cplViolationLog := Array.tabulate(49, func(i : Nat) : CPLTypes.InvariantViolation { cplViolationLog[i + 1] });
-          };
+          cplPushViolation(violation);
         };
         case _ {};
       };
@@ -2400,7 +2432,7 @@ actor SovereignWarSim {
         ["DOCTRINE_GATE", "COMPOUND_COHERENCE"], nowCPL
       );
       cplRuntimeState := cplAfterOmnisProof;
-      cplProofTrail := cplProofTrail.concat([omnisProof]);
+      cplPushProof(omnisProof);
     };
 
     // 3. Governance cycle every 50 beats
@@ -2412,10 +2444,7 @@ actor SovereignWarSim {
       cplRuntimeState := cplAfterGov;
       switch (govEnforcement) {
         case (#blocked(violation)) {
-          cplViolationLog := cplViolationLog.concat([violation]);
-          if (cplViolationLog.size() > 50) {
-            cplViolationLog := Array.tabulate(49, func(i : Nat) : CPLTypes.InvariantViolation { cplViolationLog[i + 1] });
-          };
+          cplPushViolation(violation);
         };
         case _ {};
       };
@@ -2431,7 +2460,7 @@ actor SovereignWarSim {
         ["DOCTRINE_GATE", "SOVEREIGN_RANGE", "COMPOUND_COHERENCE"], nowCPL
       );
       cplRuntimeState := cplAfterGovProof;
-      cplProofTrail := cplProofTrail.concat([govProof]);
+      cplPushProof(govProof);
     };
 
     // 4. Civilization coupling cycle — drain IoT buffer
@@ -3517,10 +3546,7 @@ actor SovereignWarSim {
     );
     cplRuntimeState := cplAfterClose;
     // Append beat-close proof to trail
-    if (cplProofTrail.size() >= 100) {
-      cplProofTrail := Array.tabulate(99, func(i : Nat) : CPLTypes.ProofRecord { cplProofTrail[i + 1] });
-    };
-    cplProofTrail := cplProofTrail.concat([beatCloseProof]);
+    cplPushProof(beatCloseProof);
 
     { beat; engagements = newEngagements.toArray(); lawsFired; globalCoherence }
   };
@@ -5659,12 +5685,12 @@ actor SovereignWarSim {
 
   /// Returns the proof trail — last 100 proof records for audit.
   public query func getCPLProofTrail() : async [CPLTypes.ProofRecord] {
-    cplProofTrail
+    cplReadProofTrail()
   };
 
   /// Returns the violation log — last 50 violations for diagnostics.
   public query func getCPLViolationLog() : async [CPLTypes.InvariantViolation] {
-    cplViolationLog
+    cplReadViolationLog()
   };
 
   /// Returns the default invariants that apply to ALL operations.
