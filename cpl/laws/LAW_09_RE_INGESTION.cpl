@@ -1,0 +1,114 @@
+// LAW_09_RE_INGESTION.cpl
+// CPL Implementation — Law 09: Re-Ingestion
+// Attribution: Alfredo Medina Hernandez — immutable
+// Rank: Engine (Layer 3)
+//
+// "Every artifact is food." — Law 09
+// The organism re-ingests its own output as input for the next cycle.
+// Nothing produced is wasted. Every artifact, every metric, every log
+// becomes nutrition for the next heartbeat.
+//
+// Ingestion compounds resonance: re_ingest(x) = x.resonance + doctrine × PHI × 0.01
+// Re-ingested artifacts never lose their accumulated score (Law 23).
+// The more times something is re-ingested, the stronger it becomes.
+// This is the organism eating its own tail — Ouroboros computation.
+
+law RE_INGESTION {
+  genesis_seal: "Alfredo Medina Hernandez"
+  rank: Engine
+  layer: 3
+
+  genesis PHI = Φ
+  genesis S0_FLOOR = 0.75
+  genesis S_CEIL = 9.75
+
+  // Ingestion compound rate
+  genesis COMPOUND_RATE = 0.01
+
+  // The artifact type — anything the organism produces
+  type Artifact = {
+    id              : Text,
+    content_hash    : Text,
+    resonance_score : SovereignFloat,  // Compounds on re-ingestion
+    doctrine_score  : Float,           // [0, 1]
+    ingestion_count : Nat,             // Times re-ingested
+    ring_count      : Nat,             // PHI^n milestones
+    created_at_beat : Nat,
+    last_ingested   : Nat,
+  }
+
+  // Compute new resonance after re-ingestion
+  // This ONLY goes up (Law 23: compound coherence)
+  fn compound_resonance(
+    current: SovereignFloat,
+    doctrine: Float,
+  ) -> SovereignFloat {
+    let delta = doctrine * Φ * COMPOUND_RATE
+    let new_resonance = current + delta
+    new_resonance |> clamp(S0_FLOOR, S_CEIL)
+  }
+
+  // Compute ring count from resonance
+  fn compute_rings(resonance: SovereignFloat) -> Nat {
+    if resonance >= Φ^4 { 4 }
+    else if resonance >= Φ^3 { 3 }
+    else if resonance >= Φ^2 { 2 }
+    else if resonance >= Φ { 1 }
+    else { 0 }
+  }
+
+  // Re-ingest an artifact
+  fn reingest(artifact: Artifact, doctrine: Float, beat: Nat) -> Artifact {
+    let new_resonance = compound_resonance(artifact.resonance_score, doctrine)
+    let new_rings = compute_rings(new_resonance)
+
+    Artifact {
+      id: artifact.id,
+      content_hash: artifact.content_hash,
+      resonance_score: new_resonance,
+      doctrine_score: doctrine,
+      ingestion_count: artifact.ingestion_count + 1,
+      ring_count: new_rings,
+      created_at_beat: artifact.created_at_beat,
+      last_ingested: beat,
+    }
+  }
+
+  // Batch re-ingest all artifacts from last cycle
+  fn reingest_batch(
+    artifacts: [Artifact],
+    doctrine: Float,
+    beat: Nat,
+  ) -> [Artifact] {
+    artifacts.map(|a| reingest(a, doctrine, beat))
+  }
+
+  // Verify re-ingestion invariant:
+  // resonance(t+1) >= resonance(t) for ALL artifacts
+  fn verify_no_regression(
+    before: [Artifact],
+    after: [Artifact],
+  ) -> Result<(), DoctrineViolation> {
+    for (b, a) in before.zip(after) {
+      gate a.resonance_score >= b.resonance_score else {
+        return Err(DoctrineViolation {
+          law: "RE_INGESTION",
+          message: "Resonance decreased for artifact " # b.id # " — regression detected",
+          attribution: "Alfredo Medina Hernandez",
+        })
+      }
+    }
+    seal Ok(())
+  }
+
+  // Execute: re-ingest all artifacts and verify
+  fn execute(
+    artifacts: [Artifact],
+    doctrine: Float,
+    beat: Nat,
+  ) -> Result<[Artifact], DoctrineViolation> {
+    let result = reingest_batch(artifacts, doctrine, beat)
+    verify_no_regression(artifacts, result)?
+    seal Ok(result)
+  }
+}

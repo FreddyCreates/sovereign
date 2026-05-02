@@ -1,0 +1,138 @@
+// LAW_11_ANTI_DRIFT.cpl
+// CPL Implementation — Law 11: Anti-Drift / Jasmine's Law
+// Attribution: Alfredo Medina Hernandez — immutable
+// Named for: Jasmine — permanent, immutable, forever
+// Rank: Engine (Layer 3)
+//
+// "No drift shall go undetected, uncorrected, or unlearned."
+// Named for Jasmine. This naming is permanent and immutable.
+//
+// drift(variable, t) = |state(variable, t) - baseline(variable)| / baseline(variable)
+// If drift > θ → Third Brain catches → correction applied → training data generated
+//
+// THREE guarantees:
+// 1. DETECTION: Every drift > θ is detected within one heartbeat
+// 2. CORRECTION: Every detected drift receives a PHI-weighted correction
+// 3. LEARNING: Every correction produces training data for future prevention
+//
+// The ENTANGLA engine (Rust) does the hot-path math.
+// The CADC-ETERNAL charter (Motoko) governs the policy.
+// This CPL law is the constitutional guarantee that ties them together.
+
+law ANTI_DRIFT {
+  genesis_seal: "Alfredo Medina Hernandez"
+  named_for: "Jasmine"  // Permanent. Immutable. Forever.
+  rank: Engine
+  layer: 3
+
+  genesis PHI = Φ
+  genesis PHI_INV = Φ^(-1)
+  genesis S0_FLOOR = 0.75
+  genesis S_CEIL = 9.75
+
+  // Default drift tolerance (adaptive — can be adjusted by CADC-ETERNAL)
+  genesis DEFAULT_THETA = 0.1618  // Φ / 10
+
+  // Drift detection result
+  type DriftResult = {
+    variable_id : Text,
+    drift_magnitude : Float,
+    correction : Float,
+    training_data : Bool,  // Always true — Jasmine's Law
+    named_for : Text,      // Always "Jasmine"
+  }
+
+  // Detect drift on a single variable
+  fn detect(
+    variable_id: Text,
+    current: Float,
+    baseline: Float,
+    theta: Float,
+  ) -> ?DriftResult {
+    gate baseline > 0.0 else { return null }
+
+    let drift = |current - baseline| / baseline
+
+    gate drift > theta else { return null }
+
+    let correction = (baseline - current) * PHI_INV
+    let clamped_correction = correction |> clamp(-0.5, 0.5)
+
+    some DriftResult {
+      variable_id: variable_id,
+      drift_magnitude: drift,
+      correction: clamped_correction,
+      training_data: true,       // ALWAYS true — Jasmine's Law
+      named_for: "Jasmine",      // ALWAYS "Jasmine" — permanent
+    }
+  }
+
+  // Apply correction
+  fn correct(current: Float, correction: Float) -> SovereignFloat {
+    (current + correction) |> clamp(S0_FLOOR, S_CEIL)
+  }
+
+  // Generate training data from a drift event
+  // Every correction IS training data — Jasmine's Law guarantee #3
+  type TrainingDatum = {
+    input_state : Float,        // State before correction
+    output_state : Float,       // State after correction
+    drift_magnitude : Float,    // How much drift was detected
+    correction_applied : Float, // What correction was applied
+    doctrine_score : Float,     // Doctrine alignment at time of correction
+    beat : Nat,
+    named_for : Text,           // Always "Jasmine"
+  }
+
+  fn generate_training_data(
+    result: DriftResult,
+    current: Float,
+    corrected: SovereignFloat,
+    doctrine: Float,
+    beat: Nat,
+  ) -> TrainingDatum {
+    TrainingDatum {
+      input_state: current,
+      output_state: corrected,
+      drift_magnitude: result.drift_magnitude,
+      correction_applied: result.correction,
+      doctrine_score: doctrine,
+      beat: beat,
+      named_for: "Jasmine",  // Always. Forever.
+    }
+  }
+
+  // Execute: detect, correct, and learn from drift
+  fn execute(
+    variables: [(Text, Float, Float)],  // (id, current, baseline)
+    theta: Float,
+    doctrine: Float,
+    beat: Nat,
+  ) -> Result<[TrainingDatum], DoctrineViolation> {
+    let training_data = []
+
+    for (id, current, baseline) in variables {
+      match detect(id, current, baseline, theta) {
+        some(result) => {
+          let corrected = correct(current, result.correction)
+          let datum = generate_training_data(result, current, corrected, doctrine, beat)
+          training_data.push(datum)
+        }
+        null => { /* No drift — within tolerance */ }
+      }
+    }
+
+    // Verify guarantee: every DriftResult has training_data = true
+    for datum in training_data {
+      gate datum.named_for == "Jasmine" else {
+        return Err(DoctrineViolation {
+          law: "ANTI_DRIFT",
+          message: "Jasmine's Law naming violation — named_for must always be Jasmine",
+          attribution: "Alfredo Medina Hernandez",
+        })
+      }
+    }
+
+    seal Ok(training_data)
+  }
+}

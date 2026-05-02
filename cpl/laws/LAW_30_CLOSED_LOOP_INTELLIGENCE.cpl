@@ -1,0 +1,176 @@
+// LAW_30_CLOSED_LOOP_INTELLIGENCE.cpl
+// CPL Implementation — Law 30: Closed-Loop Intelligence
+// Attribution: Alfredo Medina Hernandez — immutable
+// Rank: Engine (Layer 3)
+//
+// "Every intelligence must close its own loop."
+//
+// Open-loop: fire and forget. Dangerous. No accountability.
+// Closed-loop: fire, measure, compare, correct, compound.
+//
+// Every intelligence in the organism — all 130+ of them —
+// MUST implement the closed-loop pattern:
+//
+// 1. SENSE → Read inputs from world model
+// 2. THINK → Process through PHI-weighted computation
+// 3. ACT   → Produce output (state change, artifact, signal)
+// 4. MEASURE → Observe the effect of the action
+// 5. COMPARE → Compare actual vs expected outcome
+// 6. CORRECT → Adjust internal weights (Hebbian / PHI-decay)
+// 7. COMPOUND → Add to cumulative coherence (never reset)
+//
+// This law ensures no intelligence is "dumb fire."
+// Every output feeds back as input. The loop is closed.
+// The organism learns from everything it does.
+
+law CLOSED_LOOP_INTELLIGENCE {
+  genesis_seal: "Alfredo Medina Hernandez"
+  rank: Engine
+  layer: 3
+
+  genesis PHI = Φ
+  genesis S0_FLOOR = 0.75
+  genesis S_CEIL = 9.75
+
+  // The seven stages of the closed loop
+  type LoopStage = Sense | Think | Act | Measure | Compare | Correct | Compound
+
+  // State of a single closed-loop intelligence
+  type ClosedLoopState = {
+    intelligence_id  : Text,
+    current_stage    : LoopStage,
+    input_signal     : SovereignFloat,    // What was sensed
+    processed_output : SovereignFloat,    // What was thought/produced
+    actual_outcome   : SovereignFloat,    // What actually happened
+    expected_outcome : SovereignFloat,    // What was expected
+    error_signal     : Float,             // actual - expected
+    correction       : Float,             // PHI-weighted correction
+    cumulative_score : SovereignFloat,    // Compounds forever (Law 23)
+    loop_count       : Nat,               // Total complete loops
+    last_beat        : Nat,
+  }
+
+  // Initialize a closed loop for any intelligence
+  fn init_loop(id: Text) -> ClosedLoopState {
+    ClosedLoopState {
+      intelligence_id: id,
+      current_stage: Sense,
+      input_signal: S0_FLOOR,
+      processed_output: S0_FLOOR,
+      actual_outcome: S0_FLOOR,
+      expected_outcome: S0_FLOOR,
+      error_signal: 0.0,
+      correction: 0.0,
+      cumulative_score: S0_FLOOR,
+      loop_count: 0,
+      last_beat: 0,
+    }
+  }
+
+  // SENSE: Read input from world model
+  fn sense(state: ClosedLoopState, signal: SovereignFloat) -> ClosedLoopState {
+    ClosedLoopState {
+      ...state,
+      current_stage: Think,
+      input_signal: signal,
+    }
+  }
+
+  // THINK: Process through PHI-weighted computation
+  fn think(
+    state: ClosedLoopState,
+    process: fn(SovereignFloat) -> SovereignFloat,
+  ) -> ClosedLoopState {
+    let output = process(state.input_signal)
+    ClosedLoopState {
+      ...state,
+      current_stage: Act,
+      processed_output: output,
+      expected_outcome: output,  // We expect our output to succeed
+    }
+  }
+
+  // ACT: Apply the processed output (side effect occurs here)
+  fn act(state: ClosedLoopState) -> ClosedLoopState {
+    ClosedLoopState {
+      ...state,
+      current_stage: Measure,
+    }
+  }
+
+  // MEASURE: Observe what actually happened
+  fn measure(state: ClosedLoopState, actual: SovereignFloat) -> ClosedLoopState {
+    ClosedLoopState {
+      ...state,
+      current_stage: Compare,
+      actual_outcome: actual,
+    }
+  }
+
+  // COMPARE: Compute error signal
+  fn compare(state: ClosedLoopState) -> ClosedLoopState {
+    let error = state.actual_outcome - state.expected_outcome
+    ClosedLoopState {
+      ...state,
+      current_stage: Correct,
+      error_signal: error,
+    }
+  }
+
+  // CORRECT: Apply PHI-weighted correction
+  fn correct(state: ClosedLoopState) -> ClosedLoopState {
+    // Correction = -error × PHI^(-1) (opposite direction, scaled by golden ratio)
+    let correction = -state.error_signal * Φ^(-1)
+    ClosedLoopState {
+      ...state,
+      current_stage: Compound,
+      correction: correction,
+    }
+  }
+
+  // COMPOUND: Add to cumulative score (NEVER decreases — Law 23)
+  fn compound(state: ClosedLoopState, doctrine: Float, beat: Nat) -> ClosedLoopState {
+    // Compound = current + |1 - |error|| × doctrine × PHI × 0.001
+    // Low error = high compound. High error = low compound (but still positive)
+    let error_quality = 1.0 - |state.error_signal|.min(1.0)
+    let delta = error_quality * doctrine * Φ * 0.001
+    let new_cumulative = (state.cumulative_score + delta) |> clamp(S0_FLOOR, S_CEIL)
+
+    ClosedLoopState {
+      ...state,
+      current_stage: Sense,  // Loop closes — back to beginning
+      cumulative_score: new_cumulative,
+      loop_count: state.loop_count + 1,
+      last_beat: beat,
+    }
+  }
+
+  // Execute one complete loop iteration
+  fn execute_loop(
+    state: ClosedLoopState,
+    input: SovereignFloat,
+    process: fn(SovereignFloat) -> SovereignFloat,
+    actual: SovereignFloat,
+    doctrine: Float,
+    beat: Nat,
+  ) -> Result<ClosedLoopState, DoctrineViolation> {
+    let s1 = sense(state, input)
+    let s2 = think(s1, process)
+    let s3 = act(s2)
+    let s4 = measure(s3, actual)
+    let s5 = compare(s4)
+    let s6 = correct(s5)
+    let s7 = compound(s6, doctrine, beat)
+
+    // Verify: cumulative_score never decreased (Law 23)
+    gate s7.cumulative_score >= state.cumulative_score else {
+      return Err(DoctrineViolation {
+        law: "CLOSED_LOOP_INTELLIGENCE",
+        message: "Cumulative score decreased — violates Law 23 (Compound Coherence)",
+        attribution: "Alfredo Medina Hernandez",
+      })
+    }
+
+    seal Ok(s7)
+  }
+}
