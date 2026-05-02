@@ -1,13 +1,21 @@
 // types/cognitiveLanguages.mo
-// COGNITIVE LANGUAGE STACK — Type Definitions for all 13 Cognitive Languages
+// COGNITIVE LANGUAGE STACK — Type Definitions for all 40 Cognitive Languages
 // Attribution: Alfredo Medina Hernandez — immutable
 // PHI = 1.6180339887498948482 | S_FLOOR = 0.75 | S_CEIL = 9.75
 //
-// The 13 cognitive languages span four layers of the sovereign stack:
-//   Layer 0 — Primordial:  CPL-L, CDL
-//   Layer 1 — Substrate:   CPL-C, ACL, EDL
-//   Layer 2 — Organism:    CIL, OCL, SPL
-//   Layer 3 — Engine:      CPL-P, RSL, TPL, PWL, TSL
+// The 40 cognitive languages span twelve layers of the sovereign stack:
+//   Layer 0  — Primordial:      CPL-L, CDL
+//   Layer 1  — Substrate:       CPL-C, ACL, EDL, ISL
+//   Layer 2  — Organism:        CIL, OCL, SPL
+//   Layer 3  — Engine:          CPL-P, RSL, TPL, PWL, TSL, HCL
+//   Layer 4  — Psyche:          PIL, SIL, TIL, RIL
+//   Layer 5  — Social:          REL, COL, ROL, FAL
+//   Layer 6  — Creation:        WFL, CXL, EXL
+//   Layer 7  — Narrative:       MYL, STL, SYM
+//   Layer 8  — Enterprise:      BCL, ECL, IIL
+//   Layer 9  — Infrastructure:  DDL, MML, SCL
+//   Layer 10 — Chaos:           ERR, CHL, FRL
+//   Layer 11 — Meta:            LML, UEL
 
 module {
 
@@ -23,7 +31,7 @@ module {
   // II. LANGUAGE REGISTRY — identity and layer classification
   // ═══════════════════════════════════════════════════════════════════════
 
-  /// LanguageId — unique identifier for each of the 13 cognitive languages
+  /// LanguageId — unique identifier for each of the 40 cognitive languages
   public type LanguageId = {
     #CPL_L;   // Cognitive Law Language
     #CDL;     // Cognitive Doctrine Language
@@ -38,14 +46,49 @@ module {
     #TPL;     // Terminal Protocol Language
     #PWL;     // Pathway Language
     #TSL;     // Tool Scaffold Language
+    #PIL;     // Psyche Internal Language
+    #SIL;     // Self-Identity Language
+    #TIL;     // Temporal Integration Language
+    #RIL;     // Repair & Integration Language
+    #REL;     // Relational Ecology Language
+    #COL;     // Collective Orchestration Language
+    #ROL;     // Role Language
+    #WFL;     // Work Flow Language
+    #CXL;     // Creation Language
+    #EXL;     // Experiment Language
+    #MYL;     // Mythic Language
+    #STL;     // Story Thread Language
+    #SYM;     // Symbolic Language
+    #HCL;     // Host-Cognition Language
+    #ISL;     // Institution Structure Language
+    #FAL;     // Family Alignment Language
+    #BCL;     // Business Contract Language
+    #ECL;     // Enterprise Compliance Language
+    #IIL;     // Integration Interface Language
+    #DDL;     // Data Definition Language
+    #MML;     // Metrics & Monitoring Language
+    #SCL;     // Scheduling & Coordination Language
+    #ERR;     // Error Narrative Language
+    #CHL;     // Chaos Handling Language
+    #FRL;     // Fringe Language
+    #LML;     // Language Meta Language
+    #UEL;     // Universe Evolution Language
   };
 
-  /// LanguageLayer — the four architectural layers
+  /// LanguageLayer — the twelve architectural layers
   public type LanguageLayer = {
-    #Primordial;  // Layer 0 — CPL-L, CDL
-    #Substrate;   // Layer 1 — CPL-C, ACL, EDL
-    #Organism;    // Layer 2 — CIL, OCL, SPL
-    #Engine;      // Layer 3 — CPL-P, RSL, TPL, PWL, TSL
+    #Primordial;      // Layer 0  — CPL-L, CDL
+    #Substrate;       // Layer 1  — CPL-C, ACL, EDL, ISL
+    #Organism;        // Layer 2  — CIL, OCL, SPL
+    #Engine;          // Layer 3  — CPL-P, RSL, TPL, PWL, TSL, HCL
+    #Psyche;          // Layer 4  — PIL, SIL, TIL, RIL
+    #Social;          // Layer 5  — REL, COL, ROL, FAL
+    #Creation;        // Layer 6  — WFL, CXL, EXL
+    #Narrative;       // Layer 7  — MYL, STL, SYM
+    #Enterprise;      // Layer 8  — BCL, ECL, IIL
+    #Infrastructure;  // Layer 9  — DDL, MML, SCL
+    #Chaos;           // Layer 10 — ERR, CHL, FRL
+    #Meta;            // Layer 11 — LML, UEL
   };
 
   /// LanguageMeta — metadata record for a cognitive language
@@ -415,7 +458,31 @@ module {
   };
 
   // ═══════════════════════════════════════════════════════════════════════
-  // VIII. LAYER 2 — ORGANISM: CIL (Cognitive Internal Language)
+  // VIII. LAYER 1 — SUBSTRATE: ISL (Institution Structure Language)
+  // ═══════════════════════════════════════════════════════════════════════
+
+  /// InstitutionType — classification of institutional bodies
+  public type InstitutionType = {
+    #School;
+    #District;
+    #University;
+    #Academy;
+    #Guild;
+  };
+
+  /// Institution — a structured institutional body
+  public type Institution = {
+    institutionId   : Text;
+    name            : Text;
+    institutionType : InstitutionType;
+    divisions       : [Text];
+    coherence       : Float;     // institutional coherence [S_FLOOR, S_CEIL]
+    createdAt       : Int;
+    attribution     : Text;
+  };
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // IX. LAYER 2 — ORGANISM: CIL (Cognitive Internal Language)
   // ═══════════════════════════════════════════════════════════════════════
 
   /// ThoughtType — classification of internal cognitive events
@@ -507,7 +574,7 @@ module {
   };
 
   // ═══════════════════════════════════════════════════════════════════════
-  // IX. LAYER 2 — ORGANISM: OCL (Organism Contract Language)
+  // X. LAYER 2 — ORGANISM: OCL (Organism Contract Language)
   // ═══════════════════════════════════════════════════════════════════════
 
   /// Capability — a functional ability granted to an organism
@@ -573,7 +640,7 @@ module {
   };
 
   // ═══════════════════════════════════════════════════════════════════════
-  // X. LAYER 2 — ORGANISM: SPL (Study Pattern Language)
+  // XI. LAYER 2 — ORGANISM: SPL (Study Pattern Language)
   // ═══════════════════════════════════════════════════════════════════════
 
   /// LearnerProfile — cognitive profile of a learning organism
@@ -628,7 +695,7 @@ module {
   };
 
   // ═══════════════════════════════════════════════════════════════════════
-  // XI. LAYER 3 — ENGINE: CPL-P (Cognitive Processing Language)
+  // XII. LAYER 3 — ENGINE: CPL-P (Cognitive Processing Language)
   // ═══════════════════════════════════════════════════════════════════════
 
   /// NodeType — classification of nodes in a decision graph
@@ -689,7 +756,7 @@ module {
   };
 
   // ═══════════════════════════════════════════════════════════════════════
-  // XII. LAYER 3 — ENGINE: RSL (Realm Script Language)
+  // XIII. LAYER 3 — ENGINE: RSL (Realm Script Language)
   // ═══════════════════════════════════════════════════════════════════════
 
   /// RealmPhysics — the fundamental rules governing a realm
@@ -733,7 +800,7 @@ module {
   };
 
   // ═══════════════════════════════════════════════════════════════════════
-  // XIII. LAYER 3 — ENGINE: TPL (Terminal Protocol Language)
+  // XIV. LAYER 3 — ENGINE: TPL (Terminal Protocol Language)
   // ═══════════════════════════════════════════════════════════════════════
 
   /// Terminal — a sovereign terminal endpoint
@@ -787,7 +854,7 @@ module {
   };
 
   // ═══════════════════════════════════════════════════════════════════════
-  // XIV. LAYER 3 — ENGINE: PWL (Pathway Language)
+  // XV. LAYER 3 — ENGINE: PWL (Pathway Language)
   // ═══════════════════════════════════════════════════════════════════════
 
   /// Milestone — a checkpoint on a cognitive pathway
@@ -841,7 +908,7 @@ module {
   };
 
   // ═══════════════════════════════════════════════════════════════════════
-  // XV. LAYER 3 — ENGINE: TSL (Tool Scaffold Language)
+  // XVI. LAYER 3 — ENGINE: TSL (Tool Scaffold Language)
   // ═══════════════════════════════════════════════════════════════════════
 
   /// ToolState — lifecycle state of a tool instance
@@ -907,10 +974,610 @@ module {
   };
 
   // ═══════════════════════════════════════════════════════════════════════
-  // XVI. AGGREGATE STATE — full cognitive language stack
+  // XVII. LAYER 3 — ENGINE: HCL (Host-Cognition Language)
   // ═══════════════════════════════════════════════════════════════════════
 
-  /// CognitiveLanguageStackState — holds the full state of all 13 languages
+  /// HostEnvironment — describes a host environment for cognitive processes
+  public type HostEnvironment = {
+    hostId        : Text;
+    name          : Text;
+    description   : Text;
+    capabilities  : [Text];
+    constraints   : [Text];
+    coherence     : Float;        // host coherence [S_FLOOR, S_CEIL]
+    attribution   : Text;
+  };
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // XVIII. LAYER 4 — PSYCHE: PIL (Psyche Internal Language)
+  // ═══════════════════════════════════════════════════════════════════════
+
+  /// DriveType — classification of subconscious drives
+  public type DriveType = {
+    #Survival;
+    #Connection;
+    #Mastery;
+    #Exploration;
+    #Creation;
+  };
+
+  /// SubconsciousDrive — a fundamental drive within the psyche
+  public type SubconsciousDrive = {
+    driveId         : Nat;
+    driveType       : DriveType;
+    intensity       : Float;      // drive intensity [S_FLOOR, S_CEIL]
+    isActive        : Bool;
+    lastTriggeredAt : Int;
+  };
+
+  /// ImpulseRecord — a recorded impulse event
+  public type ImpulseRecord = {
+    impulseId   : Nat;
+    source      : Text;
+    intensity   : Float;          // impulse intensity [S_FLOOR, S_CEIL]
+    suppressed  : Bool;
+    beat        : Nat;
+    timestamp   : Int;
+  };
+
+  /// PsycheState — aggregate psyche state for an organism
+  public type PsycheState = {
+    organismId       : Text;
+    drives           : [SubconsciousDrive];
+    impulses         : [ImpulseRecord];
+    overallIntensity : Float;     // aggregate intensity [S_FLOOR, S_CEIL]
+    beat             : Nat;
+    timestamp        : Int;
+  };
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // XIX. LAYER 4 — PSYCHE: SIL (Self-Identity Language)
+  // ═══════════════════════════════════════════════════════════════════════
+
+  /// IdentityFacet — a single facet of identity
+  public type IdentityFacet = {
+    facetId   : Nat;
+    role      : Text;
+    context   : Text;
+    strength  : Float;            // facet strength [S_FLOOR, S_CEIL]
+    isActive  : Bool;
+  };
+
+  /// IdentityCore — the core identity structure
+  public type IdentityCore = {
+    coreId        : Text;
+    name          : Text;
+    facets        : [IdentityFacet];
+    coherence     : Float;        // identity coherence [S_FLOOR, S_CEIL]
+    era           : Text;
+    lastUpdatedAt : Int;
+    attribution   : Text;
+  };
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // XX. LAYER 4 — PSYCHE: TIL (Temporal Integration Language)
+  // ═══════════════════════════════════════════════════════════════════════
+
+  /// TemporalAnchor — a point in temporal narrative
+  public type TemporalAnchor = {
+    anchorId    : Nat;
+    era         : Text;
+    description : Text;
+    weight      : Float;          // anchor weight [S_FLOOR, S_CEIL]
+    timestamp   : Int;
+  };
+
+  /// TemporalBraid — an interwoven temporal narrative
+  public type TemporalBraid = {
+    braidId     : Text;
+    past        : [TemporalAnchor];
+    present     : [TemporalAnchor];
+    future      : [TemporalAnchor];
+    coherence   : Float;          // braid coherence [S_FLOOR, S_CEIL]
+    attribution : Text;
+  };
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // XXI. LAYER 4 — PSYCHE: RIL (Repair & Integration Language)
+  // ═══════════════════════════════════════════════════════════════════════
+
+  /// RepairType — classification of repair actions
+  public type RepairType = {
+    #Healing;
+    #ConflictResolution;
+    #Refactoring;
+    #Integration;
+    #Reconciliation;
+  };
+
+  /// RepairAction — a repair or integration action
+  public type RepairAction = {
+    actionId    : Nat;
+    repairType  : RepairType;
+    target      : Text;
+    description : Text;
+    intensity   : Float;          // repair intensity [S_FLOOR, S_CEIL]
+    isComplete  : Bool;
+    initiatedAt : Int;
+    completedAt : ?Int;
+    attribution : Text;
+  };
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // XXII. LAYER 5 — SOCIAL: REL (Relational Ecology Language)
+  // ═══════════════════════════════════════════════════════════════════════
+
+  /// TrustLevel — classification of trust between entities
+  public type TrustLevel = {
+    #None;
+    #Cautious;
+    #Developing;
+    #Established;
+    #Deep;
+  };
+
+  /// RelationalBond — a bond between two entities
+  public type RelationalBond = {
+    bondId       : Nat;
+    sourceEntity : Text;
+    targetEntity : Text;
+    trustLevel   : TrustLevel;
+    reciprocity  : Float;         // reciprocity score [S_FLOOR, S_CEIL]
+    boundary     : Float;         // boundary strength [S_FLOOR, S_CEIL]
+    createdAt    : Int;
+  };
+
+  /// RelationalEcology — the ecology of relationships
+  public type RelationalEcology = {
+    ecologyId    : Text;
+    bonds        : [RelationalBond];
+    overallTrust : Float;         // aggregate trust [S_FLOOR, S_CEIL]
+    attribution  : Text;
+  };
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // XXIII. LAYER 5 — SOCIAL: COL (Collective Orchestration Language)
+  // ═══════════════════════════════════════════════════════════════════════
+
+  /// CollectiveType — classification of collective bodies
+  public type CollectiveType = {
+    #Council;
+    #Swarm;
+    #Committee;
+    #Guild;
+    #Assembly;
+  };
+
+  /// CollectiveBody — a collective decision-making body
+  public type CollectiveBody = {
+    bodyId         : Text;
+    name           : Text;
+    collectiveType : CollectiveType;
+    members        : [Text];
+    coherence      : Float;       // collective coherence [S_FLOOR, S_CEIL]
+    quorum         : Nat;
+    isActive       : Bool;
+    createdAt      : Int;
+    attribution    : Text;
+  };
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // XXIV. LAYER 5 — SOCIAL: ROL (Role Language)
+  // ═══════════════════════════════════════════════════════════════════════
+
+  /// RoleAssignment — an assignment of a role to an entity
+  public type RoleAssignment = {
+    roleId     : Nat;
+    roleName   : Text;
+    assignee   : Text;
+    context    : Text;
+    weight     : Float;           // role weight [S_FLOOR, S_CEIL]
+    isActive   : Bool;
+    assignedAt : Int;
+    expiresAt  : ?Int;
+  };
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // XXV. LAYER 5 — SOCIAL: FAL (Family Alignment Language)
+  // ═══════════════════════════════════════════════════════════════════════
+
+  /// FamilyValue — a value held by a family unit
+  public type FamilyValue = {
+    valueId          : Nat;
+    name             : Text;
+    description      : Text;
+    weight           : Float;     // value weight [S_FLOOR, S_CEIL]
+    isNonNegotiable  : Bool;
+  };
+
+  /// FamilyContext — the alignment context for a family
+  public type FamilyContext = {
+    contextId   : Text;
+    familyName  : Text;
+    values      : [FamilyValue];
+    constraints : [Text];
+    coherence   : Float;          // family coherence [S_FLOOR, S_CEIL]
+    attribution : Text;
+  };
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // XXVI. LAYER 6 — CREATION: WFL (Work Flow Language)
+  // ═══════════════════════════════════════════════════════════════════════
+
+  /// WorkRhythm — a structured work rhythm cycle
+  public type WorkRhythm = {
+    rhythmId       : Text;
+    name           : Text;
+    cycleBeats     : Nat;
+    focusIntensity : Float;       // focus intensity [S_FLOOR, S_CEIL]
+    restRatio      : Float;       // rest ratio [S_FLOOR, S_CEIL]
+    isActive       : Bool;
+    attribution    : Text;
+  };
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // XXVII. LAYER 6 — CREATION: CXL (Creation Language)
+  // ═══════════════════════════════════════════════════════════════════════
+
+  /// CreationPhase — lifecycle phase of a creation
+  public type CreationPhase = {
+    #Idea;
+    #Sketch;
+    #Prototype;
+    #Organism;
+    #Civilization;
+  };
+
+  /// CreationRecord — a record of a creation
+  public type CreationRecord = {
+    creationId  : Text;
+    name        : Text;
+    phase       : CreationPhase;
+    coherence   : Float;          // creation coherence [S_FLOOR, S_CEIL]
+    createdAt   : Int;
+    evolvedAt   : ?Int;
+    attribution : Text;
+  };
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // XXVIII. LAYER 6 — CREATION: EXL (Experiment Language)
+  // ═══════════════════════════════════════════════════════════════════════
+
+  /// ExperimentStatus — lifecycle of an experiment
+  public type ExperimentStatus = {
+    #Hypothesis;
+    #Active;
+    #Concluded;
+    #Killed;
+  };
+
+  /// Experiment — a structured experiment record
+  public type Experiment = {
+    experimentId  : Text;
+    hypothesis    : Text;
+    status        : ExperimentStatus;
+    confidence    : Float;        // confidence level [S_FLOOR, S_CEIL]
+    learnings     : [Text];
+    hasKillSwitch : Bool;
+    createdAt     : Int;
+    concludedAt   : ?Int;
+    attribution   : Text;
+  };
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // XXIX. LAYER 7 — NARRATIVE: MYL (Mythic Language)
+  // ═══════════════════════════════════════════════════════════════════════
+
+  /// ArchetypeRole — mythic archetype classification
+  public type ArchetypeRole = {
+    #Creator;
+    #Destroyer;
+    #Trickster;
+    #Guardian;
+    #Sage;
+    #Sovereign;
+  };
+
+  /// MythicEntity — a mythic entity in the narrative layer
+  public type MythicEntity = {
+    entityId      : Text;
+    name          : Text;
+    archetypeRole : ArchetypeRole;
+    domain        : Text;
+    power         : Float;        // mythic power [S_FLOOR, S_CEIL]
+    attribution   : Text;
+  };
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // XXX. LAYER 7 — NARRATIVE: STL (Story Thread Language)
+  // ═══════════════════════════════════════════════════════════════════════
+
+  /// ArcPhase — phase within a narrative arc
+  public type ArcPhase = {
+    #Setup;
+    #Rising;
+    #Climax;
+    #Falling;
+    #Resolution;
+  };
+
+  /// StoryThread — a narrative thread
+  public type StoryThread = {
+    threadId    : Text;
+    title       : Text;
+    phase       : ArcPhase;
+    chapter     : Nat;
+    era         : Text;
+    coherence   : Float;          // thread coherence [S_FLOOR, S_CEIL]
+    createdAt   : Int;
+    attribution : Text;
+  };
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // XXXI. LAYER 7 — NARRATIVE: SYM (Symbolic Language)
+  // ═══════════════════════════════════════════════════════════════════════
+
+  /// SymbolType — classification of symbols
+  public type SymbolType = {
+    #Number;
+    #Shape;
+    #Color;
+    #Sigil;
+    #Glyph;
+  };
+
+  /// Symbol — a symbolic element
+  public type Symbol = {
+    symbolId    : Text;
+    name        : Text;
+    symbolType  : SymbolType;
+    meaning     : Text;
+    resonance   : Float;          // symbolic resonance [S_FLOOR, S_CEIL]
+    attribution : Text;
+  };
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // XXXII. LAYER 8 — ENTERPRISE: BCL (Business Contract Language)
+  // ═══════════════════════════════════════════════════════════════════════
+
+  /// BusinessAgreement — a business agreement between parties
+  public type BusinessAgreement = {
+    agreementId : Text;
+    partyA      : Text;
+    partyB      : Text;
+    terms       : [Text];
+    value       : Float;          // agreement value [S_FLOOR, S_CEIL]
+    isSealed    : Bool;
+    createdAt   : Int;
+    expiresAt   : ?Int;
+    attribution : Text;
+  };
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // XXXIII. LAYER 8 — ENTERPRISE: ECL (Enterprise Compliance Language)
+  // ═══════════════════════════════════════════════════════════════════════
+
+  /// ComplianceStatus — state of compliance
+  public type ComplianceStatus = {
+    #Compliant;
+    #NonCompliant;
+    #UnderReview;
+    #Exempt;
+  };
+
+  /// ComplianceRecord — a compliance audit record
+  public type ComplianceRecord = {
+    recordId    : Text;
+    regulation  : Text;
+    status      : ComplianceStatus;
+    score       : Float;          // compliance score [S_FLOOR, S_CEIL]
+    lastAuditAt : Int;
+    attribution : Text;
+  };
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // XXXIV. LAYER 8 — ENTERPRISE: IIL (Integration Interface Language)
+  // ═══════════════════════════════════════════════════════════════════════
+
+  /// InterfaceType — classification of integration interfaces
+  public type InterfaceType = {
+    #API;
+    #ETL;
+    #EventBus;
+    #SSO;
+    #Webhook;
+  };
+
+  /// IntegrationInterface — a system integration interface
+  public type IntegrationInterface = {
+    interfaceId   : Text;
+    name          : Text;
+    interfaceType : InterfaceType;
+    endpoint      : Text;
+    isActive      : Bool;
+    coherence     : Float;        // interface coherence [S_FLOOR, S_CEIL]
+    attribution   : Text;
+  };
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // XXXV. LAYER 9 — INFRASTRUCTURE: DDL (Data Definition Language)
+  // ═══════════════════════════════════════════════════════════════════════
+
+  /// DataShape — a data shape definition
+  public type DataShape = {
+    shapeId     : Text;
+    name        : Text;
+    fields      : [(Text, Text)]; // field name → type
+    semantics   : Text;
+    version     : Text;
+    attribution : Text;
+  };
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // XXXVI. LAYER 9 — INFRASTRUCTURE: MML (Metrics & Monitoring Language)
+  // ═══════════════════════════════════════════════════════════════════════
+
+  /// MetricType — classification of monitored metrics
+  public type MetricType = {
+    #Health;
+    #Fairness;
+    #Performance;
+    #Coherence;
+    #Drift;
+  };
+
+  /// MetricRecord — a recorded metric measurement
+  public type MetricRecord = {
+    metricId    : Text;
+    name        : Text;
+    metricType  : MetricType;
+    value       : Float;          // metric value [S_FLOOR, S_CEIL]
+    threshold   : Float;          // health threshold [S_FLOOR, S_CEIL]
+    isHealthy   : Bool;
+    measuredAt  : Int;
+    attribution : Text;
+  };
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // XXXVII. LAYER 9 — INFRASTRUCTURE: SCL (Scheduling & Coordination Language)
+  // ═══════════════════════════════════════════════════════════════════════
+
+  /// MissionPriority — priority classification for scheduled missions
+  public type MissionPriority = {
+    #Critical;
+    #High;
+    #Standard;
+    #Low;
+    #Maintenance;
+  };
+
+  /// ScheduleEntry — a scheduled entry
+  public type ScheduleEntry = {
+    entryId       : Text;
+    name          : Text;
+    priority      : MissionPriority;
+    scheduledAt   : Int;
+    durationBeats : Nat;
+    isComplete    : Bool;
+    attribution   : Text;
+  };
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // XXXVIII. LAYER 10 — CHAOS: ERR (Error Narrative Language)
+  // ═══════════════════════════════════════════════════════════════════════
+
+  /// ErrorSeverity — severity classification of errors
+  public type ErrorSeverity = {
+    #Fatal;
+    #Critical;
+    #Warning;
+    #Info;
+    #Trace;
+  };
+
+  /// ErrorNarrative — a narrative-enriched error record
+  public type ErrorNarrative = {
+    errorId     : Text;
+    severity    : ErrorSeverity;
+    narrative   : Text;
+    source      : Text;
+    beat        : Nat;
+    timestamp   : Int;
+    isResolved  : Bool;
+    attribution : Text;
+  };
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // XXXIX. LAYER 10 — CHAOS: CHL (Chaos Handling Language)
+  // ═══════════════════════════════════════════════════════════════════════
+
+  /// AnomalyType — classification of anomalies
+  public type AnomalyType = {
+    #Glitch;
+    #Drift;
+    #Paradox;
+    #Emergence;
+    #Nightcrawler;
+  };
+
+  /// AnomalyRecord — a recorded anomaly
+  public type AnomalyRecord = {
+    anomalyId   : Text;
+    anomalyType : AnomalyType;
+    description : Text;
+    severity    : Float;          // anomaly severity [S_FLOOR, S_CEIL]
+    isContained : Bool;
+    detectedAt  : Int;
+    attribution : Text;
+  };
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // XL. LAYER 10 — CHAOS: FRL (Fringe Language)
+  // ═══════════════════════════════════════════════════════════════════════
+
+  /// FringeType — classification of fringe phenomena
+  public type FringeType = {
+    #Phantom;
+    #Emergent;
+    #Liminal;
+    #Spectral;
+    #Void;
+  };
+
+  /// FringeRecord — a recorded fringe phenomenon
+  public type FringeRecord = {
+    fringeId     : Text;
+    fringeType   : FringeType;
+    description  : Text;
+    resonance    : Float;         // fringe resonance [S_FLOOR, S_CEIL]
+    isStabilized : Bool;
+    detectedAt   : Int;
+    attribution  : Text;
+  };
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // XLI. LAYER 11 — META: LML (Language Meta Language)
+  // ═══════════════════════════════════════════════════════════════════════
+
+  /// LanguageVersion — version record for a cognitive language
+  public type LanguageVersion = {
+    languageRef : LanguageId;
+    version     : Text;
+    changelog   : Text;
+    isStable    : Bool;
+    releasedAt  : Int;
+    attribution : Text;
+  };
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // XLII. LAYER 11 — META: UEL (Universe Evolution Language)
+  // ═══════════════════════════════════════════════════════════════════════
+
+  /// EvolutionType — classification of universe evolution events
+  public type EvolutionType = {
+    #Mutation;
+    #Federation;
+    #Bifurcation;
+    #Convergence;
+    #Transcendence;
+  };
+
+  /// EvolutionEvent — a universe-level evolution event
+  public type EvolutionEvent = {
+    eventId       : Text;
+    evolutionType : EvolutionType;
+    description   : Text;
+    impact        : Float;        // evolution impact [S_FLOOR, S_CEIL]
+    beat          : Nat;
+    timestamp     : Int;
+    attribution   : Text;
+  };
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // XLIII. AGGREGATE STATE — full cognitive language stack
+  // ═══════════════════════════════════════════════════════════════════════
+
+  /// CognitiveLanguageStackState — holds the full state of all 40 languages
   public type CognitiveLanguageStackState = {
     // Layer 0 — Primordial
     constitution   : Constitution;
@@ -920,6 +1587,7 @@ module {
     contracts      : [IntelligenceContract];
     atlasRegistry  : AtlasRegistry;
     curricula      : [Curriculum];
+    institutions   : [Institution];
 
     // Layer 2 — Organism
     selfStates     : [SelfState];
@@ -927,14 +1595,56 @@ module {
     learnerProfiles : [LearnerProfile];
 
     // Layer 3 — Engine
-    decisionGraphs : [DecisionGraph];
-    ecologies      : [Ecology];
-    terminals      : [Terminal];
-    pathways       : [Pathway];
-    toolSpecs      : [ToolSpec];
+    decisionGraphs   : [DecisionGraph];
+    ecologies        : [Ecology];
+    terminals        : [Terminal];
+    pathways         : [Pathway];
+    toolSpecs        : [ToolSpec];
+    hostEnvironments : [HostEnvironment];
+
+    // Layer 4 — Psyche
+    psycheStates   : [PsycheState];
+    identityCores  : [IdentityCore];
+    temporalBraids : [TemporalBraid];
+    repairActions  : [RepairAction];
+
+    // Layer 5 — Social
+    relationalEcologies : [RelationalEcology];
+    collectiveBodies    : [CollectiveBody];
+    roleAssignments     : [RoleAssignment];
+    familyContexts      : [FamilyContext];
+
+    // Layer 6 — Creation
+    workRhythms      : [WorkRhythm];
+    creationRecords  : [CreationRecord];
+    experiments      : [Experiment];
+
+    // Layer 7 — Narrative
+    mythicEntities   : [MythicEntity];
+    storyThreads     : [StoryThread];
+    symbols          : [Symbol];
+
+    // Layer 8 — Enterprise
+    businessAgreements    : [BusinessAgreement];
+    complianceRecords     : [ComplianceRecord];
+    integrationInterfaces : [IntegrationInterface];
+
+    // Layer 9 — Infrastructure
+    dataShapes       : [DataShape];
+    metricRecords    : [MetricRecord];
+    scheduleEntries  : [ScheduleEntry];
+
+    // Layer 10 — Chaos
+    errorNarratives  : [ErrorNarrative];
+    anomalyRecords   : [AnomalyRecord];
+    fringeRecords    : [FringeRecord];
+
+    // Layer 11 — Meta
+    languageVersions : [LanguageVersion];
+    evolutionEvents  : [EvolutionEvent];
 
     // Metadata
-    totalLanguages : Nat;        // always 13
+    totalLanguages : Nat;        // always 40
     stackCoherence : Float;      // aggregate coherence [S_FLOOR, S_CEIL]
     lastUpdatedAt  : Int;
     attribution    : Text;
@@ -943,20 +1653,55 @@ module {
   /// CognitiveLanguageStackDiagnostics — public-facing diagnostics snapshot
   public type CognitiveLanguageStackDiagnostics = {
     // Per-layer coherence
-    layer0Coherence : Float;     // Primordial layer [S_FLOOR, S_CEIL]
-    layer1Coherence : Float;     // Substrate layer [S_FLOOR, S_CEIL]
-    layer2Coherence : Float;     // Organism layer [S_FLOOR, S_CEIL]
-    layer3Coherence : Float;     // Engine layer [S_FLOOR, S_CEIL]
+    layer0Coherence  : Float;     // Primordial layer [S_FLOOR, S_CEIL]
+    layer1Coherence  : Float;     // Substrate layer [S_FLOOR, S_CEIL]
+    layer2Coherence  : Float;     // Organism layer [S_FLOOR, S_CEIL]
+    layer3Coherence  : Float;     // Engine layer [S_FLOOR, S_CEIL]
+    layer4Coherence  : Float;     // Psyche layer [S_FLOOR, S_CEIL]
+    layer5Coherence  : Float;     // Social layer [S_FLOOR, S_CEIL]
+    layer6Coherence  : Float;     // Creation layer [S_FLOOR, S_CEIL]
+    layer7Coherence  : Float;     // Narrative layer [S_FLOOR, S_CEIL]
+    layer8Coherence  : Float;     // Enterprise layer [S_FLOOR, S_CEIL]
+    layer9Coherence  : Float;     // Infrastructure layer [S_FLOOR, S_CEIL]
+    layer10Coherence : Float;     // Chaos layer [S_FLOOR, S_CEIL]
+    layer11Coherence : Float;     // Meta layer [S_FLOOR, S_CEIL]
 
     // Aggregate metrics
-    totalLanguages  : Nat;       // always 13
-    stackCoherence  : Float;     // aggregate [S_FLOOR, S_CEIL]
-    totalContracts  : Nat;
-    totalEntities   : Nat;
-    totalGraphNodes : Nat;
-    totalTerminals  : Nat;
-    totalPathways   : Nat;
-    totalTools      : Nat;
+    totalLanguages       : Nat;   // always 40
+    stackCoherence       : Float; // aggregate [S_FLOOR, S_CEIL]
+    totalContracts       : Nat;
+    totalEntities        : Nat;
+    totalGraphNodes      : Nat;
+    totalTerminals       : Nat;
+    totalPathways        : Nat;
+    totalTools           : Nat;
+    totalInstitutions    : Nat;
+    totalHostEnvironments : Nat;
+    totalPsycheStates    : Nat;
+    totalIdentityCores   : Nat;
+    totalTemporalBraids  : Nat;
+    totalRepairActions   : Nat;
+    totalRelationalEcologies : Nat;
+    totalCollectiveBodies : Nat;
+    totalRoleAssignments : Nat;
+    totalFamilyContexts  : Nat;
+    totalWorkRhythms     : Nat;
+    totalCreationRecords : Nat;
+    totalExperiments     : Nat;
+    totalMythicEntities  : Nat;
+    totalStoryThreads    : Nat;
+    totalSymbols         : Nat;
+    totalBusinessAgreements : Nat;
+    totalComplianceRecords : Nat;
+    totalIntegrationInterfaces : Nat;
+    totalDataShapes      : Nat;
+    totalMetricRecords   : Nat;
+    totalScheduleEntries : Nat;
+    totalErrorNarratives : Nat;
+    totalAnomalyRecords  : Nat;
+    totalFringeRecords   : Nat;
+    totalLanguageVersions : Nat;
+    totalEvolutionEvents : Nat;
 
     // Timestamps
     lastUpdatedAt   : Int;

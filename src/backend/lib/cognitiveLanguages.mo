@@ -1,5 +1,5 @@
 // lib/cognitiveLanguages.mo
-// COGNITIVE LANGUAGE STACK — Runtime Operations for all 13 Cognitive Languages
+// COGNITIVE LANGUAGE STACK — Runtime Operations for all 40 Cognitive Languages
 // Attribution: Alfredo Medina Hernandez — immutable
 // PHI = 1.6180339887498948482 | S_FLOOR = 0.75 | S_CEIL = 9.75
 //
@@ -55,6 +55,7 @@ module {
       contracts = state.contracts;
       atlasRegistry = state.atlasRegistry;
       curricula = state.curricula;
+      institutions = state.institutions;
       selfStates = state.selfStates;
       charters = state.charters;
       learnerProfiles = state.learnerProfiles;
@@ -63,6 +64,32 @@ module {
       terminals = state.terminals;
       pathways = state.pathways;
       toolSpecs = state.toolSpecs;
+      hostEnvironments = state.hostEnvironments;
+      psycheStates = state.psycheStates;
+      identityCores = state.identityCores;
+      temporalBraids = state.temporalBraids;
+      repairActions = state.repairActions;
+      relationalEcologies = state.relationalEcologies;
+      collectiveBodies = state.collectiveBodies;
+      roleAssignments = state.roleAssignments;
+      familyContexts = state.familyContexts;
+      workRhythms = state.workRhythms;
+      creationRecords = state.creationRecords;
+      experiments = state.experiments;
+      mythicEntities = state.mythicEntities;
+      storyThreads = state.storyThreads;
+      symbols = state.symbols;
+      businessAgreements = state.businessAgreements;
+      complianceRecords = state.complianceRecords;
+      integrationInterfaces = state.integrationInterfaces;
+      dataShapes = state.dataShapes;
+      metricRecords = state.metricRecords;
+      scheduleEntries = state.scheduleEntries;
+      errorNarratives = state.errorNarratives;
+      anomalyRecords = state.anomalyRecords;
+      fringeRecords = state.fringeRecords;
+      languageVersions = state.languageVersions;
+      evolutionEvents = state.evolutionEvents;
       totalLanguages = state.totalLanguages;
       stackCoherence = coherence;
       lastUpdatedAt = ts;
@@ -107,6 +134,7 @@ module {
         attribution = FOUNDER;
       };
       curricula = [];
+      institutions = [];
       selfStates = [];
       charters = [];
       learnerProfiles = [];
@@ -115,7 +143,33 @@ module {
       terminals = [];
       pathways = [];
       toolSpecs = [];
-      totalLanguages = 13;
+      hostEnvironments = [];
+      psycheStates = [];
+      identityCores = [];
+      temporalBraids = [];
+      repairActions = [];
+      relationalEcologies = [];
+      collectiveBodies = [];
+      roleAssignments = [];
+      familyContexts = [];
+      workRhythms = [];
+      creationRecords = [];
+      experiments = [];
+      mythicEntities = [];
+      storyThreads = [];
+      symbols = [];
+      businessAgreements = [];
+      complianceRecords = [];
+      integrationInterfaces = [];
+      dataShapes = [];
+      metricRecords = [];
+      scheduleEntries = [];
+      errorNarratives = [];
+      anomalyRecords = [];
+      fringeRecords = [];
+      languageVersions = [];
+      evolutionEvents = [];
+      totalLanguages = 40;
       stackCoherence = S_FLOOR;
       lastUpdatedAt = 0;
       attribution = FOUNDER;
@@ -168,6 +222,7 @@ module {
       contracts = state.contracts;
       atlasRegistry = state.atlasRegistry;
       curricula = state.curricula;
+      institutions = state.institutions;
       selfStates = state.selfStates;
       charters = state.charters;
       learnerProfiles = state.learnerProfiles;
@@ -176,6 +231,32 @@ module {
       terminals = state.terminals;
       pathways = state.pathways;
       toolSpecs = state.toolSpecs;
+      hostEnvironments = state.hostEnvironments;
+      psycheStates = state.psycheStates;
+      identityCores = state.identityCores;
+      temporalBraids = state.temporalBraids;
+      repairActions = state.repairActions;
+      relationalEcologies = state.relationalEcologies;
+      collectiveBodies = state.collectiveBodies;
+      roleAssignments = state.roleAssignments;
+      familyContexts = state.familyContexts;
+      workRhythms = state.workRhythms;
+      creationRecords = state.creationRecords;
+      experiments = state.experiments;
+      mythicEntities = state.mythicEntities;
+      storyThreads = state.storyThreads;
+      symbols = state.symbols;
+      businessAgreements = state.businessAgreements;
+      complianceRecords = state.complianceRecords;
+      integrationInterfaces = state.integrationInterfaces;
+      dataShapes = state.dataShapes;
+      metricRecords = state.metricRecords;
+      scheduleEntries = state.scheduleEntries;
+      errorNarratives = state.errorNarratives;
+      anomalyRecords = state.anomalyRecords;
+      fringeRecords = state.fringeRecords;
+      languageVersions = state.languageVersions;
+      evolutionEvents = state.evolutionEvents;
       totalLanguages = state.totalLanguages;
       stackCoherence = state.stackCoherence;
       lastUpdatedAt = timestamp;
@@ -226,6 +307,7 @@ module {
       contracts = state.contracts;
       atlasRegistry = state.atlasRegistry;
       curricula = state.curricula;
+      institutions = state.institutions;
       selfStates = state.selfStates;
       charters = state.charters;
       learnerProfiles = state.learnerProfiles;
@@ -234,6 +316,32 @@ module {
       terminals = state.terminals;
       pathways = state.pathways;
       toolSpecs = state.toolSpecs;
+      hostEnvironments = state.hostEnvironments;
+      psycheStates = state.psycheStates;
+      identityCores = state.identityCores;
+      temporalBraids = state.temporalBraids;
+      repairActions = state.repairActions;
+      relationalEcologies = state.relationalEcologies;
+      collectiveBodies = state.collectiveBodies;
+      roleAssignments = state.roleAssignments;
+      familyContexts = state.familyContexts;
+      workRhythms = state.workRhythms;
+      creationRecords = state.creationRecords;
+      experiments = state.experiments;
+      mythicEntities = state.mythicEntities;
+      storyThreads = state.storyThreads;
+      symbols = state.symbols;
+      businessAgreements = state.businessAgreements;
+      complianceRecords = state.complianceRecords;
+      integrationInterfaces = state.integrationInterfaces;
+      dataShapes = state.dataShapes;
+      metricRecords = state.metricRecords;
+      scheduleEntries = state.scheduleEntries;
+      errorNarratives = state.errorNarratives;
+      anomalyRecords = state.anomalyRecords;
+      fringeRecords = state.fringeRecords;
+      languageVersions = state.languageVersions;
+      evolutionEvents = state.evolutionEvents;
       totalLanguages = state.totalLanguages;
       stackCoherence = state.stackCoherence;
       lastUpdatedAt = timestamp;
@@ -320,6 +428,7 @@ module {
       contracts = state.contracts.concat([contract]);
       atlasRegistry = state.atlasRegistry;
       curricula = state.curricula;
+      institutions = state.institutions;
       selfStates = state.selfStates;
       charters = state.charters;
       learnerProfiles = state.learnerProfiles;
@@ -328,6 +437,32 @@ module {
       terminals = state.terminals;
       pathways = state.pathways;
       toolSpecs = state.toolSpecs;
+      hostEnvironments = state.hostEnvironments;
+      psycheStates = state.psycheStates;
+      identityCores = state.identityCores;
+      temporalBraids = state.temporalBraids;
+      repairActions = state.repairActions;
+      relationalEcologies = state.relationalEcologies;
+      collectiveBodies = state.collectiveBodies;
+      roleAssignments = state.roleAssignments;
+      familyContexts = state.familyContexts;
+      workRhythms = state.workRhythms;
+      creationRecords = state.creationRecords;
+      experiments = state.experiments;
+      mythicEntities = state.mythicEntities;
+      storyThreads = state.storyThreads;
+      symbols = state.symbols;
+      businessAgreements = state.businessAgreements;
+      complianceRecords = state.complianceRecords;
+      integrationInterfaces = state.integrationInterfaces;
+      dataShapes = state.dataShapes;
+      metricRecords = state.metricRecords;
+      scheduleEntries = state.scheduleEntries;
+      errorNarratives = state.errorNarratives;
+      anomalyRecords = state.anomalyRecords;
+      fringeRecords = state.fringeRecords;
+      languageVersions = state.languageVersions;
+      evolutionEvents = state.evolutionEvents;
       totalLanguages = state.totalLanguages;
       stackCoherence = state.stackCoherence;
       lastUpdatedAt = timestamp;
@@ -402,6 +537,7 @@ module {
       contracts = state.contracts;
       atlasRegistry = state.atlasRegistry;
       curricula = state.curricula;
+      institutions = state.institutions;
       selfStates = state.selfStates.concat([selfState]);
       charters = state.charters;
       learnerProfiles = state.learnerProfiles;
@@ -410,6 +546,32 @@ module {
       terminals = state.terminals;
       pathways = state.pathways;
       toolSpecs = state.toolSpecs;
+      hostEnvironments = state.hostEnvironments;
+      psycheStates = state.psycheStates;
+      identityCores = state.identityCores;
+      temporalBraids = state.temporalBraids;
+      repairActions = state.repairActions;
+      relationalEcologies = state.relationalEcologies;
+      collectiveBodies = state.collectiveBodies;
+      roleAssignments = state.roleAssignments;
+      familyContexts = state.familyContexts;
+      workRhythms = state.workRhythms;
+      creationRecords = state.creationRecords;
+      experiments = state.experiments;
+      mythicEntities = state.mythicEntities;
+      storyThreads = state.storyThreads;
+      symbols = state.symbols;
+      businessAgreements = state.businessAgreements;
+      complianceRecords = state.complianceRecords;
+      integrationInterfaces = state.integrationInterfaces;
+      dataShapes = state.dataShapes;
+      metricRecords = state.metricRecords;
+      scheduleEntries = state.scheduleEntries;
+      errorNarratives = state.errorNarratives;
+      anomalyRecords = state.anomalyRecords;
+      fringeRecords = state.fringeRecords;
+      languageVersions = state.languageVersions;
+      evolutionEvents = state.evolutionEvents;
       totalLanguages = state.totalLanguages;
       stackCoherence = state.stackCoherence;
       lastUpdatedAt = timestamp;
@@ -479,6 +641,7 @@ module {
       contracts = state.contracts;
       atlasRegistry = state.atlasRegistry;
       curricula = state.curricula;
+      institutions = state.institutions;
       selfStates = state.selfStates;
       charters = state.charters.concat([charter]);
       learnerProfiles = state.learnerProfiles;
@@ -487,6 +650,32 @@ module {
       terminals = state.terminals;
       pathways = state.pathways;
       toolSpecs = state.toolSpecs;
+      hostEnvironments = state.hostEnvironments;
+      psycheStates = state.psycheStates;
+      identityCores = state.identityCores;
+      temporalBraids = state.temporalBraids;
+      repairActions = state.repairActions;
+      relationalEcologies = state.relationalEcologies;
+      collectiveBodies = state.collectiveBodies;
+      roleAssignments = state.roleAssignments;
+      familyContexts = state.familyContexts;
+      workRhythms = state.workRhythms;
+      creationRecords = state.creationRecords;
+      experiments = state.experiments;
+      mythicEntities = state.mythicEntities;
+      storyThreads = state.storyThreads;
+      symbols = state.symbols;
+      businessAgreements = state.businessAgreements;
+      complianceRecords = state.complianceRecords;
+      integrationInterfaces = state.integrationInterfaces;
+      dataShapes = state.dataShapes;
+      metricRecords = state.metricRecords;
+      scheduleEntries = state.scheduleEntries;
+      errorNarratives = state.errorNarratives;
+      anomalyRecords = state.anomalyRecords;
+      fringeRecords = state.fringeRecords;
+      languageVersions = state.languageVersions;
+      evolutionEvents = state.evolutionEvents;
       totalLanguages = state.totalLanguages;
       stackCoherence = state.stackCoherence;
       lastUpdatedAt = timestamp;
@@ -627,6 +816,7 @@ module {
       contracts = state.contracts;
       atlasRegistry = state.atlasRegistry;
       curricula = state.curricula;
+      institutions = state.institutions;
       selfStates = state.selfStates;
       charters = state.charters;
       learnerProfiles = state.learnerProfiles;
@@ -635,6 +825,32 @@ module {
       terminals = state.terminals;
       pathways = state.pathways;
       toolSpecs = state.toolSpecs;
+      hostEnvironments = state.hostEnvironments;
+      psycheStates = state.psycheStates;
+      identityCores = state.identityCores;
+      temporalBraids = state.temporalBraids;
+      repairActions = state.repairActions;
+      relationalEcologies = state.relationalEcologies;
+      collectiveBodies = state.collectiveBodies;
+      roleAssignments = state.roleAssignments;
+      familyContexts = state.familyContexts;
+      workRhythms = state.workRhythms;
+      creationRecords = state.creationRecords;
+      experiments = state.experiments;
+      mythicEntities = state.mythicEntities;
+      storyThreads = state.storyThreads;
+      symbols = state.symbols;
+      businessAgreements = state.businessAgreements;
+      complianceRecords = state.complianceRecords;
+      integrationInterfaces = state.integrationInterfaces;
+      dataShapes = state.dataShapes;
+      metricRecords = state.metricRecords;
+      scheduleEntries = state.scheduleEntries;
+      errorNarratives = state.errorNarratives;
+      anomalyRecords = state.anomalyRecords;
+      fringeRecords = state.fringeRecords;
+      languageVersions = state.languageVersions;
+      evolutionEvents = state.evolutionEvents;
       totalLanguages = state.totalLanguages;
       stackCoherence = state.stackCoherence;
       lastUpdatedAt = timestamp;
@@ -682,6 +898,7 @@ module {
       contracts = state.contracts;
       atlasRegistry = newRegistry;
       curricula = state.curricula;
+      institutions = state.institutions;
       selfStates = state.selfStates;
       charters = state.charters;
       learnerProfiles = state.learnerProfiles;
@@ -690,6 +907,32 @@ module {
       terminals = state.terminals;
       pathways = state.pathways;
       toolSpecs = state.toolSpecs;
+      hostEnvironments = state.hostEnvironments;
+      psycheStates = state.psycheStates;
+      identityCores = state.identityCores;
+      temporalBraids = state.temporalBraids;
+      repairActions = state.repairActions;
+      relationalEcologies = state.relationalEcologies;
+      collectiveBodies = state.collectiveBodies;
+      roleAssignments = state.roleAssignments;
+      familyContexts = state.familyContexts;
+      workRhythms = state.workRhythms;
+      creationRecords = state.creationRecords;
+      experiments = state.experiments;
+      mythicEntities = state.mythicEntities;
+      storyThreads = state.storyThreads;
+      symbols = state.symbols;
+      businessAgreements = state.businessAgreements;
+      complianceRecords = state.complianceRecords;
+      integrationInterfaces = state.integrationInterfaces;
+      dataShapes = state.dataShapes;
+      metricRecords = state.metricRecords;
+      scheduleEntries = state.scheduleEntries;
+      errorNarratives = state.errorNarratives;
+      anomalyRecords = state.anomalyRecords;
+      fringeRecords = state.fringeRecords;
+      languageVersions = state.languageVersions;
+      evolutionEvents = state.evolutionEvents;
       totalLanguages = state.totalLanguages;
       stackCoherence = state.stackCoherence;
       lastUpdatedAt = timestamp;
@@ -749,6 +992,7 @@ module {
       contracts = state.contracts;
       atlasRegistry = state.atlasRegistry;
       curricula = state.curricula;
+      institutions = state.institutions;
       selfStates = state.selfStates;
       charters = state.charters;
       learnerProfiles = state.learnerProfiles;
@@ -757,6 +1001,32 @@ module {
       terminals = newTerminals;
       pathways = state.pathways;
       toolSpecs = state.toolSpecs;
+      hostEnvironments = state.hostEnvironments;
+      psycheStates = state.psycheStates;
+      identityCores = state.identityCores;
+      temporalBraids = state.temporalBraids;
+      repairActions = state.repairActions;
+      relationalEcologies = state.relationalEcologies;
+      collectiveBodies = state.collectiveBodies;
+      roleAssignments = state.roleAssignments;
+      familyContexts = state.familyContexts;
+      workRhythms = state.workRhythms;
+      creationRecords = state.creationRecords;
+      experiments = state.experiments;
+      mythicEntities = state.mythicEntities;
+      storyThreads = state.storyThreads;
+      symbols = state.symbols;
+      businessAgreements = state.businessAgreements;
+      complianceRecords = state.complianceRecords;
+      integrationInterfaces = state.integrationInterfaces;
+      dataShapes = state.dataShapes;
+      metricRecords = state.metricRecords;
+      scheduleEntries = state.scheduleEntries;
+      errorNarratives = state.errorNarratives;
+      anomalyRecords = state.anomalyRecords;
+      fringeRecords = state.fringeRecords;
+      languageVersions = state.languageVersions;
+      evolutionEvents = state.evolutionEvents;
       totalLanguages = state.totalLanguages;
       stackCoherence = state.stackCoherence;
       lastUpdatedAt = timestamp;
@@ -843,6 +1113,7 @@ module {
       contracts = state.contracts;
       atlasRegistry = state.atlasRegistry;
       curricula = state.curricula;
+      institutions = state.institutions;
       selfStates = state.selfStates;
       charters = state.charters;
       learnerProfiles = state.learnerProfiles;
@@ -851,6 +1122,32 @@ module {
       terminals = state.terminals;
       pathways = state.pathways;
       toolSpecs = state.toolSpecs.concat([spec]);
+      hostEnvironments = state.hostEnvironments;
+      psycheStates = state.psycheStates;
+      identityCores = state.identityCores;
+      temporalBraids = state.temporalBraids;
+      repairActions = state.repairActions;
+      relationalEcologies = state.relationalEcologies;
+      collectiveBodies = state.collectiveBodies;
+      roleAssignments = state.roleAssignments;
+      familyContexts = state.familyContexts;
+      workRhythms = state.workRhythms;
+      creationRecords = state.creationRecords;
+      experiments = state.experiments;
+      mythicEntities = state.mythicEntities;
+      storyThreads = state.storyThreads;
+      symbols = state.symbols;
+      businessAgreements = state.businessAgreements;
+      complianceRecords = state.complianceRecords;
+      integrationInterfaces = state.integrationInterfaces;
+      dataShapes = state.dataShapes;
+      metricRecords = state.metricRecords;
+      scheduleEntries = state.scheduleEntries;
+      errorNarratives = state.errorNarratives;
+      anomalyRecords = state.anomalyRecords;
+      fringeRecords = state.fringeRecords;
+      languageVersions = state.languageVersions;
+      evolutionEvents = state.evolutionEvents;
       totalLanguages = state.totalLanguages;
       stackCoherence = state.stackCoherence;
       lastUpdatedAt = timestamp;
@@ -927,6 +1224,14 @@ module {
       layer1Coherence = layer1;
       layer2Coherence = layer2;
       layer3Coherence = layer3;
+      layer4Coherence = S_FLOOR;
+      layer5Coherence = S_FLOOR;
+      layer6Coherence = S_FLOOR;
+      layer7Coherence = S_FLOOR;
+      layer8Coherence = S_FLOOR;
+      layer9Coherence = S_FLOOR;
+      layer10Coherence = S_FLOOR;
+      layer11Coherence = S_FLOOR;
       totalLanguages = state.totalLanguages;
       stackCoherence = state.stackCoherence;
       totalContracts = state.contracts.size();
@@ -935,6 +1240,33 @@ module {
       totalTerminals = state.terminals.size();
       totalPathways = state.pathways.size();
       totalTools = state.toolSpecs.size();
+      totalInstitutions = state.institutions.size();
+      totalHostEnvironments = state.hostEnvironments.size();
+      totalPsycheStates = state.psycheStates.size();
+      totalIdentityCores = state.identityCores.size();
+      totalTemporalBraids = state.temporalBraids.size();
+      totalRepairActions = state.repairActions.size();
+      totalRelationalEcologies = state.relationalEcologies.size();
+      totalCollectiveBodies = state.collectiveBodies.size();
+      totalRoleAssignments = state.roleAssignments.size();
+      totalFamilyContexts = state.familyContexts.size();
+      totalWorkRhythms = state.workRhythms.size();
+      totalCreationRecords = state.creationRecords.size();
+      totalExperiments = state.experiments.size();
+      totalMythicEntities = state.mythicEntities.size();
+      totalStoryThreads = state.storyThreads.size();
+      totalSymbols = state.symbols.size();
+      totalBusinessAgreements = state.businessAgreements.size();
+      totalComplianceRecords = state.complianceRecords.size();
+      totalIntegrationInterfaces = state.integrationInterfaces.size();
+      totalDataShapes = state.dataShapes.size();
+      totalMetricRecords = state.metricRecords.size();
+      totalScheduleEntries = state.scheduleEntries.size();
+      totalErrorNarratives = state.errorNarratives.size();
+      totalAnomalyRecords = state.anomalyRecords.size();
+      totalFringeRecords = state.fringeRecords.size();
+      totalLanguageVersions = state.languageVersions.size();
+      totalEvolutionEvents = state.evolutionEvents.size();
       lastUpdatedAt = state.lastUpdatedAt;
       attribution = FOUNDER;
     }
@@ -970,7 +1302,7 @@ module {
     updateStateMeta(state, newCoherence, timestamp)
   };
 
-  /// Returns metadata for all 13 cognitive languages.
+  /// Returns metadata for all 40 cognitive languages.
   public func getAllLanguageMetadata() : [CLTypes.LanguageMeta] {
     [
       { id = #CPL_L; name = "Cognitive Law Language"; layer = #Primordial; purpose = "Constitutions and doctrine" },
@@ -978,6 +1310,7 @@ module {
       { id = #CPL_C; name = "Cognitive Contract Language"; layer = #Substrate; purpose = "Intelligence contracts" },
       { id = #ACL;   name = "Atlas Configuration Language"; layer = #Substrate; purpose = "Ontology and entity registry" },
       { id = #EDL;   name = "Educational Doctrine Language"; layer = #Substrate; purpose = "Standards and curricula" },
+      { id = #ISL;   name = "Institution Structure Language"; layer = #Substrate; purpose = "Institutional governance" },
       { id = #CIL;   name = "Cognitive Internal Language"; layer = #Organism; purpose = "Inner monologue" },
       { id = #OCL;   name = "Organism Contract Language"; layer = #Organism; purpose = "Per-organism charter" },
       { id = #SPL;   name = "Study Pattern Language"; layer = #Organism; purpose = "Personal learning blueprints" },
@@ -986,6 +1319,32 @@ module {
       { id = #TPL;   name = "Terminal Protocol Language"; layer = #Engine; purpose = "Terminal commands" },
       { id = #PWL;   name = "Pathway Language"; layer = #Engine; purpose = "Life trajectories" },
       { id = #TSL;   name = "Tool Scaffold Language"; layer = #Engine; purpose = "Tool generation" },
+      { id = #HCL;   name = "Host-Cognition Language"; layer = #Engine; purpose = "Host environment binding" },
+      { id = #PIL;   name = "Psyche Internal Language"; layer = #Psyche; purpose = "Subconscious drives and impulses" },
+      { id = #SIL;   name = "Self-Identity Language"; layer = #Psyche; purpose = "Identity facets and coherence" },
+      { id = #TIL;   name = "Temporal Integration Language"; layer = #Psyche; purpose = "Past-present-future braiding" },
+      { id = #RIL;   name = "Repair & Integration Language"; layer = #Psyche; purpose = "Healing and conflict resolution" },
+      { id = #REL;   name = "Relational Ecology Language"; layer = #Social; purpose = "Trust and relational bonds" },
+      { id = #COL;   name = "Collective Orchestration Language"; layer = #Social; purpose = "Collective decision-making" },
+      { id = #ROL;   name = "Role Language"; layer = #Social; purpose = "Role assignment and context" },
+      { id = #FAL;   name = "Family Alignment Language"; layer = #Social; purpose = "Family values and constraints" },
+      { id = #WFL;   name = "Work Flow Language"; layer = #Creation; purpose = "Work rhythm cycles" },
+      { id = #CXL;   name = "Creation Language"; layer = #Creation; purpose = "Creation lifecycle" },
+      { id = #EXL;   name = "Experiment Language"; layer = #Creation; purpose = "Hypothesis and experiment tracking" },
+      { id = #MYL;   name = "Mythic Language"; layer = #Narrative; purpose = "Mythic archetypes and power" },
+      { id = #STL;   name = "Story Thread Language"; layer = #Narrative; purpose = "Narrative arcs and threads" },
+      { id = #SYM;   name = "Symbolic Language"; layer = #Narrative; purpose = "Symbols and resonance" },
+      { id = #BCL;   name = "Business Contract Language"; layer = #Enterprise; purpose = "Business agreements" },
+      { id = #ECL;   name = "Enterprise Compliance Language"; layer = #Enterprise; purpose = "Regulatory compliance" },
+      { id = #IIL;   name = "Integration Interface Language"; layer = #Enterprise; purpose = "System integration interfaces" },
+      { id = #DDL;   name = "Data Definition Language"; layer = #Infrastructure; purpose = "Data shape definitions" },
+      { id = #MML;   name = "Metrics & Monitoring Language"; layer = #Infrastructure; purpose = "Health and performance metrics" },
+      { id = #SCL;   name = "Scheduling & Coordination Language"; layer = #Infrastructure; purpose = "Mission scheduling" },
+      { id = #ERR;   name = "Error Narrative Language"; layer = #Chaos; purpose = "Error narratives and resolution" },
+      { id = #CHL;   name = "Chaos Handling Language"; layer = #Chaos; purpose = "Anomaly detection and containment" },
+      { id = #FRL;   name = "Fringe Language"; layer = #Chaos; purpose = "Fringe phenomena tracking" },
+      { id = #LML;   name = "Language Meta Language"; layer = #Meta; purpose = "Language versioning and changelog" },
+      { id = #UEL;   name = "Universe Evolution Language"; layer = #Meta; purpose = "Universe-level evolution events" },
     ]
   };
 
