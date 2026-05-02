@@ -803,7 +803,7 @@ module {
   /// BranchOption — a single option within a pathway branch
   public type BranchOption = {
     optionId      : Nat;
-    label         : Text;
+    optionLabel   : Text;
     targetMilestone : Nat;        // milestone ID this option leads to
     weight        : Float;        // PHI-weighted preference [S_FLOOR, S_CEIL]
     condition     : ?Text;        // optional condition for this branch

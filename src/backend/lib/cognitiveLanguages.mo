@@ -144,7 +144,7 @@ module {
     let law : CLTypes.Law = {
       lawId;
       name;
-      text = name # " — declared at beat " # Nat.toText(beat);
+      text = name # " — declared at beat " # beat.toText();
       grade;
       strength = clampedStrength;
       safetyRails = [];
@@ -154,7 +154,7 @@ module {
     };
 
     let newConstitution : CLTypes.Constitution = {
-      laws = Array.append(state.constitution.laws, [law]);
+      laws = state.constitution.laws.concat([law]);
       amendments = state.constitution.amendments;
       totalLaws = lawId;
       coherence = clampSovereign(Float.max(state.constitution.coherence, state.constitution.coherence + clampedStrength * PHI * 0.001));
@@ -203,7 +203,7 @@ module {
       amendmentId;
       targetLawId = lawId;
       proposedText = description;
-      rationale = "Proposed by " # proposer # " at beat " # Nat.toText(beat);
+      rationale = "Proposed by " # proposer # " at beat " # beat.toText();
       status;
       doctrineScore = clampedScore;
       proposedAt = timestamp;
@@ -213,7 +213,7 @@ module {
 
     let newConstitution : CLTypes.Constitution = {
       laws = state.constitution.laws;
-      amendments = Array.append(state.constitution.amendments, [amendment]);
+      amendments = state.constitution.amendments.concat([amendment]);
       totalLaws = state.constitution.totalLaws;
       coherence = state.constitution.coherence;
       lastAmendedAt = ?timestamp;
@@ -302,7 +302,7 @@ module {
 
     let contract : CLTypes.IntelligenceContract = {
       contractId;
-      name = organismName # " (" # latinName # ") Gen-" # Nat.toText(generation);
+      name = organismName # " (" # latinName # ") Gen-" # generation.toText();
       scope = #Organism;
       rights = [];
       duties = [];
@@ -317,7 +317,7 @@ module {
     let newState : CLTypes.CognitiveLanguageStackState = {
       constitution = state.constitution;
       philosophy = state.philosophy;
-      contracts = Array.append(state.contracts, [contract]);
+      contracts = state.contracts.concat([contract]);
       atlasRegistry = state.atlasRegistry;
       curricula = state.curricula;
       selfStates = state.selfStates;
@@ -402,7 +402,7 @@ module {
       contracts = state.contracts;
       atlasRegistry = state.atlasRegistry;
       curricula = state.curricula;
-      selfStates = Array.append(state.selfStates, [selfState]);
+      selfStates = state.selfStates.concat([selfState]);
       charters = state.charters;
       learnerProfiles = state.learnerProfiles;
       decisionGraphs = state.decisionGraphs;
@@ -480,7 +480,7 @@ module {
       atlasRegistry = state.atlasRegistry;
       curricula = state.curricula;
       selfStates = state.selfStates;
-      charters = Array.append(state.charters, [charter]);
+      charters = state.charters.concat([charter]);
       learnerProfiles = state.learnerProfiles;
       decisionGraphs = state.decisionGraphs;
       ecologies = state.ecologies;
@@ -601,7 +601,7 @@ module {
     beat : Nat,
     timestamp : Int,
   ) : (CLTypes.CognitiveLanguageStackState, CLTypes.RealmPhysics) {
-    let realmId = "realm-" # Nat.toText(state.ecologies.size() + 1);
+    let realmId = "realm-" # (state.ecologies.size() + 1).toText();
 
     let physics : CLTypes.RealmPhysics = {
       realmId;
@@ -631,7 +631,7 @@ module {
       charters = state.charters;
       learnerProfiles = state.learnerProfiles;
       decisionGraphs = state.decisionGraphs;
-      ecologies = Array.append(state.ecologies, [ecology]);
+      ecologies = state.ecologies.concat([ecology]);
       terminals = state.terminals;
       pathways = state.pathways;
       toolSpecs = state.toolSpecs;
@@ -656,12 +656,12 @@ module {
     beat : Nat,
     timestamp : Int,
   ) : (CLTypes.CognitiveLanguageStackState, CLTypes.Archetype) {
-    let archetypeId = "arch-" # Nat.toText(state.atlasRegistry.archetypes.size() + 1);
+    let archetypeId = "arch-" # (state.atlasRegistry.archetypes.size() + 1).toText();
 
     let archetype : CLTypes.Archetype = {
       archetypeId;
       name;
-      description = latinName # " — registered at beat " # Nat.toText(beat);
+      description = latinName # " — registered at beat " # beat.toText();
       properties = [];
       constraints = [];
       phiWeight = clampSovereign(S_FLOOR * PHI);
@@ -669,7 +669,7 @@ module {
 
     let newRegistry : CLTypes.AtlasRegistry = {
       entities = state.atlasRegistry.entities;
-      archetypes = Array.append(state.atlasRegistry.archetypes, [archetype]);
+      archetypes = state.atlasRegistry.archetypes.concat([archetype]);
       relationships = state.atlasRegistry.relationships;
       totalEntities = state.atlasRegistry.totalEntities;
       registryCoherence = state.atlasRegistry.registryCoherence;
@@ -733,13 +733,12 @@ module {
       lastSyncBeat = beat;
     };
 
-    let exists = Array.filter<CLTypes.Terminal>(
-      state.terminals,
+    let exists = state.terminals.filter(
       func(t : CLTypes.Terminal) : Bool { t.terminalId == terminalId }
     );
 
     let newTerminals = if (exists.size() == 0) {
-      Array.append(state.terminals, [terminal]);
+      state.terminals.concat([terminal]);
     } else {
       state.terminals;
     };
@@ -802,7 +801,7 @@ module {
     {
       milestoneId;
       name;
-      description = milestoneType # " milestone — est. " # Nat.toText(estimatedBeats) # " beats";
+      description = milestoneType # " milestone — est. " # estimatedBeats.toText() # " beats";
       requiredScore = clampSovereign(phiValue);
       isReached = false;
       reachedAt = null;
@@ -825,12 +824,12 @@ module {
     timestamp : Int,
   ) : (CLTypes.CognitiveLanguageStackState, CLTypes.ToolSpec) {
     let difficulty = clampSovereign(learnerMastery * PHI_INV);
-    let specId = "tool-" # Nat.toText(state.toolSpecs.size() + 1);
+    let specId = "tool-" # (state.toolSpecs.size() + 1).toText();
 
     let spec : CLTypes.ToolSpec = {
       specId;
       name = topic # " " # toolType;
-      description = "ZPD-calibrated " # toolType # " for " # learnerId # " — difficulty " # Float.toText(difficulty);
+      description = "ZPD-calibrated " # toolType # " for " # learnerId # " — difficulty " # difficulty.toText();
       version = "1.0.0";
       inputSchema = [("topic", "Text"), ("mastery", "Float")];
       outputSchema = [("result", "Text"), ("newMastery", "Float")];
@@ -851,7 +850,7 @@ module {
       ecologies = state.ecologies;
       terminals = state.terminals;
       pathways = state.pathways;
-      toolSpecs = Array.append(state.toolSpecs, [spec]);
+      toolSpecs = state.toolSpecs.concat([spec]);
       totalLanguages = state.totalLanguages;
       stackCoherence = state.stackCoherence;
       lastUpdatedAt = timestamp;
@@ -902,12 +901,12 @@ module {
     let charterCoherence = if (state.charters.size() == 0) { S_FLOOR } else {
       var sum : Float = 0.0;
       for (c in state.charters.vals()) { sum += c.doctrineScore };
-      clampSovereign(sum / Float.fromInt(state.charters.size()))
+      clampSovereign(sum / state.charters.size().toFloat())
     };
     let selfCoherence = if (state.selfStates.size() == 0) { S_FLOOR } else {
       var sum : Float = 0.0;
       for (s in state.selfStates.vals()) { sum += s.coherence };
-      clampSovereign(sum / Float.fromInt(state.selfStates.size()))
+      clampSovereign(sum / state.selfStates.size().toFloat())
     };
     let layer2 = clampSovereign((charterCoherence + selfCoherence) / 2.0);
 
@@ -915,7 +914,7 @@ module {
     let ecoStability = if (state.ecologies.size() == 0) { S_FLOOR } else {
       var sum : Float = 0.0;
       for (e in state.ecologies.vals()) { sum += e.stability };
-      clampSovereign(sum / Float.fromInt(state.ecologies.size()))
+      clampSovereign(sum / state.ecologies.size().toFloat())
     };
     let layer3 = ecoStability;
 
@@ -969,6 +968,25 @@ module {
     // Law 23: coherence only increases
     let newCoherence = clampSovereign(state.stackCoherence + coherenceDelta);
     updateStateMeta(state, newCoherence, timestamp)
+  };
+
+  /// Returns metadata for all 13 cognitive languages.
+  public func getAllLanguageMetadata() : [CLTypes.LanguageMeta] {
+    [
+      { id = #CPL_L; name = "Cognitive Law Language"; layer = #Primordial; purpose = "Constitutions and doctrine" },
+      { id = #CDL;   name = "Cognitive Doctrine Language"; layer = #Primordial; purpose = "Philosophies, ethics, metaphysics" },
+      { id = #CPL_C; name = "Cognitive Contract Language"; layer = #Substrate; purpose = "Intelligence contracts" },
+      { id = #ACL;   name = "Atlas Configuration Language"; layer = #Substrate; purpose = "Ontology and entity registry" },
+      { id = #EDL;   name = "Educational Doctrine Language"; layer = #Substrate; purpose = "Standards and curricula" },
+      { id = #CIL;   name = "Cognitive Internal Language"; layer = #Organism; purpose = "Inner monologue" },
+      { id = #OCL;   name = "Organism Contract Language"; layer = #Organism; purpose = "Per-organism charter" },
+      { id = #SPL;   name = "Study Pattern Language"; layer = #Organism; purpose = "Personal learning blueprints" },
+      { id = #CPL_P; name = "Cognitive Processing Language"; layer = #Engine; purpose = "Thought pipelines" },
+      { id = #RSL;   name = "Realm Script Language"; layer = #Engine; purpose = "World physics" },
+      { id = #TPL;   name = "Terminal Protocol Language"; layer = #Engine; purpose = "Terminal commands" },
+      { id = #PWL;   name = "Pathway Language"; layer = #Engine; purpose = "Life trajectories" },
+      { id = #TSL;   name = "Tool Scaffold Language"; layer = #Engine; purpose = "Tool generation" },
+    ]
   };
 
 };
