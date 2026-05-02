@@ -546,7 +546,7 @@ module {
       retentionRate = newRetention;
       preferredModality = profile.preferredModality;
       activeCompetencies = profile.activeCompetencies;
-      lastSessionAt = ?Int.abs(beat);
+      lastSessionAt = ?beat;
     }
   };
 
