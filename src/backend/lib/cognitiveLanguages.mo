@@ -3,12 +3,19 @@
 // Attribution: Alfredo Medina Hernandez — immutable
 // PHI = 1.6180339887498948482 | S_FLOOR = 0.75 | S_CEIL = 9.75
 //
-// Implements production-grade operations across all four layers:
-//   Layer 0 — Primordial:  CPL-L (Law), CDL (Doctrine)
-//   Layer 1 — Substrate:   CPL-C (Contract), ACL (Atlas), EDL (Education)
-//   Layer 2 — Organism:    CIL (Internal), OCL (Charter), SPL (Study Pattern)
-//   Layer 3 — Engine:      CPL-P (Processing), RSL (Realm), TPL (Terminal),
-//                          PWL (Pathway), TSL (Tool Scaffold)
+// Implements production-grade operations across twelve layers:
+//   Layer 0  — Primordial:      CPL-L, CDL
+//   Layer 1  — Substrate:       CPL-C, ACL, EDL, ISL
+//   Layer 2  — Organism:        CIL, OCL, SPL
+//   Layer 3  — Engine:          CPL-P, RSL, TPL, PWL, TSL, HCL
+//   Layer 4  — Psyche:          PIL, SIL, TIL, RIL
+//   Layer 5  — Social:          REL, COL, ROL, FAL
+//   Layer 6  — Creation:        WFL, CXL, EXL
+//   Layer 7  — Narrative:       MYL, STL, SYM
+//   Layer 8  — Enterprise:      BCL, ECL, IIL
+//   Layer 9  — Infrastructure:  DDL, MML, SCL
+//   Layer 10 — Chaos:           ERR, CHL, FRL
+//   Layer 11 — Meta:            LML, UEL
 //
 // Every state-mutating function returns (newState, result) — purely functional.
 // Law 23: coherence and mastery ONLY increase, never decrease.

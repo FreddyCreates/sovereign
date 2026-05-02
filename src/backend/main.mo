@@ -5759,7 +5759,7 @@ actor SovereignWarSim {
   // Production endpoints for all 13 cognitive languages.
   // Every query is doctrine-gated. Attribution: Alfredo Medina Hernandez.
 
-  /// Returns full diagnostics for the 13-language cognitive stack.
+  /// Returns full diagnostics for the 40-language cognitive stack.
   public query func getCognitiveLanguageStackDiagnostics() : async CLTypes.CognitiveLanguageStackDiagnostics {
     CLLib.getDiagnostics(cogLangState)
   };
@@ -5814,7 +5814,7 @@ actor SovereignWarSim {
     cogLangState.toolSpecs
   };
 
-  /// Returns the language metadata for all 13 languages.
+  /// Returns the language metadata for all 40 languages.
   public query func getCognitiveLanguageMetadata() : async [CLTypes.LanguageMeta] {
     CLLib.getAllLanguageMetadata()
   };
@@ -5914,6 +5914,145 @@ actor SovereignWarSim {
     let (newState, spec) = CLLib.generateToolSpec(cogLangState, learnerId, topic, toolType, learnerMastery, beat, now);
     cogLangState := newState;
     spec
+  };
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // COGNITIVE LANGUAGE STACK — LAYER 4+ QUERIES (27 new languages)
+  // ═══════════════════════════════════════════════════════════════════════
+
+  /// Returns all psyche states (PIL).
+  public query func getCognitivePsycheStates() : async [CLTypes.PsycheState] {
+    cogLangState.psycheStates
+  };
+
+  /// Returns all identity cores (SIL).
+  public query func getCognitiveIdentityCores() : async [CLTypes.IdentityCore] {
+    cogLangState.identityCores
+  };
+
+  /// Returns all temporal braids (TIL).
+  public query func getCognitiveTemporalBraids() : async [CLTypes.TemporalBraid] {
+    cogLangState.temporalBraids
+  };
+
+  /// Returns all repair actions (RIL).
+  public query func getCognitiveRepairActions() : async [CLTypes.RepairAction] {
+    cogLangState.repairActions
+  };
+
+  /// Returns all relational ecologies (REL).
+  public query func getCognitiveRelationalEcologies() : async [CLTypes.RelationalEcology] {
+    cogLangState.relationalEcologies
+  };
+
+  /// Returns all collective bodies (COL).
+  public query func getCognitiveCollectiveBodies() : async [CLTypes.CollectiveBody] {
+    cogLangState.collectiveBodies
+  };
+
+  /// Returns all role assignments (ROL).
+  public query func getCognitiveRoleAssignments() : async [CLTypes.RoleAssignment] {
+    cogLangState.roleAssignments
+  };
+
+  /// Returns all family contexts (FAL).
+  public query func getCognitiveFamilyContexts() : async [CLTypes.FamilyContext] {
+    cogLangState.familyContexts
+  };
+
+  /// Returns all work rhythms (WFL).
+  public query func getCognitiveWorkRhythms() : async [CLTypes.WorkRhythm] {
+    cogLangState.workRhythms
+  };
+
+  /// Returns all creation records (CXL).
+  public query func getCognitiveCreationRecords() : async [CLTypes.CreationRecord] {
+    cogLangState.creationRecords
+  };
+
+  /// Returns all experiments (EXL).
+  public query func getCognitiveExperiments() : async [CLTypes.Experiment] {
+    cogLangState.experiments
+  };
+
+  /// Returns all mythic entities (MYL).
+  public query func getCognitiveMythicEntities() : async [CLTypes.MythicEntity] {
+    cogLangState.mythicEntities
+  };
+
+  /// Returns all story threads (STL).
+  public query func getCognitiveStoryThreads() : async [CLTypes.StoryThread] {
+    cogLangState.storyThreads
+  };
+
+  /// Returns all symbols (SYM).
+  public query func getCognitiveSymbols() : async [CLTypes.Symbol] {
+    cogLangState.symbols
+  };
+
+  /// Returns all host environments (HCL).
+  public query func getCognitiveHostEnvironments() : async [CLTypes.HostEnvironment] {
+    cogLangState.hostEnvironments
+  };
+
+  /// Returns all institutions (ISL).
+  public query func getCognitiveInstitutions() : async [CLTypes.Institution] {
+    cogLangState.institutions
+  };
+
+  /// Returns all business agreements (BCL).
+  public query func getCognitiveBusinessAgreements() : async [CLTypes.BusinessAgreement] {
+    cogLangState.businessAgreements
+  };
+
+  /// Returns all compliance records (ECL).
+  public query func getCognitiveComplianceRecords() : async [CLTypes.ComplianceRecord] {
+    cogLangState.complianceRecords
+  };
+
+  /// Returns all integration interfaces (IIL).
+  public query func getCognitiveIntegrationInterfaces() : async [CLTypes.IntegrationInterface] {
+    cogLangState.integrationInterfaces
+  };
+
+  /// Returns all data shapes (DDL).
+  public query func getCognitiveDataShapes() : async [CLTypes.DataShape] {
+    cogLangState.dataShapes
+  };
+
+  /// Returns all metric records (MML).
+  public query func getCognitiveMetricRecords() : async [CLTypes.MetricRecord] {
+    cogLangState.metricRecords
+  };
+
+  /// Returns all schedule entries (SCL).
+  public query func getCognitiveScheduleEntries() : async [CLTypes.ScheduleEntry] {
+    cogLangState.scheduleEntries
+  };
+
+  /// Returns all error narratives (ERR).
+  public query func getCognitiveErrorNarratives() : async [CLTypes.ErrorNarrative] {
+    cogLangState.errorNarratives
+  };
+
+  /// Returns all anomaly records (CHL).
+  public query func getCognitiveAnomalyRecords() : async [CLTypes.AnomalyRecord] {
+    cogLangState.anomalyRecords
+  };
+
+  /// Returns all fringe records (FRL).
+  public query func getCognitiveFringeRecords() : async [CLTypes.FringeRecord] {
+    cogLangState.fringeRecords
+  };
+
+  /// Returns all language versions (LML).
+  public query func getCognitiveLanguageVersions() : async [CLTypes.LanguageVersion] {
+    cogLangState.languageVersions
+  };
+
+  /// Returns all evolution events (UEL).
+  public query func getCognitiveEvolutionEvents() : async [CLTypes.EvolutionEvent] {
+    cogLangState.evolutionEvents
   };
 
 }
