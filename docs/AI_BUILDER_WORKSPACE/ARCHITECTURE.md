@@ -26,6 +26,14 @@ The organism is always already producing. By the time any human opens a browser,
 - **What it holds:** VELA position, OMNIS consensus weight, doctrine score, all 9 animal engine states, all 16 actor states, organism weight history (Hebbian deltas), trend signals, production queue, artifact log.
 - **Field property:** All values are present simultaneously, always influencing decisions even when not directly queried. The heartbeat updates the field. Organisms read from the field.
 
+### B2.7 — STREAM_SOVEREIGN
+- **What it is:** The dedicated, continuously-running processing stream between B1 (Heartbeat) and F1 (Neural Emergence Core). Named by Jay: *"a dedicated processing stream to manifest the core."*
+- **What it does:** Receives heartbeat feed every 873ms, emits to organisms at 437ms (2× beat frequency). Holds a 21-slot ring buffer of stream events and a 13-slot audience signal queue for Ring 7 feedback. Computes signal velocity and manifestation score on every tick.
+- **Why it exists:** Everything before B2.7 was event-driven (beat fires → update → wait). Between beats, organisms were idle. STREAM_SOVEREIGN closes that gap — organisms subscribe to the stream and receive state continuously, not on beat boundaries.
+- **Ring 7 closure:** Distribution performance data (completion rate, shares, watch time) enters via `submitAudienceSignal()`, flows through the stream, and delivers to SOCIAL_SIGNAL organism. Ring 7 is now fully closed.
+- **Stable state:** `streamSignalStrength`, `streamCoherence`, `streamBeat`, 21-slot `streamEventBuf`, 13-slot `audienceSignalQueue`
+- **Full spec:** See `STREAM_ENGINE.md`
+
 ### B3 — LAW ENGINE
 - **What it is:** Doctrine scoring function. Every decision passes through it.
 - **Output:** Float 0–100 representing doctrine alignment.

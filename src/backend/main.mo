@@ -517,6 +517,89 @@ actor SovereignWarSim {
   // Fires on every heartbeat. Compounds coherence. Attribution sealed.
   stable var cogLangState : CLTypes.CognitiveLanguageStackState = CLLib.initState();
 
+  // ── B2.7 — STREAM_SOVEREIGN ────────────────────────────────────────────
+  // Dedicated, continuously-running processing stream between B1 and F1.
+  // Named by Jay: "Create a dedicated processing stream to manifest the core."
+  // MANIFEST is the operative word. Signal goes out continuously, not in pulses.
+  //
+  // Stream event ring buffer — 21 slots (13 + 8 — two consecutive Fibonacci numbers)
+  let STREAM_BUF_CAP : Nat = 21;
+  stable var streamSignalStrength   : Float = 0.75; // current broadcast amplitude [0.75, 9.75]
+  stable var streamPrevStrength     : Float = 0.75; // previous tick — used for velocity
+  stable var streamSignalVelocity   : Float = 0.0;  // first derivative of strength
+  stable var streamManifestScore    : Float = 0.75; // PHI-weighted output for organisms
+  stable var streamCoherence        : Float = 0.75; // alignment with organism core [0, 1]
+  stable var streamDoctrine         : Float = 0.75; // doctrine alignment [0, 1]
+  stable var streamBeat             : Nat   = 0;    // last beat that fed the stream
+  stable var streamTickCount        : Nat   = 0;    // total ticks since init
+  stable var streamIsFlowing        : Bool  = false;
+  // Event ring buffer
+  stable var streamEventBuf  : [var Text] = Array.tabulate<Text>(21, func _ = "").toVarArray();
+  stable var streamEventHead : Nat = 0;
+  stable var streamEventSize : Nat = 0;
+  // Ring 7 — Audience signal queue (13 slots — 7th Fibonacci number)
+  stable var audienceSignalBuf    : [var Float] = Array.tabulate<Float>(13, func _ = 0.0).toVarArray();
+  stable var audienceSignalHead   : Nat   = 0;
+  stable var audienceSignalSize   : Nat   = 0;
+  stable var pendingAudienceDelta : Float = 0.0; // accumulated Ring 7 delta, applied on next tick
+
+  // Push a stream event into the ring buffer
+  func streamPushEvent(event : Text) {
+    streamEventBuf[streamEventHead] := event;
+    streamEventHead := (streamEventHead + 1) % STREAM_BUF_CAP;
+    if (streamEventSize < STREAM_BUF_CAP) { streamEventSize += 1 };
+  };
+
+  // Tick the STREAM_SOVEREIGN — called from runBeat() after RING ENGINE
+  // Also closes Ring 7: audience signals absorbed into stream signal strength
+  func tickStreamSovereign(beat : Nat, coherence : Float, doctrine : Float) {
+    // Record previous strength for velocity
+    streamPrevStrength := streamSignalStrength;
+
+    // Absorb pending audience delta (Ring 7 closure)
+    let audienceDelta = pendingAudienceDelta;
+    pendingAudienceDelta := 0.0;
+
+    // PHI-decay toward coherence-driven target
+    let PHI_STREAM : Float = 1.6180339887498948482;
+    let S_FL : Float = 0.75;
+    let S_CL : Float = 9.75;
+    let target = Float.max(S_FL, Float.min(S_CL,
+      coherence * PHI_STREAM * doctrine + S_FL + audienceDelta
+    ));
+    // Stream moves toward target at rate 1/PHI per tick — smooth, never step
+    let phiInv : Float = 1.0 / PHI_STREAM;
+    let newStrength = streamSignalStrength + (target - streamSignalStrength) * phiInv;
+    streamSignalStrength := Float.max(S_FL, Float.min(S_CL, newStrength));
+
+    // Compute velocity (first derivative)
+    streamSignalVelocity := streamSignalStrength - streamPrevStrength;
+
+    // Compute manifestation score — PHI-weighted composite for organisms
+    let velBonus : Float = if (streamSignalVelocity >= 0.0) {
+      streamSignalVelocity * 0.1
+    } else {
+      streamSignalVelocity * 0.05
+    };
+    let totalWeight = PHI_STREAM + 1.0 + phiInv;
+    let rawScore = (coherence * PHI_STREAM + doctrine * 1.0 + velBonus * phiInv) / totalWeight;
+    streamManifestScore := Float.max(S_FL, Float.min(S_CL, rawScore + S_FL));
+
+    streamCoherence := Float.max(0.0, Float.min(1.0, coherence));
+    streamDoctrine  := Float.max(0.0, Float.min(1.0, doctrine));
+    streamBeat      := beat;
+    streamTickCount += 1;
+    streamIsFlowing := true;
+
+    // Record stream event in ring buffer
+    let evt = "STREAM:beat=" # beat.toText()
+      # "|signal=" # streamSignalStrength.toText()
+      # "|velocity=" # streamSignalVelocity.toText()
+      # "|manifest=" # streamManifestScore.toText()
+      # "|coherence=" # streamCoherence.toText();
+    streamPushEvent(evt);
+  };
+
   // Monologue circular buffer — inner thoughts from CIL (private to organism)
   let CL_MONOLOGUE_CAP : Nat = 64;
   var clMonologueBuf : [var ?CLTypes.MonologueEntry] = Array.tabulate<(?CLTypes.MonologueEntry)>(CL_MONOLOGUE_CAP, func _ = null).toVarArray();
@@ -3323,7 +3406,14 @@ actor SovereignWarSim {
     // doctrineScoreForSeal already computed above; use it as doctrine input.
     ringEngineState := RingEngineLib.advanceAllRings(ringEngineState, beat, doctrineScoreEarly / 100.0);
 
-    // ── FILM SCHOOL FEEDBACK LOOP — Ring 5 quality → production queue ────
+    // ── STREAM_SOVEREIGN — B2.7 — dedicated processing stream ─────────────
+    // Named by Jay: "Create a dedicated processing stream to manifest the core."
+    // Ticks on every heartbeat. Signal flows continuously between beats.
+    // Absorbs any pending Ring 7 audience data into the stream signal strength.
+    // Organisms read from the stream — not from the beat boundary directly.
+    // Law 18 (Always-On): stream never idles. Law 40 (Closed Loop): loop closes here.
+    tickStreamSovereign(beat, globalCoherence, doctrineScoreEarly / 100.0);
+
     // Disconnected engine #2: quality scores computed but never re-injected.
     // After Ring 5 fires, re-inject quality weights into production queue state.
     // Film school loop fires every ~45s ≈ every 51 beats at 873ms interval.
@@ -3653,6 +3743,67 @@ actor SovereignWarSim {
       fieldCoherence  = coherence;
       genesisWindow;
     }
+  };
+
+  // ── STREAM_SOVEREIGN — B2.7 — Public API ─────────────────────────────────
+
+  /// Returns the current STREAM_SOVEREIGN state snapshot.
+  /// The stream is always flowing — signalStrength never falls below 0.75.
+  /// Organisms read from this endpoint between heartbeats (not just on beat boundaries).
+  /// manifestScore is what organisms actually receive — PHI-weighted composite.
+  public query func getStreamSovereignState() : async {
+    signalStrength   : Float;
+    signalVelocity   : Float;
+    manifestScore    : Float;
+    streamCoherence  : Float;
+    doctrine         : Float;
+    lastBeat         : Nat;
+    tickCount        : Nat;
+    isFlowing        : Bool;
+    recentEvents     : [Text];
+    audienceSignalCount : Nat;
+  } {
+    // Read recent events from ring buffer
+    let start = if (streamEventSize < STREAM_BUF_CAP) { 0 } else { streamEventHead };
+    let events = Array.tabulate<Text>(streamEventSize, func(i : Nat) : Text {
+      streamEventBuf[(start + i) % STREAM_BUF_CAP]
+    });
+    {
+      signalStrength      = streamSignalStrength;
+      signalVelocity      = streamSignalVelocity;
+      manifestScore       = streamManifestScore;
+      streamCoherence     = streamCoherence;
+      doctrine            = streamDoctrine;
+      lastBeat            = streamBeat;
+      tickCount           = streamTickCount;
+      isFlowing           = streamIsFlowing;
+      recentEvents        = events;
+      audienceSignalCount = audienceSignalSize;
+    }
+  };
+
+  /// Submit audience performance data for Ring 7 closure.
+  /// Performance data enters the stream and modulates signal strength on next tick.
+  /// completionRate: fraction of video watched [0.0–1.0]
+  /// shareRate: share/repost rate [0.0–1.0]
+  /// watchTimeRatio: avg watch time / total length [0.0–1.0]
+  public func submitAudienceSignal(
+    completionRate  : Float,
+    shareRate       : Float,
+    watchTimeRatio  : Float,
+  ) : async () {
+    // Compute audience delta: PHI-weighted mean, centered at 0.5
+    let PHI3 : Float = 4.2360679774997896964; // PHI^3 pre-computed
+    let totalAW = PHI3 + 1.6180339887498948482 + 1.0;
+    let weighted = completionRate * PHI3 + watchTimeRatio * 1.6180339887498948482 + shareRate * 1.0;
+    let mean = weighted / totalAW;
+    let delta = (mean - 0.5) * 0.25;
+    pendingAudienceDelta += delta;
+    // Record in audience buffer
+    let signalMean = (completionRate + shareRate + watchTimeRatio) / 3.0;
+    audienceSignalBuf[audienceSignalHead] := signalMean;
+    audienceSignalHead := (audienceSignalHead + 1) % 13;
+    if (audienceSignalSize < 13) { audienceSignalSize += 1 };
   };
 
   // ── ALPHA CHARTERS — Public API ───────────────────────────────────────

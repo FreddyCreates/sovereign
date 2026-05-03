@@ -1,6 +1,26 @@
 // Rust Engine Library Root
-// Exports all animal engines for FFI integration with Motoko
+// Exports all animal engines and STREAM_SOVEREIGN for FFI integration with Motoko
 // Attribution: Alfredo Medina Hernandez
+
+// ── B2.7 — STREAM_SOVEREIGN ───────────────────────────────────────────────────
+// Dedicated processing stream between B1 (Heartbeat) and F1 (Neural Emergence Core)
+// Named by Jay: "Create a dedicated processing stream to manifest the core"
+pub mod stream_sovereign;
+
+pub use stream_sovereign::{
+    StreamSovereignState,
+    StreamSnapshot,
+    compute_audience_delta,
+    compute_manifestation_score,
+    compute_signal_velocity,
+    get_stream_snapshot,
+    init_stream_state,
+    submit_audience_signal,
+    tick_stream,
+    AUDIENCE_BUF_SIZE,
+    STREAM_BUF_SIZE,
+    STREAM_INTERVAL_MS,
+};
 
 pub mod animal_engines {
     pub mod nova;
