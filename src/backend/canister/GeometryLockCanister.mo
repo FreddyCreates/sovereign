@@ -145,10 +145,13 @@ actor GeometryLockCanister {
   /// Updates lock state (Hebbian weights, metrics, log). Returns grant/deny result.
   public shared func validateKey(token : GLTypes.GeometryToken) : async GLTypes.TokenValidation {
     // Validate with the token's beat stamped to current beatCount for window check
+    // PHI_WINDOW_BEATS = 1, so phiWindow = beatCount / 1 = beatCount.
+    // expectedWindow in validateKey = beat / PHI_WINDOW_BEATS = beatCount / 1 = beatCount.
+    // These match, so window validation passes. If PHI_WINDOW_BEATS changes, update this.
     let currentToken : GLTypes.GeometryToken = {
       token with
       beat      = beatCount;
-      phiWindow = beatCount;  // φ-window = beatCount (1 beat per window at 873ms base)
+      phiWindow = beatCount;   // = beatCount / PHI_WINDOW_BEATS where PHI_WINDOW_BEATS=1
     };
     let (newState, validation) = GLLib.validateKey(glState, currentToken);
     glState := newState;

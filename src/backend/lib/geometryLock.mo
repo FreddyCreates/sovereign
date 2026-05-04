@@ -69,10 +69,14 @@ module {
   // Round 1: FNV-1a(input)
   // Round 2: FNV-1a(r1.toText() + dimKey)    — domain-separate by dimension
   // Round 3: PHI-mix: (r1 × r2 + PHI_INT) mod 2^32  — non-linear mixing
+  //          PHI_INT = floor(PHI × 10⁹) = 1618033988 — the Golden Ratio as integer constant
+  //          This injects PHI's irrational structure into the mixing step, breaking
+  //          linear relationships between consecutive dimension outputs.
   // Round 4: FNV-1a(r3.toText() + r1.toText())       — finalization round
   //
-  // Result is in [0, 2^32), normalized to [0, 2π) by dividing by 2^32 × (1/2π).
-  let PHI_INT : Nat = 1618033988;  // floor(PHI × 10^9) as mixing constant
+  // Result is normalized to [0, 2π): r4 / 2^32 × 2π.
+  // Security note: DIM_KEYS are public — security comes from secretHash which is never stored.
+  let PHI_INT : Nat = 1618033988;  // floor(PHI × 10^9) — PHI mixing constant
   func sovereignHash(input : Text, dimKey : Text) : Float {
     let r1 = fnvRound(input);
     let r2 = fnvRound(r1.toText() # dimKey);
