@@ -4103,10 +4103,14 @@ actor SovereignWarSim {
   public query func getGeometryLockBrain() : async {
     offenseScore : Float; defenseScore : Float; coherence : Float;
     dopamine : Float; norepinephrine : Float; totalPasses : Nat;
+    kuramotoThreshold : Float; defensiveMode : Bool; immuneEvents : Nat;
+    hebbianWeights : [Float];
   } {
     let b = GLLib.getMiniBrain(geometryLockState);
     { offenseScore=b.offenseScore; defenseScore=b.defenseScore; coherence=b.coherence;
-      dopamine=b.dopamine; norepinephrine=b.norepinephrine; totalPasses=b.totalPasses }
+      dopamine=b.dopamine; norepinephrine=b.norepinephrine; totalPasses=b.totalPasses;
+      kuramotoThreshold=b.kuramotoThreshold; defensiveMode=b.defensiveMode;
+      immuneEvents=b.immuneEvents; hebbianWeights=b.hebbianWeights }
   };
 
   /// Get the lock entity's mini heart state.

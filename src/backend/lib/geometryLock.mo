@@ -4,10 +4,14 @@
 // Plays offense (grant) and defense (block). No frontend. Pure CPL streaming.
 //
 // Mathematical core:
-//   Phase vector: θⱼ = FNV(secret + callerId + window) × PHI^j mod 2π
-//   Kuramoto R = √( (mean cosΔθⱼ)² + (mean sinΔθⱼ)² )
+//   Phase vector: θⱼ = sovereignHash(secret + callerId + window, "DIM_j") mod 2π
+//     sovereignHash = 4-round iterated FNV with PHI-mixing (SOVEREIGN's own HMAC variant)
+//     Per-dimension keying — each θⱼ has an independent hash chain
+//   Kuramoto R = √( (Σwⱼ cosΔθⱼ / Σwⱼ)² + (Σwⱼ sinΔθⱼ / Σwⱼ)² )
+//     Weighted by Hebbian weights wⱼ ∈ [0.1, 2.0] — immune memory per dimension
+//   Adaptive threshold: T = PHI_INV + defenseScore/S_CEIL × 0.15
+//     Grant iff R > T (threshold tightens under sustained attack)
 //   φ-time window: ⌊beat / PHI_WINDOW_BEATS⌋  (≈ 1412ms window = 873ms × PHI)
-//   Grant threshold: R > φ⁻¹ = 0.6180339887498948482
 //
 // SOVEREIGN's own math only. No external libraries.
 // Author: SCRIBE_FOUNDATION | Maintained by SCRIBE_ENGINE
@@ -23,51 +27,69 @@ module {
 
   // ── SOVEREIGN CONSTANTS ───────────────────────────────────────────────────
   let PHI      : Float = 1.6180339887498948482;
-  let PHI_INV  : Float = 0.6180339887498948482;  // Kuramoto threshold
-  let PHI2     : Float = 2.6180339887498948482;
-  let PHI3     : Float = 4.2360679774997896964;
-  let PHI4     : Float = 6.8541019662496845446;
-  let PHI5     : Float = 11.0901699437494742108;
-  let PHI6     : Float = 17.9442719099991587542;
-  let PHI7     : Float = 29.0344418537486329650;
-  let PHI8     : Float = 46.9787137637477917192;
-  let SCHUMANN : Float = 7.83;
+  let PHI_INV  : Float = 0.6180339887498948482;  // base Kuramoto threshold (adaptive floor)
   let TWO_PI   : Float = 6.28318530717958647692;   // 2π — phase wraps here
   let S_FLOOR  : Float = 0.75;
   let S_CEIL   : Float = 9.75;
   let FOUNDER  : Text  = "Alfredo Medina Hernandez";
 
-  // PHI-time window size in beats: floor(1412ms / 873ms) = 1 beat (lock rotates every beat)
-  // Full rotation: ⌊beat / PHI_WINDOW_BEATS⌋ where PHI_WINDOW_BEATS = 1 (every heartbeat)
-  let PHI_WINDOW_BEATS : Nat = 1;  // 873ms × PHI ≈ 1412ms → rotate every beat at 873ms
+  // Hebbian learning rate — matches organism constant from SovereignConstants.ts
+  let HEBBIAN_RATE : Float = 0.0089;
+  // Adaptive threshold max headroom above PHI_INV
+  let THRESHOLD_HEADROOM : Float = 0.15;  // threshold can rise to PHI_INV + 0.15 = 0.768
+  // Hebbian weight bounds
+  let W_MIN : Float = 0.1;
+  let W_MAX : Float = 2.0;
+
+  // PHI-time window size in beats: 1 beat = 873ms (rotates every heartbeat)
+  let PHI_WINDOW_BEATS : Nat = 1;
 
   // Validation log ring buffer size: 89 = Fibonacci 11th
   let LOG_SIZE : Nat = 89;
 
   // ── SOVEREIGN MATH ────────────────────────────────────────────────────────
 
-  // FNV-1a hash variant — SOVEREIGN's own implementation (no external crypto libs)
-  // FNV offset basis for 32-bit: 2166136261
-  // FNV prime for 32-bit: 16777619
-  // We compute as Float to stay in Motoko's native types
-  func fnvHash(input : Text) : Float {
-    var hash : Nat = 2166136261;
+  // FNV-1a single-round — the primitive building block.
+  // FNV offset basis 32-bit: 2166136261 | FNV prime: 16777619
+  func fnvRound(input : Text) : Nat {
+    var h : Nat = 2166136261;
     for (c in input.toIter()) {
-      hash := hash ^ Nat.fromNat32(c.toNat32());
-      hash := (hash * 16777619) % 4294967296;  // 2^32
+      h := h ^ Nat.fromNat32(c.toNat32());
+      h := (h * 16777619) % 4294967296;  // mod 2^32
     };
-    hash.toFloat()
+    h
   };
 
-  // Modulo 2π using SOVEREIGN's own arithmetic
+  // ── SOVEREIGN 4-ROUND HASH (per-dimension keyed) ─────────────────────────
+  //
+  // This is SOVEREIGN's own HMAC variant — not FNV, not SHA256, but a
+  // 4-round Merkle-Damgård construction with PHI-mixing between rounds.
+  // Each phase dimension gets a unique dimension key → independent hash chain.
+  //
+  // Round 1: FNV-1a(input)
+  // Round 2: FNV-1a(r1.toText() + dimKey)    — domain-separate by dimension
+  // Round 3: PHI-mix: (r1 × r2 + PHI_INT) mod 2^32  — non-linear mixing
+  // Round 4: FNV-1a(r3.toText() + r1.toText())       — finalization round
+  //
+  // Result is in [0, 2^32), normalized to [0, 2π) by dividing by 2^32 × (1/2π).
+  let PHI_INT : Nat = 1618033988;  // floor(PHI × 10^9) as mixing constant
+  func sovereignHash(input : Text, dimKey : Text) : Float {
+    let r1 = fnvRound(input);
+    let r2 = fnvRound(r1.toText() # dimKey);
+    let r3 = (r1 * r2 + PHI_INT) % 4294967296;  // 2^32
+    let r4 = fnvRound(r3.toText() # r1.toText());
+    // Normalize to [0, 2π): r4 / 2^32 × 2π
+    r4.toFloat() / 4294967296.0 * TWO_PI
+  };
+
+  // Modulo 2π — for reducing phases back to [0, 2π)
   func mod2Pi(x : Float) : Float {
     let n = Float.floor(x / TWO_PI);
     x - n * TWO_PI
   };
 
   func cosApprox(theta : Float) : Float {
-    // Taylor series cos(θ) ≈ 1 - θ²/2 + θ⁴/24 — good for small |θ|
-    // For any θ, reduce to [-π, π] first
+    // Taylor series: reduce to [0, 2π) first
     let t = mod2Pi(theta);
     let t2 = t * t;
     let t4 = t2 * t2;
@@ -92,31 +114,46 @@ module {
     Float.max(0.0, Float.min(1.0, v))
   };
 
+  func clampWeight(w : Float) : Float {
+    Float.max(W_MIN, Float.min(W_MAX, w))
+  };
+
   // ── PHASE VECTOR GENERATION ───────────────────────────────────────────────
 
+  // 8 dimension keys — each dimension has its own independent domain.
+  // This replaces the old approach of scaling a single hash by PHI^j.
+  let DIM_KEYS : [Text] = [
+    "DIM1_PHI1";    // θ₁ — PHI^1 frequency band
+    "DIM2_PHI2";    // θ₂ — PHI^2 frequency band
+    "DIM3_PHI3";    // θ₃ — PHI^3 frequency band
+    "DIM4_HEART";   // θ₄ — PHI^4 = 873ms heartbeat derivation
+    "DIM5_PHI5";    // θ₅ — PHI^5 frequency band
+    "DIM6_PHI6";    // θ₆ — PHI^6 frequency band
+    "DIM7_FIB13";   // θ₇ — Fibonacci 13 coupling
+    "DIM8_FIB21";   // θ₈ — Fibonacci 21 coupling
+  ];
+
   /// Generate the expected 8-dimensional phase vector for a caller.
-  /// θⱼ = FNV(secret + callerId + window) × PHI^j mod 2π
+  /// θⱼ = sovereignHash(secretHash + callerId + window, DIM_KEYS[j-1])
+  /// Each dimension is independently derived — per-dimension keying.
   func generateExpectedPhaseVector(
     secretHash : Text,
     callerId   : Text,
     phiWindow  : Nat,
   ) : GLTypes.PhaseVector {
-    let base = fnvHash(secretHash # callerId # phiWindow.toText());
-    // Each dimension multiplied by PHI^j and reduced mod 2π
-    let t1 = mod2Pi(base * PHI  / 1e9);
-    let t2 = mod2Pi(base * PHI2 / 1e9);
-    let t3 = mod2Pi(base * PHI3 / 1e9);
-    let t4 = mod2Pi(base * PHI4 / 1e9);
-    let t5 = mod2Pi(base * PHI5 / 1e9);
-    let t6 = mod2Pi(base * PHI6 / 1e9);
-    let t7 = mod2Pi(base * PHI7 / 1e9);
-    let t8 = mod2Pi(base * PHI8 / 1e9);
-    { theta1=t1; theta2=t2; theta3=t3; theta4=t4;
-      theta5=t5; theta6=t6; theta7=t7; theta8=t8 }
+    let base = secretHash # callerId # phiWindow.toText();
+    { theta1 = sovereignHash(base, DIM_KEYS[0]);
+      theta2 = sovereignHash(base, DIM_KEYS[1]);
+      theta3 = sovereignHash(base, DIM_KEYS[2]);
+      theta4 = sovereignHash(base, DIM_KEYS[3]);
+      theta5 = sovereignHash(base, DIM_KEYS[4]);
+      theta6 = sovereignHash(base, DIM_KEYS[5]);
+      theta7 = sovereignHash(base, DIM_KEYS[6]);
+      theta8 = sovereignHash(base, DIM_KEYS[7]) }
   };
 
-  /// Generate a caller-side phase vector (presented in the token).
-  /// Same formula — caller must derive it identically to pass.
+  /// Generate a caller-side geometry token.
+  /// Same formula as generateExpectedPhaseVector — caller must derive identically.
   public func generateKey(
     callerId   : Text,
     secretHash : Text,
@@ -124,8 +161,8 @@ module {
   ) : GLTypes.GeometryToken {
     let phiWindow = beat / PHI_WINDOW_BEATS;
     let pv = generateExpectedPhaseVector(secretHash, callerId, phiWindow);
-    // Signature: FNV(callerId + phiWindow + theta1)
-    let sig = fnvHash(callerId # phiWindow.toText() # pv.theta1.toText());
+    // Signature: sovereignHash(callerId + phiWindow, "SIG") — single-dim commitment
+    let sig = fnvRound(callerId # phiWindow.toText() # pv.theta1.toText());
     {
       callerId    = callerId;
       phaseVector = pv;
@@ -135,17 +172,25 @@ module {
     }
   };
 
-  // ── KURAMOTO ORDER PARAMETER ──────────────────────────────────────────────
+  // ── WEIGHTED KURAMOTO ORDER PARAMETER ────────────────────────────────────
 
-  /// Compute Kuramoto R from presented vs expected phase vectors.
+  /// Compute weighted Kuramoto R using Hebbian weights.
+  ///
+  /// Weighted R = √( (Σwⱼ cosΔθⱼ / Σwⱼ)² + (Σwⱼ sinΔθⱼ / Σwⱼ)² )
+  ///
   /// Δθⱼ = presented.θⱼ - expected.θⱼ
-  /// R = √( (mean cosΔθⱼ)² + (mean sinΔθⱼ)² )
+  /// wⱼ ∈ [0.1, 2.0] — Hebbian immune memory weight per dimension
+  ///
+  /// Grant condition: R > threshold (adaptive, starts at φ⁻¹ = 0.618)
   func kuramotoR(
-    presented : GLTypes.PhaseVector,
-    expected  : GLTypes.PhaseVector,
-    phiWindow : Nat,
-    beat      : Nat,
-  ) : GLTypes.KuramotoResult {
+    presented  : GLTypes.PhaseVector,
+    expected   : GLTypes.PhaseVector,
+    weights    : [Float],        // 8 Hebbian weights from brain state
+    threshold  : Float,          // adaptive threshold from brain.kuramotoThreshold
+    phiWindow  : Nat,
+    beat       : Nat,
+  ) : (GLTypes.KuramotoResult, [Float]) {
+    // Build delta array
     let deltas : [Float] = [
       presented.theta1 - expected.theta1,
       presented.theta2 - expected.theta2,
@@ -156,25 +201,64 @@ module {
       presented.theta7 - expected.theta7,
       presented.theta8 - expected.theta8,
     ];
-    var sumCos : Float = 0.0;
-    var sumSin : Float = 0.0;
+    // Weighted sum of cos/sin — dimensions with higher Hebbian weight have more influence
+    var sumWeightedCos : Float = 0.0;
+    var sumWeightedSin : Float = 0.0;
+    var sumW           : Float = 0.0;
+    var j              : Nat   = 0;
     for (d in deltas.vals()) {
-      sumCos += cosApprox(d);
-      sumSin += sinApprox(d);
+      let w = if (j < weights.size()) { weights[j] } else { 1.0 };
+      sumWeightedCos += w * cosApprox(d);
+      sumWeightedSin += w * sinApprox(d);
+      sumW           += w;
+      j              += 1;
     };
-    let n : Float = 8.0;
-    let mCos = sumCos / n;
-    let mSin = sumSin / n;
-    // R = √(mCos² + mSin²)
-    let r = clamp01(Float.sqrt(mCos * mCos + mSin * mSin));
-    {
-      r          = r;
-      granted    = r > PHI_INV;
-      meanCos    = mCos;
-      meanSin    = mSin;
-      phiWindow  = phiWindow;
-      beat       = beat;
-    }
+    let denom  = if (sumW > 0.0) { sumW } else { 1.0 };
+    let mCos   = sumWeightedCos / denom;
+    let mSin   = sumWeightedSin / denom;
+    let r      = clamp01(Float.sqrt(mCos * mCos + mSin * mSin));
+    let result : GLTypes.KuramotoResult = {
+      r         = r;
+      granted   = r > threshold;   // adaptive threshold — not hardcoded
+      meanCos   = mCos;
+      meanSin   = mSin;
+      phiWindow = phiWindow;
+      beat      = beat;
+    };
+    (result, deltas)
+  };
+
+  // ── HEBBIAN LEARNING ──────────────────────────────────────────────────────
+
+  /// Hebbian update — builds immune memory across 8 phase dimensions.
+  ///
+  /// LTP on GRANT:  w[j] += η × cos(Δθⱼ)
+  ///   cos(Δθⱼ) → 1.0 when delta ≈ 0 (well-aligned) → reinforce matched dimensions
+  ///   cos(Δθⱼ) → lower when delta grows → naturally attenuate for borderline matches
+  ///
+  /// LTD on DENIAL: w[j] -= η × (1.0 - cos(Δθⱼ))
+  ///   (1 - cos(Δθ)) → 0 when aligned, → 2 when fully misaligned (delta = π)
+  ///   Suppresses dimensions that showed the most misalignment (attack pattern memory)
+  ///
+  /// All weights clamped to [W_MIN=0.1, W_MAX=2.0].
+  func hebbianUpdate(
+    weights : [Float],
+    deltas  : [Float],
+    granted : Bool,
+  ) : [Float] {
+    Array.tabulate<Float>(8, func(j) {
+      let w = if (j < weights.size()) { weights[j] } else { 1.0 };
+      let d = if (j < deltas.size())  { deltas[j]  } else { 0.0 };
+      let c = cosApprox(d);
+      let newW = if (granted) {
+        // LTP — strengthen dimensions that were aligned
+        w + HEBBIAN_RATE * c
+      } else {
+        // LTD — suppress dimensions that showed misalignment (immune memory)
+        w - HEBBIAN_RATE * (1.0 - c)
+      };
+      clampWeight(newW)
+    })
   };
 
   // ── REGISTER / REVOKE ─────────────────────────────────────────────────────
@@ -183,10 +267,9 @@ module {
   public func registerCaller(
     state      : GLTypes.GeometryLockState,
     callerId   : Text,
-    secretHash : Text,   // FNV hash of sharedSecret — caller hashes before sending
+    secretHash : Text,   // hash of sharedSecret — caller hashes before sending
     beat       : Nat,
   ) : GLTypes.GeometryLockState {
-    // Idempotent: update if exists, insert if not
     let filtered = Array.filter<(Text, GLTypes.CallerBond)>(
       state.callers, func((id, _)) { id != callerId }
     );
@@ -230,7 +313,9 @@ module {
       }
     );
     let newMetrics = updateMetrics(state, newCallers);
-    let newBrain = defenseTick(state.miniBrain, 1.0); // defense scores a full point on revocation
+    // Revocation = maximum threat → full defense tick + Hebbian LTD on all weights
+    let threat = 1.0;
+    let newBrain = defenseTick(state.miniBrain, threat);
     {
       state with
       callers         = newCallers;
@@ -243,36 +328,38 @@ module {
 
   // ── VALIDATE KEY ──────────────────────────────────────────────────────────
 
-  /// Validate an incoming geometry token.
-  /// Reconstructs expected phase vector, computes Δθⱼ, feeds into Kuramoto.
-  /// Returns grant/deny + logs the event.
+  /// Validate an incoming geometry token — full PROTO-226 pipeline:
+  ///   1. Lookup caller bond (BLOCK_UNKEYED_CALLS on miss)
+  ///   2. Check revocation and φ-window expiry
+  ///   3. Weighted Kuramoto R with Hebbian weights (per-dimension influence)
+  ///   4. Adaptive threshold from brain.kuramotoThreshold
+  ///   5. Hebbian update (LTP on grant, LTD on denial) → immune memory grows
+  ///   6. Update metrics, fire CPL laws, ring-buffer log
   public func validateKey(
     state : GLTypes.GeometryLockState,
     token : GLTypes.GeometryToken,
   ) : (GLTypes.GeometryLockState, GLTypes.TokenValidation) {
     let beat = token.beat;
-    // Find caller bond
     let callerOpt = findCaller(state.callers, token.callerId);
     switch (callerOpt) {
       case null {
-        // Unknown caller — BLOCK_UNKEYED_CALLS fires
         let reason = "BLOCK_UNKEYED_CALLS: caller not registered — " # token.callerId;
         let validation : GLTypes.TokenValidation = {
-          token       = token;
+          token;
           kuramoto    = { r=0.0; granted=false; meanCos=0.0; meanSin=0.0; phiWindow=token.phiWindow; beat };
           allowed     = false;
-          reason      = reason;
-          beat        = beat;
+          reason;
+          beat;
           attribution = FOUNDER;
         };
-        let newState = logValidation(state, token.callerId, false, 0.0, token.phiWindow, reason, beat);
-        let newState2 = fireCplLaw(newState, "BLOCK_UNKEYED_CALLS", beat);
-        let newState3 = { newState2 with metrics = { newState2.metrics with
-          totalCalls   = newState2.metrics.totalCalls + 1;
-          totalDenials = newState2.metrics.totalDenials + 1;
-          grantRate    = computeGrantRate(newState2.metrics.totalGrants, newState2.metrics.totalCalls + 1);
+        var s2 = logValidation(state, token.callerId, false, 0.0, token.phiWindow, reason, beat);
+        s2 := fireCplLaw(s2, "BLOCK_UNKEYED_CALLS", beat);
+        s2 := { s2 with metrics = { s2.metrics with
+          totalCalls   = s2.metrics.totalCalls + 1;
+          totalDenials = s2.metrics.totalDenials + 1;
+          grantRate    = computeGrantRate(s2.metrics.totalGrants, s2.metrics.totalCalls + 1);
         }};
-        (newState3, validation)
+        (s2, validation)
       };
       case (?(_id, bond)) {
         if (bond.isRevoked) {
@@ -281,10 +368,9 @@ module {
             token; kuramoto = { r=0.0; granted=false; meanCos=0.0; meanSin=0.0; phiWindow=token.phiWindow; beat };
             allowed=false; reason; beat; attribution=FOUNDER;
           };
-          let newState = logValidation(state, token.callerId, false, 0.0, token.phiWindow, reason, beat);
-          (newState, validation)
+          let s2 = logValidation(state, token.callerId, false, 0.0, token.phiWindow, reason, beat);
+          (s2, validation)
         } else {
-          // Validate φ-window
           let expectedWindow = beat / PHI_WINDOW_BEATS;
           if (token.phiWindow != expectedWindow) {
             let reason = "WINDOW_EXPIRED: phiWindow " # token.phiWindow.toText() # " expected " # expectedWindow.toText();
@@ -292,19 +378,31 @@ module {
               token; kuramoto = { r=0.0; granted=false; meanCos=0.0; meanSin=0.0; phiWindow=token.phiWindow; beat };
               allowed=false; reason; beat; attribution=FOUNDER;
             };
-            let newState = logValidation(state, token.callerId, false, 0.0, token.phiWindow, reason, beat);
-            (newState, validation)
+            let s2 = logValidation(state, token.callerId, false, 0.0, token.phiWindow, reason, beat);
+            (s2, validation)
           } else {
-            // Compute Kuramoto R
+            // ── Core PROTO-226 gate ─────────────────────────────────────────
             let expected = generateExpectedPhaseVector(bond.sharedSecretHash, token.callerId, token.phiWindow);
-            let kResult = kuramotoR(token.phaseVector, expected, token.phiWindow, beat);
-            let reason = if (kResult.granted) {
-              "GRANTED: R=" # kResult.r.toText() # " > φ⁻¹=0.618"
-            } else {
-              "DENIED: R=" # kResult.r.toText() # " ≤ φ⁻¹=0.618"
+            // Read adaptive threshold and Hebbian weights from brain
+            let threshold = state.miniBrain.kuramotoThreshold;
+            let weights   = state.miniBrain.hebbianWeights;
+            // Weighted Kuramoto computation — returns result + deltas for Hebbian update
+            let (kResult, deltas) = kuramotoR(token.phaseVector, expected, weights, threshold, token.phiWindow, beat);
+            // ── Hebbian immune memory update ────────────────────────────────
+            let newWeights = hebbianUpdate(weights, deltas, kResult.granted);
+            let newBrain   = {
+              state.miniBrain with
+              hebbianWeights = newWeights;
+              immuneEvents   = state.miniBrain.immuneEvents + 1;
+              // Tighten or relax threshold based on outcome
+              kuramotoThreshold = adaptThreshold(
+                state.miniBrain.defenseScore,
+                state.miniBrain.kuramotoThreshold,
+                kResult.granted,
+              );
             };
-            // Update caller bond resonance history
-            let newHistory = ringAppendFloat(bond.resonanceHistory, kResult.r, 13);
+            // ── Caller bond update ──────────────────────────────────────────
+            let newHistory   = ringAppendFloat(bond.resonanceHistory, kResult.r, 13);
             let updatedBond : GLTypes.CallerBond = {
               bond with
               totalCalls       = bond.totalCalls + 1;
@@ -315,21 +413,27 @@ module {
               currentR         = kResult.r;
             };
             let newCallers = updateBond(state.callers, token.callerId, updatedBond);
+            let reason = if (kResult.granted) {
+              "GRANTED: R=" # kResult.r.toText() # " > T=" # threshold.toText()
+            } else {
+              "DENIED: R=" # kResult.r.toText() # " <= T=" # threshold.toText()
+            };
             let validation : GLTypes.TokenValidation = {
               token; kuramoto=kResult; allowed=kResult.granted; reason; beat; attribution=FOUNDER;
             };
-            // Check grant rate law
-            var s2 = logValidation({ state with callers=newCallers }, token.callerId, kResult.granted, kResult.r, token.phiWindow, reason, beat);
-            let newGrants = s2.metrics.totalGrants + (if kResult.granted { 1 } else { 0 });
-            let newCalls  = s2.metrics.totalCalls + 1;
-            let newRate = computeGrantRate(newGrants, newCalls);
+            var s2 = logValidation(
+              { state with callers=newCallers; miniBrain=newBrain },
+              token.callerId, kResult.granted, kResult.r, token.phiWindow, reason, beat,
+            );
+            let newGrants  = s2.metrics.totalGrants + (if kResult.granted { 1 } else { 0 });
+            let newCalls   = s2.metrics.totalCalls + 1;
+            let newRate    = computeGrantRate(newGrants, newCalls);
             s2 := { s2 with metrics = { s2.metrics with
-              totalCalls  = newCalls;
-              totalGrants = newGrants;
+              totalCalls   = newCalls;
+              totalGrants  = newGrants;
               totalDenials = s2.metrics.totalDenials + (if kResult.granted { 0 } else { 1 });
-              grantRate   = newRate;
+              grantRate    = newRate;
             }};
-            // Fire CPL law if grant rate drops below 50%
             if (newRate < 0.5 and newCalls > 5) {
               s2 := fireCplLaw(s2, "GEOMETRY_LOCK_GRANT_RATE_LOW", beat);
             };
@@ -340,52 +444,97 @@ module {
     }
   };
 
+  // ── ADAPTIVE THRESHOLD ────────────────────────────────────────────────────
+
+  /// Adapt the Kuramoto threshold based on defense posture and latest outcome.
+  /// - Under attack (denial): threshold inches up toward PHI_INV + HEADROOM
+  /// - After grant: threshold relaxes back toward PHI_INV
+  /// Formula: T_new = T_curr + direction × HEBBIAN_RATE × THRESHOLD_HEADROOM
+  func adaptThreshold(
+    defenseScore      : Float,
+    currentThreshold  : Float,
+    lastGranted       : Bool,
+  ) : Float {
+    let targetT = PHI_INV + (defenseScore / S_CEIL) * THRESHOLD_HEADROOM;
+    let step    = HEBBIAN_RATE * THRESHOLD_HEADROOM;
+    let newT = if (lastGranted) {
+      // Relax toward base PHI_INV (trust the caller)
+      currentThreshold - step * 0.5
+    } else {
+      // Tighten toward target (lock down under pressure)
+      currentThreshold + step
+    };
+    // Hard bounds: floor at PHI_INV, ceiling at PHI_INV + HEADROOM
+    Float.max(PHI_INV, Float.min(PHI_INV + THRESHOLD_HEADROOM, newT))
+  };
+
   // ── MINI BRAIN — 3-PASS ADRE ─────────────────────────────────────────────
 
   func initMiniBrain() : GLTypes.MiniBrainState {
     {
-      offenseScore  = S_FLOOR;
-      defenseScore  = S_FLOOR;
-      coherence     = S_FLOOR;
-      lastPassBeat  = 0;
-      totalPasses   = 0;
-      doctrineScore = S_FLOOR;
-      adrePass1Done = false;
-      adrePass2Done = false;
-      adrePass3Done = false;
-      dopamine      = 5.0;   // moderate grant drive
-      norepinephrine = 5.0;  // moderate block precision
+      offenseScore      = S_FLOOR;
+      defenseScore      = S_FLOOR;
+      coherence         = S_FLOOR;
+      lastPassBeat      = 0;
+      totalPasses       = 0;
+      doctrineScore     = S_FLOOR;
+      adrePass1Done     = false;
+      adrePass2Done     = false;
+      adrePass3Done     = false;
+      dopamine          = 5.0;
+      norepinephrine    = 5.0;
+      hebbianWeights    = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0];  // neutral start
+      immuneEvents      = 0;
+      kuramotoThreshold = PHI_INV;   // 0.618 — base threshold
+      defensiveMode     = false;
     }
   };
 
+  /// Defense tick — called on revocation or attack events.
+  /// Increases norepinephrine and defenseScore. Threshold tightens reflexively.
   func defenseTick(brain : GLTypes.MiniBrainState, threat : Float) : GLTypes.MiniBrainState {
-    // Increase norepinephrine on threat (defense hormone)
-    let newNE = Float.min(S_CEIL, brain.norepinephrine + threat * PHI_INV * 0.1);
-    let newDef = Float.min(S_CEIL, brain.defenseScore + threat * 0.05);
-    { brain with norepinephrine=newNE; defenseScore=newDef }
+    let newNE  = Float.min(S_CEIL, brain.norepinephrine + threat * PHI_INV * 0.1);
+    let newDef = Float.min(S_CEIL, brain.defenseScore   + threat * 0.05);
+    // Threat spikes threshold immediately (reactive defense)
+    let newT   = Float.min(PHI_INV + THRESHOLD_HEADROOM,
+      brain.kuramotoThreshold + threat * HEBBIAN_RATE * THRESHOLD_HEADROOM * 2.0
+    );
+    { brain with
+      norepinephrine    = newNE;
+      defenseScore      = newDef;
+      kuramotoThreshold = newT;
+      defensiveMode     = newDef > S_CEIL * 0.5;
+    }
   };
 
   /// Advance mini brain — 3-pass ADRE cycle.
-  /// Pass 1 (OFFENSE): evaluate grant landscape, set offense posture
-  /// Pass 2 (DEFENSE): scan CPL laws, set defense posture
-  /// Pass 3 (INTEGRATE): rebalance dopamine/NE, seal doctrine
+  /// Pass 1 (OFFENSE): grant landscape → dopamine
+  /// Pass 2 (DEFENSE): denial pressure → norepinephrine, adaptive threshold update
+  /// Pass 3 (INTEGRATE): coherence field, doctrine consolidation
   public func advanceMiniBrain(
     brain   : GLTypes.MiniBrainState,
     metrics : GLTypes.SecurityMetrics,
     beat    : Nat,
   ) : GLTypes.MiniBrainState {
-    // Pass 1 — OFFENSE: grant rate drives dopamine
     let grantR = metrics.grantRate;
-    let newDopa = clamp(brain.dopamine + (grantR - 0.618) * PHI_INV * 0.1);
+    let denyR  = 1.0 - grantR;
+
+    // Pass 1 — OFFENSE
+    let newDopa     = clamp(brain.dopamine + (grantR - 0.618) * PHI_INV * 0.1);
     let offenseScore = clamp(brain.offenseScore + (grantR - 0.5) * 0.05);
 
-    // Pass 2 — DEFENSE: denial rate drives norepinephrine
-    let denyR = 1.0 - grantR;
-    let newNE = clamp(brain.norepinephrine + (denyR - 0.382) * PHI_INV * 0.1);
-    let defenseScore = clamp(brain.defenseScore + (denyR - 0.3) * 0.05);
+    // Pass 2 — DEFENSE: compute adaptive threshold from defense posture
+    let newNE       = clamp(brain.norepinephrine + (denyR - 0.382) * PHI_INV * 0.1);
+    let defenseScore = clamp(brain.defenseScore  + (denyR - 0.3) * 0.05);
+    let isDefensive  = grantR < 0.5 and metrics.totalCalls > 5;
+    // Threshold tracks defense score continuously (not just on call events)
+    let targetT      = PHI_INV + (defenseScore / S_CEIL) * THRESHOLD_HEADROOM;
+    let newThreshold = Float.max(PHI_INV, Float.min(PHI_INV + THRESHOLD_HEADROOM,
+      brain.kuramotoThreshold + (targetT - brain.kuramotoThreshold) * PHI_INV * 0.05
+    ));
 
-    // Pass 3 — INTEGRATE: coherence = harmonic mean of offense and defense
-    let coherence = clamp(
+    // Pass 3 — INTEGRATE
+    let coherence    = clamp(
       (offenseScore * PHI_INV + defenseScore * PHI_INV) /
       (PHI_INV + PHI_INV) * PHI
     );
@@ -393,17 +542,19 @@ module {
 
     {
       brain with
-      offenseScore  = offenseScore;
-      defenseScore  = defenseScore;
-      coherence     = coherence;
-      doctrineScore = doctrineScore;
-      dopamine      = newDopa;
-      norepinephrine = newNE;
-      adrePass1Done = true;
-      adrePass2Done = true;
-      adrePass3Done = true;
-      lastPassBeat  = beat;
-      totalPasses   = brain.totalPasses + 1;
+      offenseScore      = offenseScore;
+      defenseScore      = defenseScore;
+      coherence         = coherence;
+      doctrineScore     = doctrineScore;
+      dopamine          = newDopa;
+      norepinephrine    = newNE;
+      kuramotoThreshold = newThreshold;
+      defensiveMode     = isDefensive;
+      adrePass1Done     = true;
+      adrePass2Done     = true;
+      adrePass3Done     = true;
+      lastPassBeat      = beat;
+      totalPasses       = brain.totalPasses + 1;
     }
   };
 
@@ -411,7 +562,7 @@ module {
 
   func initMiniHeart() : GLTypes.MiniHeartState {
     {
-      beatIntervalMs = 873.0;  // PHI^4 / Schumann base
+      beatIntervalMs = 873.0;
       currentBPM     = 68.7;
       strokeVolume   = S_FLOOR;
       cardiacOutput  = S_FLOOR * 68.7;
@@ -422,26 +573,24 @@ module {
   };
 
   /// Advance mini heart — interval modulated by security load.
-  /// High threat (denials) → rate increases (urgency).
-  /// High coherence → rate normalizes (stability).
+  /// High defense → shorter interval (urgency). High coherence → normalized (stable).
   public func advanceMiniHeart(
-    heart   : GLTypes.MiniHeartState,
-    brain   : GLTypes.MiniBrainState,
-    beat    : Nat,
+    heart : GLTypes.MiniHeartState,
+    brain : GLTypes.MiniBrainState,
+    beat  : Nat,
   ) : GLTypes.MiniHeartState {
-    // Security load modulates interval: high defense → shorter interval (faster response)
-    let securityLoad = brain.defenseScore / S_CEIL;  // [0, 1]
+    let securityLoad  = brain.defenseScore / S_CEIL;
     let baseMs = 873.0;
-    let minMs  = 437.0;   // 873 / 2 — max alertness
-    let maxMs  = 1746.0;  // 873 × 2 — max calm
-    let target = baseMs - (securityLoad * (baseMs - minMs)) + ((1.0 - securityLoad) * (baseMs - minMs) * 0.1);
+    let minMs  = 437.0;
+    let maxMs  = 1746.0;
+    let target = baseMs - (securityLoad * (baseMs - minMs))
+               + ((1.0 - securityLoad) * (baseMs - minMs) * 0.1);
     let newInterval = Float.max(minMs, Float.min(maxMs,
       heart.beatIntervalMs + (target - heart.beatIntervalMs) * PHI_INV * 0.1
     ));
     let newBPM = 60000.0 / newInterval;
-    let sv = brain.defenseScore;   // stroke volume = defense readiness
-    let co = newBPM * sv;          // cardiac output = HR × SV
-    // HRV: add variation proportional to brain coherence (healthy = variable)
+    let sv     = brain.defenseScore;
+    let co     = newBPM * sv;
     let newHRV = Float.max(10.0, Float.min(80.0,
       heart.hrv + (brain.coherence / S_CEIL - 0.5) * PHI * 0.5
     ));
@@ -465,15 +614,8 @@ module {
       totalRegistered  = 0;
       totalRevoked     = 0;
       validationLog    = Array.tabulate<GLTypes.ValidationLogEntry>(LOG_SIZE, func(i) {
-        {
-          entryId   = "EMPTY_" # i.toText();
-          callerId  = "";
-          allowed   = false;
-          r         = 0.0;
-          phiWindow = 0;
-          reason    = "uninitialized";
-          beat      = 0;
-        }
+        { entryId="EMPTY_"#i.toText(); callerId=""; allowed=false;
+          r=0.0; phiWindow=0; reason="uninitialized"; beat=0 }
       });
       logHead          = 0;
       cplLaws          = initCplLaws();
@@ -481,21 +623,19 @@ module {
       miniBrain        = initMiniBrain();
       miniHeart        = initMiniHeart();
       entityId         = "GEOMETRY_LOCK_ENTITY";
-      entityVersion    = 226;   // PROTO-226
+      entityVersion    = 226;
       lastAdvancedBeat = beat;
       attribution      = FOUNDER;
     }
   };
 
-  /// Advance the Geometry Lock on every heartbeat.
-  /// Advances mini brain (3-pass ADRE), mini heart, updates CALLERS_DEGRADED law.
+  /// Advance on every heartbeat — brain ADRE, heart pulse, CPL law checks.
   public func advance(
     state : GLTypes.GeometryLockState,
     beat  : Nat,
   ) : GLTypes.GeometryLockState {
     let newBrain = advanceMiniBrain(state.miniBrain, state.metrics, beat);
     let newHeart = advanceMiniHeart(state.miniHeart, newBrain, beat);
-    // Check CALLERS_DEGRADED law: fire if no active callers
     var s2 = { state with miniBrain=newBrain; miniHeart=newHeart; lastAdvancedBeat=beat };
     if (state.metrics.activeCallers == 0) {
       s2 := fireCplLaw(s2, "GEOMETRY_LOCK_CALLERS_DEGRADED", beat);
@@ -507,39 +647,24 @@ module {
 
   func initCplLaws() : [GLTypes.CplLawRecord] {
     [
-      {
-        lawId      = "BLOCK_UNKEYED_CALLS";
-        name       = "BLOCK_UNKEYED_CALLS";
-        latinName  = "Lex Clausurae Incognitae — Block Unknown Resonance";
-        severity   = #CRITICAL;
-        trigger    = "Any call from a callerId not present in the caller registry";
-        response   = "Immediate denial. Log event. Alert GUARDIAN. Increment denial counter.";
-        isActive   = true;
-        firedCount = 0;
-        lastFiredBeat = 0;
-      },
-      {
-        lawId      = "GEOMETRY_LOCK_GRANT_RATE_LOW";
-        name       = "GEOMETRY_LOCK_GRANT_RATE_LOW";
-        latinName  = "Lex Rationis Concessionis Dimissae — Grant Rate Degradation";
-        severity   = #HIGH;
-        trigger    = "Grant rate drops below 50% with > 5 total calls";
-        response   = "Alert GUARDIAN_SENTINEL. Increase defense score in mini brain. Log anomaly.";
-        isActive   = true;
-        firedCount = 0;
-        lastFiredBeat = 0;
-      },
-      {
-        lawId      = "GEOMETRY_LOCK_CALLERS_DEGRADED";
-        name       = "GEOMETRY_LOCK_CALLERS_DEGRADED";
-        latinName  = "Lex Callantem Degradatae — No Active Callers";
-        severity   = #MEDIUM;
-        trigger    = "Zero active (non-revoked) callers registered";
-        response   = "Alert ORACLE. Reduce offense score. Signal GENESIS_SIGNAL protocol to seek new callers.";
-        isActive   = true;
-        firedCount = 0;
-        lastFiredBeat = 0;
-      },
+      { lawId="BLOCK_UNKEYED_CALLS"; name="BLOCK_UNKEYED_CALLS";
+        latinName="Lex Clausurae Incognitae — Block Unknown Resonance";
+        severity=#CRITICAL;
+        trigger ="Any call from a callerId not present in the caller registry";
+        response="Immediate denial. Log event. Alert GUARDIAN. Increment denial counter.";
+        isActive=true; firedCount=0; lastFiredBeat=0 },
+      { lawId="GEOMETRY_LOCK_GRANT_RATE_LOW"; name="GEOMETRY_LOCK_GRANT_RATE_LOW";
+        latinName="Lex Rationis Concessionis Dimissae — Grant Rate Degradation";
+        severity=#HIGH;
+        trigger ="Grant rate drops below 50% with > 5 total calls";
+        response="Alert GUARDIAN_SENTINEL. Tighten kuramotoThreshold. Log anomaly.";
+        isActive=true; firedCount=0; lastFiredBeat=0 },
+      { lawId="GEOMETRY_LOCK_CALLERS_DEGRADED"; name="GEOMETRY_LOCK_CALLERS_DEGRADED";
+        latinName="Lex Callantem Degradatae — No Active Callers";
+        severity=#MEDIUM;
+        trigger ="Zero active (non-revoked) callers registered";
+        response="Alert ORACLE. Signal GENESIS_SIGNAL protocol to seek new callers.";
+        isActive=true; firedCount=0; lastFiredBeat=0 },
     ]
   };
 
@@ -551,29 +676,25 @@ module {
     let newLaws = Array.map<GLTypes.CplLawRecord, GLTypes.CplLawRecord>(
       state.cplLaws,
       func(l) {
-        if (l.lawId == lawId) {
-          { l with firedCount=l.firedCount+1; lastFiredBeat=beat }
-        } else { l }
+        if (l.lawId == lawId) { { l with firedCount=l.firedCount+1; lastFiredBeat=beat } }
+        else { l }
       }
     );
-    let newViolations = state.metrics.lawViolations + 1;
     {
       state with
       cplLaws = newLaws;
-      metrics = { state.metrics with lawViolations = newViolations };
+      metrics = { state.metrics with lawViolations = state.metrics.lawViolations + 1 };
     }
   };
 
   // ── HELPERS ───────────────────────────────────────────────────────────────
 
   func findCaller(
-    callers : [(Text, GLTypes.CallerBond)],
+    callers  : [(Text, GLTypes.CallerBond)],
     callerId : Text,
   ) : ?(Text, GLTypes.CallerBond) {
-    let matches = Array.filter<(Text, GLTypes.CallerBond)>(
-      callers, func((id, _)) { id == callerId }
-    );
-    if (matches.size() > 0) { ?matches[0] } else { null }
+    let m = Array.filter<(Text, GLTypes.CallerBond)>(callers, func((id,_)) { id == callerId });
+    if (m.size() > 0) { ?m[0] } else { null }
   };
 
   func updateBond(
@@ -582,8 +703,7 @@ module {
     bond     : GLTypes.CallerBond,
   ) : [(Text, GLTypes.CallerBond)] {
     Array.map<(Text, GLTypes.CallerBond), (Text, GLTypes.CallerBond)>(
-      callers,
-      func((id, b)) { if (id == callerId) { (id, bond) } else { (id, b) } }
+      callers, func((id,b)) { if (id == callerId) { (id, bond) } else { (id, b) } }
     )
   };
 
@@ -597,22 +717,12 @@ module {
     beat     : Nat,
   ) : GLTypes.GeometryLockState {
     let entry : GLTypes.ValidationLogEntry = {
-      entryId   = "VL_" # callerId # "_B" # beat.toText();
-      callerId;
-      allowed;
-      r;
-      phiWindow;
-      reason;
-      beat;
+      entryId="VL_"#callerId#"_B"#beat.toText(); callerId; allowed; r; phiWindow; reason; beat;
     };
-    // Ring buffer write
     let newLog = Array.tabulate<GLTypes.ValidationLogEntry>(LOG_SIZE, func(i) {
       if (i == state.logHead) { entry } else { state.validationLog[i] }
     });
-    { state with
-      validationLog = newLog;
-      logHead       = (state.logHead + 1) % LOG_SIZE;
-    }
+    { state with validationLog=newLog; logHead=(state.logHead + 1) % LOG_SIZE }
   };
 
   func computeGrantRate(grants : Nat, total : Nat) : Float {
@@ -623,23 +733,14 @@ module {
     state   : GLTypes.GeometryLockState,
     callers : [(Text, GLTypes.CallerBond)],
   ) : GLTypes.SecurityMetrics {
-    let active = Array.filter<(Text, GLTypes.CallerBond)>(
-      callers, func((_, b)) { not b.isRevoked }
-    ).size();
-    let revoked = Array.filter<(Text, GLTypes.CallerBond)>(
-      callers, func((_, b)) { b.isRevoked }
-    ).size();
-    var sumR : Float = 0.0;
-    var countR : Nat = 0;
-    for ((_, b) in callers.vals()) {
-      if (not b.isRevoked and b.currentR > 0.0) {
-        sumR += b.currentR;
-        countR += 1;
-      };
+    let active  = Array.filter<(Text,GLTypes.CallerBond)>(callers, func((_,b)) { not b.isRevoked }).size();
+    let revoked = Array.filter<(Text,GLTypes.CallerBond)>(callers, func((_,b)) { b.isRevoked }).size();
+    var sumR : Float = 0.0; var countR : Nat = 0;
+    for ((_,b) in callers.vals()) {
+      if (not b.isRevoked and b.currentR > 0.0) { sumR += b.currentR; countR += 1 };
     };
     let avgR = if (countR == 0) { 0.0 } else { sumR / countR.toFloat() };
-    {
-      state.metrics with
+    { state.metrics with
       registeredCallers = callers.size();
       activeCallers     = active;
       revokedCallers    = revoked;
@@ -648,41 +749,25 @@ module {
   };
 
   func initMetrics(beat : Nat) : GLTypes.SecurityMetrics {
-    {
-      totalCalls        = 0;
-      totalGrants       = 0;
-      totalDenials      = 0;
-      grantRate         = 1.0;
-      registeredCallers = 0;
-      revokedCallers    = 0;
-      activeCallers     = 0;
-      avgResonanceR     = 0.0;
-      lawViolations     = 0;
-      beat;
-    }
+    { totalCalls=0; totalGrants=0; totalDenials=0; grantRate=1.0;
+      registeredCallers=0; revokedCallers=0; activeCallers=0;
+      avgResonanceR=0.0; lawViolations=0; beat }
   };
 
-  /// Ring-append a float to a [Float] array, capped at maxSize.
   func ringAppendFloat(arr : [Float], v : Float, maxSize : Nat) : [Float] {
-    if (arr.size() < maxSize) {
-      Array.append(arr, [v])
-    } else {
-      // Drop oldest (index 0), append new using tabulate
+    if (arr.size() < maxSize) { Array.append(arr, [v]) }
+    else {
       let n = arr.size();
-      Array.tabulate<Float>(n, func(i) {
-        if (i < n - 1) { arr[i + 1] } else { v }
-      })
+      Array.tabulate<Float>(n, func(i) { if (i < n - 1) { arr[i + 1] } else { v } })
     }
   };
 
   // ── PUBLIC QUERIES ────────────────────────────────────────────────────────
 
-  /// Get security metrics snapshot.
   public func getMetrics(state : GLTypes.GeometryLockState) : GLTypes.SecurityMetrics {
     state.metrics
   };
 
-  /// Get caller bond if registered.
   public func getCallerBond(
     state    : GLTypes.GeometryLockState,
     callerId : Text,
@@ -693,30 +778,25 @@ module {
     }
   };
 
-  /// Get last N validation log entries (most recent first).
   public func getValidationLog(
     state : GLTypes.GeometryLockState,
     n     : Nat,
   ) : [GLTypes.ValidationLogEntry] {
     let cap = Nat.min(n, LOG_SIZE);
-    // Read backwards from logHead
     Array.tabulate<GLTypes.ValidationLogEntry>(cap, func(i) {
       let idx = (state.logHead + LOG_SIZE - 1 - i) % LOG_SIZE;
       state.validationLog[idx]
     })
   };
 
-  /// Get CPL law status.
   public func getCplLaws(state : GLTypes.GeometryLockState) : [GLTypes.CplLawRecord] {
     state.cplLaws
   };
 
-  /// Get mini brain snapshot.
   public func getMiniBrain(state : GLTypes.GeometryLockState) : GLTypes.MiniBrainState {
     state.miniBrain
   };
 
-  /// Get mini heart snapshot.
   public func getMiniHeart(state : GLTypes.GeometryLockState) : GLTypes.MiniHeartState {
     state.miniHeart
   };

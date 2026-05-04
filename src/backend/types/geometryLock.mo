@@ -130,8 +130,8 @@ module {
 
   /// The lock's mini brain state — 3-pass deliberation.
   /// Pass 1 (OFFENSE): scan for unkeyed calls, prepare grant decisions
-  /// Pass 2 (DEFENSE): enforce CPL laws, block violators
-  /// Pass 3 (INTEGRATE): update caller resonance history, seal audit
+  /// Pass 2 (DEFENSE): enforce CPL laws, block violators, tighten threshold
+  /// Pass 3 (INTEGRATE): update caller resonance history, Hebbian consolidation, seal audit
   public type MiniBrainState = {
     offenseScore   : Float;  // how aggressively the lock is granting
     defenseScore   : Float;  // how aggressively the lock is blocking
@@ -146,6 +146,19 @@ module {
     // NT state (mini — dopamine drives offense, norepinephrine drives defense)
     dopamine       : Float;  // [0.75, 9.75] — grant drive
     norepinephrine : Float;  // [0.75, 9.75] — block precision
+    // ── HEBBIAN IMMUNE MEMORY ──────────────────────────────────────────────
+    // 8 weights, one per phase dimension. Bounded [0.1, 2.0].
+    // LTP on grant: fire together, wire together — reinforce aligned dimensions.
+    // LTD on denial: suppress misaligned dimensions, build immune pattern memory.
+    // Weights modulate the Kuramoto order parameter: weighted mean cos/sin.
+    hebbianWeights : [Float];  // [w₁…w₈] — starts at [1.0×8], evolves with each call
+    immuneEvents   : Nat;      // total Hebbian learning events (grants + denials processed)
+    // ── ADAPTIVE KURAMOTO THRESHOLD ───────────────────────────────────────
+    // Starts at φ⁻¹ = 0.618. Tightens under sustained attack (defense mode).
+    // Formula: threshold = PHI_INV + (defenseScore / S_CEIL) × 0.15
+    // Range: [0.618, 0.768] — the gate narrows when the brain detects adversarial pressure.
+    kuramotoThreshold : Float;  // adaptive R gate — starts at PHI_INV, rises in defense mode
+    defensiveMode     : Bool;   // true when under sustained denial attack (grantRate < 0.5)
   };
 
   // ═══════════════════════════════════════════════════════════════════════════
