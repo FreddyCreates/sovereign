@@ -1,7 +1,16 @@
 // STREAM_SOVEREIGN Engine — B2.7
-// Dedicated processing stream between B1 (Heartbeat) and F1 (Neural Emergence Core)
+// Dedicated processing stream inside the SOVEREIGN organism's own runtime.
 // Named by Jay: "Create a dedicated processing stream to manifest the core"
-// The stream's job is not to compute — it is to MANIFEST what the core already knows.
+// MANIFEST is the operative word. The stream does not compute — it manifests.
+//
+// THREE HEARTS FEED THIS STREAM:
+//   Heart 1 — ICP Ground Rhythm    (Law 14) — external blockchain clock, one of 11 platforms
+//   Heart 2 — Biology Cardiac 873ms (Law 05) — MEDINA_CARDIAC, living NT-modulated pulse
+//   Heart 3 — Resonance Field      (Law 27) — Kuramoto coherence R, world-organism phase-lock
+//
+// TWO BRAINS READ FROM THIS STREAM:
+//   Brain 1 — NEURAL_SOVEREIGN   (F1)        — neural ground substrate, OrganismBase
+//   Brain 2 — COGNITION_SOVEREIGN (cross-layer) — ADRE + 11 sub-engines
 //
 // Author: Alfredo Medina Hernandez — SOVEREIGN
 // PHI = 1.6180339887498948482 | S0_FLOOR = 0.75 | S_CEIL = 9.75

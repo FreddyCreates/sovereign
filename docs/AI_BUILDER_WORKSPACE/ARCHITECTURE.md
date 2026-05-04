@@ -27,11 +27,12 @@ The organism is always already producing. By the time any human opens a browser,
 - **Field property:** All values are present simultaneously, always influencing decisions even when not directly queried. The heartbeat updates the field. Organisms read from the field.
 
 ### B2.7 — STREAM_SOVEREIGN
-- **What it is:** The dedicated, continuously-running processing stream between B1 (Heartbeat) and F1 (Neural Emergence Core). Named by Jay: *"a dedicated processing stream to manifest the core."*
-- **What it does:** Receives heartbeat feed every 873ms, emits to organisms at 437ms (2× beat frequency). Holds a 21-slot ring buffer of stream events and a 13-slot audience signal queue for Ring 7 feedback. Computes signal velocity and manifestation score on every tick.
-- **Why it exists:** Everything before B2.7 was event-driven (beat fires → update → wait). Between beats, organisms were idle. STREAM_SOVEREIGN closes that gap — organisms subscribe to the stream and receive state continuously, not on beat boundaries.
-- **Ring 7 closure:** Distribution performance data (completion rate, shares, watch time) enters via `submitAudienceSignal()`, flows through the stream, and delivers to SOCIAL_SIGNAL organism. Ring 7 is now fully closed.
-- **Stable state:** `streamSignalStrength`, `streamCoherence`, `streamBeat`, 21-slot `streamEventBuf`, 13-slot `audienceSignalQueue`
+- **What it is:** The dedicated, continuously-running processing stream inside the SOVEREIGN organism's own runtime. Named by Jay: *"a dedicated processing stream to manifest the core."*
+- **Not ICP-centric:** ICP is one of 11 deployment platforms (ICP / raw web / blockchain / SOVEREIGN runtime / mobile / AR / VR / ...). The stream belongs to the organism, not to any single substrate.
+- **Three hearts feed it:** Heart 1 — ICP Ground Rhythm (Law 14); Heart 2 — Biology Cardiac / MEDINA_CARDIAC 873ms (Law 05); Heart 3 — Resonance Field / Kuramoto R (Law 27). All three converge into the stream.
+- **Two brains read from it:** Brain 1 — NEURAL_SOVEREIGN (F1, neural ground substrate); Brain 2 — COGNITION_SOVEREIGN (ADRE + 11 sub-engines). Both receive continuously — not only on beat boundaries.
+- **What it does:** Receives heartbeat feed every 873ms, emits to organisms at 437ms (2× beat). Holds a 21-slot event ring buffer and a 13-slot audience signal queue for Ring 7. Computes signal velocity and manifestation score using PHI-weighted math (no external libs — SOVEREIGN's own functions only).
+- **Ring 7 closure:** Distribution performance data enters via `submitAudienceSignal()`, modulates stream signal strength, delivers to SOCIAL_SIGNAL organism. Ring 7 is now fully closed.
 - **Full spec:** See `STREAM_ENGINE.md`
 
 ### B3 — LAW ENGINE

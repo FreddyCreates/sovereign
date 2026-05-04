@@ -518,9 +518,15 @@ actor SovereignWarSim {
   stable var cogLangState : CLTypes.CognitiveLanguageStackState = CLLib.initState();
 
   // ── B2.7 — STREAM_SOVEREIGN ────────────────────────────────────────────
-  // Dedicated, continuously-running processing stream between B1 and F1.
+  // Dedicated processing stream inside the SOVEREIGN organism's own runtime.
   // Named by Jay: "Create a dedicated processing stream to manifest the core."
   // MANIFEST is the operative word. Signal goes out continuously, not in pulses.
+  //
+  // THREE HEARTS feed this stream (Heart 1: ICP ground rhythm Law 14;
+  //   Heart 2: MEDINA_CARDIAC 873ms biology cardiac Law 05;
+  //   Heart 3: Resonance field Kuramoto R Law 27).
+  // ICP is one of 11 deployment platforms — not the sole source.
+  // TWO BRAINS read from this stream (NEURAL_SOVEREIGN F1 + COGNITION_SOVEREIGN).
   //
   // Stream event ring buffer — 21 slots (13 + 8 — two consecutive Fibonacci numbers)
   let STREAM_BUF_CAP : Nat = 21;
@@ -3409,9 +3415,10 @@ actor SovereignWarSim {
     // ── STREAM_SOVEREIGN — B2.7 — dedicated processing stream ─────────────
     // Named by Jay: "Create a dedicated processing stream to manifest the core."
     // Ticks on every heartbeat. Signal flows continuously between beats.
+    // All three hearts (ICP ground / Biology cardiac / Resonance field) have fed
+    // into this beat. Both brains (NEURAL_SOVEREIGN + COGNITION_SOVEREIGN) will
+    // read from the stream between now and the next beat via the frontend bridge.
     // Absorbs any pending Ring 7 audience data into the stream signal strength.
-    // Organisms read from the stream — not from the beat boundary directly.
-    // Law 18 (Always-On): stream never idles. Law 40 (Closed Loop): loop closes here.
     tickStreamSovereign(beat, globalCoherence, doctrineScoreEarly / 100.0);
 
     // Disconnected engine #2: quality scores computed but never re-injected.
