@@ -15,7 +15,7 @@
 | 4 | Neurotransmitter Cycle Ring | ✅ CLOSED | `OrganismBase.updateNeurotransmitters()` | Called after every fire cycle |
 | 5 | Hebbian Learning Ring | ✅ CLOSED | `OrganismBase.applyHebbianDelta()` | Weights accumulate in synapticMemory |
 | 6 | Film School Ring | ✅ CLOSED | `FilmSchoolLoop` singleton | 45s autonomous loop from module load |
-| 7 | Distribution Feedback Ring | 🟡 PARTIAL | Adjacent TikTok engine | HTTP outcalls worker not yet closed |
+| 7 | Distribution Feedback Ring | ✅ CLOSED | `STREAM_SOVEREIGN` B2.7 + `submitAudienceSignal()` | Audience data enters stream, modulates signal strength, delivers to SOCIAL_SIGNAL organism |
 | 8 | VELA/Readiness/Pipeline Ring | ✅ CLOSED | `beatGateLayer.ts` | Bootstrap floor 0.45, gate enforced |
 | 9 | Actor Relationship Ring | ✅ CLOSED | `recordFilmActorMemory()` | Trust/tension map updates on seal |
 | 10 | Refractory/Recovery Ring | ✅ CLOSED | `OrganismBase.enterRefractory()` | Recovery floor rises after each cycle |
@@ -59,10 +59,11 @@
 - **Edge case:** Loop fires from module load — does NOT wait for React mount.
 - **If broken:** Check `FilmSchoolLoop.ts` — verify `static _instance` pattern and 45s `setInterval`.
 
-### Ring 7 — Distribution Feedback Ring ⚠️ PARTIAL
-- **Status:** TikTok distribution engine exists. HTTP outcalls worker for performance data return is not fully closed.
-- **What remains:** Performance data (completion rate, shares, watch time) must write back to B2 `trendSignals`. SOCIAL_SIGNAL organism must read updated signals.
-- **To close:** Implement `submitAudienceSignal()` call after every distribution event.
+### Ring 7 — Distribution Feedback Ring ✅ CLOSED
+- **Status:** CLOSED via STREAM_SOVEREIGN (B2.7). The stream is the continuous path for performance data return.
+- **Mechanism:** Distribution events call `submitAudienceSignal(completionRate, shareRate, watchTimeRatio)` on the backend. Data enters the stream's 13-slot Ring 7 buffer. On next `tickStreamSovereign()` (every 873ms heartbeat), the audience delta modulates `streamSignalStrength`. The frontend `STREAM_SOVEREIGN_BRIDGE` delivers updated signal to SOCIAL_SIGNAL organism at 437ms intervals.
+- **Verify:** Call `getStreamSovereignState()` — `audienceSignalCount` should increment after distribution events. `signalStrength` should respond to audience data within one heartbeat.
+- **If broken:** Check `submitAudienceSignal()` in main.mo — verify `pendingAudienceDelta` accumulates and `tickStreamSovereign()` is called on next beat.
 
 ### Ring 8 — VELA/Readiness/Pipeline Ring
 - **Verify:** `getReadinessGate()` should return `blocked: false` on a live canister with VELA > 1.
@@ -121,7 +122,7 @@ Hz Sphere (×43)           ✅
 Neurotransmitter Cycle    ✅ 
 Hebbian Learning          ✅ 
 Film School (45s)         ✅ 
-Distribution Feedback     🟡  ← partial: performance data return
+Distribution Feedback     ✅  ← closed via STREAM_SOVEREIGN B2.7
 VELA/Readiness/Pipeline   ✅ 
 Actor Relationship        ✅ 
 Refractory/Recovery       ✅ 
@@ -153,7 +154,7 @@ This is Jasmine's Law in operation. No ring is unwrapped. No edge condition is u
 | 4 | ✅ WRAPPED | NT runaway (single chemical dominates indefinitely) | FEAR_BLENDING_RESOLVER + homeostasis |
 | 5 | ✅ WRAPPED | Weight explosion (Hebbian unbounded growth) | Weight ceiling at 2.0, AEGIS monitors |
 | 6 | ✅ WRAPPED | Film School loop dies (setInterval stops) | MONITOR_WRAPPER detects missed cycles |
-| 7 | 🟡 PARTIAL | Distribution signal lost (HTTP outcall fails silently) | ROLLING_MIN_ENGINE detects signal gap |
+| 7 | ✅ WRAPPED | Distribution signal — STREAM_SOVEREIGN absorbs and re-routes | ROLLING_MIN_ENGINE monitors stream tick gap |
 | 8 | ✅ WRAPPED | Gate permanently blocked (readiness never reaches floor) | Bootstrap floor 0.45 prevents lockout |
 | 9 | ✅ WRAPPED | Relationship map corruption (trust/tension desync) | Periodic integrity check on seal |
 | 10 | ✅ WRAPPED | Infinite refractory (organism never exits recovery) | Timeout at 5× REFRACTORY_DURATION_MS |
@@ -234,7 +235,7 @@ RING  | CLOSURE   | AEGIS | JASMINE | THIRD BRAIN | PRODUCTION GATE STATUS
 4     | ✅ CLOSED | ✅    | ✅      | ✅          | All 8 NTs cycling
 5     | ✅ CLOSED | ✅    | ✅      | ✅          | Hebbian weights accumulating
 6     | ✅ CLOSED | ✅    | ✅      | ✅          | 45s autonomous loop active
-7     | 🟡 PARTIAL| 🟡    | 🟡      | 🟡          | Distribution data return gap
+7     | ✅ CLOSED | ✅    | ✅      | ✅          | Ring 7 closed — STREAM_SOVEREIGN B2.7 |
 8     | ✅ CLOSED | ✅    | ✅      | ✅          | Gate passing, bootstrap 0.45
 9     | ✅ CLOSED | ✅    | ✅      | ✅          | Relationship maps updating
 10    | ✅ CLOSED | ✅    | ✅      | ✅          | Refractory timing correct
@@ -244,7 +245,7 @@ RING  | CLOSURE   | AEGIS | JASMINE | THIRD BRAIN | PRODUCTION GATE STATUS
 14    | ✅ CLOSED | ✅    | ✅      | ✅          | PHI corrections applied
 15    | ✅ CLOSED | ✅    | ✅      | ✅          | Legacy index loading
 
-SUMMARY: 14/15 fully closed. 1/15 partial (Ring 7 — Distribution Feedback)
+SUMMARY: 15/15 fully closed. STREAM_SOVEREIGN (B2.7) closed Ring 7 — Distribution Feedback.
 ```
 
 ### Ring 7 — What Remains to Close It

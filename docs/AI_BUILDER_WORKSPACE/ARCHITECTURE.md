@@ -26,6 +26,15 @@ The organism is always already producing. By the time any human opens a browser,
 - **What it holds:** VELA position, OMNIS consensus weight, doctrine score, all 9 animal engine states, all 16 actor states, organism weight history (Hebbian deltas), trend signals, production queue, artifact log.
 - **Field property:** All values are present simultaneously, always influencing decisions even when not directly queried. The heartbeat updates the field. Organisms read from the field.
 
+### B2.7 — STREAM_SOVEREIGN
+- **What it is:** The dedicated, continuously-running processing stream inside the SOVEREIGN organism's own runtime. Named by Jay: *"a dedicated processing stream to manifest the core."*
+- **Not ICP-centric:** ICP is one of 11 deployment platforms (ICP / raw web / blockchain / SOVEREIGN runtime / mobile / AR / VR / ...). The stream belongs to the organism, not to any single substrate.
+- **Three hearts feed it:** Heart 1 — ICP Ground Rhythm (Law 14); Heart 2 — Biology Cardiac / MEDINA_CARDIAC 873ms (Law 05); Heart 3 — Resonance Field / Kuramoto R (Law 27). All three converge into the stream.
+- **Two brains read from it:** Brain 1 — NEURAL_SOVEREIGN (F1, neural ground substrate); Brain 2 — COGNITION_SOVEREIGN (ADRE + 11 sub-engines). Both receive continuously — not only on beat boundaries.
+- **What it does:** Receives heartbeat feed every 873ms, emits to organisms at 437ms (2× beat). Holds a 21-slot event ring buffer and a 13-slot audience signal queue for Ring 7. Computes signal velocity and manifestation score using PHI-weighted math (no external libs — SOVEREIGN's own functions only).
+- **Ring 7 closure:** Distribution performance data enters via `submitAudienceSignal()`, modulates stream signal strength, delivers to SOCIAL_SIGNAL organism. Ring 7 is now fully closed.
+- **Full spec:** See `STREAM_ENGINE.md`
+
 ### B3 — LAW ENGINE
 - **What it is:** Doctrine scoring function. Every decision passes through it.
 - **Output:** Float 0–100 representing doctrine alignment.
