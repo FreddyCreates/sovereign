@@ -132,9 +132,9 @@ module {
       Float.max(0.0, 1.0 - diff * 2.0)
     };
     let langBonus : Float = if (
-      Text.contains(languageSignal, #text "Nova Protocol") or
-      Text.contains(languageSignal, #text "SOVEREIGN") or
-      Text.contains(languageSignal, #text "doctrine")
+      languageSignal.contains(#text "Nova Protocol") or
+      languageSignal.contains(#text "SOVEREIGN") or
+      languageSignal.contains(#text "doctrine")
     ) { 0.15 } else { 0.0 };
 
     let totalWeight = PHI + 1.0 + 1.0;

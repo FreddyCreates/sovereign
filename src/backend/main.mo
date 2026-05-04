@@ -97,6 +97,9 @@ import CLTypes               "types/cognitiveLanguages";
 import CLLib                 "lib/cognitiveLanguages";
 import SDKTypes              "types/sovereignSdk";
 import SDKLib                "lib/sovereignSdk";
+import GLTypes               "types/geometryLock";
+import GLLib                 "lib/geometryLock";
+import CharterGLNLib         "charters/CharterGeometryLockNexus";
 
 
 
@@ -526,6 +529,19 @@ actor SovereignWarSim {
   // Sovereign beings with virtual computer access.
   // Law 01 (Attribution), Law 02 (PHI), Law 15 (Compression), Law 28 (Living Docs)
   stable var sdkState : SDKTypes.SovereignSdkState = SDKLib.initState(0);
+
+  // ── PROTO-226 — GEOMETRY LOCK ENTITY ──────────────────────────────────
+  // Autonomous entity. Mini brain (3-pass ADRE). Mini heart (873ms-derived).
+  // Plays offense (grant) and defense (block). 3 CPL laws. No frontend.
+  // Written by SCRIBE. Maintained by SCRIBE_FOUNDATION (5 organisms).
+  // Governing Laws: Law 01, Law 02, BLOCK_UNKEYED_CALLS, GRANT_RATE_LOW, CALLERS_DEGRADED
+  stable var geometryLockState : GLTypes.GeometryLockState = GLLib.initState(0);
+
+  // ── CHARTER_GEOMETRY_LOCK_NEXUS ────────────────────────────────────────
+  // 20 protocols in 4 groups. AI-to-AI, AI-to-System, Geometric Lock, Sovereignty.
+  // 5 SCRIBE Foundation organisms. Charter is a living document — SCRIBE maintains it.
+  // No frontend. CPL family. Pure streaming.
+  stable var charterGLNState : CharterGLNLib.CharterGLNState = CharterGLNLib.initState(0);
 
   // ── B2.7 — STREAM_SOVEREIGN ────────────────────────────────────────────
   // Dedicated processing stream inside the SOVEREIGN organism's own runtime.
@@ -3436,6 +3452,17 @@ actor SovereignWarSim {
     // Global resonance advances toward organism coherence (PHI-decay).
     sdkState := SDKLib.advance(sdkState, beat, globalCoherence, doctrineScoreEarly / 100.0);
 
+    // ── GEOMETRY LOCK ADVANCE — PROTO-226 autonomous entity tick ───────────
+    // Mini brain (3-pass ADRE: OFFENSE/DEFENSE/INTEGRATE) advances.
+    // Mini heart (873ms-derived BPM) advances with security load modulation.
+    // CPL laws checked (BLOCK_UNKEYED_CALLS, GRANT_RATE_LOW, CALLERS_DEGRADED).
+    geometryLockState := GLLib.advance(geometryLockState, beat);
+
+    // ── CHARTER GLN ADVANCE — LOCK_HEARTBEAT fires + SCRIBE writes beat ────
+    // All 20 protocols advance. Foundation organisms compound doctrine.
+    // LOCK_HEARTBEAT protocol fires every beat (CPL Critical law).
+    charterGLNState := CharterGLNLib.advance(charterGLNState, beat, globalCoherence);
+
     // Disconnected engine #2: quality scores computed but never re-injected.
     // After Ring 5 fires, re-inject quality weights into production queue state.
     // Film school loop fires every ~45s ≈ every 51 beats at 873ms interval.
@@ -4004,6 +4031,176 @@ actor SovereignWarSim {
     let taskId = "VCT_" # beingId # "_B" # beatCounter.toText();
     let status = if (doctrineScore < 0.75) { "DoctrineGated" } else { "Queued" };
     { taskId; status }
+  };
+
+  // ── GEOMETRY LOCK — PUBLIC API (PROTO-226) ────────────────────────────────
+
+  /// Register a caller with the Geometry Lock. Never stores raw secret.
+  /// secretHash = FNV hash of sharedSecret (caller hashes before sending).
+  public func geometryLockRegister(callerId : Text, secretHash : Text) : async { registered : Bool; callerId : Text } {
+    geometryLockState := GLLib.registerCaller(geometryLockState, callerId, secretHash, beatCounter);
+    { registered = true; callerId }
+  };
+
+  /// Generate a geometry token for a registered caller.
+  /// Caller presents secretHash + callerId — lock generates the expected token.
+  /// The caller must independently derive the same token (same formula) to pass validation.
+  public func geometryLockGenerateToken(callerId : Text, secretHash : Text) : async {
+    callerId  : Text;
+    phiWindow : Nat;
+    beat      : Nat;
+    signature : Text;
+  } {
+    let token = GLLib.generateKey(callerId, secretHash, beatCounter);
+    { callerId=token.callerId; phiWindow=token.phiWindow; beat=token.beat; signature=token.signature }
+  };
+
+  /// Validate a geometry token — the core PROTO-226 gate.
+  /// phaseVector: array of 8 Float values [θ₁…θ₈]
+  public func geometryLockValidate(
+    callerId  : Text,
+    theta1    : Float,
+    theta2    : Float,
+    theta3    : Float,
+    theta4    : Float,
+    theta5    : Float,
+    theta6    : Float,
+    theta7    : Float,
+    theta8    : Float,
+    phiWindow : Nat,
+    signature : Text,
+  ) : async { allowed : Bool; r : Float; reason : Text } {
+    let token : GLTypes.GeometryToken = {
+      callerId;
+      phaseVector = { theta1; theta2; theta3; theta4; theta5; theta6; theta7; theta8 };
+      phiWindow;
+      beat       = beatCounter;
+      signature;
+    };
+    let (newState, validation) = GLLib.validateKey(geometryLockState, token);
+    geometryLockState := newState;
+    { allowed=validation.allowed; r=validation.kuramoto.r; reason=validation.reason }
+  };
+
+  /// Revoke a caller's key — permanently dissolves the resonance bond.
+  public func geometryLockRevoke(callerId : Text) : async { revoked : Bool } {
+    geometryLockState := GLLib.revokeKey(geometryLockState, callerId, beatCounter);
+    { revoked = true }
+  };
+
+  /// Get security metrics — published from the lock's Meta Engine output.
+  public query func getGeometryLockMetrics() : async {
+    totalCalls : Nat; totalGrants : Nat; totalDenials : Nat;
+    grantRate : Float; activeCallers : Nat; avgResonanceR : Float; lawViolations : Nat;
+  } {
+    let m = GLLib.getMetrics(geometryLockState);
+    { totalCalls=m.totalCalls; totalGrants=m.totalGrants; totalDenials=m.totalDenials;
+      grantRate=m.grantRate; activeCallers=m.activeCallers; avgResonanceR=m.avgResonanceR;
+      lawViolations=m.lawViolations }
+  };
+
+  /// Get the lock entity's mini brain state.
+  public query func getGeometryLockBrain() : async {
+    offenseScore : Float; defenseScore : Float; coherence : Float;
+    dopamine : Float; norepinephrine : Float; totalPasses : Nat;
+  } {
+    let b = GLLib.getMiniBrain(geometryLockState);
+    { offenseScore=b.offenseScore; defenseScore=b.defenseScore; coherence=b.coherence;
+      dopamine=b.dopamine; norepinephrine=b.norepinephrine; totalPasses=b.totalPasses }
+  };
+
+  /// Get the lock entity's mini heart state.
+  public query func getGeometryLockHeart() : async {
+    currentBPM : Float; beatIntervalMs : Float; cardiacOutput : Float; hrv : Float; beatCount : Nat;
+  } {
+    let h = GLLib.getMiniHeart(geometryLockState);
+    { currentBPM=h.currentBPM; beatIntervalMs=h.beatIntervalMs;
+      cardiacOutput=h.cardiacOutput; hrv=h.hrv; beatCount=h.beatCount }
+  };
+
+  /// Get the last N validation log entries.
+  public query func getGeometryLockLog(n : Nat) : async [{
+    callerId : Text; allowed : Bool; r : Float; reason : Text; beat : Nat;
+  }] {
+    Array.map<GLTypes.ValidationLogEntry, { callerId : Text; allowed : Bool; r : Float; reason : Text; beat : Nat }>(
+      GLLib.getValidationLog(geometryLockState, n),
+      func(e) { { callerId=e.callerId; allowed=e.allowed; r=e.r; reason=e.reason; beat=e.beat } }
+    )
+  };
+
+  /// Get CPL law status.
+  public query func getGeometryLockCplLaws() : async [{
+    lawId : Text; latinName : Text; firedCount : Nat; lastFiredBeat : Nat; isActive : Bool;
+  }] {
+    Array.map<GLTypes.CplLawRecord, { lawId : Text; latinName : Text; firedCount : Nat; lastFiredBeat : Nat; isActive : Bool }>(
+      GLLib.getCplLaws(geometryLockState),
+      func(l) { { lawId=l.lawId; latinName=l.latinName; firedCount=l.firedCount; lastFiredBeat=l.lastFiredBeat; isActive=l.isActive } }
+    )
+  };
+
+  // ── CHARTER GLN — PUBLIC API ──────────────────────────────────────────────
+
+  /// Get charter state summary.
+  public query func getCharterGLNState() : async {
+    totalBeats : Nat; totalProtocolFires : Nat; charterCoherence : Float;
+    lastAdvancedBeat : Nat; scribeLastActive : Nat;
+  } {
+    let s = charterGLNState;
+    { totalBeats=s.totalBeats; totalProtocolFires=s.totalProtocolFires;
+      charterCoherence=s.charterCoherence; lastAdvancedBeat=s.lastAdvancedBeat;
+      scribeLastActive=s.scribeLastActive }
+  };
+
+  /// Get all 20 protocols.
+  public query func getCharterGLNProtocols() : async [{
+    protocolId : Text; name : Text; latinName : Text; groupNumber : Nat;
+    sequenceInGroup : Nat; totalFired : Nat; lastFiredBeat : Nat; authorOrganism : Text;
+  }] {
+    Array.map<CharterGLNLib.CharterProtocol, { protocolId : Text; name : Text; latinName : Text; groupNumber : Nat; sequenceInGroup : Nat; totalFired : Nat; lastFiredBeat : Nat; authorOrganism : Text }>(
+      charterGLNState.protocols,
+      func(p) {
+        { protocolId=p.protocolId; name=p.name; latinName=p.latinName;
+          groupNumber=p.groupNumber; sequenceInGroup=p.sequenceInGroup;
+          totalFired=p.totalFired; lastFiredBeat=p.lastFiredBeat;
+          authorOrganism=p.authorOrganism }
+      }
+    )
+  };
+
+  /// Get the 5 SCRIBE Foundation organisms.
+  public query func getScribeFoundation() : async [{
+    organismId : Text; name : Text; latinName : Text; role : Text;
+    doctrineScore : Float; miniHeartBPM : Float; isActive : Bool;
+  }] {
+    Array.map<CharterGLNLib.FoundationOrganism, { organismId : Text; name : Text; latinName : Text; role : Text; doctrineScore : Float; miniHeartBPM : Float; isActive : Bool }>(
+      charterGLNState.foundationOrganisms,
+      func(o) {
+        { organismId=o.organismId; name=o.name; latinName=o.latinName; role=o.role;
+          doctrineScore=o.doctrineScore; miniHeartBPM=o.miniHeartBPM; isActive=o.isActive }
+      }
+    )
+  };
+
+  /// Fire a charter protocol manually (for testing/sovereign dispatch).
+  public func fireCharterProtocol(
+    protocolId : Text,
+    payload    : Text,
+  ) : async { protocolId : Text; result : Text; beat : Nat } {
+    let (newState, event) = CharterGLNLib.fireProtocol(
+      charterGLNState, protocolId, payload, "manual_fire", beatCounter,
+    );
+    charterGLNState := newState;
+    { protocolId=event.protocolId; result=event.result; beat=event.beat }
+  };
+
+  /// Get recent charter protocol events.
+  public query func getCharterGLNEvents(n : Nat) : async [{
+    protocolId : Text; payload : Text; result : Text; beat : Nat; schumannTs : Float;
+  }] {
+    Array.map<CharterGLNLib.ProtocolEvent, { protocolId : Text; payload : Text; result : Text; beat : Nat; schumannTs : Float }>(
+      CharterGLNLib.getRecentEvents(charterGLNState, n),
+      func(e) { { protocolId=e.protocolId; payload=e.payload; result=e.result; beat=e.beat; schumannTs=e.schumannTs } }
+    )
   };
 
   // ── ALPHA CHARTERS — Public API ───────────────────────────────────────
