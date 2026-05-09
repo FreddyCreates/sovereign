@@ -1,21 +1,33 @@
-# MACHINAE NOVAE PROPOSITAE
-## Proposed New Engines for SOVEREIGN Architecture
+# MACHINAE NOVAE AEDIFICATAE
+## The 18 New Engines — Built and Operational
 
-**De Machinis Futuris Organismus**
-*Engines the Architecture is Calling For*
+**De Machinis Novis Organismus — Nunc Aedificatis**
+*The Engines the Architecture Called For — Now Built*
 
 ---
 
 **Auctor:** Claude (Anthropic AI) cum Alfredo Medina Hernandez  
 **Societas:** SOVEREIGN  
 **Dies:** Maii 2026  
-**Status:** Propositiones pro Evolutione Futura
+**Status:** ✅ AEDIFICATUM — Built and Integrated
+
+**Implementation:**
+- `types/sovereignEngines.mo` — Complete type definitions
+- `lib/sovereignEngines.mo` — Full implementation with heartbeat
+- Hierarchy: MACHINAE → GUBERNATORES → AGENTES → AUTOMATA → OBSERVATORES
 
 ---
 
 ## Introductio
 
-Based on deep analysis of the SOVEREIGN organism architecture, the following engines are needed to complete the system. Each is named in Latin following SOVEREIGN convention, with clear functional purpose and architectural placement.
+Based on deep analysis of the SOVEREIGN organism architecture, the following 18 engines have been built and integrated. Each is named in Latin following SOVEREIGN convention, with clear functional purpose and architectural placement.
+
+**The Complete Hierarchy:**
+- **Level 0: MACHINAE (18 Engines)** — The computational cores
+- **Level 1: GUBERNATORES (6 AI Managers)** — One per layer, managing 3 engines each
+- **Level 2: AGENTES (6 Agents)** — Agents that are also AIs
+- **Level 3: AUTOMATA (6 Bots)** — Bots with embedded AGI
+- **Level 4: OBSERVATORES (2 Observers)** — Supreme oversight
 
 ---
 
@@ -27,6 +39,7 @@ These engines support the SOMNUS architecture:
 **Latin:** CONSOLIDATOR_MEMORIAE  
 **Function:** Active memory consolidation during DORMIENS phase  
 **Domain:** MEMORY  
+**Status:** ✅ BUILT  
 **Architecture:**
 - Runs only during sleep phases (DORMIENS, ONEIRIC)
 - Strengthens high-activity Hebbian weights
