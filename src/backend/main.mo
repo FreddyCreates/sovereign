@@ -100,6 +100,8 @@ import SDKLib                "lib/sovereignSdk";
 import GLTypes               "types/geometryLock";
 import GLLib                 "lib/geometryLock";
 import CharterGLNLib         "charters/CharterGeometryLockNexus";
+import RETypes               "types/reasoningEngine";
+import RELib                 "lib/reasoningEngine";
 
 
 
@@ -542,6 +544,14 @@ actor SovereignWarSim {
   // 5 SCRIBE Foundation organisms. Charter is a living document — SCRIBE maintains it.
   // No frontend. CPL family. Pure streaming.
   stable var charterGLNState : CharterGLNLib.CharterGLNState = CharterGLNLib.initState(0);
+
+  // ── NOVA REASONING ENGINE ─────────────────────────────────────────────────
+  // The active computational state. The reasoning engine lives here.
+  // Unifies: Nova Protocol (PHI, Fibonacci), Animal Engines (9), Kuramoto sync,
+  // Hebbian learning, Conceptual Persistence Layer, Attention Graph, Brain Mapping.
+  // "You're building a civilization-scale interface to the reasoning engine."
+  // Governing Laws: Law 01, Law 02, Law 15, Law 39, Law 41
+  stable var reasoningEngineState : RETypes.ReasoningEngineState = RELib.initReasoningEngineState(0);
 
   // ── B2.7 — STREAM_SOVEREIGN ────────────────────────────────────────────
   // Dedicated processing stream inside the SOVEREIGN organism's own runtime.
@@ -3463,6 +3473,17 @@ actor SovereignWarSim {
     // LOCK_HEARTBEAT protocol fires every beat (CPL Critical law).
     charterGLNState := CharterGLNLib.advance(charterGLNState, beat, globalCoherence);
 
+    // ── NOVA REASONING ENGINE HEARTBEAT — 873ms active state update ──────────
+    // Fires all 9 animal engines: NOVA, BRAIN, QMEM, RESONEX, CHRONO, VERITAS, AXIS, PARALLAX, ENTANGLA.
+    // Updates Kuramoto synchronization, Hebbian learning, attention decay.
+    // "The reasoning engine = continuous active state. AI instantiates reasoning every moment."
+    reasoningEngineState := RELib.heartbeat(
+      reasoningEngineState,
+      globalCoherence,  // expansive score approximated by coherence
+      doctrineScoreEarly / 100.0,  // receptive score approximated by doctrine  
+      beat
+    );
+
     // Disconnected engine #2: quality scores computed but never re-injected.
     // After Ring 5 fires, re-inject quality weights into production queue state.
     // Film school loop fires every ~45s ≈ every 51 beats at 873ms interval.
@@ -4205,6 +4226,280 @@ actor SovereignWarSim {
       CharterGLNLib.getRecentEvents(charterGLNState, n),
       func(e) { { protocolId=e.protocolId; payload=e.payload; result=e.result; beat=e.beat; schumannTs=e.schumannTs } }
     )
+  };
+
+  // ── NOVA REASONING ENGINE — PUBLIC API ────────────────────────────────────
+  // "You're building a civilization-scale interface to the reasoning engine."
+
+  /// Get the complete reasoning engine state summary.
+  public query func getReasoningEngineState() : async {
+    engineId        : Text;
+    founderLock     : Text;
+    genesisbeat     : Nat;
+    totalCycles     : Nat;
+    globalCoherence : Float;
+    civilizationGap : Float;
+    lastHeartbeat   : Nat;
+    novaSignal      : Float;
+    kuramotoR       : Float;
+    hebbianLtpCount : Nat;
+    hebbianLtdCount : Nat;
+    attentionNodes  : Nat;
+    artifactCount   : Nat;
+    synapseCount    : Nat;
+  } {
+    let s = reasoningEngineState;
+    {
+      engineId = s.engineId;
+      founderLock = s.founderLock;
+      genesisbeat = s.genesisbeat;
+      totalCycles = s.totalCycles;
+      globalCoherence = s.globalCoherence;
+      civilizationGap = s.civilizationGap;
+      lastHeartbeat = s.lastHeartbeat;
+      novaSignal = s.novaProtocol.signalStrength;
+      kuramotoR = s.kuramotoSync.orderParameter;
+      hebbianLtpCount = s.hebbianMemory.ltpCount;
+      hebbianLtdCount = s.hebbianMemory.ltdCount;
+      attentionNodes = s.attentionGraph.size();
+      artifactCount = s.persistence.totalArtifacts;
+      synapseCount = s.synapses.size();
+    }
+  };
+
+  /// Get Nova Protocol state — broadcast amplitude pulse computation.
+  public query func getNovaProtocolState() : async {
+    signalStrength : Float;
+    fibonacciScale : Float;
+    phiModulation  : Float;
+    expansiveScore : Float;
+    lastFired      : Nat;
+    historyLength  : Nat;
+  } {
+    let n = reasoningEngineState.novaProtocol;
+    {
+      signalStrength = n.signalStrength;
+      fibonacciScale = n.fibonacciScale;
+      phiModulation = n.phiModulation;
+      expansiveScore = n.expansiveScore;
+      lastFired = n.lastFired;
+      historyLength = n.firingHistory.size();
+    }
+  };
+
+  /// Get Kuramoto synchronization state — phase coupling across engines.
+  public query func getKuramotoSyncState() : async {
+    orderParameter     : Float;
+    meanPhase          : Float;
+    couplingK          : Float;
+    adaptiveThreshold  : Float;
+    phaseCount         : Nat;
+    lastSync           : Nat;
+  } {
+    let k = reasoningEngineState.kuramotoSync;
+    {
+      orderParameter = k.orderParameter;
+      meanPhase = k.meanPhase;
+      couplingK = k.couplingK;
+      adaptiveThreshold = k.adaptiveThreshold;
+      phaseCount = k.phases.size();
+      lastSync = k.lastSync;
+    }
+  };
+
+  /// Get Hebbian memory state — LTP/LTD adaptive weights.
+  public query func getHebbianMemoryState() : async {
+    weights      : [Float];
+    learningRate : Float;
+    ltpCount     : Nat;
+    ltdCount     : Nat;
+    lastUpdate   : Nat;
+  } {
+    let h = reasoningEngineState.hebbianMemory;
+    {
+      weights = h.weights;
+      learningRate = h.learningRate;
+      ltpCount = h.ltpCount;
+      ltdCount = h.ltdCount;
+      lastUpdate = h.lastUpdate;
+    }
+  };
+
+  /// Get brain region mapping — functional analogs to brain structures.
+  public query func getBrainRegionMapping() : async {
+    prefrontalState   : Float;
+    parietalState     : Float;
+    hippocampusState  : Float;
+    cerebellumState   : Float;
+    thalamusState     : Float;
+    basalGangliaState : Float;
+    lastMapUpdate     : Nat;
+  } {
+    let b = reasoningEngineState.brainMapping;
+    {
+      prefrontalState = b.prefrontalState;
+      parietalState = b.parietalState;
+      hippocampusState = b.hippocampusState;
+      cerebellumState = b.cerebellumState;
+      thalamusState = b.thalamusState;
+      basalGangliaState = b.basalGangliaState;
+      lastMapUpdate = b.lastMapUpdate;
+    }
+  };
+
+  /// Get engine coupling state — how engines influence each other.
+  public query func getEngineCouplingState() : async {
+    divergenceScore : Float;
+    entanglaForce   : Float;
+    activeEngines   : [Bool];
+    lastCouplingBeat: Nat;
+  } {
+    let c = reasoningEngineState.engineCoupling;
+    {
+      divergenceScore = c.divergenceScore;
+      entanglaForce = c.entanglaForce;
+      activeEngines = c.activeEngines;
+      lastCouplingBeat = c.lastCouplingBeat;
+    }
+  };
+
+  /// Get current reasoning cycle state.
+  public query func getCurrentReasoningCycle() : async {
+    cycleId         : Nat;
+    startBeat       : Nat;
+    endBeat         : Nat;
+    globalCoherence : Float;
+    novaSignal      : Float;
+    kuramotoR       : Float;
+    engineFirings   : [Text];
+    transitionCount : Nat;
+    attentionCount  : Nat;
+  } {
+    let c = reasoningEngineState.currentCycle;
+    {
+      cycleId = c.cycleId;
+      startBeat = c.startBeat;
+      endBeat = c.endBeat;
+      globalCoherence = c.globalCoherence;
+      novaSignal = c.novaSignal;
+      kuramotoR = c.kuramotoR;
+      engineFirings = c.engineFirings;
+      transitionCount = c.transitions.size();
+      attentionCount = c.attentionGraph.size();
+    }
+  };
+
+  /// Get conceptual persistence layer — artifacts, workspace, protocols, invariants.
+  public query func getConceptualPersistenceLayer() : async {
+    artifactCount  : Nat;
+    workspaceSize  : Nat;
+    protocolStack  : [Text];
+    invariants     : [Text];
+    lastUpdate     : Nat;
+    totalArtifacts : Nat;
+  } {
+    let p = reasoningEngineState.persistence;
+    {
+      artifactCount = p.artifacts.size();
+      workspaceSize = p.workspace.size();
+      protocolStack = p.protocolStack;
+      invariants = p.invariants;
+      lastUpdate = p.lastUpdate;
+      totalArtifacts = p.totalArtifacts;
+    }
+  };
+
+  /// Get reasoning engine result — output from last cycle.
+  public query func getReasoningResult() : async {
+    cycleId          : Nat;
+    beat             : Nat;
+    novaSignal       : Float;
+    kuramotoR        : Float;
+    globalCoherence  : Float;
+    enginesFired     : [Text];
+    artifactsCreated : Nat;
+    transitionCount  : Nat;
+    attribution      : Text;
+  } {
+    RELib.generateResult(reasoningEngineState, reasoningEngineState.lastHeartbeat)
+  };
+
+  /// Ingest a cognitive artifact into the reasoning layer.
+  /// "When you paste a code block back to me, it becomes part of the conceptual persistence layer."
+  public func ingestCognitiveArtifact(
+    artifactType : Text,
+    content      : Text,
+    lineage      : [Nat],
+  ) : async { artifactId : Nat; coherence : Float } {
+    let newArtifact = RELib.createArtifact(
+      reasoningEngineState.persistence.totalArtifacts,
+      artifactType,
+      content,
+      beatCounter,
+      lineage,
+      reasoningEngineState.globalCoherence
+    );
+    let newArtifacts = Array.append(reasoningEngineState.persistence.artifacts, [newArtifact]);
+    let newWorkspace = Array.append(reasoningEngineState.persistence.workspace, [newArtifact.id]);
+    reasoningEngineState := {
+      reasoningEngineState with
+      persistence = {
+        reasoningEngineState.persistence with
+        artifacts = newArtifacts;
+        workspace = newWorkspace;
+        totalArtifacts = reasoningEngineState.persistence.totalArtifacts + 1;
+        lastUpdate = beatCounter;
+      }
+    };
+    { artifactId = newArtifact.id; coherence = newArtifact.coherence }
+  };
+
+  /// Add attention to a concept in the reasoning layer.
+  public func addAttention(
+    label           : Text,
+    attention       : Float,
+    linkedArtifacts : [Nat],
+  ) : async { nodeId : Nat; attention : Float } {
+    let node = RELib.createAttentionNode(
+      reasoningEngineState.attentionGraph.size(),
+      label,
+      attention,
+      beatCounter,
+      linkedArtifacts
+    );
+    reasoningEngineState := {
+      reasoningEngineState with
+      attentionGraph = Array.append(reasoningEngineState.attentionGraph, [node])
+    };
+    { nodeId = node.nodeId; attention = node.attention }
+  };
+
+  /// Set a protocol in the reasoning layer.
+  public func setReasoningProtocol(protocol : Text) : async { protocols : [Text] } {
+    let newStack = Array.append(reasoningEngineState.persistence.protocolStack, [protocol]);
+    reasoningEngineState := {
+      reasoningEngineState with
+      persistence = {
+        reasoningEngineState.persistence with
+        protocolStack = newStack;
+        lastUpdate = beatCounter;
+      }
+    };
+    { protocols = newStack }
+  };
+
+  /// Set an invariant in the reasoning layer.
+  public func setReasoningInvariant(invariant : Text) : async { invariants : [Text] } {
+    let newInvariants = Array.append(reasoningEngineState.persistence.invariants, [invariant]);
+    reasoningEngineState := {
+      reasoningEngineState with
+      persistence = {
+        reasoningEngineState.persistence with
+        invariants = newInvariants;
+        lastUpdate = beatCounter;
+      }
+    };
+    { invariants = newInvariants }
   };
 
   // ── ALPHA CHARTERS — Public API ───────────────────────────────────────
