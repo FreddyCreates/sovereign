@@ -241,21 +241,27 @@ module {
       return state;  // Invalid project ID
     };
 
-    let updatedProjects = Array.tabulate<BRTypes.BuildProject>(
+    let updatedProjects = Array.tabulate<BRTypes.ProjectRecord>(
       state.projects.size(),
-      func(i : Nat) : BRTypes.BuildProject {
+      func(i : Nat) : BRTypes.ProjectRecord {
         if (i == projectId) {
-          let oldProgress = state.projects[i].progressPercent;
+          let oldProgress = state.projects[i].project.progressPercent;
           let status = if (newProgress >= 1.0) { #COMPLETUS }
                        else if (newProgress > oldProgress) { #PROGRESSUS }
-                       else { state.projects[i].status };
-          {
-            state.projects[i] with
+                       else { state.projects[i].project.status };
+          let updatedProject : BRTypes.BuildProject = {
+            state.projects[i].project with
             progressPercent = clampUnit(newProgress);
             lastUpdateBeat = beat;
             status = status;
             completionBeat = if (newProgress >= 1.0) { ?beat } else { null };
-            notes = Array.append(state.projects[i].notes, [note]);
+            notes = Array.append(state.projects[i].project.notes, [note]);
+          };
+          {
+            project = updatedProject;
+            beatsSinceUpdate = 0;
+            isStale = false;
+            lastAuditBeat = beat;
           }
         } else {
           state.projects[i]
@@ -322,11 +328,11 @@ module {
     var aliveCount : Nat = 0;
 
     for (i in state.builders.keys()) {
-      let builder = state.builders[i];
-      let beatsSinceActive = beat - builder.lastActiveBeat;
+      let record = state.builders[i];
+      let beatsSinceActive = beat - record.builder.lastActiveBeat;
       if (beatsSinceActive > DARK_THRESHOLD) {
-        darkBuilders := Array.append(darkBuilders, [builder.builderId]);
-      } else if (builder.isAlive) {
+        darkBuilders := Array.append(darkBuilders, [record.builder.builderId]);
+      } else if (record.builder.isAlive) {
         aliveCount += 1;
       };
     };
@@ -336,14 +342,14 @@ module {
     var activeCount : Nat = 0;
 
     for (i in state.projects.keys()) {
-      let project = state.projects[i];
-      switch (project.status) {
+      let record = state.projects[i];
+      switch (record.project.status) {
         case (#COMPLETUS) { };  // Completed projects don't count as stale
         case (#MORTUUS) { };    // Already dead
         case _ {
-          let beatsSinceUpdate = beat - project.lastUpdateBeat;
+          let beatsSinceUpdate = beat - record.project.lastUpdateBeat;
           if (beatsSinceUpdate > STALE_THRESHOLD) {
-            staleProjects := Array.append(staleProjects, [project.projectId]);
+            staleProjects := Array.append(staleProjects, [record.project.projectId]);
           } else {
             activeCount += 1;
           };
@@ -360,15 +366,30 @@ module {
       #CAVEAT
     };
 
-    // Mark dark builders as not alive
-    let updatedBuilders = Array.tabulate<BRTypes.BuilderIdentity>(
+    // Mark dark builders with alert status
+    let updatedBuilders = Array.tabulate<BRTypes.BuilderRecord>(
       state.builders.size(),
-      func(i : Nat) : BRTypes.BuilderIdentity {
+      func(i : Nat) : BRTypes.BuilderRecord {
+        let record = state.builders[i];
         let isDark = Array.find<Nat>(darkBuilders, func(id : Nat) : Bool { id == i }) != null;
-        if (isDark) {
-          { state.builders[i] with isAlive = false }
+        let beatsSinceActive = beat - record.builder.lastActiveBeat;
+        let alertStatus : BRTypes.BuilderAlertStatus = if (beatsSinceActive > STALE_THRESHOLD) {
+          #MARCIDUS
+        } else if (beatsSinceActive > DARK_THRESHOLD) {
+          #TENEBRIS
         } else {
-          state.builders[i]
+          #SANUS
+        };
+        let updatedBuilder = if (isDark) {
+          { record.builder with isAlive = false }
+        } else {
+          record.builder
+        };
+        {
+          builder = updatedBuilder;
+          alertStatus = alertStatus;
+          beatsSinceActive = beatsSinceActive;
+          lastAuditBeat = beat;
         }
       }
     );
@@ -434,21 +455,23 @@ module {
     };
 
     // Update builder's project lists
-    let updatedBuilders = Array.tabulate<BRTypes.BuilderIdentity>(
+    let updatedBuilders = Array.tabulate<BRTypes.BuilderRecord>(
       state.builders.size(),
-      func(i : Nat) : BRTypes.BuilderIdentity {
+      func(i : Nat) : BRTypes.BuilderRecord {
+        let record = state.builders[i];
         if (i == builderId) {
-          switch (responsibilityType) {
+          let updatedBuilder = switch (responsibilityType) {
             case (#PRIMARY_BUILDER) {
-              { state.builders[i] with activeProjects = Array.append(state.builders[i].activeProjects, [projectId]) }
+              { record.builder with activeProjects = Array.append(record.builder.activeProjects, [projectId]) }
             };
             case (#MAINTAINER) {
-              { state.builders[i] with maintainingProjects = Array.append(state.builders[i].maintainingProjects, [projectId]) }
+              { record.builder with maintainingProjects = Array.append(record.builder.maintainingProjects, [projectId]) }
             };
-            case _ { state.builders[i] };
-          }
+            case _ { record.builder };
+          };
+          { record with builder = updatedBuilder }
         } else {
-          state.builders[i]
+          record
         }
       }
     );
