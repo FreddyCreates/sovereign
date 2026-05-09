@@ -249,10 +249,22 @@ module {
   // "The attention graph — the token-to-token transitions"
   // Attention decays by PHI_INV per beat
 
+  // Power function for decay: base^exponent (iterative, for small integer exponents)
+  func pow(base : Float, exponent : Nat) : Float {
+    var result : Float = 1.0;
+    var i : Nat = 0;
+    while (i < exponent) {
+      result := result * base;
+      i += 1;
+    };
+    result
+  };
+
   public func decayAttention(nodes : [RETypes.AttentionNode], beat : Nat) : [RETypes.AttentionNode] {
     Array.map<RETypes.AttentionNode, RETypes.AttentionNode>(nodes, func(node : RETypes.AttentionNode) : RETypes.AttentionNode {
       let beatsSinceActive = beat - node.activeBeat;
-      let decay = Float.pow(PHI_INV, beatsSinceActive.toFloat() * node.decayRate);
+      // Approximate decay using integer exponent
+      let decay = pow(PHI_INV, beatsSinceActive);
       let newAttention = clampUnit(node.attention * decay);
       { node with attention = newAttention }
     })
