@@ -116,6 +116,31 @@ module {
     signature           : Text;           // builder's unique signature
   };
 
+  // ── BUILDER ALERT STATUS — NUNQUAM_OBLIVISCERE enforcement ────────────────
+  public type BuilderAlertStatus = {
+    #SANUS;           // Healthy — active within expected beats
+    #TENEBRIS;        // Dark — silent for 89+ beats (Fibonacci)
+    #MARCIDUS;        // Stale — silent for 233+ beats (Fibonacci)
+    #MORTUUS;         // Dead — no activity, considered lost
+  };
+
+  // ── BUILDER RECORD — Extended identity with alert status ──────────────────
+  // Used for NUNQUAM_OBLIVISCERE tracking
+  public type BuilderRecord = {
+    builder             : BuilderIdentity;
+    alertStatus         : BuilderAlertStatus;
+    beatsSinceActive    : Nat;
+    lastAuditBeat       : Nat;
+  };
+
+  // ── PROJECT RECORD — Extended project with health metrics ─────────────────
+  public type ProjectRecord = {
+    project             : BuildProject;
+    beatsSinceUpdate    : Nat;
+    isStale             : Bool;
+    lastAuditBeat       : Nat;
+  };
+
   // ── BUILD MEMORY — Complete history of a project ──────────────────────────
   public type BuildMemory = {
     projectId           : Nat;
@@ -183,12 +208,12 @@ module {
     founderLock         : Text;           // FOUNDER attribution
     genesisbeat         : Nat;
 
-    // All builders
-    builders            : [BuilderIdentity];
+    // All builders (with alert tracking)
+    builders            : [BuilderRecord];
     totalBuilders       : Nat;
 
-    // All projects
-    projects            : [BuildProject];
+    // All projects (with health tracking)
+    projects            : [ProjectRecord];
     totalProjects       : Nat;
 
     // All memories (never cleared)
@@ -256,6 +281,20 @@ module {
     #listMaintaining : Nat;               // what builder ID is maintaining
     #getLastAudit;
     #getForgotten;                        // all forgotten builders/projects
+  };
+
+  // ── REGISTRY HEALTH — Overview metrics ──────────────────────────────────
+  public type RegistryHealth = {
+    totalBuilders     : Nat;
+    activeBuilders    : Nat;
+    tenebrisCount     : Nat;      // Builders in darkness (89+ beats silence)
+    marcidusCount     : Nat;      // Builders stale (233+ beats)
+    healthyCount      : Nat;      // Builders operating normally
+    totalProjects     : Nat;
+    activeProjects    : Nat;
+    completedProjects : Nat;
+    healthRatio       : Float;    // healthyCount / totalBuilders [0, 1]
+    lastAuditBeat     : Nat;
   };
 
 };

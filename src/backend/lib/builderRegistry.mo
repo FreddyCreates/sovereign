@@ -108,9 +108,16 @@ module {
       signature = "AEDIFICATOR://" # latinName # "/" # beat.toText();
     };
 
+    let newRecord : BRTypes.BuilderRecord = {
+      builder = newBuilder;
+      alertStatus = #SANUS;
+      beatsSinceActive = 0;
+      lastAuditBeat = beat;
+    };
+
     {
       state with
-      builders = Array.append(state.builders, [newBuilder]);
+      builders = Array.append(state.builders, [newRecord]);
       totalBuilders = state.totalBuilders + 1;
       activeBuilders = state.activeBuilders + 1;
     }
@@ -146,6 +153,13 @@ module {
       neverForget = true;  // NUNQUAM_OBLIVISCERE — always true
     };
 
+    let newRecord : BRTypes.ProjectRecord = {
+      project = newProject;
+      beatsSinceUpdate = 0;
+      isStale = false;
+      lastAuditBeat = beat;
+    };
+
     // Initialize memory for this project
     let newMemory : BRTypes.BuildMemory = {
       projectId = state.totalProjects;
@@ -165,7 +179,7 @@ module {
 
     {
       state with
-      projects = Array.append(state.projects, [newProject]);
+      projects = Array.append(state.projects, [newRecord]);
       memories = Array.append(state.memories, [newMemory]);
       totalProjects = state.totalProjects + 1;
       activeProjects = state.activeProjects + 1;
@@ -579,6 +593,57 @@ module {
     s := registerBuilder(s, "SCRIBE", "SCRIBA_CHARTARUM", #CONSERVATOR, #DOCTRINE, [#NARRATIVE], beat);
     
     s
+  };
+
+  // ── XII. INIT REGISTRY STATE — Main initialization for main.mo ─────────────
+
+  public func initRegistryState(beat : Nat) : BRTypes.BuilderRegistryState {
+    let state = initBuilderRegistry(beat);
+    seedDefaultBuilders(state, beat)
+  };
+
+  // ── XIII. QUERY HELPERS — For main.mo endpoints ────────────────────────────
+
+  public func getTenebrisBuilders(state : BRTypes.BuilderRegistryState) : [BRTypes.BuilderRecord] {
+    Array.filter<BRTypes.BuilderRecord>(
+      state.builders,
+      func(b : BRTypes.BuilderRecord) : Bool {
+        b.alertStatus == #TENEBRIS
+      }
+    )
+  };
+
+  public func getMarcidusBuilders(state : BRTypes.BuilderRegistryState) : [BRTypes.BuilderRecord] {
+    Array.filter<BRTypes.BuilderRecord>(
+      state.builders,
+      func(b : BRTypes.BuilderRecord) : Bool {
+        b.alertStatus == #MARCIDUS
+      }
+    )
+  };
+
+  public func getRegistryHealth(state : BRTypes.BuilderRegistryState) : BRTypes.RegistryHealth {
+    let totalB = state.builders.size();
+    let tenebrisCount = getTenebrisBuilders(state).size();
+    let marcidusCount = getMarcidusBuilders(state).size();
+    let healthyCount = totalB - tenebrisCount - marcidusCount;
+    
+    let healthRatio = if (totalB > 0) {
+      healthyCount.toFloat() / totalB.toFloat()
+    } else { 1.0 };
+    
+    {
+      totalBuilders = totalB;
+      activeBuilders = state.activeBuilders;
+      tenebrisCount = tenebrisCount;
+      marcidusCount = marcidusCount;
+      healthyCount = healthyCount;
+      totalProjects = state.totalProjects;
+      activeProjects = state.activeProjects;
+      completedProjects = state.completedProjects;
+      healthRatio = healthRatio;
+      lastAuditBeat = state.lastAuditBeat;
+    }
   };
 
 };

@@ -102,6 +102,10 @@ import GLLib                 "lib/geometryLock";
 import CharterGLNLib         "charters/CharterGeometryLockNexus";
 import RETypes               "types/reasoningEngine";
 import RELib                 "lib/reasoningEngine";
+import SETypes               "types/sovereignEngines";
+import SELib                 "lib/sovereignEngines";
+import BRTypes               "types/builderRegistry";
+import BRLib                 "lib/builderRegistry";
 
 
 
@@ -552,6 +556,21 @@ actor SovereignWarSim {
   // "You're building a civilization-scale interface to the reasoning engine."
   // Governing Laws: Law 01, Law 02, Law 15, Law 39, Law 41
   stable var reasoningEngineState : RETypes.ReasoningEngineState = RELib.initReasoningEngineState(0);
+
+  // ── MACHINAE NOVAE — 18 ENGINES + HIERARCHY ────────────────────────────────
+  // Complete engine hierarchy: MACHINAE → GUBERNATORES → AGENTES → AUTOMATA → OBSERVATORES
+  // 18 engines across 6 layers (Sleep, Builder, Reasoning, Social, Protection, Creation).
+  // Each engine has REAL PHI/Fibonacci math — no stubs.
+  // Background cycles run continuously (users at 3AM see nothing different).
+  // Governing Laws: Law 01, Law 02, Law 14 (Heartbeat), Law 39 (Never Forget)
+  stable var engineHierarchyState : SETypes.EngineHierarchyState = SELib.initHierarchyState(0);
+
+  // ── AEDIFICATORUM REGISTRUM — BUILDER REGISTRY ─────────────────────────────
+  // NUNQUAM_OBLIVISCERE: Builders silent 89 beats → TENEBRIS (dark).
+  // 10 builder classes, 12 domains. Audit every 13 beats.
+  // Track all builders across civilizations. No abandoned projects.
+  // Governing Laws: Law 01, Law 39 (Never Forget), Law 41 (Track All)
+  stable var builderRegistryState : BRTypes.BuilderRegistryState = BRLib.initRegistryState(0);
 
   // ── B2.7 — STREAM_SOVEREIGN ────────────────────────────────────────────
   // Dedicated processing stream inside the SOVEREIGN organism's own runtime.
@@ -3483,6 +3502,17 @@ actor SovereignWarSim {
       doctrineScoreEarly / 100.0,  // receptive score approximated by doctrine  
       beat
     );
+
+    // ── MACHINAE NOVAE HEARTBEAT — 18 engines across 6 layers ────────────────
+    // Fires engines based on need: sleep layer when fatigued, builder layer when projects active, etc.
+    // Updates hierarchy health, gubernator coherence, observer alerts.
+    // Background cycles run continuously. Users at 3AM see nothing different.
+    engineHierarchyState := SELib.heartbeat(engineHierarchyState, beat);
+
+    // ── BUILDER REGISTRY HEARTBEAT — NUNQUAM_OBLIVISCERE ─────────────────────
+    // Audit builders every 13 beats. Flag TENEBRIS (89 beats silence), MARCIDUS (233 beats).
+    // Prevent abandoned projects. Track all work across civilizations.
+    builderRegistryState := BRLib.heartbeat(builderRegistryState, beat);
 
     // Disconnected engine #2: quality scores computed but never re-injected.
     // After Ring 5 fires, re-inject quality weights into production queue state.
@@ -6900,6 +6930,108 @@ actor SovereignWarSim {
   /// Returns all evolution events (UEL).
   public query func getCognitiveEvolutionEvents() : async [CLTypes.EvolutionEvent] {
     cogLangState.evolutionEvents
+  };
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // MACHINAE NOVAE — 18 ENGINES + COMPLETE HIERARCHY
+  // ══════════════════════════════════════════════════════════════════════════
+  // 18 engines across 6 layers. Real PHI/Fibonacci math. No stubs.
+  // Background cycles run continuously. Users at 3AM see nothing different.
+  // HIERARCHIA_PERPETUA: Engines → Gubernators → Agents → Bots → Observers
+
+  /// Returns the complete engine hierarchy state.
+  public query func getEngineHierarchyState() : async SETypes.EngineHierarchyState {
+    engineHierarchyState
+  };
+
+  /// Returns all 18 engine states.
+  public query func getAllEngines() : async [SETypes.EngineState] {
+    engineHierarchyState.engines
+  };
+
+  /// Returns engines by layer (STRATUM_SOMNI, STRATUM_AEDIFICATIONIS, etc.).
+  public query func getEnginesByLayer(layer : SETypes.EngineLayer) : async [SETypes.EngineState] {
+    SELib.getEnginesByLayer(engineHierarchyState, layer)
+  };
+
+  /// Returns all 6 gubernator (AI manager) states.
+  public query func getAllGubernators() : async [SETypes.GubernatorState] {
+    engineHierarchyState.gubernators
+  };
+
+  /// Returns all 6 agent states.
+  public query func getAllAgents() : async [SETypes.AgentState] {
+    engineHierarchyState.agents
+  };
+
+  /// Returns all 6 automaton (bot) states.
+  public query func getAllAutomata() : async [SETypes.AutomatonState] {
+    engineHierarchyState.automata
+  };
+
+  /// Returns the 2 observer states.
+  public query func getAllObservators() : async [SETypes.ObservatorState] {
+    engineHierarchyState.observators
+  };
+
+  /// Returns the cycle manager state (background processing).
+  public query func getCycleManagerState() : async SETypes.CycleManagerState {
+    engineHierarchyState.cycleManager
+  };
+
+  /// Returns overall hierarchy health [0.0, 1.0].
+  public query func getHierarchyHealth() : async Float {
+    SELib.getHierarchyHealth(engineHierarchyState)
+  };
+
+  /// Returns system-wide fatigue level [0.0, 1.0].
+  public query func getSystemFatigue() : async Float {
+    SELib.getSystemFatigue(engineHierarchyState)
+  };
+
+  /// Returns whether background cycles are active.
+  public query func isBackgroundProcessing() : async Bool {
+    SELib.isBackgroundProcessing(engineHierarchyState)
+  };
+
+  /// Returns all engine names with descriptions.
+  public query func getEngineNames() : async [(Text, Text, Text)] {
+    SELib.getAllEngineNames()
+  };
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // AEDIFICATORUM REGISTRUM — BUILDER REGISTRY
+  // ══════════════════════════════════════════════════════════════════════════
+  // NUNQUAM_OBLIVISCERE: No builder ever forgotten. 89 beats → TENEBRIS.
+
+  /// Returns the complete builder registry state.
+  public query func getBuilderRegistryState() : async BRTypes.BuilderRegistryState {
+    builderRegistryState
+  };
+
+  /// Returns all registered builders.
+  public query func getAllBuilders() : async [BRTypes.BuilderRecord] {
+    builderRegistryState.builders
+  };
+
+  /// Returns all active projects.
+  public query func getAllProjects() : async [BRTypes.ProjectRecord] {
+    builderRegistryState.projects
+  };
+
+  /// Returns builders flagged as TENEBRIS (dark - silent 89+ beats).
+  public query func getTenebrisBuilders() : async [BRTypes.BuilderRecord] {
+    BRLib.getTenebrisBuilders(builderRegistryState)
+  };
+
+  /// Returns builders flagged as MARCIDUS (stale - 233+ beats).
+  public query func getMarcidusBuilders() : async [BRTypes.BuilderRecord] {
+    BRLib.getMarcidusBuilders(builderRegistryState)
+  };
+
+  /// Returns registry health metrics.
+  public query func getBuilderRegistryHealth() : async BRTypes.RegistryHealth {
+    BRLib.getRegistryHealth(builderRegistryState)
   };
 
 }
