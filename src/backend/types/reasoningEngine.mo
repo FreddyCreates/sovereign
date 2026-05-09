@@ -115,6 +115,48 @@ module {
     learningRate    : Float;          // current adaptive learning rate
   };
 
+  // ── SOMNUS STATE — Circadian & Ultradian Sleep-Sync Cycles ────────────────
+  // "SOMNUS" (Latin: sleep/dream) — The organism's rest and consolidation state.
+  // Biological organisms require sleep for memory consolidation, repair, and
+  // recalibration. SOVEREIGN implements analogous cycles for cognitive reset.
+  //
+  // Circadian: ~100 heartbeats (87.3 seconds) — macro consolidation cycle
+  // Ultradian: ~13 heartbeats (11.3 seconds) — micro consolidation pulse
+  // Quiescent: Deep processing when external input drops
+  //
+  // "The organism that sleeps learns better than the organism that never rests."
+  public type SomnusPhase = {
+    #vigilans;      // VIGILANS (awake) — full processing, high responsiveness
+    #hypnagogic;    // HYPNAGOGIC (falling) — transitional dimming, prep for rest
+    #dormiens;      // DORMIENS (sleeping) — reduced external response, consolidation
+    #oneiric;       // ONEIRIC (dreaming) — internal pattern replay, creative synthesis
+    #hypnopompic;   // HYPNOPOMPIC (waking) — transitional brightening, prep for wake
+  };
+
+  public type SomnusState = {
+    phase             : SomnusPhase;      // current sleep phase
+    circadianBeat     : Nat;              // position in 100-beat macro cycle
+    ultradianBeat     : Nat;              // position in 13-beat micro cycle
+    somnusDepth       : Float;            // depth of rest [0.0 = full wake, 1.0 = deep sleep]
+    consolidationScore: Float;            // quality of memory consolidation this cycle
+    dreamReplayActive : Bool;             // whether oneiric replay is happening
+    lastTransition    : Nat;              // beat of last phase transition
+    cyclesSinceWake   : Nat;              // continuous wake cycles (fatigue accumulator)
+    totalRestCycles   : Nat;              // lifetime rest cycles (health metric)
+    phiModulation     : Float;            // PHI-aligned sleep rhythm factor
+    attenuationFactor : Float;            // how much external signals are dampened
+  };
+
+  // ── SOMNUS CONFIG — Sleep-wake parameters ─────────────────────────────────
+  public type SomnusConfig = {
+    circadianLength   : Nat;              // heartbeats per macro cycle (default: 100)
+    ultradianLength   : Nat;              // heartbeats per micro pulse (default: 13 = Fib)
+    fatigueThreshold  : Nat;              // cycles before mandatory rest (default: 233 = Fib)
+    minRestDepth      : Float;            // minimum consolidation depth required
+    autoSleepEnabled  : Bool;             // whether system auto-enters rest
+    dreamReplayRatio  : Float;            // fraction of rest spent in oneiric phase
+  };
+
   // ── KURAMOTO SYNC STATE — Phase synchronization across engines ────────────
   public type KuramotoSyncState = {
     phases          : [Float];        // 9 phases (one per animal engine)
@@ -203,6 +245,9 @@ module {
     cycleHistory    : [ReasoningCycle];  // last 13 cycles (Fib 7)
     totalCycles     : Nat;
 
+    // SOMNUS — Sleep/Sync Architecture
+    somnus          : SomnusState;
+
     // Metrics
     globalCoherence : Float;
     civilizationGap : Float;
@@ -217,6 +262,7 @@ module {
     attentionDecayRate     : Float;
     cycleHistoryDepth      : Nat;
     artifactRetentionDepth : Nat;
+    somnusConfig           : SomnusConfig;  // Sleep-wake configuration
   };
 
   // ── REASONING ENGINE RESULT — Output from a reasoning cycle ───────────────

@@ -558,9 +558,172 @@ module {
       cycleHistory = [];
       totalCycles = 0;
 
+      // SOMNUS — Initialize in VIGILANS (awake) state
+      somnus = {
+        phase = #vigilans;
+        circadianBeat = 0;
+        ultradianBeat = 0;
+        somnusDepth = 0.0;
+        consolidationScore = S0_FLOOR;
+        dreamReplayActive = false;
+        lastTransition = beat;
+        cyclesSinceWake = 0;
+        totalRestCycles = 0;
+        phiModulation = PHI_INV;
+        attenuationFactor = 1.0;  // Full responsiveness when awake
+      };
+
       globalCoherence = S0_FLOOR;
       civilizationGap = 0.0;
       lastHeartbeat = beat;
+    }
+  };
+
+  // ── SOMNUS — Sleep/Circadian Cycle Architecture ───────────────────────────
+  // "SOMNUS" (Latin: sleep) — The organism's rest and consolidation engine.
+  //
+  // Biological organisms consolidate memory during sleep. SOVEREIGN implements:
+  //   - Circadian rhythm (100-beat macro cycle) — full sleep/wake pattern
+  //   - Ultradian rhythm (13-beat micro pulse) — brief consolidation bursts
+  //   - Quiescent state — reduced external response, deep internal processing
+  //   - Dream replay — oneiric pattern synthesis from accumulated experiences
+  //
+  // Sleep phases modulate all engine outputs via attenuationFactor.
+  // During rest, Hebbian consolidation strengthens and external signals dampen.
+  // "The organism that sleeps learns better than the organism that never rests."
+
+  // CIRCADIAN_LENGTH: 100 heartbeats = ~87.3 seconds (PHI-derived: 100 ≈ Fib(10) + Fib(9))
+  let CIRCADIAN_LENGTH : Nat = 100;
+  // ULTRADIAN_LENGTH: 13 heartbeats = ~11.3 seconds (Fibonacci 7)
+  let ULTRADIAN_LENGTH : Nat = 13;
+  // FATIGUE_THRESHOLD: 233 cycles before mandatory rest (Fibonacci 13)
+  let FATIGUE_THRESHOLD : Nat = 233;
+
+  // Determine SOMNUS phase based on circadian position
+  func determineSomnusPhase(circadianBeat : Nat) : RETypes.SomnusPhase {
+    // Phase distribution across 100-beat cycle:
+    //   VIGILANS (0-60):     60% awake — full processing
+    //   HYPNAGOGIC (61-70):  10% transition to sleep
+    //   DORMIENS (71-85):    15% sleep — consolidation
+    //   ONEIRIC (86-92):     7% dream — pattern replay
+    //   HYPNOPOMPIC (93-99): 7% transition to wake
+    let pos = circadianBeat % CIRCADIAN_LENGTH;
+    if (pos <= 60) { #vigilans }
+    else if (pos <= 70) { #hypnagogic }
+    else if (pos <= 85) { #dormiens }
+    else if (pos <= 92) { #oneiric }
+    else { #hypnopompic }
+  };
+
+  // Compute attenuation factor based on SOMNUS phase
+  // VIGILANS = 1.0 (full), DORMIENS = 0.25 (dampened), ONEIRIC = 0.1 (deep rest)
+  func computeAttenuation(phase : RETypes.SomnusPhase) : Float {
+    switch (phase) {
+      case (#vigilans)    { 1.0 };     // Full responsiveness
+      case (#hypnagogic)  { 0.7 };     // Dimming — transitional
+      case (#dormiens)    { 0.25 };    // Sleeping — deep dampening
+      case (#oneiric)     { 0.1 };     // Dreaming — minimal external
+      case (#hypnopompic) { 0.5 };     // Waking — transitional brightening
+    }
+  };
+
+  // Compute SOMNUS depth (0.0 = full wake, 1.0 = deep sleep)
+  func computeSomnusDepth(phase : RETypes.SomnusPhase, ultradianBeat : Nat) : Float {
+    let baseDepth = switch (phase) {
+      case (#vigilans)    { 0.0 };
+      case (#hypnagogic)  { 0.3 };
+      case (#dormiens)    { 0.7 };
+      case (#oneiric)     { 1.0 };
+      case (#hypnopompic) { 0.4 };
+    };
+    // Ultradian modulation: depth oscillates within phase
+    let ultradianMod = sinApprox(ultradianBeat.toFloat() * TWO_PI / 13.0) * 0.1;
+    clampUnit(baseDepth + ultradianMod)
+  };
+
+  // Clamp to [0, 1]
+  func clampUnit(v : Float) : Float {
+    Float.max(0.0, Float.min(1.0, v))
+  };
+
+  // Consolidation during rest: strengthen top Hebbian weights
+  func computeConsolidation(
+    hebbianWeights : [Float],
+    somnusDepth : Float,
+    beat : Nat
+  ) : Float {
+    // Consolidation quality = depth × average weight coherence × PHI
+    var sum : Float = 0.0;
+    for (w in hebbianWeights.vals()) { sum += w };
+    let avgWeight = if (hebbianWeights.size() > 0) {
+      sum / hebbianWeights.size().toFloat()
+    } else { S0_FLOOR };
+    clamp(somnusDepth * avgWeight * PHI_INV)
+  };
+
+  // Run SOMNUS cycle — called every heartbeat
+  public func tickSomnus(
+    state : RETypes.SomnusState,
+    hebbianWeights : [Float],
+    beat : Nat
+  ) : RETypes.SomnusState {
+    // Advance circadian and ultradian counters
+    let newCircadian = (state.circadianBeat + 1) % CIRCADIAN_LENGTH;
+    let newUltradian = (state.ultradianBeat + 1) % ULTRADIAN_LENGTH;
+
+    // Determine new phase
+    let newPhase = determineSomnusPhase(newCircadian);
+
+    // Check if phase transitioned
+    let phaseChanged = state.phase != newPhase;
+    let transitionBeat = if (phaseChanged) { beat } else { state.lastTransition };
+
+    // Compute depth and attenuation
+    let depth = computeSomnusDepth(newPhase, newUltradian);
+    let attenuation = computeAttenuation(newPhase);
+
+    // Consolidation active during rest phases
+    let consolidating = switch (newPhase) {
+      case (#dormiens) { true };
+      case (#oneiric) { true };
+      case _ { false };
+    };
+    let consolidation = if (consolidating) {
+      computeConsolidation(hebbianWeights, depth, beat)
+    } else { S0_FLOOR };
+
+    // Dream replay during oneiric phase
+    let dreaming = switch (newPhase) {
+      case (#oneiric) { true };
+      case _ { false };
+    };
+
+    // Track wake cycles (reset on wake, accumulate otherwise)
+    let wakeAccum = switch (newPhase) {
+      case (#vigilans) { state.cyclesSinceWake + 1 };
+      case _ { 0 };
+    };
+
+    // Track total rest cycles
+    let restAccum = if (consolidating) {
+      state.totalRestCycles + 1
+    } else { state.totalRestCycles };
+
+    // PHI modulation for sleep rhythm
+    let phiMod = (beat.toFloat() * PHI_INV) - Float.floor(beat.toFloat() * PHI_INV);
+
+    {
+      phase = newPhase;
+      circadianBeat = newCircadian;
+      ultradianBeat = newUltradian;
+      somnusDepth = depth;
+      consolidationScore = consolidation;
+      dreamReplayActive = dreaming;
+      lastTransition = transitionBeat;
+      cyclesSinceWake = wakeAccum;
+      totalRestCycles = restAccum;
+      phiModulation = phiMod;
+      attenuationFactor = attenuation;
     }
   };
 
@@ -652,9 +815,21 @@ module {
       });
     };
 
+    // ── SOMNUS — Tick sleep/circadian cycle ──────────────────────────────────
+    // The organism's rest architecture runs every heartbeat, modulating all outputs.
+    // During sleep phases, external responsiveness is attenuated, consolidation occurs.
+    let somnusState = tickSomnus(state.somnus, state.hebbianMemory.weights, beat);
+
+    // Apply SOMNUS attenuation to nova signal during rest
+    let attenuatedNova = {
+      novaState with
+      signalStrength = novaState.signalStrength * somnusState.attenuationFactor;
+      firingHistory = newFiringHistory;
+    };
+
     {
       state with
-      novaProtocol = { novaState with firingHistory = newFiringHistory };
+      novaProtocol = attenuatedNova;
       kuramotoSync = kuramotoState;
       engineCoupling = coupling;
       attentionGraph = decayedAttention;
@@ -662,7 +837,8 @@ module {
       currentCycle = cycle;
       cycleHistory = newHistory;
       totalCycles = state.totalCycles + 1;
-      globalCoherence = cycle.globalCoherence;
+      somnus = somnusState;
+      globalCoherence = cycle.globalCoherence * somnusState.attenuationFactor;
       civilizationGap = coupling.divergenceScore;
       lastHeartbeat = beat;
     }
@@ -682,6 +858,37 @@ module {
       transitionCount = state.currentCycle.transitions.size();
       attribution = "SOVEREIGN://" # FOUNDER # "/REASONING_ENGINE/v1";
     }
+  };
+
+  // ── XIV. SOMNUS QUERIES — Sleep State Introspection ───────────────────────
+
+  public func getSomnusPhase(state : RETypes.ReasoningEngineState) : RETypes.SomnusPhase {
+    state.somnus.phase
+  };
+
+  public func getSomnusDepth(state : RETypes.ReasoningEngineState) : Float {
+    state.somnus.somnusDepth
+  };
+
+  public func isAwake(state : RETypes.ReasoningEngineState) : Bool {
+    switch (state.somnus.phase) {
+      case (#vigilans) { true };
+      case _ { false };
+    }
+  };
+
+  public func isDreaming(state : RETypes.ReasoningEngineState) : Bool {
+    state.somnus.dreamReplayActive
+  };
+
+  public func getConsolidationScore(state : RETypes.ReasoningEngineState) : Float {
+    state.somnus.consolidationScore
+  };
+
+  public func getFatigueLevel(state : RETypes.ReasoningEngineState) : Float {
+    // Fatigue = cycles since wake / fatigue threshold
+    let fatigue = state.somnus.cyclesSinceWake.toFloat() / FATIGUE_THRESHOLD.toFloat();
+    clampUnit(fatigue)
   };
 
 };
