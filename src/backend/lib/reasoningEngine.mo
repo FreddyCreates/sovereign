@@ -641,11 +641,6 @@ module {
     clampUnit(baseDepth + ultradianMod)
   };
 
-  // Clamp to [0, 1]
-  func clampUnit(v : Float) : Float {
-    Float.max(0.0, Float.min(1.0, v))
-  };
-
   // Consolidation during rest: strengthen top Hebbian weights
   func computeConsolidation(
     hebbianWeights : [Float],
