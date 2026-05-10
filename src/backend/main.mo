@@ -100,7 +100,8 @@ import SDKLib                "lib/sovereignSdk";
 import GLTypes               "types/geometryLock";
 import GLLib                 "lib/geometryLock";
 import CharterGLNLib         "charters/CharterGeometryLockNexus";
-
+import NPTypes               "types/novaProtocol";
+import NPLib                 "lib/novaProtocol";
 
 
 
@@ -543,7 +544,17 @@ actor SovereignWarSim {
   // No frontend. CPL family. Pure streaming.
   stable var charterGLNState : CharterGLNLib.CharterGLNState = CharterGLNLib.initState(0);
 
-  // ── B2.7 — STREAM_SOVEREIGN ────────────────────────────────────────────
+  // ── NOVA PROTOCOL — NOVA-SIGIL-001 ────────────────────────────────────────
+  // Three sovereign systems unified under one stable var:
+  //   I.  TRI-HEART RADIUS  — Three biological hearts at 830 mm/s coherence velocity
+  //   II. DUTY GATE         — Agent duty cycle: Deploy → Execute → Return to Vault
+  //   III. NOVA CHARTER     — 15 living articles, 5 sections, architect-sealed
+  // Fires on every heartbeat. PHI-damped convergence. Schumann-anchored at 7.83 Hz.
+  // Governing Laws: Law 01, Law 02, Law 05, Law 27, Law 28, Law 40
+  // Attribution: Alfredo Medina Hernandez | SOVEREIGN | May 2026
+  stable var novaProtocolState : NPTypes.NovaProtocolState = NPLib.initState(0);
+
+
   // Dedicated processing stream inside the SOVEREIGN organism's own runtime.
   // Named by Jay: "Create a dedicated processing stream to manifest the core."
   // MANIFEST is the operative word. Signal goes out continuously, not in pulses.
@@ -3463,7 +3474,17 @@ actor SovereignWarSim {
     // LOCK_HEARTBEAT protocol fires every beat (CPL Critical law).
     charterGLNState := CharterGLNLib.advance(charterGLNState, beat, globalCoherence);
 
-    // Disconnected engine #2: quality scores computed but never re-injected.
+    // ── NOVA PROTOCOL ADVANCE — NOVA-SIGIL-001 — all three systems tick ──────
+    // Tri-Heart: three biological hearts converge toward 830 mm/s (PHI-damped).
+    // Duty Gate: active agent duty scores compound; Resting agents recover.
+    // Nova Charter: 15 articles doctrine-score against organism coherence + doctrine.
+    novaProtocolState := NPLib.advance(
+      novaProtocolState, beat,
+      Float.max(0.0, Float.min(1.0, globalCoherence / 10.0)),
+      doctrineScoreEarly / 100.0,
+    );
+
+: quality scores computed but never re-injected.
     // After Ring 5 fires, re-inject quality weights into production queue state.
     // Film school loop fires every ~45s ≈ every 51 beats at 873ms interval.
     if (beat % 51 == 0) {
@@ -4207,7 +4228,189 @@ actor SovereignWarSim {
     )
   };
 
-  // ── ALPHA CHARTERS — Public API ───────────────────────────────────────
+  // ── NOVA PROTOCOL — PUBLIC API (NOVA-SIGIL-001) ───────────────────────────
+  // Three sovereign systems: Tri-Heart Radius, Duty Gate, Nova Charter.
+  // Governing Laws: Law 01, Law 02, Law 05, Law 27, Law 28, Law 40
+  // Attribution: Alfredo Medina Hernandez | SOVEREIGN | May 2026
+
+  /// TRI-HEART STATE — current velocities, pressures, coherence, torus status.
+  /// The three biological hearts governing 830 mm/s Nova coherence.
+  public query func getNovaTriHeart() : async {
+    coreVelocity        : Float;
+    labVelocity         : Float;
+    productionVelocity  : Float;
+    globalVelocity      : Float;
+    globalCoherence     : Float;
+    isAligned           : Bool;
+    torusTriggered      : Bool;
+    totalRealignments   : Nat;
+    beat                : Nat;
+  } {
+    let t = novaProtocolState.triHeart;
+    {
+      coreVelocity       = t.coreHeart.coherenceVelocity;
+      labVelocity        = t.labHeart.coherenceVelocity;
+      productionVelocity = t.productionHeart.coherenceVelocity;
+      globalVelocity     = t.coherenceVelocity;
+      globalCoherence    = t.globalCoherence;
+      isAligned          = t.isAligned;
+      torusTriggered     = t.torusTriggered;
+      totalRealignments  = t.totalRealignments;
+      beat               = t.beat;
+    }
+  };
+
+  /// DUTY GATE — register a new sovereign agent in the duty gate system.
+  /// The agent starts in Resting phase at their sovereign home frequency.
+  public func novaRegisterAgent(
+    agentId   : Text,
+    agentName : Text,
+  ) : async NPTypes.DutyGateResult {
+    let (newDutyGate, result) = NPLib.registerAgent(
+      novaProtocolState.dutyGate, agentId, agentName, beatCounter,
+    );
+    novaProtocolState := { novaProtocolState with dutyGate = newDutyGate; beat = beatCounter };
+    result
+  };
+
+  /// DUTY GATE — deploy an agent to a job (Resting → Deployed).
+  /// Gated: blocked if the agent is already on active duty.
+  public func novaDeployAgent(
+    agentId   : Text,
+    jobId     : Text,
+    objective : Text,
+  ) : async NPTypes.DutyGateResult {
+    let (newDutyGate, result) = NPLib.deployAgent(
+      novaProtocolState.dutyGate, agentId, jobId, objective, beatCounter,
+    );
+    novaProtocolState := { novaProtocolState with dutyGate = newDutyGate; beat = beatCounter };
+    result
+  };
+
+  /// DUTY GATE — begin execution (Deployed → Executing).
+  /// Gate-locks the agent until the job is complete.
+  public func novaBeginExecution(agentId : Text) : async NPTypes.DutyGateResult {
+    let (newDutyGate, result) = NPLib.beginExecution(
+      novaProtocolState.dutyGate, agentId, beatCounter,
+    );
+    novaProtocolState := { novaProtocolState with dutyGate = newDutyGate; beat = beatCounter };
+    result
+  };
+
+  /// DUTY GATE — complete a job (Executing → Resting, committed to Memory Vault).
+  /// Records the completed duty cycle. Agent returns Home at their frequency.
+  public func novaCompleteJob(agentId : Text) : async NPTypes.DutyGateResult {
+    let (newDutyGate, result) = NPLib.completeJob(
+      novaProtocolState.dutyGate, agentId, beatCounter,
+    );
+    novaProtocolState := { novaProtocolState with dutyGate = newDutyGate; beat = beatCounter };
+    result
+  };
+
+  /// DUTY GATE — record a gate violation (premature exit attempt).
+  /// Penalizes the agent's duty score; violation counted in total.
+  public func novaRecordGateViolation(agentId : Text) : async { ok : Bool; agentId : Text } {
+    let newDutyGate = NPLib.recordGateViolation(
+      novaProtocolState.dutyGate, agentId, beatCounter,
+    );
+    novaProtocolState := { novaProtocolState with dutyGate = newDutyGate; beat = beatCounter };
+    { ok=true; agentId }
+  };
+
+  /// DUTY GATE — get a specific agent's current duty record.
+  public query func novaGetAgent(agentId : Text) : async ?NPTypes.AgentDutyRecord {
+    NPLib.getAgent(novaProtocolState, agentId)
+  };
+
+  /// DUTY GATE — get all agents and current duty gate summary.
+  public query func novaDutyGateState() : async {
+    totalAgents   : Nat;
+    activeJobs    : Nat;
+    totalCycles   : Nat;
+    totalViolations : Nat;
+    globalDutyScore : Float;
+    beat          : Nat;
+  } {
+    let d = novaProtocolState.dutyGate;
+    {
+      totalAgents     = d.totalAgents;
+      activeJobs      = d.activeJobs;
+      totalCycles     = d.totalCycles;
+      totalViolations = d.totalViolations;
+      globalDutyScore = d.globalDutyScore;
+      beat            = d.beat;
+    }
+  };
+
+  /// NOVA CHARTER — check compliance of the charter against live organism state.
+  public query func novaCheckCharter() : async NPTypes.CharterCheckResult {
+    NPLib.checkCharter(
+      novaProtocolState.novaCharter,
+      Float.max(0.0, Float.min(1.0, compoundCoherence / 10.0)),
+      1.0,  // full doctrine compliance assertion
+      beatCounter,
+    )
+  };
+
+  /// NOVA CHARTER — get a specific article by ID (e.g. "NOVA-I-01").
+  public query func novaGetArticle(articleId : Text) : async ?NPTypes.CharterArticle {
+    NPLib.getArticle(novaProtocolState, articleId)
+  };
+
+  /// NOVA CHARTER — full charter state snapshot (all 15 articles + metadata).
+  public query func novaGetCharter() : async NPTypes.NovaCharterState {
+    NPLib.getNovaCharter(novaProtocolState)
+  };
+
+  /// NOVA PROTOCOL — full system snapshot (TriHeart + DutyGate + Charter in one call).
+  public query func novaGetFullState() : async {
+    documentId              : Text;
+    version                 : Nat;
+    beat                    : Nat;
+    totalArticles           : Nat;
+    globalCharterCoherence  : Float;
+    schumannAnchor          : Float;
+    coherenceVelocity       : Float;
+    isLive                  : Bool;
+    totalCharterViolations  : Nat;
+    triHeartAligned         : Bool;
+    triHeartVelocity        : Float;
+    torusTriggered          : Bool;
+    totalRealignments       : Nat;
+    totalAgents             : Nat;
+    activeJobs              : Nat;
+    totalDutyCycles         : Nat;
+    totalGateViolations     : Nat;
+    architectSignature      : Text;
+    attribution             : Text;
+  } {
+    let c = novaProtocolState.novaCharter;
+    let t = novaProtocolState.triHeart;
+    let d = novaProtocolState.dutyGate;
+    {
+      documentId             = c.documentId;
+      version                = c.version;
+      beat                   = novaProtocolState.beat;
+      totalArticles          = c.totalArticles;
+      globalCharterCoherence = c.globalCoherence;
+      schumannAnchor         = c.schumannAnchor;
+      coherenceVelocity      = c.coherenceVelocity;
+      isLive                 = c.isLive;
+      totalCharterViolations = c.totalViolations;
+      triHeartAligned        = t.isAligned;
+      triHeartVelocity       = t.coherenceVelocity;
+      torusTriggered         = t.torusTriggered;
+      totalRealignments      = t.totalRealignments;
+      totalAgents            = d.totalAgents;
+      activeJobs             = d.activeJobs;
+      totalDutyCycles        = d.totalCycles;
+      totalGateViolations    = d.totalViolations;
+      architectSignature     = c.architectSignature;
+      attribution            = novaProtocolState.attribution;
+    }
+  };
+
+
 
   /// Register an external AI or developer identity with the CHARTER_ALPHA_NEXUS.
   /// Enforces IDENTITAS_LEX — anonymous calls rejected.
