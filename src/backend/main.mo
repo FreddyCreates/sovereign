@@ -3484,7 +3484,7 @@ actor SovereignWarSim {
       doctrineScoreEarly / 100.0,
     );
 
-: quality scores computed but never re-injected.
+    // Disconnected engine #2: quality scores computed but never re-injected.
     // After Ring 5 fires, re-inject quality weights into production queue state.
     // Film school loop fires every ~45s ≈ every 51 beats at 873ms interval.
     if (beat % 51 == 0) {
