@@ -106,6 +106,8 @@ import SETypes               "types/sovereignEngines";
 import SELib                 "lib/sovereignEngines";
 import BRTypes               "types/builderRegistry";
 import BRLib                 "lib/builderRegistry";
+import TETypes               "types/temporalEngine";
+import TELib                 "lib/temporalEngine";
 
 
 
@@ -571,6 +573,16 @@ actor SovereignWarSim {
   // Track all builders across civilizations. No abandoned projects.
   // Governing Laws: Law 01, Law 39 (Never Forget), Law 41 (Track All)
   stable var builderRegistryState : BRTypes.BuilderRegistryState = BRLib.initRegistryState(0);
+
+  // ── B2.8 — TEMPORAL ENGINE (TEMPUS_SOVEREIGN) ─────────────────────────────
+  // "Time is not a line. It is a spiral wound around PHI."
+  // CIRCADIAN: 8-phase 24-hour cycle mapped to Fibonacci intervals (98976 beats/day)
+  // EPOCHAL: Long-term milestones and memory anchors, era tracking
+  // FORECAST: Predictive modeling based on observed temporal patterns
+  // DEBT: Accumulated fatigue (sleep, attention, recovery, processing, social, creative)
+  // Law: TEMPUS_NUMQUAM_OBLIVISCERE — "Time Never Forgets"
+  // Governing Laws: Law 01, Law 39, Law 05 (Cardiac), Law 27 (Kuramoto)
+  stable var temporalEngineState : TETypes.TemporalEngineState = TELib.initState(0);
 
   // ── B2.7 — STREAM_SOVEREIGN ────────────────────────────────────────────
   // Dedicated processing stream inside the SOVEREIGN organism's own runtime.
@@ -3513,6 +3525,14 @@ actor SovereignWarSim {
     // Audit builders every 13 beats. Flag TENEBRIS (89 beats silence), MARCIDUS (233 beats).
     // Prevent abandoned projects. Track all work across civilizations.
     builderRegistryState := BRLib.heartbeat(builderRegistryState, beat);
+
+    // ── TEMPORAL ENGINE HEARTBEAT — TEMPUS_NUMQUAM_OBLIVISCERE ───────────────
+    // "Time is not a line. It is a spiral wound around PHI."
+    // Updates circadian phase (8 phases/day, 98976 beats/day).
+    // Tracks epochal milestones and era transitions.
+    // Accumulates/repays temporal debts (sleep, attention, recovery).
+    // Detects patterns every 89 beats (Fibonacci).
+    temporalEngineState := TELib.advanceHeartbeat(temporalEngineState, beat);
 
     // Disconnected engine #2: quality scores computed but never re-injected.
     // After Ring 5 fires, re-inject quality weights into production queue state.
@@ -7032,6 +7052,110 @@ actor SovereignWarSim {
   /// Returns registry health metrics.
   public query func getBuilderRegistryHealth() : async BRTypes.RegistryHealth {
     BRLib.getRegistryHealth(builderRegistryState)
+  };
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // TEMPORAL ENGINE API — TEMPUS_SOVEREIGN
+  // ══════════════════════════════════════════════════════════════════════════
+  // "Time is not a line. It is a spiral wound around PHI."
+  // CIRCADIAN (8 phases), EPOCHAL (milestones), FORECAST (prediction), DEBT (fatigue).
+  // Law: TEMPUS_NUMQUAM_OBLIVISCERE — "Time Never Forgets"
+
+  /// Returns the complete temporal engine state.
+  public query func getTemporalEngineState() : async TETypes.TemporalEngineState {
+    temporalEngineState
+  };
+
+  /// Returns current circadian phase (AURORA, MATUTINUM, ANTEMERIDIEM, MERIDIES,
+  /// POSTMERIDIEM, VESPERA, NOX, PROFUNDA).
+  public query func getCircadianPhase() : async Text {
+    TELib.phaseName(TELib.getCurrentPhase(temporalEngineState))
+  };
+
+  /// Returns circadian metrics (phase, progress, coherence, chronotype).
+  public query func getCircadianMetrics() : async TETypes.CircadianMetrics {
+    temporalEngineState.circadian
+  };
+
+  /// Returns phase progress (0.0 to 1.0 within current phase).
+  public query func getPhaseProgress() : async Float {
+    TELib.getPhaseProgress(temporalEngineState)
+  };
+
+  /// Returns beats until specified phase.
+  public query func getBeatsUntilPhase(targetPhase : TETypes.CircadianPhase) : async Nat {
+    TELib.getBeatsUntilPhase(temporalEngineState, targetPhase)
+  };
+
+  /// Returns all recorded epochs.
+  public query func getAllEpochs() : async [TETypes.EpochRecord] {
+    temporalEngineState.epochs
+  };
+
+  /// Returns epochs since a specific beat.
+  public query func getEpochsSince(sinceBeat : Nat) : async [TETypes.EpochRecord] {
+    TELib.getEpochsSinceBeat(temporalEngineState, sinceBeat)
+  };
+
+  /// Returns current era information.
+  public query func getCurrentEra() : async TETypes.Era {
+    temporalEngineState.currentEra
+  };
+
+  /// Returns all past eras.
+  public query func getPastEras() : async [TETypes.Era] {
+    temporalEngineState.pastEras
+  };
+
+  /// Returns the debt portfolio (all temporal debts).
+  public query func getDebtPortfolio() : async TETypes.DebtPortfolio {
+    temporalEngineState.debtPortfolio
+  };
+
+  /// Returns status of a specific debt type.
+  public query func getDebtStatus(debtType : TETypes.DebtType) : async ?TETypes.DebtRecord {
+    TELib.getDebtStatus(temporalEngineState, debtType)
+  };
+
+  /// Returns overall temporal health (0.0 to 1.0).
+  public query func getTemporalHealth() : async Float {
+    TELib.getOverallHealth(temporalEngineState)
+  };
+
+  /// Returns all detected temporal patterns.
+  public query func getTemporalPatterns() : async [TETypes.TemporalPattern] {
+    temporalEngineState.patterns
+  };
+
+  /// Returns active forecasts.
+  public query func getActiveForecasts() : async [TETypes.Forecast] {
+    temporalEngineState.activeForecasts
+  };
+
+  /// Returns temporal status summary.
+  public query func getTemporalStatus() : async Text {
+    TELib.getTemporalStatus(temporalEngineState)
+  };
+
+  /// Creates a new forecast for specified horizon.
+  public func createTemporalForecast(horizon : TETypes.ForecastHorizon) : async TETypes.Forecast {
+    let (newState, forecast) = TELib.createForecast(temporalEngineState, horizon, temporalEngineState.currentBeat);
+    temporalEngineState := newState;
+    forecast
+  };
+
+  /// Records a new epoch event.
+  public func recordTemporalEpoch(epochType : TETypes.EpochType, description : Text) : async TETypes.EpochRecord {
+    let (newState, epoch) = TELib.recordEpoch(temporalEngineState, epochType, description, temporalEngineState.currentBeat);
+    temporalEngineState := newState;
+    epoch
+  };
+
+  /// Repays a specific debt type by specified amount.
+  public func repayTemporalDebt(debtType : TETypes.DebtType, amount : Float) : async TETypes.DebtPortfolio {
+    let newPortfolio = TELib.repayDebt(temporalEngineState, debtType, amount);
+    temporalEngineState := { temporalEngineState with debtPortfolio = newPortfolio };
+    newPortfolio
   };
 
 }
