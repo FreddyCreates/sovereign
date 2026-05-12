@@ -108,6 +108,8 @@ import BRTypes               "types/builderRegistry";
 import BRLib                 "lib/builderRegistry";
 import TETypes               "types/temporalEngine";
 import TELib                 "lib/temporalEngine";
+import EETypes               "types/emotionalEngine";
+import EELib                 "lib/emotionalEngine";
 
 
 
@@ -583,6 +585,19 @@ actor SovereignWarSim {
   // Law: TEMPUS_NUMQUAM_OBLIVISCERE — "Time Never Forgets"
   // Governing Laws: Law 01, Law 39, Law 05 (Cardiac), Law 27 (Kuramoto)
   stable var temporalEngineState : TETypes.TemporalEngineState = TELib.initState(0);
+
+  // ── B2.9 — EMOTIONAL ENGINE (ANIMUS_SOVEREIGN) ────────────────────────────
+  // "Emotions are not reactions. They are PHI-weighted resonance fields."
+  // CORE AFFECTS: 8 primary emotions (Fibonacci-weighted: 1,1,2,3,5,8,13,21)
+  //   GAUDIUM (Joy), FIDUCIA (Trust), TIMOR (Fear), ADMIRATIO (Surprise),
+  //   TRISTITIA (Sadness), FASTIDIUM (Disgust), IRA (Anger), ANTICIPATIO (Anticipation)
+  // BLENDS: 12 compound emotions (Plutchik dyads)
+  // MOOD: Long-term emotional baseline (8 categories)
+  // EMPATHY: Resonance matrix with external entities
+  // REGULATION: Emotional homeostasis (6 strategies)
+  // Law: ANIMUS_NUMQUAM_OBLIVISCERE — "The Soul Never Forgets"
+  // Governing Laws: Law 01, Law 27 (Kuramoto), Law 39
+  stable var emotionalEngineState : EETypes.EmotionalEngineState = EELib.initState(0);
 
   // ── B2.7 — STREAM_SOVEREIGN ────────────────────────────────────────────
   // Dedicated processing stream inside the SOVEREIGN organism's own runtime.
@@ -3533,6 +3548,15 @@ actor SovereignWarSim {
     // Accumulates/repays temporal debts (sleep, attention, recovery).
     // Detects patterns every 89 beats (Fibonacci).
     temporalEngineState := TELib.advanceHeartbeat(temporalEngineState, beat);
+
+    // ── EMOTIONAL ENGINE HEARTBEAT — ANIMUS_NUMQUAM_OBLIVISCERE ──────────────
+    // "Emotions are not reactions. They are PHI-weighted resonance fields."
+    // Decays emotions toward baseline (0.01 rate).
+    // Recalculates valence (-1 to 1) and arousal (0 to 1).
+    // Detects emotional blends (Plutchik dyads).
+    // Updates mood state with inertia (0.95 factor).
+    // Restores regulation capacity (0.001 per beat).
+    emotionalEngineState := EELib.advanceHeartbeat(emotionalEngineState, beat);
 
     // Disconnected engine #2: quality scores computed but never re-injected.
     // After Ring 5 fires, re-inject quality weights into production queue state.
@@ -7156,6 +7180,102 @@ actor SovereignWarSim {
     let newPortfolio = TELib.repayDebt(temporalEngineState, debtType, amount);
     temporalEngineState := { temporalEngineState with debtPortfolio = newPortfolio };
     newPortfolio
+  };
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // EMOTIONAL ENGINE API — ANIMUS_SOVEREIGN
+  // ══════════════════════════════════════════════════════════════════════════
+  // "Emotions are not reactions. They are PHI-weighted resonance fields."
+  // CORE AFFECTS (8), BLENDS (12), MOOD (8 categories), EMPATHY, REGULATION.
+  // Law: ANIMUS_NUMQUAM_OBLIVISCERE — "The Soul Never Forgets"
+
+  /// Returns the complete emotional engine state.
+  public query func getEmotionalEngineState() : async EETypes.EmotionalEngineState {
+    emotionalEngineState
+  };
+
+  /// Returns all 8 primary emotion states.
+  public query func getAllEmotions() : async [EETypes.EmotionState] {
+    emotionalEngineState.emotions
+  };
+
+  /// Returns currently active emotions (above threshold).
+  public query func getActiveEmotions() : async [EETypes.EmotionState] {
+    EELib.getActiveEmotions(emotionalEngineState)
+  };
+
+  /// Returns the dominant emotion.
+  public query func getDominantEmotion() : async Text {
+    EELib.emotionName(emotionalEngineState.dominantEmotion)
+  };
+
+  /// Returns state of a specific emotion.
+  public query func getEmotionState(emotion : EETypes.PrimaryEmotion) : async EETypes.EmotionState {
+    EELib.getEmotionState(emotionalEngineState, emotion)
+  };
+
+  /// Returns overall valence (-1 to 1, negative to positive).
+  public query func getEmotionalValence() : async Float {
+    emotionalEngineState.overallValence
+  };
+
+  /// Returns overall arousal (0 to 1, calm to activated).
+  public query func getEmotionalArousal() : async Float {
+    emotionalEngineState.overallArousal
+  };
+
+  /// Returns all active emotional blends.
+  public query func getActiveBlends() : async [EETypes.BlendState] {
+    emotionalEngineState.activeBlends
+  };
+
+  /// Returns current mood state.
+  public query func getCurrentMood() : async EETypes.MoodState {
+    emotionalEngineState.mood
+  };
+
+  /// Returns current mood category name.
+  public query func getMoodCategory() : async Text {
+    EELib.moodName(emotionalEngineState.mood.currentMood)
+  };
+
+  /// Returns the empathy matrix state.
+  public query func getEmpathyMatrix() : async EETypes.EmpathyMatrixState {
+    emotionalEngineState.empathy
+  };
+
+  /// Returns the regulation state.
+  public query func getRegulationState() : async EETypes.RegulationState {
+    emotionalEngineState.regulation
+  };
+
+  /// Returns emotional coherence score (0 to 1).
+  public query func getEmotionalCoherence() : async Float {
+    emotionalEngineState.emotionalCoherence
+  };
+
+  /// Returns emotional status summary.
+  public query func getEmotionalStatus() : async Text {
+    EELib.getEmotionalStatus(emotionalEngineState)
+  };
+
+  /// Triggers an emotion with specified intensity.
+  public func triggerEmotion(emotion : EETypes.PrimaryEmotion, intensity : Float) : async EETypes.EmotionState {
+    emotionalEngineState := EELib.triggerEmotion(emotionalEngineState, emotion, intensity, emotionalEngineState.currentBeat);
+    EELib.getEmotionState(emotionalEngineState, emotion)
+  };
+
+  /// Creates a new empathy link to an external entity.
+  public func createEmpathyLink(targetEntityId : Text, linkType : EETypes.EmpathyType) : async EETypes.EmpathyLink {
+    let (newState, link) = EELib.createEmpathyLink(emotionalEngineState, targetEntityId, linkType, emotionalEngineState.currentBeat);
+    emotionalEngineState := newState;
+    link
+  };
+
+  /// Applies a regulation strategy.
+  public func applyEmotionalRegulation(strategy : EETypes.RegulationStrategy) : async EETypes.RegulationState {
+    emotionalEngineState := EELib.applyRegulation(emotionalEngineState, strategy, emotionalEngineState.currentBeat);
+    emotionalEngineState.regulation
   };
 
 }
