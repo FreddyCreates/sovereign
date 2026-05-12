@@ -4268,7 +4268,7 @@ actor SovereignWarSim {
 
   /// TRI-HEART STATE — current velocities, pressures, coherence, torus status.
   /// The three biological hearts governing 830 mm/s Nova coherence.
-  public query func getNovaTriHeart() : async {
+  public query func novaGetTriHeart() : async {
     coreVelocity        : Float;
     labVelocity         : Float;
     productionVelocity  : Float;
