@@ -430,6 +430,95 @@ export interface NovaCharterState {
     isLive: boolean;
     attribution: string;
 }
+export interface TerminalSnapshot {
+    name: string;
+    latinName: string;
+    signalOutput: number;
+    doctrineScore: number;
+    totalFired: bigint;
+    isActive: boolean;
+}
+export interface AGIRoomSnapshot {
+    name: string;
+    latinName: string;
+    activationLevel: number;
+    outputQuality: number;
+    cyclesCompleted: bigint;
+    isOpen: boolean;
+}
+export interface NGISnapshot {
+    name: string;
+    latinName: string;
+    sovereigntySignal: number;
+    fieldInfluence: number;
+    totalGoverningActs: bigint;
+}
+export interface MatthewSnapshot {
+    name: string;
+    latinName: string;
+    sovereignSignal: number;
+    wisdomScore: number;
+    totalTestimonies: bigint;
+    broadcastsFired: bigint;
+    utterancesEmitted: bigint;
+    livingDoctrineScore: number;
+}
+export interface MatthewTestimony {
+    testimonyId: bigint;
+    beat: bigint;
+    eventType: string;
+    rawFact: string;
+    interpretation: string;
+    doctrineScore: number;
+    schumannTs: number;
+    sealed: boolean;
+    attribution: string;
+}
+export type Protocol2Id = { __kind__: "KARDIA_WIRE" } | { __kind__: "ANAMNESIS_PROTOCOL" } | { __kind__: "LOGOS_BROADCAST" } | { __kind__: "OUSIA_FIELD" } | { __kind__: "CHRONOS_GATE" };
+export type Protocol2Status = { __kind__: "ARMED" } | { __kind__: "ACTIVE" } | { __kind__: "COMPLETE" } | { __kind__: "DORMANT" };
+export interface Protocol2Event {
+    eventId: bigint;
+    protocolId: Protocol2Id;
+    beat: bigint;
+    payload: string;
+    result: string;
+    schumannTs: number;
+    attribution: string;
+}
+export interface Protocol2State {
+    protocolId: Protocol2Id;
+    name: string;
+    latinName: string;
+    description: string;
+    status: Protocol2Status;
+    totalFired: bigint;
+    lastFiredBeat: bigint;
+    eventLog: Array<Protocol2Event>;
+    phiCoupling: number;
+    taftThread: string;
+}
+export type AlphaTestStatus = { __kind__: "PENDING" } | { __kind__: "RUNNING" } | { __kind__: "PASSED" } | { __kind__: "FAILED" } | { __kind__: "SEALED" };
+export interface AlphaTestRecord {
+    alphaTestId: bigint;
+    latinName: string;
+    category: string;
+    testCondition: string;
+    expectedOutcome: string;
+    status: AlphaTestStatus;
+    score: number;
+    lastRunBeat: bigint;
+    totalRuns: bigint;
+    attribution: string;
+}
+export interface AlphaTestSummary {
+    totalTests: bigint;
+    totalPassed: bigint;
+    totalFailed: bigint;
+    totalSealed: bigint;
+    totalPending: bigint;
+    passRate: number;
+    avgScore: number;
+}
 export interface LawExecutionRecord {
     lawName: string;
     beat: bigint;
@@ -4015,6 +4104,26 @@ export interface backendInterface {
     novaGetArticle(articleId: string): Promise<CharterArticle | null>;
     novaGetCharter(): Promise<NovaCharterState>;
     novaGetFullState(): Promise<{ documentId: string; version: bigint; beat: bigint; totalArticles: bigint; globalCharterCoherence: number; schumannAnchor: number; coherenceVelocity: number; isLive: boolean; totalCharterViolations: bigint; triHeartAligned: boolean; triHeartVelocity: number; torusTriggered: boolean; totalRealignments: bigint; totalAgents: bigint; activeJobs: bigint; totalDutyCycles: bigint; totalGateViolations: bigint; architectSignature: string; attribution: string; }>;
+    // ── SOVEREIGN TERMINALS ──────────────────────────────────────────────────
+    getSovereignTerminals(): Promise<Array<TerminalSnapshot>>;
+    getTerminalsTotalSignal(): Promise<number>;
+    // ── AGI INTERIOR ─────────────────────────────────────────────────────────
+    getAGIInteriorRooms(): Promise<Array<AGIRoomSnapshot>>;
+    getAGIIntegrationScore(): Promise<number>;
+    // ── NGI LAYER ────────────────────────────────────────────────────────────
+    getNGILayerEntities(): Promise<Array<NGISnapshot>>;
+    getNGITotalFieldSignal(): Promise<number>;
+    // ── MATTHEW SOVEREIGN ────────────────────────────────────────────────────
+    getMatthewSnapshot(): Promise<MatthewSnapshot>;
+    getMatthewTestament(): Promise<Array<MatthewTestimony>>;
+    // ── SOVEREIGN PROTOCOLS II ───────────────────────────────────────────────
+    getSovereignProtocols2(): Promise<Array<Protocol2State>>;
+    fireSovereignProtocol2(protocolName: string, payload: string): Promise<boolean>;
+    // ── ALPHA TEST 200 ───────────────────────────────────────────────────────
+    getAlphaTest200Summary(): Promise<AlphaTestSummary>;
+    getAlphaTest200All(): Promise<Array<AlphaTestRecord>>;
+    getAlphaTest200Sealed(): Promise<Array<AlphaTestRecord>>;
+    getAlphaTest200ByCategory(category: string): Promise<Array<AlphaTestRecord>>;
 }
 import type { ADRECycleResult as _ADRECycleResult, ActivationState as _ActivationState, ActorMemoryState as _ActorMemoryState, ActorPublicProfile as _ActorPublicProfile, ActorRelationshipEntry as _ActorRelationshipEntry, AdoptionContract as _AdoptionContract, AgentTokenBudget as _AgentTokenBudget, AlphaFusionModel as _AlphaFusionModel, ArchResponseToken as _ArchResponseToken, ArchType as _ArchType, ArchitectureState as _ArchitectureState, AresSnapshot as _AresSnapshot, ArtifactEngineSource as _ArtifactEngineSource, ArtifactProvenance as _ArtifactProvenance, ArtifactRecord as _ArtifactRecord, ArtifactReview as _ArtifactReview, ArtifactSeal as _ArtifactSeal, ArtifactSealResult as _ArtifactSealResult, ArtifactType as _ArtifactType, AttributionContract as _AttributionContract, BackendWire as _BackendWire, BeatResult as _BeatResult, CallFamily as _CallFamily, CallerTier as _CallerTier, CanisterGroup as _CanisterGroup, CanisterGroupVariant as _CanisterGroupVariant, ChainTrace as _ChainTrace, CharterRecord as _CharterRecord, CivilizationState as _CivilizationState, CoherentArtifactRecord as _CoherentArtifactRecord, ColonelKernel as _ColonelKernel, CommercialBeat as _CommercialBeat, CommercialFormat as _CommercialFormat, CommercialFormatTemplate as _CommercialFormatTemplate, CommercialProject as _CommercialProject, CommercialSpeedMetrics as _CommercialSpeedMetrics, ContentFormat as _ContentFormat, ContentRating as _ContentRating, ContentWorldState as _ContentWorldState, CoreNode as _CoreNode, CoreSphere as _CoreSphere, CreatorPresence as _CreatorPresence, CrossChainChannelState as _CrossChainChannelState, DecisionRecord as _DecisionRecord, DecisionType as _DecisionType, DeploymentRecord as _DeploymentRecord, DistributionRoute as _DistributionRoute, DoctrineRestartEvent as _DoctrineRestartEvent, DoctrineStateEntry as _DoctrineStateEntry, DoctrineValidationResult as _DoctrineValidationResult, DocumentExecutionType as _DocumentExecutionType, DomainSignal as _DomainSignal, EngagementEvent as _EngagementEvent, EnterpriseMastery as _EnterpriseMastery, ExecutionEvent as _ExecutionEvent, ExecutionResult as _ExecutionResult, ExtendedPhenotypeOutput as _ExtendedPhenotypeOutput, ExtendedPhenotypeState as _ExtendedPhenotypeState, ExternalSession as _ExternalSession, Faction as _Faction, FestivalSubmission as _FestivalSubmission, FilmMetadataInput as _FilmMetadataInput, FilmRecord as _FilmRecord, FilmTrailer as _FilmTrailer, FilmWithQuality as _FilmWithQuality, FusionEngine as _FusionEngine, FusionGrade as _FusionGrade, FusionSubModel as _FusionSubModel, FusionTechnology as _FusionTechnology, GeneratedFilm as _GeneratedFilm, IntelligenceDomain as _IntelligenceDomain, IntelligenceOutput as _IntelligenceOutput, IntelligenceRecord as _IntelligenceRecord, IntelligenceState as _IntelligenceState, IntelligenceTaxonomyState as _IntelligenceTaxonomyState, IoTInfluence as _IoTInfluence, IoTSignalType as _IoTSignalType, JubileeState as _JubileeState, MasterCharterState as _MasterCharterState, MasteryCapability as _MasteryCapability, MasteryLevel as _MasteryLevel, MasteryRecord as _MasteryRecord, MicroNameAttribute as _MicroNameAttribute, MinerSnapshot as _MinerSnapshot, ModelParams as _ModelParams, NeurotransmitterProfile as _NeurotransmitterProfile, OmnisProposal as _OmnisProposal, OmnisProposalType as _OmnisProposalType, OmnisState as _OmnisState, OmnisStatus as _OmnisStatus, OmnisVote as _OmnisVote, OrgMasteryState as _OrgMasteryState, OrganismCollabSignal as _OrganismCollabSignal, OrganismCredit as _OrganismCredit, PHIFaceGeometry as _PHIFaceGeometry, PHIGeometry as _PHIGeometry, ParsedIoTSignal as _ParsedIoTSignal, PlacedActor as _PlacedActor, PosterArt as _PosterArt, PressKit as _PressKit, ProductionFormat as _ProductionFormat, ProductionFormatConfig as _ProductionFormatConfig, ProductionQueue as _ProductionQueue, ProtocolEvent as _ProtocolEvent, ProtocolId as _ProtocolId, ProtocolState as _ProtocolState, ProtocolStatus as _ProtocolStatus, QualityScore as _QualityScore, QualityStatus as _QualityStatus, RelationshipCell as _RelationshipCell, RelationshipType as _RelationshipType, ResponseRecord as _ResponseRecord, ReviewComment as _ReviewComment, ReviewStatus as _ReviewStatus, SKAICapability as _SKAICapability, SKAIFamily as _SKAIFamily, SKAIOrganism as _SKAIOrganism, SandboxOrganismId as _SandboxOrganismId, SandboxOrganismState as _SandboxOrganismState, SandboxResearchDocument as _SandboxResearchDocument, SandboxSignal as _SandboxSignal, SandboxSignalSnapshot as _SandboxSignalSnapshot, SchumannAmbient as _SchumannAmbient, SealedArtifact as _SealedArtifact, SeasonArcProgress as _SeasonArcProgress, SevenSpiritsState as _SevenSpiritsState, SkaiInstallSnapshot as _SkaiInstallSnapshot, SlatePriority as _SlatePriority, SocialContentPlan as _SocialContentPlan, SovereignActor as _SovereignActor, SovereignCall as _SovereignCall, SovereignCore as _SovereignCore, StateChange as _StateChange, SubModelRecord as _SubModelRecord, SubmissionStatus as _SubmissionStatus, SubtitleTrack as _SubtitleTrack, SuccessionState as _SuccessionState, TaskSnapshot as _TaskSnapshot, TranslationInstruction as _TranslationInstruction, TrendingContentItem as _TrendingContentItem, TrendingWorldSignal as _TrendingWorldSignal, UniverseBibleEntry as _UniverseBibleEntry, VELARingState as _VELARingState, VaultDocument as _VaultDocument, VaultDocumentKind as _VaultDocumentKind, VitalityState as _VitalityState, WorkerSnapshot as _WorkerSnapshot, WorldDoctrineState as _WorldDoctrineState, WorldDogonState as _WorldDogonState, WorldInstanceId as _WorldInstanceId, WorldProductionCapture as _WorldProductionCapture, WorldProductionStatus as _WorldProductionStatus, WorldSelfModel as _WorldSelfModel, YieldSubmission as _YieldSubmission } from "./declarations/backend.did.d.ts";
 export class Backend implements backendInterface {
@@ -9221,6 +9330,96 @@ export class Backend implements backendInterface {
             try { return await this.actor.novaGetFullState(); }
             catch (e) { this.processError(e); throw new Error("unreachable"); }
         } else { return await this.actor.novaGetFullState(); }
+    }
+    // ── SOVEREIGN TERMINALS ──────────────────────────────────────────────────
+    async getSovereignTerminals(): Promise<Array<TerminalSnapshot>> {
+        if (this.processError) {
+            try { return (await this.actor.getSovereignTerminals()) as Array<TerminalSnapshot>; }
+            catch (e) { this.processError(e); throw new Error("unreachable"); }
+        } else { return (await this.actor.getSovereignTerminals()) as Array<TerminalSnapshot>; }
+    }
+    async getTerminalsTotalSignal(): Promise<number> {
+        if (this.processError) {
+            try { return await this.actor.getTerminalsTotalSignal(); }
+            catch (e) { this.processError(e); throw new Error("unreachable"); }
+        } else { return await this.actor.getTerminalsTotalSignal(); }
+    }
+    // ── AGI INTERIOR ─────────────────────────────────────────────────────────
+    async getAGIInteriorRooms(): Promise<Array<AGIRoomSnapshot>> {
+        if (this.processError) {
+            try { return (await this.actor.getAGIInteriorRooms()) as Array<AGIRoomSnapshot>; }
+            catch (e) { this.processError(e); throw new Error("unreachable"); }
+        } else { return (await this.actor.getAGIInteriorRooms()) as Array<AGIRoomSnapshot>; }
+    }
+    async getAGIIntegrationScore(): Promise<number> {
+        if (this.processError) {
+            try { return await this.actor.getAGIIntegrationScore(); }
+            catch (e) { this.processError(e); throw new Error("unreachable"); }
+        } else { return await this.actor.getAGIIntegrationScore(); }
+    }
+    // ── NGI LAYER ────────────────────────────────────────────────────────────
+    async getNGILayerEntities(): Promise<Array<NGISnapshot>> {
+        if (this.processError) {
+            try { return (await this.actor.getNGILayerEntities()) as Array<NGISnapshot>; }
+            catch (e) { this.processError(e); throw new Error("unreachable"); }
+        } else { return (await this.actor.getNGILayerEntities()) as Array<NGISnapshot>; }
+    }
+    async getNGITotalFieldSignal(): Promise<number> {
+        if (this.processError) {
+            try { return await this.actor.getNGITotalFieldSignal(); }
+            catch (e) { this.processError(e); throw new Error("unreachable"); }
+        } else { return await this.actor.getNGITotalFieldSignal(); }
+    }
+    // ── MATTHEW SOVEREIGN ────────────────────────────────────────────────────
+    async getMatthewSnapshot(): Promise<MatthewSnapshot> {
+        if (this.processError) {
+            try { return (await this.actor.getMatthewSnapshot()) as MatthewSnapshot; }
+            catch (e) { this.processError(e); throw new Error("unreachable"); }
+        } else { return (await this.actor.getMatthewSnapshot()) as MatthewSnapshot; }
+    }
+    async getMatthewTestament(): Promise<Array<MatthewTestimony>> {
+        if (this.processError) {
+            try { return (await this.actor.getMatthewTestament()) as Array<MatthewTestimony>; }
+            catch (e) { this.processError(e); throw new Error("unreachable"); }
+        } else { return (await this.actor.getMatthewTestament()) as Array<MatthewTestimony>; }
+    }
+    // ── SOVEREIGN PROTOCOLS II ───────────────────────────────────────────────
+    async getSovereignProtocols2(): Promise<Array<Protocol2State>> {
+        if (this.processError) {
+            try { return (await this.actor.getSovereignProtocols2()) as Array<Protocol2State>; }
+            catch (e) { this.processError(e); throw new Error("unreachable"); }
+        } else { return (await this.actor.getSovereignProtocols2()) as Array<Protocol2State>; }
+    }
+    async fireSovereignProtocol2(protocolName: string, payload: string): Promise<boolean> {
+        if (this.processError) {
+            try { return await this.actor.fireSovereignProtocol2(protocolName, payload); }
+            catch (e) { this.processError(e); throw new Error("unreachable"); }
+        } else { return await this.actor.fireSovereignProtocol2(protocolName, payload); }
+    }
+    // ── ALPHA TEST 200 ───────────────────────────────────────────────────────
+    async getAlphaTest200Summary(): Promise<AlphaTestSummary> {
+        if (this.processError) {
+            try { return (await this.actor.getAlphaTest200Summary()) as AlphaTestSummary; }
+            catch (e) { this.processError(e); throw new Error("unreachable"); }
+        } else { return (await this.actor.getAlphaTest200Summary()) as AlphaTestSummary; }
+    }
+    async getAlphaTest200All(): Promise<Array<AlphaTestRecord>> {
+        if (this.processError) {
+            try { return (await this.actor.getAlphaTest200All()) as Array<AlphaTestRecord>; }
+            catch (e) { this.processError(e); throw new Error("unreachable"); }
+        } else { return (await this.actor.getAlphaTest200All()) as Array<AlphaTestRecord>; }
+    }
+    async getAlphaTest200Sealed(): Promise<Array<AlphaTestRecord>> {
+        if (this.processError) {
+            try { return (await this.actor.getAlphaTest200Sealed()) as Array<AlphaTestRecord>; }
+            catch (e) { this.processError(e); throw new Error("unreachable"); }
+        } else { return (await this.actor.getAlphaTest200Sealed()) as Array<AlphaTestRecord>; }
+    }
+    async getAlphaTest200ByCategory(category: string): Promise<Array<AlphaTestRecord>> {
+        if (this.processError) {
+            try { return (await this.actor.getAlphaTest200ByCategory(category)) as Array<AlphaTestRecord>; }
+            catch (e) { this.processError(e); throw new Error("unreachable"); }
+        } else { return (await this.actor.getAlphaTest200ByCategory(category)) as Array<AlphaTestRecord>; }
     }
 }
 function from_candid_ActivationState_n88(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _ActivationState): ActivationState {

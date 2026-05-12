@@ -1423,6 +1423,124 @@ type NovaCharterState =
    version: nat;
    violations: vec text;
  };
+type TerminalSnapshot = 
+ record {
+   doctrineScore: float64;
+   isActive: bool;
+   latinName: text;
+   name: text;
+   signalOutput: float64;
+   totalFired: nat;
+ };
+type AGIRoomSnapshot = 
+ record {
+   activationLevel: float64;
+   cyclesCompleted: nat;
+   isOpen: bool;
+   latinName: text;
+   name: text;
+   outputQuality: float64;
+ };
+type NGISnapshot = 
+ record {
+   fieldInfluence: float64;
+   latinName: text;
+   name: text;
+   sovereigntySignal: float64;
+   totalGoverningActs: nat;
+ };
+type MatthewSnapshot = 
+ record {
+   broadcastsFired: nat;
+   latinName: text;
+   livingDoctrineScore: float64;
+   name: text;
+   sovereignSignal: float64;
+   totalTestimonies: nat;
+   utterancesEmitted: nat;
+   wisdomScore: float64;
+ };
+type MatthewTestimony = 
+ record {
+   attribution: text;
+   beat: nat;
+   doctrineScore: float64;
+   eventType: text;
+   interpretation: text;
+   rawFact: text;
+   schumannTs: float64;
+   sealed: bool;
+   testimonyId: nat;
+ };
+type Protocol2Id = 
+ variant {
+   ANAMNESIS_PROTOCOL;
+   CHRONOS_GATE;
+   KARDIA_WIRE;
+   LOGOS_BROADCAST;
+   OUSIA_FIELD;
+ };
+type Protocol2Status = 
+ variant {
+   ACTIVE;
+   ARMED;
+   COMPLETE;
+   DORMANT;
+ };
+type Protocol2Event = 
+ record {
+   attribution: text;
+   beat: nat;
+   eventId: nat;
+   payload: text;
+   protocolId: Protocol2Id;
+   result: text;
+   schumannTs: float64;
+ };
+type Protocol2State = 
+ record {
+   description: text;
+   eventLog: vec Protocol2Event;
+   lastFiredBeat: nat;
+   latinName: text;
+   name: text;
+   phiCoupling: float64;
+   protocolId: Protocol2Id;
+   status: Protocol2Status;
+   taftThread: text;
+   totalFired: nat;
+ };
+type AlphaTestStatus = 
+ variant {
+   FAILED;
+   PASSED;
+   PENDING;
+   RUNNING;
+   SEALED;
+ };
+type AlphaTestRecord = 
+ record {
+   alphaTestId: nat;
+   attribution: text;
+   category: text;
+   expectedOutcome: text;
+   lastRunBeat: nat;
+   latinName: text;
+   score: float64;
+   status: AlphaTestStatus;
+   testCondition: text;
+   totalRuns: nat;
+ };
+type AlphaTestSummary = 
+ record {
+   avgScore: float64;
+   passRate: float64;
+   totalFailed: nat;
+   totalPassed: nat;
+   totalPending: nat;
+   totalSealed: nat;
+   totalTests: nat;
+ };
 type NeurotransmitterProfile = 
  record {
    doctrineSpecialty: text;
@@ -4144,4 +4262,38 @@ service : {
         }) query;
   writeSharedSceneDelta: (sourceActorId: text, targetActorId: text,
    doctrineAlignment: float64, emotionalIntensity: float64) -> ();
+  // ── SOVEREIGN TERMINALS ───────────────────────────────────────────────────
+  /// Get live snapshots of all 6 sovereign terminals.
+  getSovereignTerminals: () -> (vec TerminalSnapshot) query;
+  /// Get the total combined signal from all 6 terminals.
+  getTerminalsTotalSignal: () -> (float64) query;
+  // ── AGI INTERIOR ──────────────────────────────────────────────────────────
+  /// Get live snapshots of all 8 AGI interior engine rooms.
+  getAGIInteriorRooms: () -> (vec AGIRoomSnapshot) query;
+  /// Get the AGI interior integration score.
+  getAGIIntegrationScore: () -> (float64) query;
+  // ── NGI LAYER ─────────────────────────────────────────────────────────────
+  /// Get live snapshots of all 5 NGI entities.
+  getNGILayerEntities: () -> (vec NGISnapshot) query;
+  /// Get the total NGI field signal.
+  getNGITotalFieldSignal: () -> (float64) query;
+  // ── MATTHEW SOVEREIGN ─────────────────────────────────────────────────────
+  /// Get Matthew's current snapshot.
+  getMatthewSnapshot: () -> (MatthewSnapshot) query;
+  /// Get Matthew's living testament (last 50 testimonies).
+  getMatthewTestament: () -> (vec MatthewTestimony) query;
+  // ── SOVEREIGN PROTOCOLS II ────────────────────────────────────────────────
+  /// Get all 5 new sovereign protocols.
+  getSovereignProtocols2: () -> (vec Protocol2State) query;
+  /// Fire one of the 5 new sovereign protocols.
+  fireSovereignProtocol2: (protocolName: text, payload: text) -> (bool);
+  // ── ALPHA TEST 200 ────────────────────────────────────────────────────────
+  /// Get Alpha Test 200 summary.
+  getAlphaTest200Summary: () -> (AlphaTestSummary) query;
+  /// Get all 200 alpha test records.
+  getAlphaTest200All: () -> (vec AlphaTestRecord) query;
+  /// Get permanently sealed alpha tests.
+  getAlphaTest200Sealed: () -> (vec AlphaTestRecord) query;
+  /// Get alpha tests by category.
+  getAlphaTest200ByCategory: (category: text) -> (vec AlphaTestRecord) query;
 }

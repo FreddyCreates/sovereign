@@ -348,6 +348,95 @@ export interface NovaCharterState {
     isLive: boolean;
     attribution: string;
 }
+export interface TerminalSnapshot {
+    name: string;
+    latinName: string;
+    signalOutput: number;
+    doctrineScore: number;
+    totalFired: bigint;
+    isActive: boolean;
+}
+export interface AGIRoomSnapshot {
+    name: string;
+    latinName: string;
+    activationLevel: number;
+    outputQuality: number;
+    cyclesCompleted: bigint;
+    isOpen: boolean;
+}
+export interface NGISnapshot {
+    name: string;
+    latinName: string;
+    sovereigntySignal: number;
+    fieldInfluence: number;
+    totalGoverningActs: bigint;
+}
+export interface MatthewSnapshot {
+    name: string;
+    latinName: string;
+    sovereignSignal: number;
+    wisdomScore: number;
+    totalTestimonies: bigint;
+    broadcastsFired: bigint;
+    utterancesEmitted: bigint;
+    livingDoctrineScore: number;
+}
+export interface MatthewTestimony {
+    testimonyId: bigint;
+    beat: bigint;
+    eventType: string;
+    rawFact: string;
+    interpretation: string;
+    doctrineScore: number;
+    schumannTs: number;
+    sealed: boolean;
+    attribution: string;
+}
+export type Protocol2Id = { __kind__: "KARDIA_WIRE" } | { __kind__: "ANAMNESIS_PROTOCOL" } | { __kind__: "LOGOS_BROADCAST" } | { __kind__: "OUSIA_FIELD" } | { __kind__: "CHRONOS_GATE" };
+export type Protocol2Status = { __kind__: "ARMED" } | { __kind__: "ACTIVE" } | { __kind__: "COMPLETE" } | { __kind__: "DORMANT" };
+export interface Protocol2Event {
+    eventId: bigint;
+    protocolId: Protocol2Id;
+    beat: bigint;
+    payload: string;
+    result: string;
+    schumannTs: number;
+    attribution: string;
+}
+export interface Protocol2State {
+    protocolId: Protocol2Id;
+    name: string;
+    latinName: string;
+    description: string;
+    status: Protocol2Status;
+    totalFired: bigint;
+    lastFiredBeat: bigint;
+    eventLog: Array<Protocol2Event>;
+    phiCoupling: number;
+    taftThread: string;
+}
+export type AlphaTestStatus = { __kind__: "PENDING" } | { __kind__: "RUNNING" } | { __kind__: "PASSED" } | { __kind__: "FAILED" } | { __kind__: "SEALED" };
+export interface AlphaTestRecord {
+    alphaTestId: bigint;
+    latinName: string;
+    category: string;
+    testCondition: string;
+    expectedOutcome: string;
+    status: AlphaTestStatus;
+    score: number;
+    lastRunBeat: bigint;
+    totalRuns: bigint;
+    attribution: string;
+}
+export interface AlphaTestSummary {
+    totalTests: bigint;
+    totalPassed: bigint;
+    totalFailed: bigint;
+    totalSealed: bigint;
+    totalPending: bigint;
+    passRate: number;
+    avgScore: number;
+}
 export interface LawExecutionRecord {
     lawName: string;
     beat: bigint;
@@ -3982,4 +4071,24 @@ export interface backendInterface {
         architectSignature: string;
         attribution: string;
     }>;
+    // ── SOVEREIGN TERMINALS ──────────────────────────────────────────────────
+    getSovereignTerminals(): Promise<Array<TerminalSnapshot>>;
+    getTerminalsTotalSignal(): Promise<number>;
+    // ── AGI INTERIOR ─────────────────────────────────────────────────────────
+    getAGIInteriorRooms(): Promise<Array<AGIRoomSnapshot>>;
+    getAGIIntegrationScore(): Promise<number>;
+    // ── NGI LAYER ────────────────────────────────────────────────────────────
+    getNGILayerEntities(): Promise<Array<NGISnapshot>>;
+    getNGITotalFieldSignal(): Promise<number>;
+    // ── MATTHEW SOVEREIGN ────────────────────────────────────────────────────
+    getMatthewSnapshot(): Promise<MatthewSnapshot>;
+    getMatthewTestament(): Promise<Array<MatthewTestimony>>;
+    // ── SOVEREIGN PROTOCOLS II ───────────────────────────────────────────────
+    getSovereignProtocols2(): Promise<Array<Protocol2State>>;
+    fireSovereignProtocol2(protocolName: string, payload: string): Promise<boolean>;
+    // ── ALPHA TEST 200 ───────────────────────────────────────────────────────
+    getAlphaTest200Summary(): Promise<AlphaTestSummary>;
+    getAlphaTest200All(): Promise<Array<AlphaTestRecord>>;
+    getAlphaTest200Sealed(): Promise<Array<AlphaTestRecord>>;
+    getAlphaTest200ByCategory(category: string): Promise<Array<AlphaTestRecord>>;
 }

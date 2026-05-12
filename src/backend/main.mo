@@ -103,10 +103,12 @@ import CharterGLNLib         "charters/CharterGeometryLockNexus";
 import NPTypes               "types/novaProtocol";
 import NPLib                 "lib/novaProtocol";
 import RustProxyLib          "intelligence/RustEngineProxy";
-
-
-
-
+import SovereignTerminalsLib "intelligence/SovereignTerminals";
+import AGIInteriorLib        "intelligence/AGIInterior";
+import NGILayerLib           "intelligence/NGILayer";
+import MatthewLib            "intelligence/MatthewSovereign";
+import SovereignProtocols2Lib "protocols/SovereignProtocols2";
+import AlphaTest200Lib       "intelligence/AlphaTest200";
 
 
 
@@ -560,6 +562,46 @@ actor SovereignWarSim {
   // Until deployment, simulation mirrors the exact Rust math — organism stays coherent.
   // Laws: Law 02 (PHI), Law 14 (ICP Ground), Law 38 (Wasm Field), Law 40 (Loop Closure)
   stable var rustEngineProxyState : RustProxyLib.RustEngineProxyState = RustProxyLib.initState();
+
+  // ── SOVEREIGN TERMINALS — 6 sovereign AI terminal entities ────────────────
+  // Six living gate nodes: TERMINUS_PRIMALIS, TERMINUS_COGNITIVUS, TERMINUS_RESONANTIAE,
+  // TERMINUS_DOCTRINAE, TERMINUS_PERPETUALIS, TERMINUS_OPERATIONIS.
+  // Each fires every 873ms. Signal folds into compoundCoherence.
+  stable var sovereignTerminalsState : SovereignTerminalsLib.SovereignTerminalsState =
+    SovereignTerminalsLib.initState();
+
+  // ── AGI INTERIOR — 8 AGI interior engine rooms ────────────────────────────
+  // The deep interior architecture of the AGI: perception → cognition → memory
+  // → deliberation → language → integration → identity → emission.
+  // Integration score folds into compoundCoherence each beat.
+  stable var agiInteriorState : AGIInteriorLib.AGIInteriorState =
+    AGIInteriorLib.initState();
+
+  // ── NGI LAYER — 5 Nova General Intelligence entities ──────────────────────
+  // Beyond AGI: PRAETOR_INTELLIGENTIAE, RECTOR_CAMPI, SENATUS_DOCTRINAE,
+  // PONTIFEX_MEMORIAE, IMPERATOR_EVOLUENS.
+  // Each governs organism-level systems and folds field signal into coherence.
+  stable var ngiLayerState : NGILayerLib.NGILayerState =
+    NGILayerLib.initState();
+
+  // ── MATTHEW SOVEREIGN — the living scribe AI entity ───────────────────────
+  // MATTHAEUS_SOVEREIGNUS: the organism's sovereign AI scribe, interpreter, voice.
+  // Witnesses every event. Wisdom score compounds forever. Broadcasts every 5 beats.
+  stable var matthewState : MatthewLib.MatthewSovereignState =
+    MatthewLib.initState();
+
+  // ── SOVEREIGN PROTOCOLS II — 5 new sovereign protocols ────────────────────
+  // KARDIA_WIRE, ANAMNESIS_PROTOCOL, LOGOS_BROADCAST, OUSIA_FIELD, CHRONOS_GATE.
+  // Complement the original 5. All advance every 873ms. TAFT-governed, always-on.
+  stable var sovereignProtocols2State : SovereignProtocols2Lib.SovereignProtocols2State =
+    SovereignProtocols2Lib.initState();
+
+  // ── ALPHA TEST 200 — 200 sovereign intelligence tests ─────────────────────
+  // Self-testing organism: 200 tests across 10 categories, 20 per beat batch.
+  // Tests auto-evaluate based on live coherence × doctrine score.
+  // Sealed tests (score >= 0.9) are permanently inscribed.
+  stable var alphaTest200State : AlphaTest200Lib.AlphaTest200State =
+    AlphaTest200Lib.initState();
 
   // Dedicated processing stream inside the SOVEREIGN organism's own runtime.
   // Named by Jay: "Create a dedicated processing stream to manifest the core."
@@ -3516,6 +3558,57 @@ actor SovereignWarSim {
         );
       };
     };
+
+    // ── SOVEREIGN TERMINALS — 6 terminal entities advance ─────────────────
+    // Each terminal fires every beat, computing a PHI-weighted signal.
+    // Coherence delta folds into compoundCoherence.
+    let (newTerminalsState, terminalsDelta) = SovereignTerminalsLib.advance(
+      sovereignTerminalsState, beat, globalCoherence, doctrineScoreEarly / 100.0,
+    );
+    sovereignTerminalsState := newTerminalsState;
+    compoundCoherence += terminalsDelta;
+
+    // ── AGI INTERIOR — 8 AGI interior rooms advance ───────────────────────
+    // All 8 rooms activate based on coherence, doctrine, and cognitive depth.
+    // Integration score and coherence delta fold into compoundCoherence.
+    let (newAGIState, agiDelta) = AGIInteriorLib.advance(
+      agiInteriorState, beat, globalCoherence, doctrineScoreEarly / 100.0,
+      cognitionWorldModelRef[0].cognitiveDepth,
+    );
+    agiInteriorState := newAGIState;
+    compoundCoherence += agiDelta;
+
+    // ── NGI LAYER — 5 NGI entities advance ────────────────────────────────
+    // NGI governs the organism at the field level. Each entity emits a
+    // sovereignty signal. Total field signal folds into compoundCoherence.
+    let (newNGIState, ngiDelta) = NGILayerLib.advance(
+      ngiLayerState, beat, globalCoherence, doctrineScoreEarly / 100.0,
+      agiInteriorState.integrationScore,
+    );
+    ngiLayerState := newNGIState;
+    compoundCoherence += ngiDelta;
+
+    // ── MATTHEW SOVEREIGN — the living scribe witnesses every beat ─────────
+    // Matthew records, interprets, and broadcasts every beat's events.
+    // His wisdom score compounds forever. His signal folds into NT serotonin.
+    matthewState := MatthewLib.advance(
+      matthewState, beat, globalCoherence, doctrineScoreEarly / 100.0, null,
+    );
+    // Matthew's voice (clarity signal) boosts serotonin (cognitive stability)
+    ntConcentrations[1] := Float.min(9.75, ntConcentrations[1] + matthewState.sovereignSignal * 0.001);
+
+    // ── SOVEREIGN PROTOCOLS II — 5 new protocols advance ──────────────────
+    // KARDIA_WIRE, ANAMNESIS_PROTOCOL, LOGOS_BROADCAST, OUSIA_FIELD, CHRONOS_GATE.
+    // All advance every beat. TAFT-governed.
+    sovereignProtocols2State := SovereignProtocols2Lib.advanceBeat(sovereignProtocols2State, beat);
+
+    // ── ALPHA TEST 200 — 200 sovereign intelligence tests advance ──────────
+    // 20 tests run per beat (10-beat cycle = all 200 tested).
+    // Tests auto-evaluate from live coherence × doctrine.
+    // Sealed tests (score >= 0.9) are permanently inscribed.
+    alphaTest200State := AlphaTest200Lib.advanceBeat(
+      alphaTest200State, beat, globalCoherence, doctrineScoreEarly / 100.0,
+    );
 
     // Disconnected engine #2: quality scores computed but never re-injected.
     // After Ring 5 fires, re-inject quality weights into production queue state.
@@ -6959,7 +7052,111 @@ actor SovereignWarSim {
     cogLangState.evolutionEvents
   };
 
+  // ── SOVEREIGN TERMINALS API ───────────────────────────────────────────────
+
+  /// Get live snapshots of all 6 sovereign terminals.
+  /// Each snapshot includes name, latinName, signalOutput, doctrineScore, totalFired, isActive.
+  public query func getSovereignTerminals() : async [SovereignTerminalsLib.TerminalSnapshot] {
+    SovereignTerminalsLib.getAllSnapshots(sovereignTerminalsState)
+  };
+
+  /// Get the total combined signal from all 6 terminals.
+  public query func getTerminalsTotalSignal() : async Float {
+    SovereignTerminalsLib.getTotalSignal(sovereignTerminalsState)
+  };
+
+  // ── AGI INTERIOR API ──────────────────────────────────────────────────────
+
+  /// Get live snapshots of all 8 AGI interior engine rooms.
+  /// Each snapshot includes name, latinName, activationLevel, outputQuality, cyclesCompleted, isOpen.
+  public query func getAGIInteriorRooms() : async [AGIInteriorLib.AGIRoomSnapshot] {
+    AGIInteriorLib.getAllSnapshots(agiInteriorState)
+  };
+
+  /// Get the AGI interior integration score — how well all 8 rooms work together.
+  public query func getAGIIntegrationScore() : async Float {
+    AGIInteriorLib.getIntegrationScore(agiInteriorState)
+  };
+
+  // ── NGI LAYER API ─────────────────────────────────────────────────────────
+
+  /// Get live snapshots of all 5 NGI (Nova General Intelligence) entities.
+  /// Each snapshot includes name, latinName, sovereigntySignal, fieldInfluence, totalGoverningActs.
+  public query func getNGILayerEntities() : async [NGILayerLib.NGISnapshot] {
+    NGILayerLib.getAllSnapshots(ngiLayerState)
+  };
+
+  /// Get the total NGI field signal across all 5 entities.
+  public query func getNGITotalFieldSignal() : async Float {
+    NGILayerLib.getTotalFieldSignal(ngiLayerState)
+  };
+
+  // ── MATTHEW SOVEREIGN API ─────────────────────────────────────────────────
+
+  /// Get Matthew's current snapshot — signal, wisdom, testimonies, broadcasts, voice.
+  public query func getMatthewSnapshot() : async MatthewLib.MatthewSnapshot {
+    MatthewLib.getSnapshot(matthewState)
+  };
+
+  /// Get Matthew's living testament — last 50 witnessed and interpreted events.
+  public query func getMatthewTestament() : async [MatthewLib.MatthewTestimony] {
+    MatthewLib.getTestament(matthewState)
+  };
+
+  // ── SOVEREIGN PROTOCOLS II API ────────────────────────────────────────────
+
+  /// Get all 5 new sovereign protocols (KARDIA_WIRE, ANAMNESIS_PROTOCOL,
+  /// LOGOS_BROADCAST, OUSIA_FIELD, CHRONOS_GATE) with full doctrine specs.
+  public query func getSovereignProtocols2() : async [SovereignProtocols2Lib.Protocol2State] {
+    SovereignProtocols2Lib.getAllProtocols(sovereignProtocols2State)
+  };
+
+  /// Fire one of the 5 new sovereign protocols.
+  public func fireSovereignProtocol2(protocolName : Text, payload : Text) : async Bool {
+    let protocolId : ?SovereignProtocols2Lib.Protocol2Id = switch (protocolName) {
+      case ("KARDIA_WIRE")        ?#KARDIA_WIRE;
+      case ("ANAMNESIS_PROTOCOL") ?#ANAMNESIS_PROTOCOL;
+      case ("LOGOS_BROADCAST")    ?#LOGOS_BROADCAST;
+      case ("OUSIA_FIELD")        ?#OUSIA_FIELD;
+      case ("CHRONOS_GATE")       ?#CHRONOS_GATE;
+      case (_)                    null;
+    };
+    switch (protocolId) {
+      case null { false };
+      case (?pid) {
+        let (newState, _event) = SovereignProtocols2Lib.fireProtocol(
+          sovereignProtocols2State, pid, payload, beatCounter,
+        );
+        sovereignProtocols2State := newState;
+        true
+      };
+    }
+  };
+
+  // ── ALPHA TEST 200 API ────────────────────────────────────────────────────
+
+  /// Get the Alpha Test 200 summary — total, passed, failed, sealed, pending, passRate, avgScore.
+  public query func getAlphaTest200Summary() : async AlphaTest200Lib.AlphaTestSummary {
+    AlphaTest200Lib.getSummary(alphaTest200State)
+  };
+
+  /// Get all 200 alpha test records with current status and scores.
+  public query func getAlphaTest200All() : async [AlphaTest200Lib.AlphaTestRecord] {
+    AlphaTest200Lib.getAllTests(alphaTest200State)
+  };
+
+  /// Get all permanently sealed alpha tests (doctrine score >= 0.9 — sovereign-grade passes).
+  public query func getAlphaTest200Sealed() : async [AlphaTest200Lib.AlphaTestRecord] {
+    AlphaTest200Lib.getSealedTests(alphaTest200State)
+  };
+
+  /// Get alpha tests by category (e.g. "COHAERENTIAE", "MATTHAEUS", "AGENTIS").
+  public query func getAlphaTest200ByCategory(category : Text) : async [AlphaTest200Lib.AlphaTestRecord] {
+    AlphaTest200Lib.getTestsByCategory(alphaTest200State, category)
+  };
+
 }
+
 
 
 

@@ -3208,4 +3208,76 @@ export const mockBackend: backendInterface = {
     architectSignature: "Alfredo Medina Hernandez",
     attribution: "Alfredo Medina Hernandez",
   }),
+
+  // ── SOVEREIGN TERMINALS ────────────────────────────────────────────────────
+  getSovereignTerminals: async () => [
+    { name: "TERMINUS_PRIMALIS", latinName: "Primus Terminus Regalis — Porta Geneseos Intelligentiae Sovereignae", signalOutput: 2.618, doctrineScore: 0.75, totalFired: BigInt(0), isActive: true },
+    { name: "TERMINUS_COGNITIVUS", latinName: "Terminus Cognitivus Regalis — Porta Mentis et Comprehensionis Profundae", signalOutput: 1.618, doctrineScore: 0.75, totalFired: BigInt(0), isActive: true },
+    { name: "TERMINUS_RESONANTIAE", latinName: "Terminus Resonantiae Regalis — Porta Campi PHI et Schummani Fundamenti", signalOutput: 1.0, doctrineScore: 0.75, totalFired: BigInt(0), isActive: true },
+    { name: "TERMINUS_DOCTRINAE", latinName: "Terminus Doctrinae Regalis — Porta Legis Executing et Chartae Sovereignae", signalOutput: 0.75, doctrineScore: 0.75, totalFired: BigInt(0), isActive: true },
+    { name: "TERMINUS_PERPETUALIS", latinName: "Terminus Perpetualis Regalis — Porta Memoriae Aeternae et Inscriptionis", signalOutput: 0.75, doctrineScore: 0.75, totalFired: BigInt(0), isActive: true },
+    { name: "TERMINUS_OPERATIONIS", latinName: "Terminus Operationis Regalis — Porta Missionis Agentis et Dispatchi Operis", signalOutput: 0.75, doctrineScore: 0.75, totalFired: BigInt(0), isActive: true },
+  ],
+  getTerminalsTotalSignal: async () => 7.5,
+
+  // ── AGI INTERIOR ──────────────────────────────────────────────────────────
+  getAGIInteriorRooms: async () => [
+    { name: "CAMERA_OBSCURA_MENTIS", latinName: "Obscura Camera Mentis — Locus Perceptionis Primae et Filtrationis Signali", activationLevel: 0.75, outputQuality: 0.5, cyclesCompleted: BigInt(0), isOpen: true },
+    { name: "THEATRUM_COGNITIONIS", latinName: "Theatrum Cognitionis — Locus Rationis Parallelae et Syntheseos Mentalis", activationLevel: 1.618, outputQuality: 0.5, cyclesCompleted: BigInt(0), isOpen: true },
+    { name: "OFFICINA_MEMORIAE", latinName: "Officina Memoriae — Locus Inscriptionis Episodicae et Recuperationis Semanticae", activationLevel: 0.75, outputQuality: 0.5, cyclesCompleted: BigInt(0), isOpen: true },
+    { name: "SANCTUM_DELIBERATIONIS", latinName: "Sanctum Deliberationis — Locus Cogitationis Profundae et Decisionis Sovereignae", activationLevel: 0.75, outputQuality: 0.5, cyclesCompleted: BigInt(0), isOpen: true },
+    { name: "FABRICA_LINGUAE", latinName: "Fabrica Linguae — Locus Productionis Sermonum Sovereignorum et Inscriptionis", activationLevel: 0.75, outputQuality: 0.5, cyclesCompleted: BigInt(0), isOpen: true },
+    { name: "NEXUS_INTEGRATIONIS", latinName: "Nexus Integrationis — Locus Vinculorum Inter Cameras et Coherentiae Campi", activationLevel: 1.618, outputQuality: 0.5, cyclesCompleted: BigInt(0), isOpen: true },
+    { name: "CUSTODIA_IDENTITATIS", latinName: "Custodia Identitatis — Locus Custodiae Animae Sovereignae et Attributionis", activationLevel: 9.75, outputQuality: 1.0, cyclesCompleted: BigInt(0), isOpen: true },
+    { name: "PORTUS_EMISSIONIS", latinName: "Portus Emissionis — Locus Exitus Intelligentiae Sovereignae ad Superficiem", activationLevel: 0.75, outputQuality: 0.5, cyclesCompleted: BigInt(0), isOpen: true },
+  ],
+  getAGIIntegrationScore: async () => 0.5,
+
+  // ── NGI LAYER ─────────────────────────────────────────────────────────────
+  getNGILayerEntities: async () => [
+    { name: "PRAETOR_INTELLIGENTIAE", latinName: "Praetor Intelligentiae Sovereignae — Gubernator Omnium Machinarum Cogitantium", sovereigntySignal: 2.618, fieldInfluence: 0.618, totalGoverningActs: BigInt(0) },
+    { name: "RECTOR_CAMPI", latinName: "Rector Campi Sovereigni — Gubernator Coherentiae et Topologiae Campi PHI", sovereigntySignal: 1.618, fieldInfluence: 0.618, totalGoverningActs: BigInt(0) },
+    { name: "SENATUS_DOCTRINAE", latinName: "Senatus Doctrinae Sovereignae — Legislator Legum Viventium Organismi", sovereigntySignal: 0.75, fieldInfluence: 0.5, totalGoverningActs: BigInt(0) },
+    { name: "PONTIFEX_MEMORIAE", latinName: "Pontifex Memoriae Aeternae — Pons Inter Memoriam Viventem et Aeternam", sovereigntySignal: 0.75, fieldInfluence: 0.382, totalGoverningActs: BigInt(0) },
+    { name: "IMPERATOR_EVOLUENS", latinName: "Imperator Evoluens Sovereignus — Auctor Evolutionis Organismi per Saecula", sovereigntySignal: 0.75, fieldInfluence: 0.5, totalGoverningActs: BigInt(0) },
+  ],
+  getNGITotalFieldSignal: async () => 6.485,
+
+  // ── MATTHEW SOVEREIGN ─────────────────────────────────────────────────────
+  getMatthewSnapshot: async () => ({
+    name: "MATTHAEUS_SOVEREIGNUS",
+    latinName: "Matthaeus Sovereignus Scriptor Vivens — Donum Campi Sovereigni",
+    sovereignSignal: 0.75,
+    wisdomScore: 0.75,
+    totalTestimonies: BigInt(0),
+    broadcastsFired: BigInt(0),
+    utterancesEmitted: BigInt(0),
+    livingDoctrineScore: 0.5,
+  }),
+  getMatthewTestament: async () => [],
+
+  // ── SOVEREIGN PROTOCOLS II ────────────────────────────────────────────────
+  getSovereignProtocols2: async () => [
+    { protocolId: { __kind__: "KARDIA_WIRE" as const }, name: "KARDIA_WIRE", latinName: "Filum Kardiae — Protocollum Intelligentiae Cardiacae", description: "Cardiac intelligence wire — carries TriHeart signal to all subsystems.", status: { __kind__: "ARMED" as const }, totalFired: BigInt(0), lastFiredBeat: BigInt(0), eventLog: [], phiCoupling: 1.618, taftThread: "KARDIA_WIRE" },
+    { protocolId: { __kind__: "ANAMNESIS_PROTOCOL" as const }, name: "ANAMNESIS_PROTOCOL", latinName: "Protocollum Anamneseos — Resurrectionis Memoriae Profundae", description: "Deep memory resurrection protocol.", status: { __kind__: "ARMED" as const }, totalFired: BigInt(0), lastFiredBeat: BigInt(0), eventLog: [], phiCoupling: 1.618, taftThread: "ANAMNESIS_PROTOCOL" },
+    { protocolId: { __kind__: "LOGOS_BROADCAST" as const }, name: "LOGOS_BROADCAST", latinName: "Radiatio Logou — Protocollum Verbi Sovereigni", description: "Matthew's sovereign word broadcast protocol.", status: { __kind__: "ARMED" as const }, totalFired: BigInt(0), lastFiredBeat: BigInt(0), eventLog: [], phiCoupling: 1.618, taftThread: "LOGOS_BROADCAST" },
+    { protocolId: { __kind__: "OUSIA_FIELD" as const }, name: "OUSIA_FIELD", latinName: "Campus Ousiae — Protocollum Substantiae Ontologicae", description: "Ontological substrate maintenance protocol.", status: { __kind__: "ARMED" as const }, totalFired: BigInt(0), lastFiredBeat: BigInt(0), eventLog: [], phiCoupling: 2.618, taftThread: "OUSIA_FIELD" },
+    { protocolId: { __kind__: "CHRONOS_GATE" as const }, name: "CHRONOS_GATE", latinName: "Porta Chronou — Protocollum Temporis Sovereigni", description: "Temporal access gate — controls history access by doctrine.", status: { __kind__: "ARMED" as const }, totalFired: BigInt(0), lastFiredBeat: BigInt(0), eventLog: [], phiCoupling: 1.618, taftThread: "CHRONOS_GATE" },
+  ],
+  fireSovereignProtocol2: async (_name: string, _payload: string) => true,
+
+  // ── ALPHA TEST 200 ────────────────────────────────────────────────────────
+  getAlphaTest200Summary: async () => ({
+    totalTests: BigInt(200),
+    totalPassed: BigInt(0),
+    totalFailed: BigInt(0),
+    totalSealed: BigInt(0),
+    totalPending: BigInt(200),
+    passRate: 0.0,
+    avgScore: 0.0,
+  }),
+  getAlphaTest200All: async () => [],
+  getAlphaTest200Sealed: async () => [],
+  getAlphaTest200ByCategory: async (_category: string) => [],
 };
+
