@@ -112,6 +112,8 @@ import EETypes               "types/emotionalEngine";
 import EELib                 "lib/emotionalEngine";
 import SpETypes              "types/spatialEngine";
 import SpELib                "lib/spatialEngine";
+import SoETypes              "types/socialEngine";
+import SoELib                "lib/socialEngine";
 
 
 
@@ -611,6 +613,19 @@ actor SovereignWarSim {
   // Law: LOCUS_NUMQUAM_OBLIVISCERE — "Place Never Forgets"
   // Governing Laws: Law 01, Law 39, Law 27 (Kuramoto)
   stable var spatialEngineState : SpETypes.SpatialEngineState = SpELib.initState(0);
+
+  // ── B2.11 — SOCIAL ENGINE (SOCIETAS_SOVEREIGN) ────────────────────────────
+  // "Society is not a crowd. It is PHI-structured resonance between beings."
+  // RELATIONSHIPS: 10 types (AMICITIA, COLLEGIUM, FAMILITAS, MAGISTER, DISCIPULUS,
+  //   SOCIUS, ADVERSARIUS, INIMICUS, COGNITIO, NEXUS). Fibonacci depth levels.
+  // REPUTATION: 6 dimensions (FIDES, COMPETENTIA, BENEVOLENTIA, INTEGRITAS, AUCTORITAS, GRATIA).
+  //   8 ranks from INFAMIS to SANCTUS.
+  // INFLUENCE: 6 types (PERSUASIO, INSPIRATIO, COERCITIO, EXEMPLUM, AUCTORITAS, CHARISMA)
+  // GROUPS: 8 types (FAMILIA, COLLEGIUM, SODALITAS, FACTIO, COMMUNITAS, ORDO, CONCILIUM, SECRETUM)
+  // COMMUNICATION: 10 message types, conversations, inbox/outbox
+  // Law: SOCIETAS_NUMQUAM_OBLIVISCERE — "Society Never Forgets"
+  // Governing Laws: Law 01, Law 27 (Kuramoto), Law 39
+  stable var socialEngineState : SoETypes.SocialEngineState = SoELib.initState(0);
 
   // ── B2.7 — STREAM_SOVEREIGN ────────────────────────────────────────────
   // Dedicated processing stream inside the SOVEREIGN organism's own runtime.
@@ -3579,6 +3594,15 @@ actor SovereignWarSim {
     // Decays spatial memory strengths every 13 beats (Fibonacci).
     // Calculates spatial coherence based on zone stability.
     spatialEngineState := SpELib.advanceHeartbeat(spatialEngineState, beat);
+
+    // ── SOCIAL ENGINE HEARTBEAT — SOCIETAS_NUMQUAM_OBLIVISCERE ───────────────
+    // "Society is not a crowd. It is PHI-structured resonance between beings."
+    // Decays trust in inactive relationships every 21 beats (Fibonacci).
+    // Updates network density based on active relationship count.
+    // Calculates social coherence from average trust levels.
+    // Updates isolation score (inverse of network density).
+    // Computes social capital from reputation + network + coherence.
+    socialEngineState := SoELib.advanceHeartbeat(socialEngineState, beat);
 
     // Disconnected engine #2: quality scores computed but never re-injected.
     // After Ring 5 fires, re-inject quality weights into production queue state.
@@ -7417,6 +7441,142 @@ actor SovereignWarSim {
   /// Calculates distance between two coordinates.
   public query func getSpatialDistance(a : SpETypes.Coordinate, b : SpETypes.Coordinate) : async Float {
     SpELib.distance(a, b)
+  };
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // SOCIAL ENGINE API — SOCIETAS_SOVEREIGN
+  // ══════════════════════════════════════════════════════════════════════════
+  // "Society is not a crowd. It is PHI-structured resonance between beings."
+  // RELATIONSHIPS (10 types), REPUTATION (6 dimensions, 8 ranks), INFLUENCE (6 types),
+  // GROUPS (8 types), COMMUNICATION (10 message types).
+  // Law: SOCIETAS_NUMQUAM_OBLIVISCERE — "Society Never Forgets"
+
+  /// Returns the complete social engine state.
+  public query func getSocialEngineState() : async SoETypes.SocialEngineState {
+    socialEngineState
+  };
+
+  /// Returns all relationships.
+  public query func getAllRelationships() : async [SoETypes.RelationshipRecord] {
+    socialEngineState.relationships
+  };
+
+  /// Returns active relationships only.
+  public query func getActiveRelationships() : async [SoETypes.RelationshipRecord] {
+    SoELib.getActiveRelationships(socialEngineState)
+  };
+
+  /// Returns relationship with a specific entity.
+  public query func getRelationshipWith(targetId : Text) : async ?SoETypes.RelationshipRecord {
+    SoELib.getRelationshipWith(socialEngineState, targetId)
+  };
+
+  /// Returns active relationship count.
+  public query func getActiveRelationshipCount() : async Nat {
+    socialEngineState.activeRelationships
+  };
+
+  /// Returns own reputation profile.
+  public query func getOwnReputation() : async SoETypes.ReputationProfile {
+    socialEngineState.ownReputation
+  };
+
+  /// Returns own reputation rank name.
+  public query func getOwnReputationRank() : async Text {
+    SoELib.rankName(socialEngineState.ownReputation.reputationRank)
+  };
+
+  /// Returns influence state.
+  public query func getInfluenceState() : async SoETypes.InfluenceState {
+    socialEngineState.influence
+  };
+
+  /// Returns all groups.
+  public query func getAllGroups() : async [SoETypes.GroupRecord] {
+    socialEngineState.groups
+  };
+
+  /// Returns group by ID.
+  public query func getGroupById(groupId : Nat) : async ?SoETypes.GroupRecord {
+    SoELib.getGroupById(socialEngineState, groupId)
+  };
+
+  /// Returns all group memberships.
+  public query func getGroupMemberships() : async [SoETypes.GroupMembership] {
+    socialEngineState.memberships
+  };
+
+  /// Returns communication state.
+  public query func getCommunicationState() : async SoETypes.CommunicationState {
+    socialEngineState.communication
+  };
+
+  /// Returns inbox messages.
+  public query func getInbox() : async [SoETypes.MessageRecord] {
+    socialEngineState.communication.inbox
+  };
+
+  /// Returns outbox messages.
+  public query func getOutbox() : async [SoETypes.MessageRecord] {
+    socialEngineState.communication.outbox
+  };
+
+  /// Returns social coherence (0 to 1).
+  public query func getSocialCoherence() : async Float {
+    socialEngineState.socialCoherence
+  };
+
+  /// Returns network density (0 to 1).
+  public query func getNetworkDensity() : async Float {
+    socialEngineState.networkDensity
+  };
+
+  /// Returns social capital (0 to 1).
+  public query func getSocialCapital() : async Float {
+    socialEngineState.socialCapital
+  };
+
+  /// Returns isolation score (0 to 1).
+  public query func getIsolationScore() : async Float {
+    socialEngineState.isolation
+  };
+
+  /// Returns social status summary.
+  public query func getSocialStatus() : async Text {
+    SoELib.getSocialStatus(socialEngineState)
+  };
+
+  /// Forms a new relationship with an entity.
+  public func formRelationship(targetId : Text, relType : SoETypes.RelationshipType) : async SoETypes.RelationshipRecord {
+    let (newState, rel) = SoELib.formRelationship(socialEngineState, targetId, relType, socialEngineState.currentBeat);
+    socialEngineState := newState;
+    rel
+  };
+
+  /// Ends a relationship with an entity.
+  public func endRelationship(targetId : Text) : async Nat {
+    socialEngineState := SoELib.endRelationship(socialEngineState, targetId);
+    socialEngineState.activeRelationships
+  };
+
+  /// Updates trust with an entity.
+  public func updateTrust(targetId : Text, delta : Float) : async ?SoETypes.RelationshipRecord {
+    socialEngineState := SoELib.updateTrust(socialEngineState, targetId, delta, socialEngineState.currentBeat);
+    SoELib.getRelationshipWith(socialEngineState, targetId)
+  };
+
+  /// Creates a new group.
+  public func createSocialGroup(name : Text, groupType : SoETypes.GroupType, purpose : Text) : async SoETypes.GroupRecord {
+    let (newState, group) = SoELib.createGroup(socialEngineState, name, groupType, purpose, socialEngineState.currentBeat);
+    socialEngineState := newState;
+    group
+  };
+
+  /// Sends a message to an entity.
+  public func sendSocialMessage(receiverId : Text, messageType : SoETypes.MessageType, content : Text) : async SoETypes.MessageRecord {
+    let (newState, message) = SoELib.sendMessage(socialEngineState, receiverId, messageType, content, socialEngineState.currentBeat);
+    socialEngineState := newState;
+    message
   };
 
 }
