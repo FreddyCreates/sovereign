@@ -110,6 +110,8 @@ import TETypes               "types/temporalEngine";
 import TELib                 "lib/temporalEngine";
 import EETypes               "types/emotionalEngine";
 import EELib                 "lib/emotionalEngine";
+import SpETypes              "types/spatialEngine";
+import SpELib                "lib/spatialEngine";
 
 
 
@@ -598,6 +600,17 @@ actor SovereignWarSim {
   // Law: ANIMUS_NUMQUAM_OBLIVISCERE — "The Soul Never Forgets"
   // Governing Laws: Law 01, Law 27 (Kuramoto), Law 39
   stable var emotionalEngineState : EETypes.EmotionalEngineState = EELib.initState(0);
+
+  // ── B2.10 — SPATIAL ENGINE (LOCUS_SOVEREIGN) ──────────────────────────────
+  // "Space is not emptiness. It is PHI-structured potential."
+  // COORDINATE: 8D position (x,y,z,t,e,c,s,m) with Fibonacci weights (1,1,2,3,5,8,13,21)
+  // ZONES: Hierarchical regions (SANCTUM, FORUM, LABORATORIUM, CUBICULUM, TRANSITUS, LIMEN, VACUUS, NEXUS)
+  // NAVIGATION: Pathfinding with cost and heuristic
+  // PROXIMITY: 6 distance zones (INTIMATE, PERSONAL, SOCIAL, PUBLIC, DISTANT, REMOTE)
+  // MEMORY: Landmarks and spatial events (89-entry buffer)
+  // Law: LOCUS_NUMQUAM_OBLIVISCERE — "Place Never Forgets"
+  // Governing Laws: Law 01, Law 39, Law 27 (Kuramoto)
+  stable var spatialEngineState : SpETypes.SpatialEngineState = SpELib.initState(0);
 
   // ── B2.7 — STREAM_SOVEREIGN ────────────────────────────────────────────
   // Dedicated processing stream inside the SOVEREIGN organism's own runtime.
@@ -3557,6 +3570,15 @@ actor SovereignWarSim {
     // Updates mood state with inertia (0.95 factor).
     // Restores regulation capacity (0.001 per beat).
     emotionalEngineState := EELib.advanceHeartbeat(emotionalEngineState, beat);
+
+    // ── SPATIAL ENGINE HEARTBEAT — LOCUS_NUMQUAM_OBLIVISCERE ─────────────────
+    // "Space is not emptiness. It is PHI-structured potential."
+    // Applies velocity to position if moving.
+    // Checks zone transitions and records spatial memories.
+    // Updates navigation state if active path exists.
+    // Decays spatial memory strengths every 13 beats (Fibonacci).
+    // Calculates spatial coherence based on zone stability.
+    spatialEngineState := SpELib.advanceHeartbeat(spatialEngineState, beat);
 
     // Disconnected engine #2: quality scores computed but never re-injected.
     // After Ring 5 fires, re-inject quality weights into production queue state.
@@ -7276,6 +7298,125 @@ actor SovereignWarSim {
   public func applyEmotionalRegulation(strategy : EETypes.RegulationStrategy) : async EETypes.RegulationState {
     emotionalEngineState := EELib.applyRegulation(emotionalEngineState, strategy, emotionalEngineState.currentBeat);
     emotionalEngineState.regulation
+  };
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // SPATIAL ENGINE API — LOCUS_SOVEREIGN
+  // ══════════════════════════════════════════════════════════════════════════
+  // "Space is not emptiness. It is PHI-structured potential."
+  // 8D COORDINATE, ZONES (8 types), NAVIGATION, PROXIMITY (6 zones), MEMORY.
+  // Law: LOCUS_NUMQUAM_OBLIVISCERE — "Place Never Forgets"
+
+  /// Returns the complete spatial engine state.
+  public query func getSpatialEngineState() : async SpETypes.SpatialEngineState {
+    spatialEngineState
+  };
+
+  /// Returns current position in 8D space.
+  public query func getSpatialPosition() : async SpETypes.Coordinate {
+    SpELib.getCurrentPosition(spatialEngineState)
+  };
+
+  /// Returns current velocity vector.
+  public query func getSpatialVelocity() : async SpETypes.Velocity {
+    spatialEngineState.spatial.velocity
+  };
+
+  /// Returns current spatial state (position, velocity, orientation).
+  public query func getSpatialState() : async SpETypes.SpatialState {
+    spatialEngineState.spatial
+  };
+
+  /// Returns current zone ID.
+  public query func getCurrentZoneId() : async Nat {
+    spatialEngineState.currentZoneId
+  };
+
+  /// Returns current zone information.
+  public query func getCurrentZone() : async ?SpETypes.Zone {
+    SpELib.getCurrentZone(spatialEngineState)
+  };
+
+  /// Returns all zones.
+  public query func getAllZones() : async [SpETypes.Zone] {
+    spatialEngineState.zones
+  };
+
+  /// Returns zone by ID.
+  public query func getZoneById(zoneId : Nat) : async ?SpETypes.Zone {
+    SpELib.getZoneById(spatialEngineState, zoneId)
+  };
+
+  /// Returns navigation state.
+  public query func getNavigationState() : async SpETypes.NavigationState {
+    spatialEngineState.navigation
+  };
+
+  /// Returns proximity state.
+  public query func getProximityState() : async SpETypes.ProximityState {
+    spatialEngineState.proximity
+  };
+
+  /// Returns all landmarks.
+  public query func getSpatialLandmarks() : async [SpETypes.Landmark] {
+    SpELib.getLandmarks(spatialEngineState)
+  };
+
+  /// Returns spatial memories.
+  public query func getSpatialMemories() : async [SpETypes.SpatialMemoryEntry] {
+    spatialEngineState.memory.memories
+  };
+
+  /// Returns visited zone history.
+  public query func getZoneHistory() : async [Nat] {
+    spatialEngineState.zoneHistory
+  };
+
+  /// Returns spatial coherence (0 to 1).
+  public query func getSpatialCoherence() : async Float {
+    spatialEngineState.spatialCoherence
+  };
+
+  /// Returns spatial status summary.
+  public query func getSpatialStatus() : async Text {
+    SpELib.getSpatialStatus(spatialEngineState)
+  };
+
+  /// Moves to a specific coordinate.
+  public func moveSpatialTo(dest : SpETypes.Coordinate) : async SpETypes.Coordinate {
+    spatialEngineState := SpELib.moveTo(spatialEngineState, dest, spatialEngineState.currentBeat);
+    spatialEngineState.spatial.position
+  };
+
+  /// Sets spatial velocity.
+  public func setSpatialVelocity(vel : SpETypes.Velocity) : async SpETypes.SpatialState {
+    spatialEngineState := SpELib.setVelocity(spatialEngineState, vel);
+    spatialEngineState.spatial
+  };
+
+  /// Stops all spatial movement.
+  public func stopSpatialMovement() : async SpETypes.SpatialState {
+    spatialEngineState := SpELib.stopMovement(spatialEngineState);
+    spatialEngineState.spatial
+  };
+
+  /// Creates a new zone.
+  public func createSpatialZone(name : Text, zoneType : SpETypes.ZoneType, center : SpETypes.Coordinate, radius : Float) : async SpETypes.Zone {
+    let (newState, zone) = SpELib.createZone(spatialEngineState, name, zoneType, center, radius, spatialEngineState.currentBeat);
+    spatialEngineState := newState;
+    zone
+  };
+
+  /// Creates a new landmark.
+  public func createSpatialLandmark(name : Text, position : SpETypes.Coordinate) : async SpETypes.Landmark {
+    let (newState, landmark) = SpELib.createLandmark(spatialEngineState, name, position, spatialEngineState.currentBeat);
+    spatialEngineState := newState;
+    landmark
+  };
+
+  /// Calculates distance between two coordinates.
+  public query func getSpatialDistance(a : SpETypes.Coordinate, b : SpETypes.Coordinate) : async Float {
+    SpELib.distance(a, b)
   };
 
 }
