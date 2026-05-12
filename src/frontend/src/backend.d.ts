@@ -252,6 +252,102 @@ export interface NovaState {
     signalStrength: number;
     lastFired: bigint;
 }
+export type AgentDutyPhase = { __kind__: "Resting" } | { __kind__: "Deployed" } | { __kind__: "Executing" } | { __kind__: "Returning" };
+export type HeartId = { __kind__: "CoreHeart" } | { __kind__: "LabHeart" } | { __kind__: "ProductionHeart" };
+export interface HeartState {
+    heartId: HeartId;
+    name: string;
+    bpmBase: bigint;
+    coherenceVelocity: number;
+    outputPressure: number;
+    schumannPhase: number;
+    isCoherent: boolean;
+    lastBeatAt: bigint;
+    totalBeats: bigint;
+    attribution: string;
+}
+export interface TriHeartState {
+    coreHeart: HeartState;
+    labHeart: HeartState;
+    productionHeart: HeartState;
+    globalCoherence: number;
+    coherenceVelocity: number;
+    isAligned: boolean;
+    torusTriggered: boolean;
+    totalRealignments: bigint;
+    beat: bigint;
+    attribution: string;
+}
+export interface AgentDutyRecord {
+    agentId: string;
+    agentName: string;
+    phase: AgentDutyPhase;
+    jobId: string | null;
+    objective: string | null;
+    deployedAt: bigint | null;
+    executionStart: bigint | null;
+    completedAt: bigint | null;
+    dutyScore: number;
+    homeFrequency: number;
+    gateViolations: bigint;
+    totalDutyCycles: bigint;
+    attribution: string;
+}
+export interface DutyGateResult {
+    ok: boolean;
+    agentId: string;
+    newPhase: AgentDutyPhase;
+    message: string;
+    beat: bigint;
+    attribution: string;
+}
+export interface DutyGateState {
+    agents: Array<AgentDutyRecord>;
+    totalAgents: bigint;
+    activeJobs: bigint;
+    totalCycles: bigint;
+    totalViolations: bigint;
+    globalDutyScore: number;
+    beat: bigint;
+    attribution: string;
+}
+export type CharterSection = { __kind__: "PhilosophicalSubstrate" } | { __kind__: "TriHeartRadius" } | { __kind__: "SovereignAgentProtocols" } | { __kind__: "MemoryRegistry" } | { __kind__: "MathematicalDirective" };
+export interface CharterArticle {
+    articleId: string;
+    section: CharterSection;
+    sectionNumber: bigint;
+    title: string;
+    lawText: string;
+    mathFormula: string;
+    frequencyHz: number;
+    isSovereign: boolean;
+    doctrineScore: number;
+    sealedAtBeat: bigint;
+    attribution: string;
+}
+export interface CharterCheckResult {
+    compliant: boolean;
+    violations: Array<string>;
+    globalCoherence: number;
+    beat: bigint;
+    attribution: string;
+}
+export interface NovaCharterState {
+    documentId: string;
+    version: bigint;
+    articles: Array<CharterArticle>;
+    totalArticles: bigint;
+    globalCoherence: number;
+    schumannAnchor: number;
+    coherenceVelocity: number;
+    violations: Array<string>;
+    totalViolations: bigint;
+    sealedAtBeat: bigint;
+    lastCheckedBeat: bigint;
+    architectSignature: string;
+    isLive: boolean;
+    attribution: string;
+}
 export interface LawExecutionRecord {
     lawName: string;
     beat: bigint;
@@ -3824,4 +3920,66 @@ export interface backendInterface {
         producer: string;
     } | null>;
     writeSharedSceneDelta(sourceActorId: string, targetActorId: string, doctrineAlignment: number, emotionalIntensity: number): Promise<void>;
+    // ── NOVA PROTOCOL — NOVA-SIGIL-001 ──────────────────────────────────────
+    /** TRI-HEART RADIUS — get live three-heart coherence state. */
+    novaGetTriHeart(): Promise<{
+        coreVelocity: number;
+        labVelocity: number;
+        productionVelocity: number;
+        globalVelocity: number;
+        globalCoherence: number;
+        isAligned: boolean;
+        torusTriggered: boolean;
+        totalRealignments: bigint;
+        beat: bigint;
+    }>;
+    /** DUTY GATE — register a new sovereign agent. */
+    novaRegisterAgent(agentId: string, agentName: string): Promise<DutyGateResult>;
+    /** DUTY GATE — deploy an agent to a job (Resting → Deployed). */
+    novaDeployAgent(agentId: string, jobId: string, objective: string): Promise<DutyGateResult>;
+    /** DUTY GATE — begin execution (Deployed → Executing). Gate-locks the agent. */
+    novaBeginExecution(agentId: string): Promise<DutyGateResult>;
+    /** DUTY GATE — complete a job (Executing → Resting, committed to Vault). */
+    novaCompleteJob(agentId: string): Promise<DutyGateResult>;
+    /** DUTY GATE — record a gate violation (premature exit attempt). */
+    novaRecordGateViolation(agentId: string): Promise<{ ok: boolean; agentId: string }>;
+    /** DUTY GATE — get a specific agent's current duty record. */
+    novaGetAgent(agentId: string): Promise<AgentDutyRecord | null>;
+    /** DUTY GATE — get all agents and duty gate summary. */
+    novaDutyGateState(): Promise<{
+        totalAgents: bigint;
+        activeJobs: bigint;
+        totalCycles: bigint;
+        totalViolations: bigint;
+        globalDutyScore: number;
+        beat: bigint;
+    }>;
+    /** NOVA CHARTER — check compliance against live organism state. */
+    novaCheckCharter(): Promise<CharterCheckResult>;
+    /** NOVA CHARTER — get a specific article by ID (e.g. "NOVA-I-01"). */
+    novaGetArticle(articleId: string): Promise<CharterArticle | null>;
+    /** NOVA CHARTER — full charter state (all 15 articles + metadata). */
+    novaGetCharter(): Promise<NovaCharterState>;
+    /** NOVA PROTOCOL — full system snapshot (TriHeart + DutyGate + Charter). */
+    novaGetFullState(): Promise<{
+        documentId: string;
+        version: bigint;
+        beat: bigint;
+        totalArticles: bigint;
+        globalCharterCoherence: number;
+        schumannAnchor: number;
+        coherenceVelocity: number;
+        isLive: boolean;
+        totalCharterViolations: bigint;
+        triHeartAligned: boolean;
+        triHeartVelocity: number;
+        torusTriggered: boolean;
+        totalRealignments: bigint;
+        totalAgents: bigint;
+        activeJobs: bigint;
+        totalDutyCycles: bigint;
+        totalGateViolations: bigint;
+        architectSignature: string;
+        attribution: string;
+    }>;
 }

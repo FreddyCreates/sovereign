@@ -1301,6 +1301,128 @@ type NovaState =
    lastFired: nat;
    signalStrength: float64;
  };
+type AgentDutyPhase = 
+ variant {
+   Deployed;
+   Executing;
+   Resting;
+   Returning;
+ };
+type HeartId = 
+ variant {
+   CoreHeart;
+   LabHeart;
+   ProductionHeart;
+ };
+type HeartState = 
+ record {
+   attribution: text;
+   bpmBase: nat;
+   coherenceVelocity: float64;
+   heartId: HeartId;
+   isCoherent: bool;
+   lastBeatAt: nat;
+   name: text;
+   outputPressure: float64;
+   schumannPhase: float64;
+   totalBeats: nat;
+ };
+type TriHeartState = 
+ record {
+   attribution: text;
+   beat: nat;
+   coherenceVelocity: float64;
+   coreHeart: HeartState;
+   globalCoherence: float64;
+   isAligned: bool;
+   labHeart: HeartState;
+   productionHeart: HeartState;
+   torusTriggered: bool;
+   totalRealignments: nat;
+ };
+type AgentDutyRecord = 
+ record {
+   agentId: text;
+   agentName: text;
+   attribution: text;
+   completedAt: opt nat;
+   deployedAt: opt nat;
+   dutyScore: float64;
+   executionStart: opt nat;
+   gateViolations: nat;
+   homeFrequency: float64;
+   jobId: opt text;
+   objective: opt text;
+   phase: AgentDutyPhase;
+   totalDutyCycles: nat;
+ };
+type DutyGateResult = 
+ record {
+   agentId: text;
+   attribution: text;
+   beat: nat;
+   message: text;
+   newPhase: AgentDutyPhase;
+   ok: bool;
+ };
+type DutyGateState = 
+ record {
+   activeJobs: nat;
+   agents: vec AgentDutyRecord;
+   attribution: text;
+   beat: nat;
+   globalDutyScore: float64;
+   totalAgents: nat;
+   totalCycles: nat;
+   totalViolations: nat;
+ };
+type CharterSection = 
+ variant {
+   MathematicalDirective;
+   MemoryRegistry;
+   PhilosophicalSubstrate;
+   SovereignAgentProtocols;
+   TriHeartRadius;
+ };
+type CharterArticle = 
+ record {
+   articleId: text;
+   attribution: text;
+   doctrineScore: float64;
+   frequencyHz: float64;
+   isSovereign: bool;
+   lawText: text;
+   mathFormula: text;
+   sealedAtBeat: nat;
+   section: CharterSection;
+   sectionNumber: nat;
+   title: text;
+ };
+type CharterCheckResult = 
+ record {
+   attribution: text;
+   beat: nat;
+   compliant: bool;
+   globalCoherence: float64;
+   violations: vec text;
+ };
+type NovaCharterState = 
+ record {
+   architectSignature: text;
+   articles: vec CharterArticle;
+   attribution: text;
+   coherenceVelocity: float64;
+   documentId: text;
+   globalCoherence: float64;
+   isLive: bool;
+   lastCheckedBeat: nat;
+   schumannAnchor: float64;
+   sealedAtBeat: nat;
+   totalArticles: nat;
+   totalViolations: nat;
+   version: nat;
+   violations: vec text;
+ };
 type NeurotransmitterProfile = 
  record {
    doctrineSpecialty: text;
@@ -3810,6 +3932,74 @@ service : {
                           err: text;
                           ok: WorldInstanceId;
                         });
+  /// NOVA PROTOCOL — begin execution phase for an agent (Deployed → Executing).
+  /// Gate-locks the agent until the job is complete.
+  novaBeginExecution: (agentId: text) -> (DutyGateResult);
+  /// NOVA CHARTER — check charter compliance against live organism state.
+  novaCheckCharter: () -> (CharterCheckResult) query;
+  /// NOVA PROTOCOL — complete a job (Executing → Resting, committed to Memory Vault).
+  novaCompleteJob: (agentId: text) -> (DutyGateResult);
+  /// NOVA PROTOCOL — deploy an agent to a job (Resting → Deployed).
+  novaDeployAgent: (agentId: text, jobId: text, objective: text) -> (DutyGateResult);
+  /// DUTY GATE — get all agents and current duty gate summary.
+  novaDutyGateState: () ->
+   (record {
+      activeJobs: nat;
+      beat: nat;
+      globalDutyScore: float64;
+      totalAgents: nat;
+      totalCycles: nat;
+      totalViolations: nat;
+    }) query;
+  /// NOVA PROTOCOL — full system snapshot (TriHeart + DutyGate + Charter in one call).
+  novaGetFullState: () ->
+   (record {
+      activeJobs: nat;
+      architectSignature: text;
+      attribution: text;
+      beat: nat;
+      coherenceVelocity: float64;
+      globalCharterCoherence: float64;
+      isLive: bool;
+      schumannAnchor: float64;
+      totalAgents: nat;
+      totalCharterViolations: nat;
+      totalDutyCycles: nat;
+      totalGateViolations: nat;
+      totalRealignments: nat;
+      totalArticles: nat;
+      torusTriggered: bool;
+      triHeartAligned: bool;
+      triHeartVelocity: float64;
+      documentId: text;
+      version: nat;
+    }) query;
+  /// NOVA CHARTER — get a specific article by ID (e.g. "NOVA-I-01").
+  novaGetArticle: (articleId: text) -> (opt CharterArticle) query;
+  /// NOVA PROTOCOL — get a specific agent's current duty record.
+  novaGetAgent: (agentId: text) -> (opt AgentDutyRecord) query;
+  /// NOVA CHARTER — full charter state snapshot (all 15 articles + metadata).
+  novaGetCharter: () -> (NovaCharterState) query;
+  /// TRI-HEART RADIUS — get live three-heart coherence state.
+  novaGetTriHeart: () ->
+   (record {
+      beat: nat;
+      coreVelocity: float64;
+      globalCoherence: float64;
+      globalVelocity: float64;
+      isAligned: bool;
+      labVelocity: float64;
+      productionVelocity: float64;
+      torusTriggered: bool;
+      totalRealignments: nat;
+    }) query;
+  /// DUTY GATE — record a gate violation (premature exit attempt).
+  novaRecordGateViolation: (agentId: text) -> (record {
+                                                  agentId: text;
+                                                  ok: bool;
+                                                });
+  /// DUTY GATE — register a new sovereign agent in the duty gate system.
+  novaRegisterAgent: (agentId: text, agentName: text) -> (DutyGateResult);
   /// NEVER decrements. Called on every artifact seal event.
   onArtifactSealed: () -> ();
   /// Called on organism success events (world expansion, milestone crossing).

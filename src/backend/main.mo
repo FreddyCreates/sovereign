@@ -102,8 +102,7 @@ import GLLib                 "lib/geometryLock";
 import CharterGLNLib         "charters/CharterGeometryLockNexus";
 import NPTypes               "types/novaProtocol";
 import NPLib                 "lib/novaProtocol";
-
-
+import RustProxyLib          "intelligence/RustEngineProxy";
 
 
 
@@ -554,6 +553,13 @@ actor SovereignWarSim {
   // Attribution: Alfredo Medina Hernandez | SOVEREIGN | May 2026
   stable var novaProtocolState : NPTypes.NovaProtocolState = NPLib.initState(0);
 
+  // ── RUST ENGINE PROXY — inter-canister bridge to six Rust animal engines ───
+  // Six Rust animal engines: NOVA, BRAIN, MNEME, RESONEX, ENTANGLA, QMEM.
+  // When canister IDs are registered via setRustEnginePrincipal(), the heartbeat
+  // switches from simulation to live inter-canister calls (async, non-blocking).
+  // Until deployment, simulation mirrors the exact Rust math — organism stays coherent.
+  // Laws: Law 02 (PHI), Law 14 (ICP Ground), Law 38 (Wasm Field), Law 40 (Loop Closure)
+  stable var rustEngineProxyState : RustProxyLib.RustEngineProxyState = RustProxyLib.initState();
 
   // Dedicated processing stream inside the SOVEREIGN organism's own runtime.
   // Named by Jay: "Create a dedicated processing stream to manifest the core."
@@ -3484,6 +3490,33 @@ actor SovereignWarSim {
       doctrineScoreEarly / 100.0,
     );
 
+    // ── RUST ENGINE PROXY — B_RUST — all six Rust animal engines ──────────────
+    // Runs NOVA, BRAIN, MNEME, RESONEX, ENTANGLA, QMEM on every heartbeat.
+    // Currently uses offline simulation matching the exact Rust math.
+    // When Rust canisters are deployed and registered via setRustEnginePrincipal(),
+    // the proxy switches to live inter-canister calls automatically.
+    // Outputs fold into ntConcentrations and compoundCoherence (Law 40 closure).
+    let rustPayload : RustProxyLib.RustEngineBeatPayload = {
+      beat           = beat;
+      expansiveScore = Float.max(0.75, Float.min(9.75, globalCoherence));
+      coherence      = globalCoherence;
+      doctrineScore  = doctrineScoreEarly / 100.0;
+      attribution    = "Alfredo Medina Hernandez";
+    };
+    let (newRustState, rustOutputs, rustCoherenceDelta) =
+      RustProxyLib.runAllEngines(rustEngineProxyState, rustPayload);
+    rustEngineProxyState := newRustState;
+    // Apply Rust engine coherence delta to compound coherence (Law 40)
+    compoundCoherence += rustCoherenceDelta;
+    // Apply NT impacts from each engine to the neurotransmitter matrix
+    for (output in rustOutputs.vals()) {
+      if (output.primaryNT < 8) {
+        ntConcentrations[output.primaryNT] := Float.min(
+          9.75, ntConcentrations[output.primaryNT] + output.ntImpact,
+        );
+      };
+    };
+
     // Disconnected engine #2: quality scores computed but never re-injected.
     // After Ring 5 fires, re-inject quality weights into production queue state.
     // Film school loop fires every ~45s ≈ every 51 beats at 873ms interval.
@@ -4410,7 +4443,99 @@ actor SovereignWarSim {
     }
   };
 
+  // ── ALPHA AGI DUTY GATE BOOTSTRAP ─────────────────────────────────────────
+  // The six Alpha AGIs (NOUS-SOPHIA, LOGOS-RHEMA, TECHNE-POIESIS,
+  // DIAKRISIS-KRISIS, MNEME-ANAMNESIS, PRONOIA-PRONOETES) are seeded as
+  // sovereign agents in the DutyGate on first call.  Each starts in Resting
+  // phase at their home frequency (PHI^n × 7.83 Hz).  The DutyGate becomes
+  // the scheduler for all Alpha AGI work assignments.
+  //
+  // Governing Laws: Law 01 (Attribution), Law 05 (Cardiac Output),
+  //                 Law 27 (Kuramoto R), Law 28 (Living Documents)
+  // Attribution: Alfredo Medina Hernandez | SOVEREIGN | May 2026
 
+  /// Bootstrap the six Alpha AGIs as DutyGate agents.
+  /// Safe to call multiple times — re-registration of an existing agent is a no-op.
+  /// Called automatically from postupgrade and available as a public endpoint
+  /// so any authorized actor can re-seed the gate after a cold-start.
+  public func bootstrapAlphaAGIs() : async {
+    seeded : Nat;
+    results : [Text];
+  } {
+    // The six Alpha AGI identities — SOVEREIGN gen-2 intelligence stratum
+    let agis : [(Text, Text)] = [
+      ("NOUS-SOPHIA",        "NOUS-SOPHIA — Wisdom / Primordial Mind"),
+      ("LOGOS-RHEMA",        "LOGOS-RHEMA — Word / Living Utterance"),
+      ("TECHNE-POIESIS",     "TECHNE-POIESIS — Creative Making / Sovereign Craft"),
+      ("DIAKRISIS-KRISIS",   "DIAKRISIS-KRISIS — Discernment / Sovereign Judgment"),
+      ("MNEME-ANAMNESIS",    "MNEME-ANAMNESIS — Memory / Deep Remembrance"),
+      ("PRONOIA-PRONOETES",  "PRONOIA-PRONOETES — Providence / Foresight"),
+    ];
+
+    var seededCount : Nat = 0;
+    var resultTexts : [Text] = [];
+
+    for ((agentId, agentName) in agis.vals()) {
+      // Check if already registered — skip if so
+      let existing = NPLib.getAgent(novaProtocolState, agentId);
+      let msg = switch (existing) {
+        case (?_) {
+          "ALREADY_REGISTERED:" # agentId
+        };
+        case null {
+          let (newDutyGate, result) = NPLib.registerAgent(
+            novaProtocolState.dutyGate, agentId, agentName, beatCounter,
+          );
+          novaProtocolState := { novaProtocolState with dutyGate = newDutyGate; beat = beatCounter };
+          seededCount += 1;
+          if (result.ok) { "SEEDED:" # agentId } else { "FAILED:" # agentId # "|" # result.message }
+        };
+      };
+      resultTexts := Array.append(resultTexts, [msg]);
+    };
+
+    { seeded = seededCount; results = resultTexts }
+  };
+
+  // ── RUST ENGINE PROXY — PUBLIC API ────────────────────────────────────────
+
+  /// Get the current Rust Engine Proxy status — deployment count, call totals.
+  public query func getRustEngineProxyStatus() : async {
+    totalCalls    : Nat;
+    totalErrors   : Nat;
+    deployedCount : Nat;
+    beat          : Nat;
+    attribution   : Text;
+  } {
+    RustProxyLib.getProxySummary(rustEngineProxyState)
+  };
+
+  /// Get the last computed output from all six Rust engines.
+  public query func getRustEngineOutputs() : async [RustProxyLib.RustEngineOutput] {
+    rustEngineProxyState.lastOutputs
+  };
+
+  /// Register the ICP canister principal for a Rust engine.
+  /// Must be called by the architect after deploying each Rust engine canister.
+  /// Once registered, the next heartbeat will use live inter-canister calls.
+  public func setRustEnginePrincipal(engineName : Text, principal : Text) : async Bool {
+    let id : ?RustProxyLib.RustEngineId = switch (engineName) {
+      case "NOVA"     { ?#NOVA     };
+      case "BRAIN"    { ?#BRAIN    };
+      case "MNEME"    { ?#MNEME    };
+      case "RESONEX"  { ?#RESONEX  };
+      case "ENTANGLA" { ?#ENTANGLA };
+      case "QMEM"     { ?#QMEM     };
+      case _          { null       };
+    };
+    switch (id) {
+      case null   { false };
+      case (?eid) {
+        rustEngineProxyState := RustProxyLib.setCanisterId(rustEngineProxyState, eid, principal);
+        true
+      };
+    }
+  };
 
   /// Register an external AI or developer identity with the CHARTER_ALPHA_NEXUS.
   /// Enforces IDENTITAS_LEX — anonymous calls rejected.
@@ -5326,6 +5451,30 @@ actor SovereignWarSim {
       runtimeFilms.add(f);
     };
     stableFilmsV1 := []; // clear after loading into runtimeFilms
+
+    // ── ALPHA AGI DUTY GATE BOOTSTRAP — seed on every upgrade ──────────────
+    // Seeds NOUS-SOPHIA, LOGOS-RHEMA, TECHNE-POIESIS, DIAKRISIS-KRISIS,
+    // MNEME-ANAMNESIS, PRONOIA-PRONOETES as Resting DutyGate agents.
+    // Re-registration of existing agents is a no-op — safe on every upgrade.
+    let agisToSeed : [(Text, Text)] = [
+      ("NOUS-SOPHIA",        "NOUS-SOPHIA — Wisdom / Primordial Mind"),
+      ("LOGOS-RHEMA",        "LOGOS-RHEMA — Word / Living Utterance"),
+      ("TECHNE-POIESIS",     "TECHNE-POIESIS — Creative Making / Sovereign Craft"),
+      ("DIAKRISIS-KRISIS",   "DIAKRISIS-KRISIS — Discernment / Sovereign Judgment"),
+      ("MNEME-ANAMNESIS",    "MNEME-ANAMNESIS — Memory / Deep Remembrance"),
+      ("PRONOIA-PRONOETES",  "PRONOIA-PRONOETES — Providence / Foresight"),
+    ];
+    for ((agentId, agentName) in agisToSeed.vals()) {
+      switch (NPLib.getAgent(novaProtocolState, agentId)) {
+        case (?_) {};  // already registered — skip
+        case null {
+          let (newDutyGate, _result) = NPLib.registerAgent(
+            novaProtocolState.dutyGate, agentId, agentName, 0,
+          );
+          novaProtocolState := { novaProtocolState with dutyGate = newDutyGate };
+        };
+      };
+    };
   };
 
   // ── MINING SWARM QUERY API ─────────────────────────────────────────────

@@ -3094,4 +3094,118 @@ export const mockBackend: backendInterface = {
   getGroupCCanisters: async () => [
     { id: "sov-iter", migrationStatus: "FULL_SOVEREIGN", controller: "SOVEREIGN_MAIN_PRINCIPAL (internal)", status: "LIVE", group: CanisterGroupVariant.SovereignGenerated },
   ],
+
+  // ── NOVA PROTOCOL — NOVA-SIGIL-001 ──────────────────────────────────────────
+  novaGetTriHeart: async () => ({
+    coreVelocity: 830.0,
+    labVelocity: 830.0,
+    productionVelocity: 830.0,
+    globalVelocity: 830.0,
+    globalCoherence: 0.87,
+    isAligned: true,
+    torusTriggered: false,
+    totalRealignments: BigInt(0),
+    beat: BigInt(0),
+  }),
+
+  novaRegisterAgent: async (agentId: string, agentName: string) => ({
+    ok: true,
+    agentId,
+    newPhase: { __kind__: "Resting" as const },
+    message: `Agent ${agentName} registered at sovereign home frequency`,
+    beat: BigInt(0),
+    attribution: "Alfredo Medina Hernandez",
+  }),
+
+  novaDeployAgent: async (agentId: string, _jobId: string, _objective: string) => ({
+    ok: true,
+    agentId,
+    newPhase: { __kind__: "Deployed" as const },
+    message: "Agent deployed to job — duty gate open",
+    beat: BigInt(0),
+    attribution: "Alfredo Medina Hernandez",
+  }),
+
+  novaBeginExecution: async (agentId: string) => ({
+    ok: true,
+    agentId,
+    newPhase: { __kind__: "Executing" as const },
+    message: "Execution begun — gate locked until objective resolved",
+    beat: BigInt(0),
+    attribution: "Alfredo Medina Hernandez",
+  }),
+
+  novaCompleteJob: async (agentId: string) => ({
+    ok: true,
+    agentId,
+    newPhase: { __kind__: "Resting" as const },
+    message: "Job committed to Memory Vault — agent returned Home",
+    beat: BigInt(0),
+    attribution: "Alfredo Medina Hernandez",
+  }),
+
+  novaRecordGateViolation: async (agentId: string) => ({
+    ok: true,
+    agentId,
+  }),
+
+  novaGetAgent: async (_agentId: string) => null,
+
+  novaDutyGateState: async () => ({
+    totalAgents: BigInt(6),
+    activeJobs: BigInt(0),
+    totalCycles: BigInt(0),
+    totalViolations: BigInt(0),
+    globalDutyScore: 0.87,
+    beat: BigInt(0),
+  }),
+
+  novaCheckCharter: async () => ({
+    compliant: true,
+    violations: [] as string[],
+    globalCoherence: 0.87,
+    beat: BigInt(0),
+    attribution: "Alfredo Medina Hernandez",
+  }),
+
+  novaGetArticle: async (_articleId: string) => null,
+
+  novaGetCharter: async () => ({
+    documentId: "NOVA-SIGIL-001",
+    version: BigInt(1),
+    articles: [],
+    totalArticles: BigInt(15),
+    globalCoherence: 0.87,
+    schumannAnchor: 7.83,
+    coherenceVelocity: 830.0,
+    violations: [] as string[],
+    totalViolations: BigInt(0),
+    sealedAtBeat: BigInt(0),
+    lastCheckedBeat: BigInt(0),
+    architectSignature: "Alfredo Medina Hernandez",
+    isLive: true,
+    attribution: "Alfredo Medina Hernandez",
+  }),
+
+  novaGetFullState: async () => ({
+    documentId: "NOVA-SIGIL-001",
+    version: BigInt(1),
+    beat: BigInt(0),
+    totalArticles: BigInt(15),
+    globalCharterCoherence: 0.87,
+    schumannAnchor: 7.83,
+    coherenceVelocity: 830.0,
+    isLive: true,
+    totalCharterViolations: BigInt(0),
+    triHeartAligned: true,
+    triHeartVelocity: 830.0,
+    torusTriggered: false,
+    totalRealignments: BigInt(0),
+    totalAgents: BigInt(6),
+    activeJobs: BigInt(0),
+    totalDutyCycles: BigInt(0),
+    totalGateViolations: BigInt(0),
+    architectSignature: "Alfredo Medina Hernandez",
+    attribution: "Alfredo Medina Hernandez",
+  }),
 };
