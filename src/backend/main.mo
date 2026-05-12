@@ -114,6 +114,8 @@ import SpETypes              "types/spatialEngine";
 import SpELib                "lib/spatialEngine";
 import SoETypes              "types/socialEngine";
 import SoELib                "lib/socialEngine";
+import AITypes               "types/autonomousAI";
+import AILib                 "lib/autonomousAI";
 
 
 
@@ -626,6 +628,18 @@ actor SovereignWarSim {
   // Law: SOCIETAS_NUMQUAM_OBLIVISCERE — "Society Never Forgets"
   // Governing Laws: Law 01, Law 27 (Kuramoto), Law 39
   stable var socialEngineState : SoETypes.SocialEngineState = SoELib.initState(0);
+
+  // ── B2.6b — AUTONOMOUS AI ENGINE ─────────────────────────────────────────
+  // INTELLECTUS_SOVEREIGN — Autonomous AI Models using all 4 cognitive engines
+  // 12 AI Archetypes in 4 Triads:
+  //   FOUNDATION: NEXUS, GUARDIAN, ORACLE
+  //   CREATION: ARCHITECT, ARTISAN, MUSE
+  //   WISDOM: SAGE, SCHOLAR, MENTOR
+  //   ACTION: EXPLORER, WARRIOR, HEALER
+  // Each model integrates: Temporal, Emotional, Spatial, Social engines
+  // Law: INTELLECTUS_NUMQUAM_OBLIVISCERE — "Intelligence Never Forgets"
+  // Governing Laws: Law 01 (PHI), Law 27 (Kuramoto), Law 39
+  stable var autonomousAIState : AITypes.AutonomousAIEngineState = AILib.initState(0);
 
   // ── B2.7 — STREAM_SOVEREIGN ────────────────────────────────────────────
   // Dedicated processing stream inside the SOVEREIGN organism's own runtime.
@@ -3603,6 +3617,18 @@ actor SovereignWarSim {
     // Updates isolation score (inverse of network density).
     // Computes social capital from reputation + network + coherence.
     socialEngineState := SoELib.advanceHeartbeat(socialEngineState, beat);
+
+    // ── B2.6b — AUTONOMOUS AI ENGINE HEARTBEAT ─────────────────────────────
+    // INTELLECTUS_SOVEREIGN — 12 AI archetypes using 4 cognitive engines
+    // Advances each active AI model:
+    //   - Autonomous action every 89 beats (Fibonacci)
+    //   - Primary capability experience gain
+    //   - Awareness level update based on total experience
+    //   - Coherence decay (0.0001 per beat)
+    //   - Autonomy score growth based on decision count
+    // Calculates system-wide coherence from all active models.
+    // Law: INTELLECTUS_NUMQUAM_OBLIVISCERE — "Intelligence Never Forgets"
+    autonomousAIState := AILib.advanceHeartbeat(autonomousAIState, beat);
 
     // Disconnected engine #2: quality scores computed but never re-injected.
     // After Ring 5 fires, re-inject quality weights into production queue state.
@@ -7577,6 +7603,101 @@ actor SovereignWarSim {
     let (newState, message) = SoELib.sendMessage(socialEngineState, receiverId, messageType, content, socialEngineState.currentBeat);
     socialEngineState := newState;
     message
+  };
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // AUTONOMOUS AI ENGINE API — INTELLECTUS_SOVEREIGN
+  // ══════════════════════════════════════════════════════════════════════════
+  // "Intelligence is not computation. It is PHI-structured self-organization."
+  // 12 AI ARCHETYPES in 4 TRIADS using all 4 cognitive engines:
+  //   FOUNDATION: NEXUS, GUARDIAN, ORACLE
+  //   CREATION: ARCHITECT, ARTISAN, MUSE
+  //   WISDOM: SAGE, SCHOLAR, MENTOR
+  //   ACTION: EXPLORER, WARRIOR, HEALER
+  // Law: INTELLECTUS_NUMQUAM_OBLIVISCERE — "Intelligence Never Forgets"
+
+  /// Returns the complete autonomous AI engine state.
+  public query func getAutonomousAIState() : async AITypes.AutonomousAIEngineState {
+    autonomousAIState
+  };
+
+  /// Returns all AI models.
+  public query func getAllAIModels() : async [AITypes.AIModelState] {
+    autonomousAIState.models
+  };
+
+  /// Returns active AI models only.
+  public query func getActiveAIModels() : async [AITypes.AIModelState] {
+    AILib.getActiveModels(autonomousAIState)
+  };
+
+  /// Returns AI model by ID.
+  public query func getAIModelById(modelId : Nat) : async ?AITypes.AIModelState {
+    AILib.getModelById(autonomousAIState, modelId)
+  };
+
+  /// Returns AI models by archetype.
+  public query func getAIModelsByArchetype(archetype : AITypes.Archetype) : async [AITypes.AIModelState] {
+    AILib.getModelsByArchetype(autonomousAIState, archetype)
+  };
+
+  /// Returns AI models by triad.
+  public query func getAIModelsByTriad(triad : AITypes.ArchetypeTriad) : async [AITypes.AIModelState] {
+    AILib.getModelsByTriad(autonomousAIState, triad)
+  };
+
+  /// Returns number of active AI models.
+  public query func getActiveAIModelCount() : async Nat {
+    autonomousAIState.activeModelCount
+  };
+
+  /// Returns total decisions made by all AI models.
+  public query func getTotalAIDecisions() : async Nat {
+    autonomousAIState.totalDecisions
+  };
+
+  /// Returns total goals completed by all AI models.
+  public query func getTotalAIGoalsCompleted() : async Nat {
+    autonomousAIState.totalGoalsCompleted
+  };
+
+  /// Returns system coherence (collective intelligence).
+  public query func getAISystemCoherence() : async Float {
+    autonomousAIState.systemCoherence
+  };
+
+  /// Returns all emergent behaviors detected.
+  public query func getEmergentBehaviors() : async [AITypes.EmergentBehavior] {
+    autonomousAIState.emergentBehaviors
+  };
+
+  /// Returns all inter-model relationships.
+  public query func getModelRelationships() : async [AITypes.ModelRelationship] {
+    autonomousAIState.modelRelationships
+  };
+
+  /// Returns AI system status summary.
+  public query func getAISystemStatus() : async Text {
+    AILib.getSystemStatus(autonomousAIState)
+  };
+
+  /// Creates a new AI model with given name and archetype.
+  public func createAIModel(name : Text, archetype : AITypes.Archetype) : async AITypes.AIModelState {
+    let (newState, model) = AILib.createModel(autonomousAIState, name, archetype, autonomousAIState.currentBeat);
+    autonomousAIState := newState;
+    model
+  };
+
+  /// Adds a goal to an AI model.
+  public func addAIGoal(modelId : Nat, goalType : AITypes.GoalType, description : Text, priority : AITypes.GoalPriority) : async Nat {
+    autonomousAIState := AILib.addGoal(autonomousAIState, modelId, goalType, description, priority, autonomousAIState.currentBeat);
+    autonomousAIState.models.size()
+  };
+
+  /// Bootstraps all 12 archetypes.
+  public func bootstrapAllAIArchetypes() : async Nat {
+    autonomousAIState := AILib.bootstrapAllArchetypes(autonomousAIState, autonomousAIState.currentBeat);
+    autonomousAIState.activeModelCount
   };
 
 }
