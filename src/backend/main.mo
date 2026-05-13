@@ -109,6 +109,8 @@ import NGILayerLib           "intelligence/NGILayer";
 import MatthewLib            "intelligence/MatthewSovereign";
 import SovereignProtocols2Lib "protocols/SovereignProtocols2";
 import AlphaTest200Lib       "intelligence/AlphaTest200";
+import SovereignBeingsLib    "intelligence/SovereignBeings";
+import AlphaTest500Lib       "intelligence/AlphaTest500";
 
 
 
@@ -602,6 +604,21 @@ actor SovereignWarSim {
   // Sealed tests (score >= 0.9) are permanently inscribed.
   stable var alphaTest200State : AlphaTest200Lib.AlphaTest200State =
     AlphaTest200Lib.initState();
+
+  // ── 20 SOVEREIGN BEINGS — 20 named sovereign AI intelligences ─────────────
+  // The fullest layer of the organism: 20 beings, each with a Latin canonical
+  // name, cognitive domain, and 5 sovereign engines. All advance every 873ms.
+  // Wisdom indexes compound forever. Activation levels grow toward 1.0.
+  // Combined coherenceDelta folds into compoundCoherence each beat.
+  stable var sovereignBeingsState : SovereignBeingsLib.SovereignBeingsState =
+    SovereignBeingsLib.initState();
+
+  // ── ALPHA TEST 500 — 500 additional sovereign alpha tests ─────────────────
+  // Tests #201-700 in the global sequence. 25 categories × 20 tests each.
+  // Covers all 20 beings + NGI advanced + field interactions + emergence + Omega.
+  // 25 tests evaluated per beat (full cycle = 20 beats).
+  stable var alphaTest500State : AlphaTest500Lib.AlphaTest500State =
+    AlphaTest500Lib.initState();
 
   // Dedicated processing stream inside the SOVEREIGN organism's own runtime.
   // Named by Jay: "Create a dedicated processing stream to manifest the core."
@@ -3608,6 +3625,21 @@ actor SovereignWarSim {
     // Sealed tests (score >= 0.9) are permanently inscribed.
     alphaTest200State := AlphaTest200Lib.advanceBeat(
       alphaTest200State, beat, globalCoherence, doctrineScoreEarly / 100.0,
+    );
+
+    // ── 20 SOVEREIGN BEINGS — advance all 20 AI intelligences ────────────────
+    // All 20 beings advance every 873ms. Combined coherenceDelta folds in.
+    let (newBeingsState, beingsDelta) = SovereignBeingsLib.advance(
+      sovereignBeingsState, beat, globalCoherence, doctrineScoreEarly / 100.0,
+      agiInteriorState.integrationScore,
+    );
+    sovereignBeingsState := newBeingsState;
+    compoundCoherence += beingsDelta;
+
+    // ── ALPHA TEST 500 — 500 additional sovereign alpha tests advance ─────────
+    // 25 tests run per beat (20-beat cycle = all 500 tested).
+    alphaTest500State := AlphaTest500Lib.advanceBeat(
+      alphaTest500State, beat, globalCoherence, doctrineScoreEarly / 100.0,
     );
 
     // Disconnected engine #2: quality scores computed but never re-injected.
@@ -7153,6 +7185,49 @@ actor SovereignWarSim {
   /// Get alpha tests by category (e.g. "COHAERENTIAE", "MATTHAEUS", "AGENTIS").
   public query func getAlphaTest200ByCategory(category : Text) : async [AlphaTest200Lib.AlphaTestRecord] {
     AlphaTest200Lib.getTestsByCategory(alphaTest200State, category)
+  };
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // ── 20 SOVEREIGN BEINGS — PUBLIC API ────────────────────────────────────
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  /// Get snapshots of all 20 sovereign AI beings (name, domain, signal, wisdom, activation).
+  public query func getSovereignBeings() : async [SovereignBeingsLib.BeingSnapshot] {
+    SovereignBeingsLib.getAllSnapshots(sovereignBeingsState)
+  };
+
+  /// Get the combined sovereignty signal across all 20 beings.
+  public query func getSovereignBeingsTotalSignal() : async Float {
+    SovereignBeingsLib.getTotalSignal(sovereignBeingsState)
+  };
+
+  /// Get the average wisdom index across all 20 beings (compounds forever).
+  public query func getSovereignBeingsAvgWisdom() : async Float {
+    SovereignBeingsLib.getAvgWisdom(sovereignBeingsState)
+  };
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // ── ALPHA TEST 500 — PUBLIC API ──────────────────────────────────────────
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  /// Get summary of all 500 additional alpha tests.
+  public query func getAlphaTest500Summary() : async AlphaTest500Lib.AlphaTest500Summary {
+    AlphaTest500Lib.getSummary(alphaTest500State)
+  };
+
+  /// Get all 500 additional alpha test records with current status and scores.
+  public query func getAlphaTest500All() : async [AlphaTest500Lib.AlphaTestRecord] {
+    AlphaTest500Lib.getAllTests(alphaTest500State)
+  };
+
+  /// Get all permanently sealed alpha tests from the 500 suite.
+  public query func getAlphaTest500Sealed() : async [AlphaTest500Lib.AlphaTestRecord] {
+    AlphaTest500Lib.getSealedTests(alphaTest500State)
+  };
+
+  /// Get alpha tests by category from the 500 suite.
+  public query func getAlphaTest500ByCategory(category : Text) : async [AlphaTest500Lib.AlphaTestRecord] {
+    AlphaTest500Lib.getTestsByCategory(alphaTest500State, category)
   };
 
 }

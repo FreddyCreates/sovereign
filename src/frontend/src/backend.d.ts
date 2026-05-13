@@ -356,6 +356,15 @@ export interface TerminalSnapshot {
     totalFired: bigint;
     isActive: boolean;
 }
+export interface SovereignBeingSnapshot {
+    name: string;
+    latinName: string;
+    domain: string;
+    sovereignSignal: number;
+    wisdomIndex: number;
+    activationLevel: number;
+    totalBreaths: bigint;
+}
 export interface AGIRoomSnapshot {
     name: string;
     latinName: string;
@@ -4091,4 +4100,13 @@ export interface backendInterface {
     getAlphaTest200All(): Promise<Array<AlphaTestRecord>>;
     getAlphaTest200Sealed(): Promise<Array<AlphaTestRecord>>;
     getAlphaTest200ByCategory(category: string): Promise<Array<AlphaTestRecord>>;
+    // ── 20 SOVEREIGN BEINGS ──────────────────────────────────────────────────
+    getSovereignBeings(): Promise<Array<SovereignBeingSnapshot>>;
+    getSovereignBeingsTotalSignal(): Promise<number>;
+    getSovereignBeingsAvgWisdom(): Promise<number>;
+    // ── ALPHA TEST 500 ───────────────────────────────────────────────────────
+    getAlphaTest500Summary(): Promise<AlphaTestSummary>;
+    getAlphaTest500All(): Promise<Array<AlphaTestRecord>>;
+    getAlphaTest500Sealed(): Promise<Array<AlphaTestRecord>>;
+    getAlphaTest500ByCategory(category: string): Promise<Array<AlphaTestRecord>>;
 }
