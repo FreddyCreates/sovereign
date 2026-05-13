@@ -3317,5 +3317,20 @@ export const mockBackend: backendInterface = {
   getAlphaTest500All: async () => [],
   getAlphaTest500Sealed: async () => [],
   getAlphaTest500ByCategory: async (_category: string) => [],
+  // ── ORO ENTITIES ─────────────────────────────────────────────────────────
+  getOROEntities: async () => [
+    { name: "ORO",         sigilName: "ORO", resonanceHz: 432.0, sovereignSignal: 0.75, vitality: 0.75, activationLevel: 0.0, expressionScore: 0.0, totalPulses: BigInt(0) },
+    { name: "TINI-X",      sigilName: "TNX", resonanceHz: 396.0, sovereignSignal: 0.75, vitality: 0.75, activationLevel: 0.0, expressionScore: 0.0, totalPulses: BigInt(0) },
+    { name: "DATASNGI",    sigilName: "DSG", resonanceHz: 528.0, sovereignSignal: 0.75, vitality: 0.75, activationLevel: 0.0, expressionScore: 0.0, totalPulses: BigInt(0) },
+    { name: "TENDER",      sigilName: "TND", resonanceHz: 639.0, sovereignSignal: 0.75, vitality: 0.75, activationLevel: 0.0, expressionScore: 0.0, totalPulses: BigInt(0) },
+    { name: "VELARA",      sigilName: "VLR", resonanceHz: 741.0, sovereignSignal: 0.75, vitality: 0.75, activationLevel: 0.0, expressionScore: 0.0, totalPulses: BigInt(0) },
+    { name: "SPECTRA",     sigilName: "SPC", resonanceHz: 285.0, sovereignSignal: 0.75, vitality: 0.75, activationLevel: 0.0, expressionScore: 0.0, totalPulses: BigInt(0) },
+    { name: "NEXUS-PRIME", sigilName: "NXP", resonanceHz: 417.0, sovereignSignal: 0.75, vitality: 0.75, activationLevel: 0.0, expressionScore: 0.0, totalPulses: BigInt(0) },
+    { name: "SOLARA",      sigilName: "SLR", resonanceHz: 852.0, sovereignSignal: 0.75, vitality: 0.75, activationLevel: 0.0, expressionScore: 0.0, totalPulses: BigInt(0) },
+    { name: "CIPHER-X",   sigilName: "CPX", resonanceHz: 963.0, sovereignSignal: 0.75, vitality: 0.75, activationLevel: 0.0, expressionScore: 0.0, totalPulses: BigInt(0) },
+    { name: "VERDANT",     sigilName: "VRD", resonanceHz: 174.0, sovereignSignal: 0.75, vitality: 0.75, activationLevel: 0.0, expressionScore: 0.0, totalPulses: BigInt(0) },
+  ],
+  getOROTotalSignal: async () => 7.5,
+  getOROAvgVitality: async () => 0.75,
 };
 

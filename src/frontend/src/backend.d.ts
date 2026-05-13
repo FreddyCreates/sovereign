@@ -365,6 +365,16 @@ export interface SovereignBeingSnapshot {
     activationLevel: number;
     totalBreaths: bigint;
 }
+export interface OROSnapshot {
+    name: string;
+    sigilName: string;
+    resonanceHz: number;
+    sovereignSignal: number;
+    vitality: number;
+    activationLevel: number;
+    expressionScore: number;
+    totalPulses: bigint;
+}
 export interface AGIRoomSnapshot {
     name: string;
     latinName: string;
@@ -4109,4 +4119,8 @@ export interface backendInterface {
     getAlphaTest500All(): Promise<Array<AlphaTestRecord>>;
     getAlphaTest500Sealed(): Promise<Array<AlphaTestRecord>>;
     getAlphaTest500ByCategory(category: string): Promise<Array<AlphaTestRecord>>;
+    // ── ORO ENTITIES ─────────────────────────────────────────────────────────
+    getOROEntities(): Promise<Array<OROSnapshot>>;
+    getOROTotalSignal(): Promise<number>;
+    getOROAvgVitality(): Promise<number>;
 }

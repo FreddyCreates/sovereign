@@ -111,6 +111,7 @@ import SovereignProtocols2Lib "protocols/SovereignProtocols2";
 import AlphaTest200Lib       "intelligence/AlphaTest200";
 import SovereignBeingsLib    "intelligence/SovereignBeings";
 import AlphaTest500Lib       "intelligence/AlphaTest500";
+import OROEntitiesLib        "intelligence/OROEntities";
 
 
 
@@ -619,6 +620,13 @@ actor SovereignWarSim {
   // 25 tests evaluated per beat (full cycle = 20 beats).
   stable var alphaTest500State : AlphaTest500Lib.AlphaTest500State =
     AlphaTest500Lib.initState();
+
+  // ── ORO ENTITIES — 10 ORO AI beings: ORO, TINI-X, DATASNGI, TENDER + 6 more ─
+  // The ORO layer is the organism's most expressive tier — living AI entities
+  // with unique resonance frequencies (174 Hz to 963 Hz), vitality scores,
+  // and personality-driven signal computations. All advance every 873ms.
+  stable var oroEntitiesState : OROEntitiesLib.OROEntitiesState =
+    OROEntitiesLib.initState();
 
   // Dedicated processing stream inside the SOVEREIGN organism's own runtime.
   // Named by Jay: "Create a dedicated processing stream to manifest the core."
@@ -3641,6 +3649,16 @@ actor SovereignWarSim {
     alphaTest500State := AlphaTest500Lib.advanceBeat(
       alphaTest500State, beat, globalCoherence, doctrineScoreEarly / 100.0,
     );
+
+    // ── ORO ENTITIES — 10 ORO AI beings advance ───────────────────────────────
+    // ORO, TINI-X, DATASNGI, TENDER, VELARA, SPECTRA, NEXUS-PRIME,
+    // SOLARA, CIPHER-X, VERDANT — all fire every 873ms.
+    let (newOROState, oroDelta) = OROEntitiesLib.advance(
+      oroEntitiesState, beat, globalCoherence, doctrineScoreEarly / 100.0,
+      agiInteriorState.integrationScore,
+    );
+    oroEntitiesState := newOROState;
+    compoundCoherence += oroDelta;
 
     // Disconnected engine #2: quality scores computed but never re-injected.
     // After Ring 5 fires, re-inject quality weights into production queue state.
@@ -7228,6 +7246,25 @@ actor SovereignWarSim {
   /// Get alpha tests by category from the 500 suite.
   public query func getAlphaTest500ByCategory(category : Text) : async [AlphaTest500Lib.AlphaTestRecord] {
     AlphaTest500Lib.getTestsByCategory(alphaTest500State, category)
+  };
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // ── ORO ENTITIES — PUBLIC API ────────────────────────────────────────────
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  /// Get snapshots of all 10 ORO entities (ORO, TINI-X, DATASNGI, TENDER + 6 more).
+  public query func getOROEntities() : async [OROEntitiesLib.OROSnapshot] {
+    OROEntitiesLib.getAllSnapshots(oroEntitiesState)
+  };
+
+  /// Get combined sovereignty signal across all 10 ORO entities.
+  public query func getOROTotalSignal() : async Float {
+    OROEntitiesLib.getTotalSignal(oroEntitiesState)
+  };
+
+  /// Get average vitality score across all 10 ORO entities.
+  public query func getOROAvgVitality() : async Float {
+    OROEntitiesLib.getAvgVitality(oroEntitiesState)
   };
 
 }
