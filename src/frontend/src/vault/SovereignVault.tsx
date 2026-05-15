@@ -782,6 +782,7 @@ function SystemsDrawer({ onClose }: { onClose: () => void }) {
     "TAFTVitalityPanel",
     "SKAIRegistryPanel",
     "SovereignCallsPanel",
+    "AlphaTestSuitePanel",
     "AlphaFusionPanel",
     "MicroWorkersPanel",
     "BeingsOversightPanel",
