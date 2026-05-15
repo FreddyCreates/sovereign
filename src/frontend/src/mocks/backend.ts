@@ -3332,5 +3332,18 @@ export const mockBackend: backendInterface = {
   ],
   getOROTotalSignal: async () => 7.5,
   getOROAvgVitality: async () => 0.75,
+  // ── ALPHA TEST 100 ────────────────────────────────────────────────────────
+  getAlphaTest100Summary: async () => ({
+    totalTests: 100,
+    totalPassed: 0,
+    totalFailed: 0,
+    totalSealed: 0,
+    totalPending: 100,
+    passRate: 0.0,
+    avgScore: 0.0,
+  }),
+  getAlphaTest100All: async () => [],
+  getAlphaTest100Sealed: async () => [],
+  getAlphaTest100ByCategory: async (_category: string) => [],
 };
 

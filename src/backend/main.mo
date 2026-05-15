@@ -112,6 +112,7 @@ import AlphaTest200Lib       "intelligence/AlphaTest200";
 import SovereignBeingsLib    "intelligence/SovereignBeings";
 import AlphaTest500Lib       "intelligence/AlphaTest500";
 import OROEntitiesLib        "intelligence/OROEntities";
+import AlphaTest100Lib       "intelligence/AlphaTest100";
 
 
 
@@ -627,6 +628,12 @@ actor SovereignWarSim {
   // and personality-driven signal computations. All advance every 873ms.
   stable var oroEntitiesState : OROEntitiesLib.OROEntitiesState =
     OROEntitiesLib.initState();
+
+  // ── ALPHA TEST 100 — 100 ORO-layer sovereign tests (#701-800) ─────────────
+  // 10 categories × 10 tests: ORO_FIELD, TINI_X, DATASNGI, TENDER, VELARA,
+  // SPECTRA, NEXUS_PRIME, SOLARA, CIPHER_X, VERDANT. 10 tests per beat.
+  stable var alphaTest100State : AlphaTest100Lib.AlphaTest100State =
+    AlphaTest100Lib.initState();
 
   // Dedicated processing stream inside the SOVEREIGN organism's own runtime.
   // Named by Jay: "Create a dedicated processing stream to manifest the core."
@@ -3660,7 +3667,12 @@ actor SovereignWarSim {
     oroEntitiesState := newOROState;
     compoundCoherence += oroDelta;
 
-    // Disconnected engine #2: quality scores computed but never re-injected.
+    // ── ALPHA TEST 100 — 100 ORO-layer tests advance ──────────────────────────
+    // 10 tests per beat (10-beat cycle covers all 100 ORO-entity tests #701-800).
+    alphaTest100State := AlphaTest100Lib.advanceBeat(
+      alphaTest100State, beat, globalCoherence, doctrineScoreEarly / 100.0,
+    );
+
     // After Ring 5 fires, re-inject quality weights into production queue state.
     // Film school loop fires every ~45s ≈ every 51 beats at 873ms interval.
     if (beat % 51 == 0) {
@@ -7265,6 +7277,30 @@ actor SovereignWarSim {
   /// Get average vitality score across all 10 ORO entities.
   public query func getOROAvgVitality() : async Float {
     OROEntitiesLib.getAvgVitality(oroEntitiesState)
+  };
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // ── ALPHA TEST 100 — PUBLIC API ──────────────────────────────────────────
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  /// Get summary of 100 ORO-layer alpha tests (#701-800).
+  public query func getAlphaTest100Summary() : async AlphaTest100Lib.AlphaTest100Summary {
+    AlphaTest100Lib.getSummary(alphaTest100State)
+  };
+
+  /// Get all 100 ORO-layer alpha test records with current status and scores.
+  public query func getAlphaTest100All() : async [AlphaTest100Lib.AlphaTestRecord] {
+    AlphaTest100Lib.getAllTests(alphaTest100State)
+  };
+
+  /// Get permanently sealed ORO-layer alpha tests (score >= 0.9).
+  public query func getAlphaTest100Sealed() : async [AlphaTest100Lib.AlphaTestRecord] {
+    AlphaTest100Lib.getSealedTests(alphaTest100State)
+  };
+
+  /// Get ORO-layer alpha tests by category (e.g. "ORO_FIELD", "TENDER", "VERDANT").
+  public query func getAlphaTest100ByCategory(category : Text) : async [AlphaTest100Lib.AlphaTestRecord] {
+    AlphaTest100Lib.getTestsByCategory(alphaTest100State, category)
   };
 
 }

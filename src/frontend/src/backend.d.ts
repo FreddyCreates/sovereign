@@ -456,6 +456,15 @@ export interface AlphaTestSummary {
     passRate: number;
     avgScore: number;
 }
+export interface AlphaTest100Summary {
+    totalTests: number;
+    totalPassed: number;
+    totalFailed: number;
+    totalSealed: number;
+    totalPending: number;
+    passRate: number;
+    avgScore: number;
+}
 export interface LawExecutionRecord {
     lawName: string;
     beat: bigint;
@@ -4123,4 +4132,9 @@ export interface backendInterface {
     getOROEntities(): Promise<Array<OROSnapshot>>;
     getOROTotalSignal(): Promise<number>;
     getOROAvgVitality(): Promise<number>;
+    // ── ALPHA TEST 100 ────────────────────────────────────────────────────────
+    getAlphaTest100Summary(): Promise<AlphaTest100Summary>;
+    getAlphaTest100All(): Promise<Array<AlphaTestRecord>>;
+    getAlphaTest100Sealed(): Promise<Array<AlphaTestRecord>>;
+    getAlphaTest100ByCategory(category: string): Promise<Array<AlphaTestRecord>>;
 }
