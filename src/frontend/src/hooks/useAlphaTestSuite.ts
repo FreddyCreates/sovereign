@@ -139,9 +139,9 @@ export function useAlphaTest200All() {
     queryKey: ["alphaTest200All"],
     enabled: !isFetching && !!actor,
     queryFn: async () =>
-      (
-        (await actor.getAlphaTest200All()) as AlphaTestRecord[]
-      ).map((r) => normaliseRecord(r, "A")),
+      ((await actor.getAlphaTest200All()) as AlphaTestRecord[]).map((r) =>
+        normaliseRecord(r, "A"),
+      ),
     refetchInterval: 8000,
     staleTime: 7000,
   });
@@ -169,9 +169,9 @@ export function useAlphaTest500All() {
     queryKey: ["alphaTest500All"],
     enabled: !isFetching && !!actor,
     queryFn: async () =>
-      (
-        (await actor.getAlphaTest500All()) as AlphaTestRecord[]
-      ).map((r) => normaliseRecord(r, "B")),
+      ((await actor.getAlphaTest500All()) as AlphaTestRecord[]).map((r) =>
+        normaliseRecord(r, "B"),
+      ),
     refetchInterval: 8000,
     staleTime: 7000,
   });
@@ -199,9 +199,9 @@ export function useAlphaTest100All() {
     queryKey: ["alphaTest100All"],
     enabled: !isFetching && !!actor,
     queryFn: async () =>
-      (
-        (await actor.getAlphaTest100All()) as AlphaTestRecord[]
-      ).map((r) => normaliseRecord(r, "C")),
+      ((await actor.getAlphaTest100All()) as AlphaTestRecord[]).map((r) =>
+        normaliseRecord(r, "C"),
+      ),
     refetchInterval: 8000,
     staleTime: 7000,
   });
@@ -218,8 +218,12 @@ export function useAlphaTestSuite(): AlphaTestSuiteState {
   const recC = useAlphaTest100All();
 
   const isLoading =
-    sumA.isLoading || sumB.isLoading || sumC.isLoading ||
-    recA.isLoading || recB.isLoading || recC.isLoading;
+    sumA.isLoading ||
+    sumB.isLoading ||
+    sumC.isLoading ||
+    recA.isLoading ||
+    recB.isLoading ||
+    recC.isLoading;
 
   // Aggregate summary
   const a = sumA.data;
@@ -227,11 +231,16 @@ export function useAlphaTestSuite(): AlphaTestSuiteState {
   const c = sumC.data;
 
   const aggregate: NormalisedSummary = {
-    totalTests: (a?.totalTests ?? 0) + (b?.totalTests ?? 0) + (c?.totalTests ?? 0),
-    totalPassed: (a?.totalPassed ?? 0) + (b?.totalPassed ?? 0) + (c?.totalPassed ?? 0),
-    totalFailed: (a?.totalFailed ?? 0) + (b?.totalFailed ?? 0) + (c?.totalFailed ?? 0),
-    totalSealed: (a?.totalSealed ?? 0) + (b?.totalSealed ?? 0) + (c?.totalSealed ?? 0),
-    totalPending: (a?.totalPending ?? 0) + (b?.totalPending ?? 0) + (c?.totalPending ?? 0),
+    totalTests:
+      (a?.totalTests ?? 0) + (b?.totalTests ?? 0) + (c?.totalTests ?? 0),
+    totalPassed:
+      (a?.totalPassed ?? 0) + (b?.totalPassed ?? 0) + (c?.totalPassed ?? 0),
+    totalFailed:
+      (a?.totalFailed ?? 0) + (b?.totalFailed ?? 0) + (c?.totalFailed ?? 0),
+    totalSealed:
+      (a?.totalSealed ?? 0) + (b?.totalSealed ?? 0) + (c?.totalSealed ?? 0),
+    totalPending:
+      (a?.totalPending ?? 0) + (b?.totalPending ?? 0) + (c?.totalPending ?? 0),
     passRate:
       (a?.passRate ?? 0) / 3 + (b?.passRate ?? 0) / 3 + (c?.passRate ?? 0) / 3,
     avgScore:

@@ -25,16 +25,16 @@ import { useHeartbeatPulse } from "../hooks/useHeartbeatPulse";
 const PHI = 1.6180339887498948482;
 
 // ─── Colors ──────────────────────────────────────────────────────────────────
-const BG      = "oklch(0.06 0.009 280)";
+const BG = "oklch(0.06 0.009 280)";
 const SURFACE = "oklch(0.09 0.012 278)";
-const BORDER  = "oklch(0.14 0.015 278)";
-const GOLD    = "oklch(0.82 0.18 68)";
-const CYAN    = "oklch(0.75 0.16 200)";
-const DIM     = "oklch(0.38 0.02 278)";
-const GREEN   = "oklch(0.72 0.18 145)";
-const AMBER   = "oklch(0.78 0.18 68)";
-const RED     = "oklch(0.65 0.22 25)";
-const PURPLE  = "oklch(0.68 0.22 290)";
+const BORDER = "oklch(0.14 0.015 278)";
+const GOLD = "oklch(0.82 0.18 68)";
+const CYAN = "oklch(0.75 0.16 200)";
+const DIM = "oklch(0.38 0.02 278)";
+const GREEN = "oklch(0.72 0.18 145)";
+const AMBER = "oklch(0.78 0.18 68)";
+const RED = "oklch(0.65 0.22 25)";
+const PURPLE = "oklch(0.68 0.22 290)";
 
 // ─── Status badge config ──────────────────────────────────────────────────────
 type StatusKey = "SEALED" | "PASSED" | "FAILED" | "RUNNING" | "PENDING";
@@ -43,18 +43,30 @@ const STATUS_CONFIG: Record<
   StatusKey,
   { color: string; bg: string; label: string }
 > = {
-  SEALED:  { color: GOLD,   bg: "oklch(0.82 0.18 68 / 0.12)",  label: "⬡ SEALED"  },
-  PASSED:  { color: GREEN,  bg: "oklch(0.72 0.18 145 / 0.12)", label: "✓ PASSED"  },
-  FAILED:  { color: RED,    bg: "oklch(0.65 0.22 25 / 0.12)",  label: "✗ FAILED"  },
-  RUNNING: { color: CYAN,   bg: "oklch(0.75 0.16 200 / 0.12)", label: "◎ RUNNING" },
-  PENDING: { color: DIM,    bg: "oklch(0.14 0.015 278 / 0.5)", label: "◌ PENDING" },
+  SEALED: { color: GOLD, bg: "oklch(0.82 0.18 68 / 0.12)", label: "⬡ SEALED" },
+  PASSED: {
+    color: GREEN,
+    bg: "oklch(0.72 0.18 145 / 0.12)",
+    label: "✓ PASSED",
+  },
+  FAILED: { color: RED, bg: "oklch(0.65 0.22 25 / 0.12)", label: "✗ FAILED" },
+  RUNNING: {
+    color: CYAN,
+    bg: "oklch(0.75 0.16 200 / 0.12)",
+    label: "◎ RUNNING",
+  },
+  PENDING: {
+    color: DIM,
+    bg: "oklch(0.14 0.015 278 / 0.5)",
+    label: "◌ PENDING",
+  },
 };
 
 // ─── Suite badge ─────────────────────────────────────────────────────────────
 const SUITE_CONFIG = {
-  A: { label: "A·200",  color: CYAN,   desc: "#1-200"   },
-  B: { label: "B·500",  color: PURPLE, desc: "#201-700" },
-  C: { label: "C·100",  color: GOLD,   desc: "#701-800" },
+  A: { label: "A·200", color: CYAN, desc: "#1-200" },
+  B: { label: "B·500", color: PURPLE, desc: "#201-700" },
+  C: { label: "C·100", color: GOLD, desc: "#701-800" },
 } as const;
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
@@ -129,7 +141,9 @@ function SuiteBar({
         </span>
         <span
           className="font-mono text-[8px] font-bold"
-          style={{ color: passRate >= 0.8 ? GREEN : passRate >= 0.5 ? AMBER : RED }}
+          style={{
+            color: passRate >= 0.8 ? GREEN : passRate >= 0.5 ? AMBER : RED,
+          }}
         >
           {(passRate * 100).toFixed(1)}%
         </span>
@@ -138,8 +152,8 @@ function SuiteBar({
   );
 }
 
-function TestRow({ rec, pulse }: { rec: NormalisedTestRecord; pulse: boolean }) {
-  const cfg = STATUS_CONFIG[(rec.status as StatusKey)] ?? STATUS_CONFIG.PENDING;
+function TestRow({ rec }: { rec: NormalisedTestRecord }) {
+  const cfg = STATUS_CONFIG[rec.status as StatusKey] ?? STATUS_CONFIG.PENDING;
   const suite = SUITE_CONFIG[rec.suite];
 
   return (
@@ -147,11 +161,12 @@ function TestRow({ rec, pulse }: { rec: NormalisedTestRecord; pulse: boolean }) 
       className="flex items-start gap-2 px-3 py-1.5 border-b transition-all"
       style={{
         borderColor: BORDER,
-        background: rec.status === "SEALED"
-          ? "oklch(0.82 0.18 68 / 0.04)"
-          : rec.status === "FAILED"
-          ? "oklch(0.65 0.22 25 / 0.03)"
-          : "transparent",
+        background:
+          rec.status === "SEALED"
+            ? "oklch(0.82 0.18 68 / 0.04)"
+            : rec.status === "FAILED"
+              ? "oklch(0.65 0.22 25 / 0.03)"
+              : "transparent",
         opacity: rec.status === "PENDING" ? 0.55 : 1,
       }}
     >
@@ -206,7 +221,10 @@ function TestRow({ rec, pulse }: { rec: NormalisedTestRecord; pulse: boolean }) 
 
       {/* Latin name + condition */}
       <div className="flex-1 min-w-0">
-        <div className="font-mono text-[6px] font-bold truncate" style={{ color: GOLD }}>
+        <div
+          className="font-mono text-[6px] font-bold truncate"
+          style={{ color: GOLD }}
+        >
           {rec.latinName}
         </div>
         <div className="font-mono text-[6px] truncate" style={{ color: DIM }}>
@@ -234,7 +252,6 @@ export function AlphaTestSuitePanel() {
   const [statusFilter, setStatusFilter] = useState<string>("ALL");
   const [suiteFilter, setSuiteFilter] = useState<string>("ALL");
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [expanded, setExpanded] = useState<number | null>(null);
 
   const listRef = useRef<HTMLDivElement>(null);
 
@@ -293,7 +310,8 @@ export function AlphaTestSuitePanel() {
               className="h-full rounded-full transition-all duration-700"
               style={{
                 width: `${phiHealth * 100}%`,
-                background: phiHealth >= 0.8 ? GOLD : phiHealth >= 0.5 ? AMBER : RED,
+                background:
+                  phiHealth >= 0.8 ? GOLD : phiHealth >= 0.5 ? AMBER : RED,
                 boxShadow: pulse
                   ? `0 0 8px ${phiHealth >= 0.8 ? GOLD : AMBER}`
                   : "none",
@@ -312,7 +330,10 @@ export function AlphaTestSuitePanel() {
       </div>
 
       {/* ── Suite summary bars ── */}
-      <div className="grid grid-cols-3 gap-3 px-4 py-3 flex-shrink-0 border-b" style={{ borderColor: BORDER }}>
+      <div
+        className="grid grid-cols-3 gap-3 px-4 py-3 flex-shrink-0 border-b"
+        style={{ borderColor: BORDER }}
+      >
         {suite.suiteA && (
           <SuiteBar
             label={SUITE_CONFIG.A.label}
@@ -353,7 +374,10 @@ export function AlphaTestSuitePanel() {
           />
         )}
         {suite.isLoading && !suite.suiteA && !suite.suiteB && !suite.suiteC && (
-          <div className="col-span-3 py-4 text-center text-[7px]" style={{ color: DIM }}>
+          <div
+            className="col-span-3 py-4 text-center text-[7px]"
+            style={{ color: DIM }}
+          >
             Loading suite summaries from heartbeat…
           </div>
         )}
@@ -365,43 +389,57 @@ export function AlphaTestSuitePanel() {
         style={{ borderColor: BORDER, background: SURFACE }}
       >
         <div className="flex items-center gap-1.5">
-          <span className="text-[7px]" style={{ color: DIM }}>TOTAL</span>
+          <span className="text-[7px]" style={{ color: DIM }}>
+            TOTAL
+          </span>
           <span className="text-[9px] font-bold" style={{ color: GOLD }}>
             {suite.aggregate.totalTests}
           </span>
         </div>
         <div className="flex items-center gap-1.5">
-          <span className="text-[7px]" style={{ color: GOLD }}>⬡ SEALED</span>
+          <span className="text-[7px]" style={{ color: GOLD }}>
+            ⬡ SEALED
+          </span>
           <span className="text-[9px] font-bold" style={{ color: GOLD }}>
             {suite.aggregate.totalSealed}
           </span>
         </div>
         <div className="flex items-center gap-1.5">
-          <span className="text-[7px]" style={{ color: GREEN }}>✓ PASSED</span>
+          <span className="text-[7px]" style={{ color: GREEN }}>
+            ✓ PASSED
+          </span>
           <span className="text-[9px] font-bold" style={{ color: GREEN }}>
             {suite.aggregate.totalPassed}
           </span>
         </div>
         <div className="flex items-center gap-1.5">
-          <span className="text-[7px]" style={{ color: RED }}>✗ FAILED</span>
+          <span className="text-[7px]" style={{ color: RED }}>
+            ✗ FAILED
+          </span>
           <span className="text-[9px] font-bold" style={{ color: RED }}>
             {suite.aggregate.totalFailed}
           </span>
         </div>
         <div className="flex items-center gap-1.5">
-          <span className="text-[7px]" style={{ color: DIM }}>◌ PENDING</span>
+          <span className="text-[7px]" style={{ color: DIM }}>
+            ◌ PENDING
+          </span>
           <span className="text-[9px] font-bold" style={{ color: DIM }}>
             {suite.aggregate.totalPending}
           </span>
         </div>
         <div className="flex items-center gap-1.5 ml-auto">
-          <span className="text-[7px]" style={{ color: DIM }}>avg score</span>
+          <span className="text-[7px]" style={{ color: DIM }}>
+            avg score
+          </span>
           <span className="text-[9px] font-bold" style={{ color: CYAN }}>
             {suite.aggregate.avgScore.toFixed(4)}
           </span>
         </div>
         <div className="flex items-center gap-1.5">
-          <span className="text-[7px]" style={{ color: DIM }}>PHI × health</span>
+          <span className="text-[7px]" style={{ color: DIM }}>
+            PHI × health
+          </span>
           <span className="text-[9px] font-bold" style={{ color: GOLD }}>
             {(phiHealth * PHI).toFixed(4)}
           </span>
@@ -433,7 +471,10 @@ export function AlphaTestSuitePanel() {
               style={{
                 borderColor: suiteFilter === s ? GOLD : BORDER,
                 color: suiteFilter === s ? GOLD : DIM,
-                background: suiteFilter === s ? "oklch(0.82 0.18 68 / 0.1)" : "transparent",
+                background:
+                  suiteFilter === s
+                    ? "oklch(0.82 0.18 68 / 0.1)"
+                    : "transparent",
               }}
             >
               {s === "ALL" ? "ALL SUITES" : `SUITE ${s}`}
@@ -443,24 +484,30 @@ export function AlphaTestSuitePanel() {
 
         {/* Status filter */}
         <div className="flex items-center gap-1">
-          {(["ALL", "SEALED", "PASSED", "FAILED", "PENDING"] as const).map((st) => {
-            const cfg = st === "ALL" ? { color: DIM, label: "ALL STATUS" } : STATUS_CONFIG[st];
-            return (
-              <button
-                key={st}
-                type="button"
-                onClick={() => setStatusFilter(st)}
-                className="font-mono text-[6px] px-2 py-1 rounded border transition-colors"
-                style={{
-                  borderColor: statusFilter === st ? cfg.color : BORDER,
-                  color: statusFilter === st ? cfg.color : DIM,
-                  background: statusFilter === st ? `${cfg.color}18` : "transparent",
-                }}
-              >
-                {st === "ALL" ? "ALL STATUS" : st}
-              </button>
-            );
-          })}
+          {(["ALL", "SEALED", "PASSED", "FAILED", "PENDING"] as const).map(
+            (st) => {
+              const cfg =
+                st === "ALL"
+                  ? { color: DIM, label: "ALL STATUS" }
+                  : STATUS_CONFIG[st];
+              return (
+                <button
+                  key={st}
+                  type="button"
+                  onClick={() => setStatusFilter(st)}
+                  className="font-mono text-[6px] px-2 py-1 rounded border transition-colors"
+                  style={{
+                    borderColor: statusFilter === st ? cfg.color : BORDER,
+                    color: statusFilter === st ? cfg.color : DIM,
+                    background:
+                      statusFilter === st ? `${cfg.color}18` : "transparent",
+                  }}
+                >
+                  {st === "ALL" ? "ALL STATUS" : st}
+                </button>
+              );
+            },
+          )}
         </div>
 
         {/* Category filter (scrollable row) */}
@@ -475,7 +522,10 @@ export function AlphaTestSuitePanel() {
             style={{
               borderColor: categoryFilter === "ALL" ? CYAN : BORDER,
               color: categoryFilter === "ALL" ? CYAN : DIM,
-              background: categoryFilter === "ALL" ? "oklch(0.75 0.16 200 / 0.1)" : "transparent",
+              background:
+                categoryFilter === "ALL"
+                  ? "oklch(0.75 0.16 200 / 0.1)"
+                  : "transparent",
             }}
           >
             ALL CAT
@@ -489,7 +539,10 @@ export function AlphaTestSuitePanel() {
               style={{
                 borderColor: categoryFilter === cat ? CYAN : BORDER,
                 color: categoryFilter === cat ? CYAN : DIM,
-                background: categoryFilter === cat ? "oklch(0.75 0.16 200 / 0.1)" : "transparent",
+                background:
+                  categoryFilter === cat
+                    ? "oklch(0.75 0.16 200 / 0.1)"
+                    : "transparent",
               }}
             >
               {cat}
@@ -508,19 +561,52 @@ export function AlphaTestSuitePanel() {
         className="flex items-center gap-2 px-3 py-1 border-b flex-shrink-0"
         style={{ borderColor: BORDER, background: SURFACE }}
       >
-        <div className="w-12 font-mono text-[6px] tracking-widest" style={{ color: DIM }}>ID</div>
-        <div className="w-16 font-mono text-[6px] tracking-widest" style={{ color: DIM }}>STATUS</div>
-        <div className="w-10 font-mono text-[6px] tracking-widest" style={{ color: DIM }}>SCORE</div>
-        <div className="w-24 font-mono text-[6px] tracking-widest" style={{ color: DIM }}>CATEGORY</div>
-        <div className="flex-1 font-mono text-[6px] tracking-widest" style={{ color: DIM }}>LATIN NAME · CONDITION</div>
-        <div className="font-mono text-[6px] tracking-widest" style={{ color: DIM }}>RUNS</div>
+        <div
+          className="w-12 font-mono text-[6px] tracking-widest"
+          style={{ color: DIM }}
+        >
+          ID
+        </div>
+        <div
+          className="w-16 font-mono text-[6px] tracking-widest"
+          style={{ color: DIM }}
+        >
+          STATUS
+        </div>
+        <div
+          className="w-10 font-mono text-[6px] tracking-widest"
+          style={{ color: DIM }}
+        >
+          SCORE
+        </div>
+        <div
+          className="w-24 font-mono text-[6px] tracking-widest"
+          style={{ color: DIM }}
+        >
+          CATEGORY
+        </div>
+        <div
+          className="flex-1 font-mono text-[6px] tracking-widest"
+          style={{ color: DIM }}
+        >
+          LATIN NAME · CONDITION
+        </div>
+        <div
+          className="font-mono text-[6px] tracking-widest"
+          style={{ color: DIM }}
+        >
+          RUNS
+        </div>
       </div>
 
       {/* ── Scrollable test list ── */}
       <div
         ref={listRef}
         className="flex-1 overflow-y-auto"
-        style={{ scrollbarWidth: "thin", scrollbarColor: `${BORDER} transparent` }}
+        style={{
+          scrollbarWidth: "thin",
+          scrollbarColor: `${BORDER} transparent`,
+        }}
       >
         {suite.isLoading && filtered.length === 0 ? (
           <div className="flex items-center justify-center h-32">
@@ -536,7 +622,7 @@ export function AlphaTestSuitePanel() {
           </div>
         ) : (
           filtered.map((rec) => (
-            <TestRow key={`${rec.suite}-${rec.id}`} rec={rec} pulse={pulse} />
+            <TestRow key={`${rec.suite}-${rec.id}`} rec={rec} />
           ))
         )}
       </div>

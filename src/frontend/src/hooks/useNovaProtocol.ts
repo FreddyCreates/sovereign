@@ -99,15 +99,24 @@ export interface NovaProtocolState {
 
 export interface NovaProtocolActions {
   /** Register a new sovereign agent in the DutyGate */
-  registerAgent(agentId: string, agentName: string): Promise<DutyGateResult | null>;
+  registerAgent(
+    agentId: string,
+    agentName: string,
+  ): Promise<DutyGateResult | null>;
   /** Deploy agent to a job (Resting → Deployed) */
-  deployAgent(agentId: string, jobId: string, objective: string): Promise<DutyGateResult | null>;
+  deployAgent(
+    agentId: string,
+    jobId: string,
+    objective: string,
+  ): Promise<DutyGateResult | null>;
   /** Begin execution (Deployed → Executing) — gate-locks the agent */
   beginExecution(agentId: string): Promise<DutyGateResult | null>;
   /** Complete a job (Executing → Resting, committed to Memory Vault) */
   completeJob(agentId: string): Promise<DutyGateResult | null>;
   /** Record a gate violation (premature exit attempt) */
-  recordGateViolation(agentId: string): Promise<{ ok: boolean; agentId: string } | null>;
+  recordGateViolation(
+    agentId: string,
+  ): Promise<{ ok: boolean; agentId: string } | null>;
   /** Fetch a specific agent's full duty record */
   getAgent(agentId: string): Promise<AgentDutyRecord | null>;
   /** Fetch a specific charter article by ID (e.g. "NOVA-I-01") */
@@ -163,9 +172,10 @@ export function useNovaProtocol(options?: {
       const raw = await actor.novaGetFullState();
 
       // Derive TriHeart snapshot with deviation metric
-      const deviationPct = Math.abs(raw.triHeartVelocity - NOVA_VELOCITY) / NOVA_VELOCITY * 100;
+      const deviationPct =
+        (Math.abs(raw.triHeartVelocity - NOVA_VELOCITY) / NOVA_VELOCITY) * 100;
       const triHeart: TriHeartSnapshot = {
-        coreVelocity: 0,      // populated by novaGetTriHeart if needed
+        coreVelocity: 0, // populated by novaGetTriHeart if needed
         labVelocity: 0,
         productionVelocity: 0,
         globalVelocity: raw.triHeartVelocity,
@@ -191,14 +201,17 @@ export function useNovaProtocol(options?: {
       if (newPulse) {
         prevBeatRef.current = raw.beat;
         if (pulseTimerRef.current) clearTimeout(pulseTimerRef.current);
-        pulseTimerRef.current = setTimeout(() => {
-          setState(s => ({ ...s, pulse: false }));
-        }, Math.floor(HEARTBEAT_MS * 0.5));
+        pulseTimerRef.current = setTimeout(
+          () => {
+            setState((s) => ({ ...s, pulse: false }));
+          },
+          Math.floor(HEARTBEAT_MS * 0.5),
+        );
       }
 
       beatCountRef.current += 1;
 
-      setState(s => ({
+      setState((s) => ({
         ...s,
         fullState: raw,
         triHeart,
@@ -212,15 +225,15 @@ export function useNovaProtocol(options?: {
       if (beatCountRef.current % 10 === 0) {
         if (pollCharter) {
           const charter = await actor.novaGetCharter();
-          setState(s => ({ ...s, charter }));
+          setState((s) => ({ ...s, charter }));
         }
         if (pollCharterCheck) {
           const charterCheck = await actor.novaCheckCharter();
-          setState(s => ({ ...s, charterCheck }));
+          setState((s) => ({ ...s, charterCheck }));
         }
       }
     } catch (err) {
-      setState(s => ({
+      setState((s) => ({
         ...s,
         isLoading: false,
         error: err instanceof Error ? err.message : String(err),
@@ -246,22 +259,34 @@ export function useNovaProtocol(options?: {
 
   // ── ACTIONS ─────────────────────────────────────────────────────────────
   const registerAgent = useCallback(
-    async (agentId: string, agentName: string): Promise<DutyGateResult | null> => {
+    async (
+      agentId: string,
+      agentName: string,
+    ): Promise<DutyGateResult | null> => {
       if (!actor) return null;
-      try { return await actor.novaRegisterAgent(agentId, agentName); }
-      catch { return null; }
+      try {
+        return await actor.novaRegisterAgent(agentId, agentName);
+      } catch {
+        return null;
+      }
     },
     [actor],
   );
 
   const deployAgent = useCallback(
-    async (agentId: string, jobId: string, objective: string): Promise<DutyGateResult | null> => {
+    async (
+      agentId: string,
+      jobId: string,
+      objective: string,
+    ): Promise<DutyGateResult | null> => {
       if (!actor) return null;
       try {
         const result = await actor.novaDeployAgent(agentId, jobId, objective);
         fetchFullState(); // refresh on state change
         return result;
-      } catch { return null; }
+      } catch {
+        return null;
+      }
     },
     [actor, fetchFullState],
   );
@@ -273,7 +298,9 @@ export function useNovaProtocol(options?: {
         const result = await actor.novaBeginExecution(agentId);
         fetchFullState();
         return result;
-      } catch { return null; }
+      } catch {
+        return null;
+      }
     },
     [actor, fetchFullState],
   );
@@ -285,16 +312,23 @@ export function useNovaProtocol(options?: {
         const result = await actor.novaCompleteJob(agentId);
         fetchFullState();
         return result;
-      } catch { return null; }
+      } catch {
+        return null;
+      }
     },
     [actor, fetchFullState],
   );
 
   const recordGateViolation = useCallback(
-    async (agentId: string): Promise<{ ok: boolean; agentId: string } | null> => {
+    async (
+      agentId: string,
+    ): Promise<{ ok: boolean; agentId: string } | null> => {
       if (!actor) return null;
-      try { return await actor.novaRecordGateViolation(agentId); }
-      catch { return null; }
+      try {
+        return await actor.novaRecordGateViolation(agentId);
+      } catch {
+        return null;
+      }
     },
     [actor],
   );
@@ -302,8 +336,11 @@ export function useNovaProtocol(options?: {
   const getAgent = useCallback(
     async (agentId: string): Promise<AgentDutyRecord | null> => {
       if (!actor) return null;
-      try { return await actor.novaGetAgent(agentId); }
-      catch { return null; }
+      try {
+        return await actor.novaGetAgent(agentId);
+      } catch {
+        return null;
+      }
     },
     [actor],
   );
@@ -311,25 +348,30 @@ export function useNovaProtocol(options?: {
   const getArticle = useCallback(
     async (articleId: string): Promise<CharterArticle | null> => {
       if (!actor) return null;
-      try { return await actor.novaGetArticle(articleId); }
-      catch { return null; }
+      try {
+        return await actor.novaGetArticle(articleId);
+      } catch {
+        return null;
+      }
     },
     [actor],
   );
 
-  const checkCharter = useCallback(
-    async (): Promise<CharterCheckResult | null> => {
+  const checkCharter =
+    useCallback(async (): Promise<CharterCheckResult | null> => {
       if (!actor) return null;
       try {
         const result = await actor.novaCheckCharter();
-        setState(s => ({ ...s, charterCheck: result }));
+        setState((s) => ({ ...s, charterCheck: result }));
         return result;
-      } catch { return null; }
-    },
-    [actor],
-  );
+      } catch {
+        return null;
+      }
+    }, [actor]);
 
-  const refresh = useCallback(() => { fetchFullState(); }, [fetchFullState]);
+  const refresh = useCallback(() => {
+    fetchFullState();
+  }, [fetchFullState]);
 
   return {
     ...state,
