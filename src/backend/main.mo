@@ -113,6 +113,7 @@ import SovereignBeingsLib    "intelligence/SovereignBeings";
 import AlphaTest500Lib       "intelligence/AlphaTest500";
 import OROEntitiesLib        "intelligence/OROEntities";
 import AlphaTest100Lib       "intelligence/AlphaTest100";
+import AlphaTest1300Lib      "intelligence/AlphaTest1300";
 
 
 
@@ -634,6 +635,9 @@ actor SovereignWarSim {
   // SPECTRA, NEXUS_PRIME, SOLARA, CIPHER_X, VERDANT. 10 tests per beat.
   stable var alphaTest100State : AlphaTest100Lib.AlphaTest100State =
     AlphaTest100Lib.initState();
+
+  stable var alphaTest1300State : AlphaTest1300Lib.AlphaTest1300State =
+    AlphaTest1300Lib.initState();
 
   // Dedicated processing stream inside the SOVEREIGN organism's own runtime.
   // Named by Jay: "Create a dedicated processing stream to manifest the core."
@@ -3671,6 +3675,13 @@ actor SovereignWarSim {
     // 10 tests per beat (10-beat cycle covers all 100 ORO-entity tests #701-800).
     alphaTest100State := AlphaTest100Lib.advanceBeat(
       alphaTest100State, beat, globalCoherence, doctrineScoreEarly / 100.0,
+    );
+
+    // ── ALPHA TEST 1300 — 1300 expanded sovereign tests (#801-2100) advance ───
+    // 50 tests per beat (26-beat cycle covers all 1300 tests each cycle).
+    // Brings global sovereign test count to 2100: 200+500+100+1300 = 2100.
+    alphaTest1300State := AlphaTest1300Lib.advanceBeat(
+      alphaTest1300State, beat, globalCoherence, doctrineScoreEarly / 100.0,
     );
 
     // After Ring 5 fires, re-inject quality weights into production queue state.
@@ -7301,6 +7312,29 @@ actor SovereignWarSim {
   /// Get ORO-layer alpha tests by category (e.g. "ORO_FIELD", "TENDER", "VERDANT").
   public query func getAlphaTest100ByCategory(category : Text) : async [AlphaTest100Lib.AlphaTestRecord] {
     AlphaTest100Lib.getTestsByCategory(alphaTest100State, category)
+  };
+
+  // ── ALPHA TEST 1300 ENDPOINTS (#801-2100) ─────────────────────────────────
+
+  /// Get summary of 1300 expanded sovereign alpha tests (#801-2100).
+  /// Total sovereign tests after this suite: 200 + 500 + 100 + 1300 = 2100.
+  public query func getAlphaTest1300Summary() : async AlphaTest1300Lib.AlphaTest1300Summary {
+    AlphaTest1300Lib.getSummary(alphaTest1300State)
+  };
+
+  /// Get all 1300 expanded sovereign alpha test records with current status and scores.
+  public query func getAlphaTest1300All() : async [AlphaTest1300Lib.AlphaTestRecord] {
+    AlphaTest1300Lib.getAllTests(alphaTest1300State)
+  };
+
+  /// Get permanently sealed expanded alpha tests (score >= 0.9).
+  public query func getAlphaTest1300Sealed() : async [AlphaTest1300Lib.AlphaTestRecord] {
+    AlphaTest1300Lib.getSealedTests(alphaTest1300State)
+  };
+
+  /// Get expanded alpha tests by category (e.g. "NEXUS_FIELD", "SOVEREIGN_OMEGA").
+  public query func getAlphaTest1300ByCategory(category : Text) : async [AlphaTest1300Lib.AlphaTestRecord] {
+    AlphaTest1300Lib.getTestsByCategory(alphaTest1300State, category)
   };
 
 }

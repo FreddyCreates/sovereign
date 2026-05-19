@@ -465,6 +465,15 @@ export interface AlphaTest100Summary {
     passRate: number;
     avgScore: number;
 }
+export interface AlphaTest1300Summary {
+    totalTests: number;
+    totalPassed: number;
+    totalFailed: number;
+    totalSealed: number;
+    totalPending: number;
+    passRate: number;
+    avgScore: number;
+}
 export interface LawExecutionRecord {
     lawName: string;
     beat: bigint;
@@ -4137,4 +4146,8 @@ export interface backendInterface {
     getAlphaTest100All(): Promise<Array<AlphaTestRecord>>;
     getAlphaTest100Sealed(): Promise<Array<AlphaTestRecord>>;
     getAlphaTest100ByCategory(category: string): Promise<Array<AlphaTestRecord>>;
+    getAlphaTest1300Summary(): Promise<AlphaTest1300Summary>;
+    getAlphaTest1300All(): Promise<Array<AlphaTestRecord>>;
+    getAlphaTest1300Sealed(): Promise<Array<AlphaTestRecord>>;
+    getAlphaTest1300ByCategory(category: string): Promise<Array<AlphaTestRecord>>;
 }

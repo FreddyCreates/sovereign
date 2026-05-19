@@ -3345,5 +3345,17 @@ export const mockBackend: backendInterface = {
   getAlphaTest100All: async () => [],
   getAlphaTest100Sealed: async () => [],
   getAlphaTest100ByCategory: async (_category: string) => [],
+  getAlphaTest1300Summary: async () => ({
+    totalTests: 1300,
+    totalPassed: 0,
+    totalFailed: 0,
+    totalSealed: 0,
+    totalPending: 1300,
+    passRate: 0.0,
+    avgScore: 0.0,
+  }),
+  getAlphaTest1300All: async () => [],
+  getAlphaTest1300Sealed: async () => [],
+  getAlphaTest1300ByCategory: async (_category: string) => [],
 };
 
