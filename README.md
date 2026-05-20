@@ -54,7 +54,7 @@ Sovereign is a **hierarchical autonomous intelligence system** that combines:
 
 ### Prerequisites
 
-- **Node.js** 18+ with **pnpm**
+- **Node.js** 20+ with **pnpm**
 - **DFX** (Internet Computer SDK)
 - **Mops** (Motoko package manager)
 
