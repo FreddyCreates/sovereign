@@ -116,6 +116,8 @@ import SoETypes              "types/socialEngine";
 import SoELib                "lib/socialEngine";
 import AITypes               "types/autonomousAI";
 import AILib                 "lib/autonomousAI";
+import Test20KTypes          "tests/SovereignTest20KTypes";
+import Test20KLib            "tests/SovereignTest20K";
 
 
 
@@ -640,6 +642,15 @@ actor SovereignWarSim {
   // Law: INTELLECTUS_NUMQUAM_OBLIVISCERE — "Intelligence Never Forgets"
   // Governing Laws: Law 01 (PHI), Law 27 (Kuramoto), Law 39
   stable var autonomousAIState : AITypes.AutonomousAIEngineState = AILib.initState(0);
+
+  // ── SOVEREIGN TEST 20K — NATIVE MOPS ICP/WEB3 TEST FRAMEWORK ──────────────
+  // 20,000 tests across 100 categories for direct deployment to Internet Computer.
+  // 100 tests execute per heartbeat (200-beat full cycle).
+  // Categories: Substrate, Intelligence, Geometry, Coherence, Resonance,
+  //   Hebbian, Topology, Spectral, Quantum, Neural (10 domains × 10 categories each).
+  // PHI-based deterministic results. Doctrine-aligned. Always-on verification.
+  // Governing Laws: Law 01 (Attribution), Law 02 (PHI), Law 14 (Heartbeat)
+  stable var test20KState : Test20KTypes.TestSuiteState = Test20KLib.initTestSuite();
 
   // ── B2.7 — STREAM_SOVEREIGN ────────────────────────────────────────────
   // Dedicated processing stream inside the SOVEREIGN organism's own runtime.
@@ -7698,6 +7709,110 @@ actor SovereignWarSim {
   public func bootstrapAllAIArchetypes() : async Nat {
     autonomousAIState := AILib.bootstrapAllArchetypes(autonomousAIState, autonomousAIState.currentBeat);
     autonomousAIState.activeModelCount
+  };
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // SOVEREIGN TEST 20K — NATIVE MOPS ICP/WEB3 TEST FRAMEWORK (20,000 TESTS)
+  // 100 categories × 200 tests = 20,000 tests
+  // Executes 100 tests per heartbeat, completes full cycle in 200 beats
+  // ══════════════════════════════════════════════════════════════════════════
+
+  /// Get test suite summary (20,000 tests overview)
+  public query func getTest20KSummary() : async Test20KTypes.TestSuiteSummary {
+    Test20KLib.getSuiteSummary(test20KState)
+  };
+
+  /// Execute a single test by ID (0-19999)
+  public query func executeTest20K(testId : Nat) : async Test20KTypes.TestResult {
+    Test20KLib.executeTest(testId, autonomousAIState.currentBeat)
+  };
+
+  /// Execute batch of tests
+  public query func executeTest20KBatch(startId : Nat, count : Nat) : async [Test20KTypes.TestResult] {
+    Test20KLib.executeBatch(startId, count, autonomousAIState.currentBeat)
+  };
+
+  /// Execute all tests for a category (0-99)
+  public query func executeTest20KCategory(catId : Nat) : async [Test20KTypes.TestResult] {
+    Test20KLib.executeCategoryTests(catId, autonomousAIState.currentBeat)
+  };
+
+  /// Get category summary
+  public query func getTest20KCategorySummary(catId : Nat) : async ?Test20KTypes.CategorySummary {
+    Test20KLib.getCategorySummary(test20KState, catId)
+  };
+
+  /// Get all 100 category summaries
+  public query func getTest20KAllCategories() : async [Test20KTypes.TestCategory] {
+    test20KState.categories
+  };
+
+  /// Get test suite state
+  public query func getTest20KState() : async Test20KTypes.TestSuiteState {
+    test20KState
+  };
+
+  /// Get overall test statistics
+  public query func getTest20KStats() : async {
+    totalTests : Nat;
+    testsExecuted : Nat;
+    passRate : Float;
+    score : Float;
+    phiResonance : Float;
+    coherence : Float;
+    beatCount : Nat;
+    cyclePosition : Nat;
+  } {
+    {
+      totalTests = test20KState.totalTests;
+      testsExecuted = test20KState.testsExecuted;
+      passRate = test20KState.overallPassRate;
+      score = test20KState.overallScore;
+      phiResonance = test20KState.overallPhiResonance;
+      coherence = test20KState.coherenceScore;
+      beatCount = test20KState.beatCount;
+      cyclePosition = test20KState.currentCyclePosition;
+    }
+  };
+
+  /// Run heartbeat tests (100 tests)
+  public func runTest20KHeartbeat() : async Test20KTypes.BatchTestResult {
+    let batch = Test20KLib.executeHeartbeatTests(autonomousAIState.currentBeat);
+    test20KState := Test20KLib.updateStateWithBatch(test20KState, batch);
+    batch
+  };
+
+  /// Run full test cycle (all 20,000 tests)
+  public func runTest20KFullCycle() : async Test20KTypes.TestSuiteSummary {
+    var beat : Nat = test20KState.beatCount;
+    var i : Nat = 0;
+    while (i < 200) {
+      let batch = Test20KLib.executeHeartbeatTests(beat + i);
+      test20KState := Test20KLib.updateStateWithBatch(test20KState, batch);
+      i += 1;
+    };
+    Test20KLib.getSuiteSummary(test20KState)
+  };
+
+  /// Reset test suite
+  public func resetTest20K() : async () {
+    test20KState := Test20KLib.initTestSuite();
+  };
+
+  /// Get domain pass rates
+  public query func getTest20KDomainRates() : async [(Text, Float)] {
+    [
+      ("Substrate", Test20KLib.getDomainPassRate(test20KState, #Substrate)),
+      ("Intelligence", Test20KLib.getDomainPassRate(test20KState, #Intelligence)),
+      ("Geometry", Test20KLib.getDomainPassRate(test20KState, #Geometry)),
+      ("Coherence", Test20KLib.getDomainPassRate(test20KState, #Coherence)),
+      ("Resonance", Test20KLib.getDomainPassRate(test20KState, #Resonance)),
+      ("Hebbian", Test20KLib.getDomainPassRate(test20KState, #Hebbian)),
+      ("Topology", Test20KLib.getDomainPassRate(test20KState, #Topology)),
+      ("Spectral", Test20KLib.getDomainPassRate(test20KState, #Spectral)),
+      ("Quantum", Test20KLib.getDomainPassRate(test20KState, #Quantum)),
+      ("Neural", Test20KLib.getDomainPassRate(test20KState, #Neural)),
+    ]
   };
 
 }
