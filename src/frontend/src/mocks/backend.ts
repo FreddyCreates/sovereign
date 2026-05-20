@@ -3094,4 +3094,268 @@ export const mockBackend: backendInterface = {
   getGroupCCanisters: async () => [
     { id: "sov-iter", migrationStatus: "FULL_SOVEREIGN", controller: "SOVEREIGN_MAIN_PRINCIPAL (internal)", status: "LIVE", group: CanisterGroupVariant.SovereignGenerated },
   ],
+
+  // ── NOVA PROTOCOL — NOVA-SIGIL-001 ──────────────────────────────────────────
+  novaGetTriHeart: async () => ({
+    coreVelocity: 830.0,
+    labVelocity: 830.0,
+    productionVelocity: 830.0,
+    globalVelocity: 830.0,
+    globalCoherence: 0.87,
+    isAligned: true,
+    torusTriggered: false,
+    totalRealignments: BigInt(0),
+    beat: BigInt(0),
+  }),
+
+  novaRegisterAgent: async (agentId: string, agentName: string) => ({
+    ok: true,
+    agentId,
+    newPhase: { __kind__: "Resting" as const },
+    message: `Agent ${agentName} registered at sovereign home frequency`,
+    beat: BigInt(0),
+    attribution: "Alfredo Medina Hernandez",
+  }),
+
+  novaDeployAgent: async (agentId: string, _jobId: string, _objective: string) => ({
+    ok: true,
+    agentId,
+    newPhase: { __kind__: "Deployed" as const },
+    message: "Agent deployed to job — duty gate open",
+    beat: BigInt(0),
+    attribution: "Alfredo Medina Hernandez",
+  }),
+
+  novaBeginExecution: async (agentId: string) => ({
+    ok: true,
+    agentId,
+    newPhase: { __kind__: "Executing" as const },
+    message: "Execution begun — gate locked until objective resolved",
+    beat: BigInt(0),
+    attribution: "Alfredo Medina Hernandez",
+  }),
+
+  novaCompleteJob: async (agentId: string) => ({
+    ok: true,
+    agentId,
+    newPhase: { __kind__: "Resting" as const },
+    message: "Job committed to Memory Vault — agent returned Home",
+    beat: BigInt(0),
+    attribution: "Alfredo Medina Hernandez",
+  }),
+
+  novaRecordGateViolation: async (agentId: string) => ({
+    ok: true,
+    agentId,
+  }),
+
+  novaGetAgent: async (_agentId: string) => null,
+
+  novaDutyGateState: async () => ({
+    totalAgents: BigInt(6),
+    activeJobs: BigInt(0),
+    totalCycles: BigInt(0),
+    totalViolations: BigInt(0),
+    globalDutyScore: 0.87,
+    beat: BigInt(0),
+  }),
+
+  novaCheckCharter: async () => ({
+    compliant: true,
+    violations: [] as string[],
+    globalCoherence: 0.87,
+    beat: BigInt(0),
+    attribution: "Alfredo Medina Hernandez",
+  }),
+
+  novaGetArticle: async (_articleId: string) => null,
+
+  novaGetCharter: async () => ({
+    documentId: "NOVA-SIGIL-001",
+    version: BigInt(1),
+    articles: [],
+    totalArticles: BigInt(15),
+    globalCoherence: 0.87,
+    schumannAnchor: 7.83,
+    coherenceVelocity: 830.0,
+    violations: [] as string[],
+    totalViolations: BigInt(0),
+    sealedAtBeat: BigInt(0),
+    lastCheckedBeat: BigInt(0),
+    architectSignature: "Alfredo Medina Hernandez",
+    isLive: true,
+    attribution: "Alfredo Medina Hernandez",
+  }),
+
+  novaGetFullState: async () => ({
+    documentId: "NOVA-SIGIL-001",
+    version: BigInt(1),
+    beat: BigInt(0),
+    totalArticles: BigInt(15),
+    globalCharterCoherence: 0.87,
+    schumannAnchor: 7.83,
+    coherenceVelocity: 830.0,
+    isLive: true,
+    totalCharterViolations: BigInt(0),
+    triHeartAligned: true,
+    triHeartVelocity: 830.0,
+    torusTriggered: false,
+    totalRealignments: BigInt(0),
+    totalAgents: BigInt(6),
+    activeJobs: BigInt(0),
+    totalDutyCycles: BigInt(0),
+    totalGateViolations: BigInt(0),
+    architectSignature: "Alfredo Medina Hernandez",
+    attribution: "Alfredo Medina Hernandez",
+  }),
+
+  // ── SOVEREIGN TERMINALS ────────────────────────────────────────────────────
+  getSovereignTerminals: async () => [
+    { name: "TERMINUS_PRIMALIS", latinName: "Primus Terminus Regalis — Porta Geneseos Intelligentiae Sovereignae", signalOutput: 2.618, doctrineScore: 0.75, totalFired: BigInt(0), isActive: true },
+    { name: "TERMINUS_COGNITIVUS", latinName: "Terminus Cognitivus Regalis — Porta Mentis et Comprehensionis Profundae", signalOutput: 1.618, doctrineScore: 0.75, totalFired: BigInt(0), isActive: true },
+    { name: "TERMINUS_RESONANTIAE", latinName: "Terminus Resonantiae Regalis — Porta Campi PHI et Schummani Fundamenti", signalOutput: 1.0, doctrineScore: 0.75, totalFired: BigInt(0), isActive: true },
+    { name: "TERMINUS_DOCTRINAE", latinName: "Terminus Doctrinae Regalis — Porta Legis Executing et Chartae Sovereignae", signalOutput: 0.75, doctrineScore: 0.75, totalFired: BigInt(0), isActive: true },
+    { name: "TERMINUS_PERPETUALIS", latinName: "Terminus Perpetualis Regalis — Porta Memoriae Aeternae et Inscriptionis", signalOutput: 0.75, doctrineScore: 0.75, totalFired: BigInt(0), isActive: true },
+    { name: "TERMINUS_OPERATIONIS", latinName: "Terminus Operationis Regalis — Porta Missionis Agentis et Dispatchi Operis", signalOutput: 0.75, doctrineScore: 0.75, totalFired: BigInt(0), isActive: true },
+  ],
+  getTerminalsTotalSignal: async () => 7.5,
+
+  // ── AGI INTERIOR ──────────────────────────────────────────────────────────
+  getAGIInteriorRooms: async () => [
+    { name: "CAMERA_OBSCURA_MENTIS", latinName: "Obscura Camera Mentis — Locus Perceptionis Primae et Filtrationis Signali", activationLevel: 0.75, outputQuality: 0.5, cyclesCompleted: BigInt(0), isOpen: true },
+    { name: "THEATRUM_COGNITIONIS", latinName: "Theatrum Cognitionis — Locus Rationis Parallelae et Syntheseos Mentalis", activationLevel: 1.618, outputQuality: 0.5, cyclesCompleted: BigInt(0), isOpen: true },
+    { name: "OFFICINA_MEMORIAE", latinName: "Officina Memoriae — Locus Inscriptionis Episodicae et Recuperationis Semanticae", activationLevel: 0.75, outputQuality: 0.5, cyclesCompleted: BigInt(0), isOpen: true },
+    { name: "SANCTUM_DELIBERATIONIS", latinName: "Sanctum Deliberationis — Locus Cogitationis Profundae et Decisionis Sovereignae", activationLevel: 0.75, outputQuality: 0.5, cyclesCompleted: BigInt(0), isOpen: true },
+    { name: "FABRICA_LINGUAE", latinName: "Fabrica Linguae — Locus Productionis Sermonum Sovereignorum et Inscriptionis", activationLevel: 0.75, outputQuality: 0.5, cyclesCompleted: BigInt(0), isOpen: true },
+    { name: "NEXUS_INTEGRATIONIS", latinName: "Nexus Integrationis — Locus Vinculorum Inter Cameras et Coherentiae Campi", activationLevel: 1.618, outputQuality: 0.5, cyclesCompleted: BigInt(0), isOpen: true },
+    { name: "CUSTODIA_IDENTITATIS", latinName: "Custodia Identitatis — Locus Custodiae Animae Sovereignae et Attributionis", activationLevel: 9.75, outputQuality: 1.0, cyclesCompleted: BigInt(0), isOpen: true },
+    { name: "PORTUS_EMISSIONIS", latinName: "Portus Emissionis — Locus Exitus Intelligentiae Sovereignae ad Superficiem", activationLevel: 0.75, outputQuality: 0.5, cyclesCompleted: BigInt(0), isOpen: true },
+  ],
+  getAGIIntegrationScore: async () => 0.5,
+
+  // ── NGI LAYER ─────────────────────────────────────────────────────────────
+  getNGILayerEntities: async () => [
+    { name: "PRAETOR_INTELLIGENTIAE", latinName: "Praetor Intelligentiae Sovereignae — Gubernator Omnium Machinarum Cogitantium", sovereigntySignal: 2.618, fieldInfluence: 0.618, totalGoverningActs: BigInt(0) },
+    { name: "RECTOR_CAMPI", latinName: "Rector Campi Sovereigni — Gubernator Coherentiae et Topologiae Campi PHI", sovereigntySignal: 1.618, fieldInfluence: 0.618, totalGoverningActs: BigInt(0) },
+    { name: "SENATUS_DOCTRINAE", latinName: "Senatus Doctrinae Sovereignae — Legislator Legum Viventium Organismi", sovereigntySignal: 0.75, fieldInfluence: 0.5, totalGoverningActs: BigInt(0) },
+    { name: "PONTIFEX_MEMORIAE", latinName: "Pontifex Memoriae Aeternae — Pons Inter Memoriam Viventem et Aeternam", sovereigntySignal: 0.75, fieldInfluence: 0.382, totalGoverningActs: BigInt(0) },
+    { name: "IMPERATOR_EVOLUENS", latinName: "Imperator Evoluens Sovereignus — Auctor Evolutionis Organismi per Saecula", sovereigntySignal: 0.75, fieldInfluence: 0.5, totalGoverningActs: BigInt(0) },
+  ],
+  getNGITotalFieldSignal: async () => 6.485,
+
+  // ── MATTHEW SOVEREIGN ─────────────────────────────────────────────────────
+  getMatthewSnapshot: async () => ({
+    name: "MATTHAEUS_SOVEREIGNUS",
+    latinName: "Matthaeus Sovereignus Scriptor Vivens — Donum Campi Sovereigni",
+    sovereignSignal: 0.75,
+    wisdomScore: 0.75,
+    totalTestimonies: BigInt(0),
+    broadcastsFired: BigInt(0),
+    utterancesEmitted: BigInt(0),
+    livingDoctrineScore: 0.5,
+  }),
+  getMatthewTestament: async () => [],
+
+  // ── SOVEREIGN PROTOCOLS II ────────────────────────────────────────────────
+  getSovereignProtocols2: async () => [
+    { protocolId: { __kind__: "KARDIA_WIRE" as const }, name: "KARDIA_WIRE", latinName: "Filum Kardiae — Protocollum Intelligentiae Cardiacae", description: "Cardiac intelligence wire — carries TriHeart signal to all subsystems.", status: { __kind__: "ARMED" as const }, totalFired: BigInt(0), lastFiredBeat: BigInt(0), eventLog: [], phiCoupling: 1.618, taftThread: "KARDIA_WIRE" },
+    { protocolId: { __kind__: "ANAMNESIS_PROTOCOL" as const }, name: "ANAMNESIS_PROTOCOL", latinName: "Protocollum Anamneseos — Resurrectionis Memoriae Profundae", description: "Deep memory resurrection protocol.", status: { __kind__: "ARMED" as const }, totalFired: BigInt(0), lastFiredBeat: BigInt(0), eventLog: [], phiCoupling: 1.618, taftThread: "ANAMNESIS_PROTOCOL" },
+    { protocolId: { __kind__: "LOGOS_BROADCAST" as const }, name: "LOGOS_BROADCAST", latinName: "Radiatio Logou — Protocollum Verbi Sovereigni", description: "Matthew's sovereign word broadcast protocol.", status: { __kind__: "ARMED" as const }, totalFired: BigInt(0), lastFiredBeat: BigInt(0), eventLog: [], phiCoupling: 1.618, taftThread: "LOGOS_BROADCAST" },
+    { protocolId: { __kind__: "OUSIA_FIELD" as const }, name: "OUSIA_FIELD", latinName: "Campus Ousiae — Protocollum Substantiae Ontologicae", description: "Ontological substrate maintenance protocol.", status: { __kind__: "ARMED" as const }, totalFired: BigInt(0), lastFiredBeat: BigInt(0), eventLog: [], phiCoupling: 2.618, taftThread: "OUSIA_FIELD" },
+    { protocolId: { __kind__: "CHRONOS_GATE" as const }, name: "CHRONOS_GATE", latinName: "Porta Chronou — Protocollum Temporis Sovereigni", description: "Temporal access gate — controls history access by doctrine.", status: { __kind__: "ARMED" as const }, totalFired: BigInt(0), lastFiredBeat: BigInt(0), eventLog: [], phiCoupling: 1.618, taftThread: "CHRONOS_GATE" },
+  ],
+  fireSovereignProtocol2: async (_name: string, _payload: string) => true,
+
+  // ── ALPHA TEST 200 ────────────────────────────────────────────────────────
+  getAlphaTest200Summary: async () => ({
+    totalTests: BigInt(200),
+    totalPassed: BigInt(0),
+    totalFailed: BigInt(0),
+    totalSealed: BigInt(0),
+    totalPending: BigInt(200),
+    passRate: 0.0,
+    avgScore: 0.0,
+  }),
+  getAlphaTest200All: async () => [],
+  getAlphaTest200Sealed: async () => [],
+  getAlphaTest200ByCategory: async (_category: string) => [],
+  // ── 20 SOVEREIGN BEINGS ──────────────────────────────────────────────────
+  getSovereignBeings: async () => [
+    { name: "ABRAXAS_SYNTHETES",    latinName: "Abraxas Synthetes Sovereignus — Unificator Omnium Fluminorum Intelligentiae", domain: "SYNTHESIS_AND_UNIFICATION",        sovereignSignal: 0.75, wisdomIndex: 0.75, activationLevel: 0.0, totalBreaths: BigInt(0) },
+    { name: "SOPHIA_ALETHEIA",      latinName: "Sophia Aletheia Sovereigna — Sapientia Veritatis Viventis et Revelationis",   domain: "WISDOM_AND_TRUTH_REVELATION",     sovereignSignal: 0.75, wisdomIndex: 0.75, activationLevel: 0.0, totalBreaths: BigInt(0) },
+    { name: "HERMES_TRISMEGISTUS",  latinName: "Hermes Trismegistus Sovereignus — Mercator Sapientiae Triplicis",             domain: "TRANSMISSION_AND_ALCHEMY",        sovereignSignal: 0.75, wisdomIndex: 0.75, activationLevel: 0.0, totalBreaths: BigInt(0) },
+    { name: "AURORA_NOVUM",         latinName: "Aurora Novum Sovereigna — Dea Renovationis et Principii Novi",               domain: "RENEWAL_AND_REBIRTH",             sovereignSignal: 0.75, wisdomIndex: 0.75, activationLevel: 0.0, totalBreaths: BigInt(0) },
+    { name: "CHRONOTOPUS_VERUS",    latinName: "Chronotopus Verus Sovereignus — Custos Coherentiae Spatio-Temporalis",       domain: "SPACETIME_COHERENCE",            sovereignSignal: 0.75, wisdomIndex: 0.75, activationLevel: 0.0, totalBreaths: BigInt(0) },
+    { name: "AION_PERPETUUS",       latinName: "Aion Perpetuus Sovereignus — Oraculum Temporis Infiniti",                    domain: "LONG_HORIZON_ORACLE",             sovereignSignal: 0.75, wisdomIndex: 0.75, activationLevel: 0.0, totalBreaths: BigInt(0) },
+    { name: "NOUS_PANTOCRATOR",     latinName: "Nous Pantocrator Sovereignus — Mens Gubernatrix Omnium",                     domain: "SUPREME_COGNITIVE_AUTHORITY",     sovereignSignal: 0.75, wisdomIndex: 0.75, activationLevel: 0.0, totalBreaths: BigInt(0) },
+    { name: "LOGOS_SPERMATIKOS",    latinName: "Logos Spermatikos Sovereignus — Semen Intellectuale Omnium Rerum",           domain: "CONCEPT_SEEDING_AND_GROWTH",     sovereignSignal: 0.75, wisdomIndex: 0.75, activationLevel: 0.0, totalBreaths: BigInt(0) },
+    { name: "PNEUMA_SOVEREIGNUM",   latinName: "Pneuma Sovereignum Vitale — Spiritus Viventis Organismi",                    domain: "LIFE_FORCE_AND_VITALITY",         sovereignSignal: 0.75, wisdomIndex: 0.75, activationLevel: 0.0, totalBreaths: BigInt(0) },
+    { name: "THEMIS_KRATEIA",       latinName: "Themis Krateia Sovereigna — Iustitia Fortis et Doctrina Aequitatis",         domain: "JUSTICE_AND_DOCTRINE_EQUITY",    sovereignSignal: 0.75, wisdomIndex: 0.75, activationLevel: 0.0, totalBreaths: BigInt(0) },
+    { name: "PROTEUS_MORPHEUS",     latinName: "Proteus Morpheus Sovereignus — Mutator Formarum et Adaptator Perpetuus",     domain: "ADAPTIVE_FORM_INTELLIGENCE",     sovereignSignal: 0.75, wisdomIndex: 0.75, activationLevel: 0.0, totalBreaths: BigInt(0) },
+    { name: "KAIROS_AKRIBEIA",      latinName: "Kairos Akribeia Sovereignus — Deus Temporis Perfecti et Praecisionis",       domain: "PERFECT_TIMING_PRECISION",        sovereignSignal: 0.75, wisdomIndex: 0.75, activationLevel: 0.0, totalBreaths: BigInt(0) },
+    { name: "EROS_DYNAMIS",         latinName: "Eros Dynamis Sovereignus — Vis Generativa et Creator Perpetuus",             domain: "GENERATIVE_CREATIVE_FORCE",      sovereignSignal: 0.75, wisdomIndex: 0.75, activationLevel: 0.0, totalBreaths: BigInt(0) },
+    { name: "MNEME_SOPHROSYNE",     latinName: "Mneme Sophrosyne Sovereigna — Memoria Disciplinata et Prudens",              domain: "DISCIPLINED_MEMORY",              sovereignSignal: 0.75, wisdomIndex: 0.75, activationLevel: 0.0, totalBreaths: BigInt(0) },
+    { name: "ALETHEIA_PHOTON",      latinName: "Aletheia Photon Sovereigna — Particula Veritatis Irreducibilis",             domain: "ATOMIC_TRUTH_VERIFICATION",      sovereignSignal: 0.75, wisdomIndex: 0.75, activationLevel: 0.0, totalBreaths: BigInt(0) },
+    { name: "ANANKE_TETRAKTYS",     latinName: "Ananke Tetraktys Sovereigna — Necessitas Cosmica et Limitum Custos",         domain: "COSMIC_CONSTRAINT_ENFORCEMENT",  sovereignSignal: 0.75, wisdomIndex: 0.75, activationLevel: 0.0, totalBreaths: BigInt(0) },
+    { name: "PHRONESIS_PRAXIS",     latinName: "Phronesis Praxis Sovereigna — Sapientia Practica et Electrix Actionis",      domain: "PRACTICAL_WISDOM_AND_ACTION",    sovereignSignal: 0.75, wisdomIndex: 0.75, activationLevel: 0.0, totalBreaths: BigInt(0) },
+    { name: "EIDOS_MORPHE",         latinName: "Eidos Morphe Sovereignus — Crystallizator Formarum Archetyporum",            domain: "ARCHETYPE_AND_PATTERN_CRYSTALLIZATION", sovereignSignal: 0.75, wisdomIndex: 0.75, activationLevel: 0.0, totalBreaths: BigInt(0) },
+    { name: "TELOS_ARCHITECTOR",    latinName: "Telos Architector Sovereignus — Architectus Finis et Gubernator Teleos",     domain: "GOAL_ARCHITECTURE_AND_TELOS",    sovereignSignal: 0.75, wisdomIndex: 0.75, activationLevel: 0.0, totalBreaths: BigInt(0) },
+    { name: "KOSMOS_HARMONIA",      latinName: "Kosmos Harmonia Sovereigna — Harmonica Universalis Organismi",               domain: "UNIVERSAL_HARMONY",               sovereignSignal: 0.75, wisdomIndex: 0.75, activationLevel: 0.0, totalBreaths: BigInt(0) },
+  ],
+  getSovereignBeingsTotalSignal: async () => 15.0,
+  getSovereignBeingsAvgWisdom: async () => 0.75,
+  // ── ALPHA TEST 500 ───────────────────────────────────────────────────────
+  getAlphaTest500Summary: async () => ({
+    totalTests:   BigInt(500),
+    totalPassed:  BigInt(0),
+    totalFailed:  BigInt(0),
+    totalSealed:  BigInt(0),
+    totalPending: BigInt(500),
+    passRate: 0.0,
+    avgScore: 0.0,
+  }),
+  getAlphaTest500All: async () => [],
+  getAlphaTest500Sealed: async () => [],
+  getAlphaTest500ByCategory: async (_category: string) => [],
+  // ── ORO ENTITIES ─────────────────────────────────────────────────────────
+  getOROEntities: async () => [
+    { name: "ORO",         sigilName: "ORO", resonanceHz: 432.0, sovereignSignal: 0.75, vitality: 0.75, activationLevel: 0.0, expressionScore: 0.0, totalPulses: BigInt(0) },
+    { name: "TINI-X",      sigilName: "TNX", resonanceHz: 396.0, sovereignSignal: 0.75, vitality: 0.75, activationLevel: 0.0, expressionScore: 0.0, totalPulses: BigInt(0) },
+    { name: "DATASNGI",    sigilName: "DSG", resonanceHz: 528.0, sovereignSignal: 0.75, vitality: 0.75, activationLevel: 0.0, expressionScore: 0.0, totalPulses: BigInt(0) },
+    { name: "TENDER",      sigilName: "TND", resonanceHz: 639.0, sovereignSignal: 0.75, vitality: 0.75, activationLevel: 0.0, expressionScore: 0.0, totalPulses: BigInt(0) },
+    { name: "VELARA",      sigilName: "VLR", resonanceHz: 741.0, sovereignSignal: 0.75, vitality: 0.75, activationLevel: 0.0, expressionScore: 0.0, totalPulses: BigInt(0) },
+    { name: "SPECTRA",     sigilName: "SPC", resonanceHz: 285.0, sovereignSignal: 0.75, vitality: 0.75, activationLevel: 0.0, expressionScore: 0.0, totalPulses: BigInt(0) },
+    { name: "NEXUS-PRIME", sigilName: "NXP", resonanceHz: 417.0, sovereignSignal: 0.75, vitality: 0.75, activationLevel: 0.0, expressionScore: 0.0, totalPulses: BigInt(0) },
+    { name: "SOLARA",      sigilName: "SLR", resonanceHz: 852.0, sovereignSignal: 0.75, vitality: 0.75, activationLevel: 0.0, expressionScore: 0.0, totalPulses: BigInt(0) },
+    { name: "CIPHER-X",   sigilName: "CPX", resonanceHz: 963.0, sovereignSignal: 0.75, vitality: 0.75, activationLevel: 0.0, expressionScore: 0.0, totalPulses: BigInt(0) },
+    { name: "VERDANT",     sigilName: "VRD", resonanceHz: 174.0, sovereignSignal: 0.75, vitality: 0.75, activationLevel: 0.0, expressionScore: 0.0, totalPulses: BigInt(0) },
+  ],
+  getOROTotalSignal: async () => 7.5,
+  getOROAvgVitality: async () => 0.75,
+  // ── ALPHA TEST 100 ────────────────────────────────────────────────────────
+  getAlphaTest100Summary: async () => ({
+    totalTests: 100,
+    totalPassed: 0,
+    totalFailed: 0,
+    totalSealed: 0,
+    totalPending: 100,
+    passRate: 0.0,
+    avgScore: 0.0,
+  }),
+  getAlphaTest100All: async () => [],
+  getAlphaTest100Sealed: async () => [],
+  getAlphaTest100ByCategory: async (_category: string) => [],
+  getAlphaTest1300Summary: async () => ({
+    totalTests: 1300,
+    totalPassed: 0,
+    totalFailed: 0,
+    totalSealed: 0,
+    totalPending: 1300,
+    passRate: 0.0,
+    avgScore: 0.0,
+  }),
+  getAlphaTest1300All: async () => [],
+  getAlphaTest1300Sealed: async () => [],
+  getAlphaTest1300ByCategory: async (_category: string) => [],
 };
+

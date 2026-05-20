@@ -42,11 +42,7 @@
  * PHI = 1.6180339887 · © Alfredo Medina Hernandez · SOVEREIGN
  */
 
-import {
-  PHI,
-  S_CEILING,
-  S_FLOOR,
-} from "../constants/SovereignConstants";
+import { PHI, S_CEILING, S_FLOOR } from "../constants/SovereignConstants";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -245,12 +241,17 @@ class StreamSovereignBridge {
       // Compute frontier manifestation score using PHI weighting
       // (mirrors the Rust engine formula in stream_sovereign.rs)
       const phiInv = 1 / PHI;
-      const velBonus = localVelocity >= 0 ? localVelocity * 0.1 : localVelocity * 0.05;
+      const velBonus =
+        localVelocity >= 0 ? localVelocity * 0.1 : localVelocity * 0.05;
       const totalWeight = PHI + 1 + phiInv;
       const rawScore =
         (raw.streamCoherence * PHI + raw.doctrine * 1.0 + velBonus * phiInv) /
         totalWeight;
-      const frontendManifestScore = clamp(rawScore + S_FLOOR, S_FLOOR, S_CEILING);
+      const frontendManifestScore = clamp(
+        rawScore + S_FLOOR,
+        S_FLOOR,
+        S_CEILING,
+      );
 
       this._state = {
         signalStrength: clamp(raw.signalStrength, S_FLOOR, S_CEILING),

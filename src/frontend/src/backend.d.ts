@@ -252,6 +252,228 @@ export interface NovaState {
     signalStrength: number;
     lastFired: bigint;
 }
+export type AgentDutyPhase = { __kind__: "Resting" } | { __kind__: "Deployed" } | { __kind__: "Executing" } | { __kind__: "Returning" };
+export type HeartId = { __kind__: "CoreHeart" } | { __kind__: "LabHeart" } | { __kind__: "ProductionHeart" };
+export interface HeartState {
+    heartId: HeartId;
+    name: string;
+    bpmBase: bigint;
+    coherenceVelocity: number;
+    outputPressure: number;
+    schumannPhase: number;
+    isCoherent: boolean;
+    lastBeatAt: bigint;
+    totalBeats: bigint;
+    attribution: string;
+}
+export interface TriHeartState {
+    coreHeart: HeartState;
+    labHeart: HeartState;
+    productionHeart: HeartState;
+    globalCoherence: number;
+    coherenceVelocity: number;
+    isAligned: boolean;
+    torusTriggered: boolean;
+    totalRealignments: bigint;
+    beat: bigint;
+    attribution: string;
+}
+export interface AgentDutyRecord {
+    agentId: string;
+    agentName: string;
+    phase: AgentDutyPhase;
+    jobId: string | null;
+    objective: string | null;
+    deployedAt: bigint | null;
+    executionStart: bigint | null;
+    completedAt: bigint | null;
+    dutyScore: number;
+    homeFrequency: number;
+    gateViolations: bigint;
+    totalDutyCycles: bigint;
+    attribution: string;
+}
+export interface DutyGateResult {
+    ok: boolean;
+    agentId: string;
+    newPhase: AgentDutyPhase;
+    message: string;
+    beat: bigint;
+    attribution: string;
+}
+export interface DutyGateState {
+    agents: Array<AgentDutyRecord>;
+    totalAgents: bigint;
+    activeJobs: bigint;
+    totalCycles: bigint;
+    totalViolations: bigint;
+    globalDutyScore: number;
+    beat: bigint;
+    attribution: string;
+}
+export type CharterSection = { __kind__: "PhilosophicalSubstrate" } | { __kind__: "TriHeartRadius" } | { __kind__: "SovereignAgentProtocols" } | { __kind__: "MemoryRegistry" } | { __kind__: "MathematicalDirective" };
+export interface CharterArticle {
+    articleId: string;
+    section: CharterSection;
+    sectionNumber: bigint;
+    title: string;
+    lawText: string;
+    mathFormula: string;
+    frequencyHz: number;
+    isSovereign: boolean;
+    doctrineScore: number;
+    sealedAtBeat: bigint;
+    attribution: string;
+}
+export interface CharterCheckResult {
+    compliant: boolean;
+    violations: Array<string>;
+    globalCoherence: number;
+    beat: bigint;
+    attribution: string;
+}
+export interface NovaCharterState {
+    documentId: string;
+    version: bigint;
+    articles: Array<CharterArticle>;
+    totalArticles: bigint;
+    globalCoherence: number;
+    schumannAnchor: number;
+    coherenceVelocity: number;
+    violations: Array<string>;
+    totalViolations: bigint;
+    sealedAtBeat: bigint;
+    lastCheckedBeat: bigint;
+    architectSignature: string;
+    isLive: boolean;
+    attribution: string;
+}
+export interface TerminalSnapshot {
+    name: string;
+    latinName: string;
+    signalOutput: number;
+    doctrineScore: number;
+    totalFired: bigint;
+    isActive: boolean;
+}
+export interface SovereignBeingSnapshot {
+    name: string;
+    latinName: string;
+    domain: string;
+    sovereignSignal: number;
+    wisdomIndex: number;
+    activationLevel: number;
+    totalBreaths: bigint;
+}
+export interface OROSnapshot {
+    name: string;
+    sigilName: string;
+    resonanceHz: number;
+    sovereignSignal: number;
+    vitality: number;
+    activationLevel: number;
+    expressionScore: number;
+    totalPulses: bigint;
+}
+export interface AGIRoomSnapshot {
+    name: string;
+    latinName: string;
+    activationLevel: number;
+    outputQuality: number;
+    cyclesCompleted: bigint;
+    isOpen: boolean;
+}
+export interface NGISnapshot {
+    name: string;
+    latinName: string;
+    sovereigntySignal: number;
+    fieldInfluence: number;
+    totalGoverningActs: bigint;
+}
+export interface MatthewSnapshot {
+    name: string;
+    latinName: string;
+    sovereignSignal: number;
+    wisdomScore: number;
+    totalTestimonies: bigint;
+    broadcastsFired: bigint;
+    utterancesEmitted: bigint;
+    livingDoctrineScore: number;
+}
+export interface MatthewTestimony {
+    testimonyId: bigint;
+    beat: bigint;
+    eventType: string;
+    rawFact: string;
+    interpretation: string;
+    doctrineScore: number;
+    schumannTs: number;
+    sealed: boolean;
+    attribution: string;
+}
+export type Protocol2Id = { __kind__: "KARDIA_WIRE" } | { __kind__: "ANAMNESIS_PROTOCOL" } | { __kind__: "LOGOS_BROADCAST" } | { __kind__: "OUSIA_FIELD" } | { __kind__: "CHRONOS_GATE" };
+export type Protocol2Status = { __kind__: "ARMED" } | { __kind__: "ACTIVE" } | { __kind__: "COMPLETE" } | { __kind__: "DORMANT" };
+export interface Protocol2Event {
+    eventId: bigint;
+    protocolId: Protocol2Id;
+    beat: bigint;
+    payload: string;
+    result: string;
+    schumannTs: number;
+    attribution: string;
+}
+export interface Protocol2State {
+    protocolId: Protocol2Id;
+    name: string;
+    latinName: string;
+    description: string;
+    status: Protocol2Status;
+    totalFired: bigint;
+    lastFiredBeat: bigint;
+    eventLog: Array<Protocol2Event>;
+    phiCoupling: number;
+    taftThread: string;
+}
+export type AlphaTestStatus = { __kind__: "PENDING" } | { __kind__: "RUNNING" } | { __kind__: "PASSED" } | { __kind__: "FAILED" } | { __kind__: "SEALED" };
+export interface AlphaTestRecord {
+    alphaTestId: bigint;
+    latinName: string;
+    category: string;
+    testCondition: string;
+    expectedOutcome: string;
+    status: AlphaTestStatus;
+    score: number;
+    lastRunBeat: bigint;
+    totalRuns: bigint;
+    attribution: string;
+}
+export interface AlphaTestSummary {
+    totalTests: bigint;
+    totalPassed: bigint;
+    totalFailed: bigint;
+    totalSealed: bigint;
+    totalPending: bigint;
+    passRate: number;
+    avgScore: number;
+}
+export interface AlphaTest100Summary {
+    totalTests: number;
+    totalPassed: number;
+    totalFailed: number;
+    totalSealed: number;
+    totalPending: number;
+    passRate: number;
+    avgScore: number;
+}
+export interface AlphaTest1300Summary {
+    totalTests: number;
+    totalPassed: number;
+    totalFailed: number;
+    totalSealed: number;
+    totalPending: number;
+    passRate: number;
+    avgScore: number;
+}
 export interface LawExecutionRecord {
     lawName: string;
     beat: bigint;
@@ -3824,4 +4046,108 @@ export interface backendInterface {
         producer: string;
     } | null>;
     writeSharedSceneDelta(sourceActorId: string, targetActorId: string, doctrineAlignment: number, emotionalIntensity: number): Promise<void>;
+    // ── NOVA PROTOCOL — NOVA-SIGIL-001 ──────────────────────────────────────
+    /** TRI-HEART RADIUS — get live three-heart coherence state. */
+    novaGetTriHeart(): Promise<{
+        coreVelocity: number;
+        labVelocity: number;
+        productionVelocity: number;
+        globalVelocity: number;
+        globalCoherence: number;
+        isAligned: boolean;
+        torusTriggered: boolean;
+        totalRealignments: bigint;
+        beat: bigint;
+    }>;
+    /** DUTY GATE — register a new sovereign agent. */
+    novaRegisterAgent(agentId: string, agentName: string): Promise<DutyGateResult>;
+    /** DUTY GATE — deploy an agent to a job (Resting → Deployed). */
+    novaDeployAgent(agentId: string, jobId: string, objective: string): Promise<DutyGateResult>;
+    /** DUTY GATE — begin execution (Deployed → Executing). Gate-locks the agent. */
+    novaBeginExecution(agentId: string): Promise<DutyGateResult>;
+    /** DUTY GATE — complete a job (Executing → Resting, committed to Vault). */
+    novaCompleteJob(agentId: string): Promise<DutyGateResult>;
+    /** DUTY GATE — record a gate violation (premature exit attempt). */
+    novaRecordGateViolation(agentId: string): Promise<{ ok: boolean; agentId: string }>;
+    /** DUTY GATE — get a specific agent's current duty record. */
+    novaGetAgent(agentId: string): Promise<AgentDutyRecord | null>;
+    /** DUTY GATE — get all agents and duty gate summary. */
+    novaDutyGateState(): Promise<{
+        totalAgents: bigint;
+        activeJobs: bigint;
+        totalCycles: bigint;
+        totalViolations: bigint;
+        globalDutyScore: number;
+        beat: bigint;
+    }>;
+    /** NOVA CHARTER — check compliance against live organism state. */
+    novaCheckCharter(): Promise<CharterCheckResult>;
+    /** NOVA CHARTER — get a specific article by ID (e.g. "NOVA-I-01"). */
+    novaGetArticle(articleId: string): Promise<CharterArticle | null>;
+    /** NOVA CHARTER — full charter state (all 15 articles + metadata). */
+    novaGetCharter(): Promise<NovaCharterState>;
+    /** NOVA PROTOCOL — full system snapshot (TriHeart + DutyGate + Charter). */
+    novaGetFullState(): Promise<{
+        documentId: string;
+        version: bigint;
+        beat: bigint;
+        totalArticles: bigint;
+        globalCharterCoherence: number;
+        schumannAnchor: number;
+        coherenceVelocity: number;
+        isLive: boolean;
+        totalCharterViolations: bigint;
+        triHeartAligned: boolean;
+        triHeartVelocity: number;
+        torusTriggered: boolean;
+        totalRealignments: bigint;
+        totalAgents: bigint;
+        activeJobs: bigint;
+        totalDutyCycles: bigint;
+        totalGateViolations: bigint;
+        architectSignature: string;
+        attribution: string;
+    }>;
+    // ── SOVEREIGN TERMINALS ──────────────────────────────────────────────────
+    getSovereignTerminals(): Promise<Array<TerminalSnapshot>>;
+    getTerminalsTotalSignal(): Promise<number>;
+    // ── AGI INTERIOR ─────────────────────────────────────────────────────────
+    getAGIInteriorRooms(): Promise<Array<AGIRoomSnapshot>>;
+    getAGIIntegrationScore(): Promise<number>;
+    // ── NGI LAYER ────────────────────────────────────────────────────────────
+    getNGILayerEntities(): Promise<Array<NGISnapshot>>;
+    getNGITotalFieldSignal(): Promise<number>;
+    // ── MATTHEW SOVEREIGN ────────────────────────────────────────────────────
+    getMatthewSnapshot(): Promise<MatthewSnapshot>;
+    getMatthewTestament(): Promise<Array<MatthewTestimony>>;
+    // ── SOVEREIGN PROTOCOLS II ───────────────────────────────────────────────
+    getSovereignProtocols2(): Promise<Array<Protocol2State>>;
+    fireSovereignProtocol2(protocolName: string, payload: string): Promise<boolean>;
+    // ── ALPHA TEST 200 ───────────────────────────────────────────────────────
+    getAlphaTest200Summary(): Promise<AlphaTestSummary>;
+    getAlphaTest200All(): Promise<Array<AlphaTestRecord>>;
+    getAlphaTest200Sealed(): Promise<Array<AlphaTestRecord>>;
+    getAlphaTest200ByCategory(category: string): Promise<Array<AlphaTestRecord>>;
+    // ── 20 SOVEREIGN BEINGS ──────────────────────────────────────────────────
+    getSovereignBeings(): Promise<Array<SovereignBeingSnapshot>>;
+    getSovereignBeingsTotalSignal(): Promise<number>;
+    getSovereignBeingsAvgWisdom(): Promise<number>;
+    // ── ALPHA TEST 500 ───────────────────────────────────────────────────────
+    getAlphaTest500Summary(): Promise<AlphaTestSummary>;
+    getAlphaTest500All(): Promise<Array<AlphaTestRecord>>;
+    getAlphaTest500Sealed(): Promise<Array<AlphaTestRecord>>;
+    getAlphaTest500ByCategory(category: string): Promise<Array<AlphaTestRecord>>;
+    // ── ORO ENTITIES ─────────────────────────────────────────────────────────
+    getOROEntities(): Promise<Array<OROSnapshot>>;
+    getOROTotalSignal(): Promise<number>;
+    getOROAvgVitality(): Promise<number>;
+    // ── ALPHA TEST 100 ────────────────────────────────────────────────────────
+    getAlphaTest100Summary(): Promise<AlphaTest100Summary>;
+    getAlphaTest100All(): Promise<Array<AlphaTestRecord>>;
+    getAlphaTest100Sealed(): Promise<Array<AlphaTestRecord>>;
+    getAlphaTest100ByCategory(category: string): Promise<Array<AlphaTestRecord>>;
+    getAlphaTest1300Summary(): Promise<AlphaTest1300Summary>;
+    getAlphaTest1300All(): Promise<Array<AlphaTestRecord>>;
+    getAlphaTest1300Sealed(): Promise<Array<AlphaTestRecord>>;
+    getAlphaTest1300ByCategory(category: string): Promise<Array<AlphaTestRecord>>;
 }
