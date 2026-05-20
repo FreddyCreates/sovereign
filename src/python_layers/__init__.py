@@ -8,6 +8,10 @@ This package contains Python-based layers for the SOVEREIGN polyglot architectur
 - SOPHIA: Wisdom Layer - ML/AI model orchestration
 - HERMES: Communication Layer - Message routing and protocols
 - PROMETHEUS: Learning Layer - Adaptive learning and training
+- ATHENA: Strategy Layer - Strategic planning and decision making
+- APOLLO: Harmony Layer - Harmonic synthesis and light computation
+- ARTEMIS: Protection Layer - Boundary defense and threat detection
+- HEPHAESTUS: Forge Layer - Artifact creation and crafting
 
 All layers maintain doctrine alignment and use PHI-based mathematics.
 
@@ -47,6 +51,41 @@ from .prometheus.prometheus import (
     LearningMode,
 )
 
+from .athena.athena import (
+    init_athena_state,
+    execute_athena,
+    AthenaState,
+    Strategy,
+    Tactic,
+    StrategyType,
+)
+
+from .apollo.apollo import (
+    init_apollo_state,
+    execute_apollo,
+    ApolloState,
+    HarmonicField,
+    Frequency,
+)
+
+from .artemis.artemis import (
+    init_artemis_state,
+    execute_artemis,
+    ArtemisState,
+    Barrier,
+    Threat,
+    ThreatLevel,
+)
+
+from .hephaestus.hephaestus import (
+    init_hephaestus_state,
+    execute_hephaestus,
+    HephaestusState,
+    Artifact,
+    Recipe,
+    ForgeState,
+)
+
 # PHI constant available at package level
 PHI = 1.6180339887498948482
 PHI_INV = 1.0 / PHI
@@ -75,6 +114,37 @@ __all__ = [
     "PrometheusState",
     "LearningSignal",
     "LearningMode",
+    
+    # ATHENA
+    "init_athena_state",
+    "execute_athena",
+    "AthenaState",
+    "Strategy",
+    "Tactic",
+    "StrategyType",
+    
+    # APOLLO
+    "init_apollo_state",
+    "execute_apollo",
+    "ApolloState",
+    "HarmonicField",
+    "Frequency",
+    
+    # ARTEMIS
+    "init_artemis_state",
+    "execute_artemis",
+    "ArtemisState",
+    "Barrier",
+    "Threat",
+    "ThreatLevel",
+    
+    # HEPHAESTUS
+    "init_hephaestus_state",
+    "execute_hephaestus",
+    "HephaestusState",
+    "Artifact",
+    "Recipe",
+    "ForgeState",
     
     # Constants
     "PHI",
