@@ -1,0 +1,32 @@
+# SOVEREIGN Python Layers Requirements
+# Attribution: Alfredo Medina Hernandez — immutable
+#
+# These requirements are for the Python layers:
+# - SOPHIA (Wisdom Layer)
+# - HERMES (Communication Layer)
+# - PROMETHEUS (Learning Layer)
+#
+# The layers use only Python standard library by default.
+# These optional dependencies enhance capabilities:
+
+# For production ML/AI capabilities (optional)
+# numpy>=1.24.0
+# scipy>=1.11.0
+
+# For type checking (development only)
+# mypy>=1.5.0
+
+# For testing (development only)
+# pytest>=7.4.0
+# pytest-cov>=4.1.0
+
+# Core dependencies (none required - uses standard library)
+# All modules use only:
+# - dataclasses (stdlib)
+# - typing (stdlib)
+# - enum (stdlib)
+# - math (stdlib)
+# - random (stdlib)
+# - hashlib (stdlib)
+# - heapq (stdlib)
+# - datetime (stdlib)
