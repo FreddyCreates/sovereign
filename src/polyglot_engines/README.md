@@ -1,7 +1,7 @@
 # Sovereign Polyglot Engines
 # Attribution: Alfredo Medina Hernandez — immutable
 # 
-# 20 Multi-Language Sovereign Intelligence Engines
+# 25 Multi-Language Sovereign Intelligence Engines
 # 
 # Each engine combines 4-5 programming languages:
 # - Julia: Core mathematical computation
@@ -129,7 +129,39 @@ Protocol_score = field × coherence × network_factor × doctrine
 
 ## Total Statistics
 
-- 20 polyglot engines
-- 5 intelligence tiers
-- 84 language implementations (20+16+16+16+16)
+- 25 polyglot engines
+- 6 intelligence tiers (including Hybrid)
+- 109 language implementations
 - 6 programming languages (Julia, Haskell, Python, TypeScript, Rust, Go)
+
+### Hybrid - Cross-Tier Integration (NEW)
+5 engines × 5 languages = 25 language implementations
+
+21. **OMEGA_SYNTHESIS** - NGI×AGI Hybrid
+    - Languages: Julia + Haskell + Python + TypeScript + Rust
+    - Parent Tiers: NGI × AGI
+    - Model: Supreme synthesis with unified omega field
+
+22. **GENESIS_ADAPTIVE** - AGI×AASI Hybrid
+    - Languages: Julia + Python + TypeScript + Rust + Go
+    - Parent Tiers: AGI × AASI
+    - Model: Adaptive genesis with creation depth
+
+23. **NEXUS_CORE** - AASI×AI Hybrid
+    - Languages: Python + TypeScript + Julia + Haskell + Rust
+    - Parent Tiers: AASI × AI
+    - Model: Central nexus with core coordination
+
+24. **PROTOCOL_MIND** - AI×Protocol Hybrid
+    - Languages: TypeScript + Rust + Go + Python + Julia
+    - Parent Tiers: AI × Protocol
+    - Model: Protocol mind bridge with intelligent coordination
+
+25. **SOVEREIGN_UNITY** - ALL-Tier Integration
+    - Languages: Julia + Haskell + Python + TypeScript + Rust
+    - Parent Tiers: NGI × AGI × AASI × AI × Protocol
+    - Model: Supreme five-fold unity with all-tier synthesis
+
+## Research
+
+See [docs/POLYGLOT_ARCHITECTURE_PAPER.md](../../docs/POLYGLOT_ARCHITECTURE_PAPER.md) for comprehensive research on multi-language AI architectures.
