@@ -48,7 +48,7 @@ module {
 
   func pseudoFloat(seed : Nat, salt : Nat) : Float {
     let v = (seed * 6364136223846793005 + salt * 1442695040888963407 + 12345) % 1000000;
-    Float.fromInt(v) / 1000000.0
+    v.toFloat() / 1000000.0
   };
 
   func phiWeight(rank : Nat) : Float {
@@ -175,7 +175,7 @@ module {
       };
     };
     if (count == 0) return 0.8;
-    let avg = sumCoh / Float.fromInt(count);
+    let avg = sumCoh / count.toFloat();
     clamp01(minCoh * 0.6 + avg * 0.4)
   };
 
@@ -212,8 +212,8 @@ module {
           coupling += Float.sin(phases[j] - phases[i]);
         };
       };
-      let omega = Float.fromInt(i + 1) * 0.1;
-      let dTheta = omega + k * coupling / Float.fromInt(n);
+      let omega = (i + 1).toFloat() * 0.1;
+      let dTheta = omega + k * coupling / n.toFloat();
       let newPhase = phases[i] + dTheta * 0.01;
       newPhase
     })
@@ -228,7 +228,7 @@ module {
       cosSum += Float.cos(p);
       sinSum += Float.sin(p);
     };
-    let nf = Float.fromInt(n);
+    let nf = n.toFloat();
     Float.sqrt((cosSum / nf) ** 2.0 + (sinSum / nf) ** 2.0)
   };
 
@@ -482,7 +482,7 @@ module {
     if (scores.size() == 0) return 0.0;
     var sum : Float = 0.0;
     for (s in scores.vals()) { sum += s };
-    sum / Float.fromInt(scores.size())
+    sum / scores.size().toFloat()
   };
 
   // ══════════════════════════════════════════════════════════════════════════
