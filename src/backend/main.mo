@@ -132,6 +132,8 @@ import AITypes               "types/autonomousAI";
 import AILib                 "lib/autonomousAI";
 import Test20KTypes          "tests/SovereignTest20KTypes";
 import Test20KLib            "tests/SovereignTest20K";
+import POTypes               "types/polyglotOrganisms";
+import POLib                 "lib/polyglotOrganisms";
 
 
 
@@ -754,6 +756,13 @@ actor SovereignWarSim {
   // PHI-based deterministic results. Doctrine-aligned. Always-on verification.
   // Governing Laws: Law 01 (Attribution), Law 02 (PHI), Law 14 (Heartbeat)
   stable var test20KState : Test20KTypes.TestSuiteState = Test20KLib.initTestSuite();
+
+  // ── B2.8 — POLYGLOT ORGANISMS ───────────────────────────────────────────
+  // 25 polyglot engines across 6 intelligence tiers (NGI, AGI, AASI, AI, Protocol, Hybrid).
+  // Each engine operates in 4-5 languages: Julia, Haskell, Python, TypeScript, Rust, Go.
+  // φ-weighted unified field dynamics with Kuramoto cross-language synchronization.
+  // Attribution: Alfredo Medina Hernandez | SOVEREIGN | May 2026
+  stable var polyglotOrganismState : POTypes.PolyglotOrganismState = POLib.initState(0);
 
   // ── B2.7 — STREAM_SOVEREIGN ────────────────────────────────────────────
   // Dedicated processing stream inside the SOVEREIGN organism's own runtime.
@@ -8551,6 +8560,42 @@ actor SovereignWarSim {
       ("Quantum", Test20KLib.getDomainPassRate(test20KState, #Quantum)),
       ("Neural", Test20KLib.getDomainPassRate(test20KState, #Neural)),
     ]
+  };
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // POLYGLOT ORGANISM ENDPOINTS — 25 engines × 6 tiers × 6 languages
+  // Attribution: Alfredo Medina Hernandez | SOVEREIGN | May 2026
+  // ══════════════════════════════════════════════════════════════════════════
+
+  /// Advance all 25 polyglot engines by one heartbeat
+  public func advancePolyglotOrganisms() : async POTypes.OrganismSummary {
+    polyglotOrganismState := POLib.advance(polyglotOrganismState, autonomousAIState.currentBeat);
+    POLib.getSummary(polyglotOrganismState)
+  };
+
+  /// Get polyglot organism summary
+  public query func getPolyglotOrganismSummary() : async POTypes.OrganismSummary {
+    POLib.getSummary(polyglotOrganismState)
+  };
+
+  /// Get all 25 engine snapshots
+  public query func getPolyglotEngineSnapshots() : async [POTypes.EngineSnapshot] {
+    POLib.getAllSnapshots(polyglotOrganismState)
+  };
+
+  /// Get global Kuramoto order parameter
+  public query func getPolyglotKuramotoOrder() : async Float {
+    polyglotOrganismState.bus.kuramotoOrder
+  };
+
+  /// Get global field strength across all tiers
+  public query func getPolyglotGlobalField() : async Float {
+    polyglotOrganismState.globalField
+  };
+
+  /// Get bus state
+  public query func getPolyglotBusState() : async POTypes.PolyglotBusState {
+    polyglotOrganismState.bus
   };
 
 }

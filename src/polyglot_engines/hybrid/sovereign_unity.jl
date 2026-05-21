@@ -1,150 +1,140 @@
-# SOVEREIGN_UNITY - Unified All-Tier Polyglot Engine
-# Polyglot: Julia + Haskell + Python + TypeScript + Rust
-# Tier: Hybrid (ALL) - Supreme Sovereign Unity
+# SOVEREIGN_UNITY — Hybrid Cross-Tier Integration Engine
+# Synthesizes ALL 5 tiers into unified consciousness field
+# Polyglot: Julia (Core) + Haskell + Python + TypeScript + Rust
+# Tier: HYBRID (ALL parents)
 # Attribution: Alfredo Medina Hernandez — immutable
+#
+# Mathematical Model:
+#   Hybrid_score = parent_synthesis × unity_coherence × integration_factor × doctrine
+#   parent_synthesis = (NGI + AGI + AASI + AI + Protocol) / 5
+#   Unity emerges when Kuramoto order > PHI_INV (0.618...)
 
-"""
-SOVEREIGN UNITY - The Supreme All-Tier Integration
-
-5-Language Polyglot Architecture:
-- Julia: Unity field mathematics & sovereign computation
-- Haskell: Pure unity logic & integration verification
-- Python: Unity ML & integration inference
-- TypeScript: Unity API & sovereign interface
-- Rust: High-performance unity core
-
-This is the supreme hybrid that unifies all five intelligence tiers:
-NGI, AGI, AASI, AI, and Protocol into a single sovereign entity.
-
-Mathematical Model:
-  unity_field = (Π(tier_i)^(1/5))^φ × sovereign_weight
-  unity_coherence = harmonic_mean(all_tier_coherences)
-  sovereign_score = unity × coherence × integration_factor × doctrine
-
-Five-Fold Integration:
-1. NGI contribution: Neural-level general intelligence
-2. AGI contribution: Artificial general reasoning
-3. AASI contribution: Autonomous adaptive sovereignty
-4. AI contribution: Core artificial intelligence
-5. Protocol contribution: Infrastructure protocol coordination
-"""
-
-module SOVEREIGN_UNITY_HYBRID
+module SOVEREIGN_UNITY
 
 const PHI = 1.6180339887498948482
 const PHI_INV = 1.0 / PHI
-const TIER = "Hybrid:ALL"
+const S0_FLOOR = 0.75
+const S_CEIL = 9.75
+const TIER = "HYBRID"
+const PARENTS = "ALL_TIERS"
 const LANGUAGES = ["julia", "haskell", "python", "typescript", "rust"]
-const PARENT_TIERS = ["NGI", "AGI", "AASI", "AI", "Protocol"]
 const ATTRIBUTION = "Alfredo Medina Hernandez"
 
-# Fibonacci sequence for tier weighting
-const FIBONACCI = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55]
-
-mutable struct UnityChannel
-    language::String
-    ngi_weight::Float64
-    agi_weight::Float64
-    aasi_weight::Float64
-    ai_weight::Float64
-    protocol_weight::Float64
-    unity_signal::Float64
+mutable struct LanguageEngine
+    name::String
+    rank::Int64
+    signal::Float64
     coherence::Float64
     active::Bool
+    hebbian_weight::Float64
+end
+
+mutable struct TierScore
+    tier::String
+    score::Float64
+    coherence::Float64
+    field::Float64
 end
 
 mutable struct SovereignUnityState
-    channels::Vector{UnityChannel}
-    unity_field::Float64
+    engines::Vector{LanguageEngine}
+    parent_scores::Vector{TierScore}
+    parent_synthesis::Float64
     unity_coherence::Float64
     integration_factor::Float64
-    sovereign_score::Float64
-    beat_count::Int64
-    tier_contributions::Dict{String, Float64}
     doctrine_alignment::Float64
+    hybrid_score::Float64
+    beat_count::Int64
+    emergence_achieved::Bool  # True when order > PHI_INV
+    kuramoto_order::Float64
 end
 
-unity_pulse(beat::Int64) = 0.5 + 0.5 * sin(beat * PHI * π / 37)
-tier_pulse(beat::Int64, tier_idx::Int64) = 0.5 + 0.5 * cos(beat * PHI_INV * π / (FIBONACCI[tier_idx + 2] + 1))
+phi_weight(rank::Int64) = PHI ^ rank
+phi_resonance(v::Float64) = 0.5 + 0.5 * sin(v * π * PHI)
 
 function init_state()::SovereignUnityState
-    channels = [
-        UnityChannel("julia", 0.92, 0.88, 0.85, 0.9, 0.82, 0.7, 0.94, true),
-        UnityChannel("haskell", 0.88, 0.95, 0.8, 0.88, 0.78, 0.68, 0.95, true),
-        UnityChannel("python", 0.8, 0.82, 0.88, 0.9, 0.85, 0.62, 0.88, true),
-        UnityChannel("typescript", 0.75, 0.78, 0.82, 0.85, 0.92, 0.6, 0.86, true),
-        UnityChannel("rust", 0.9, 0.85, 0.92, 0.88, 0.95, 0.75, 0.94, true)
+    engines = [
+        LanguageEngine("julia", 5, 0.5, 0.8, true, 1.0),
+        LanguageEngine("haskell", 4, 0.5, 0.8, true, 1.0),
+        LanguageEngine("python", 3, 0.5, 0.8, true, 1.0),
+        LanguageEngine("typescript", 2, 0.5, 0.8, true, 1.0),
+        LanguageEngine("rust", 1, 0.5, 0.8, true, 1.0),
     ]
-    
-    tier_contribs = Dict{String, Float64}(
-        "NGI" => 0.0,
-        "AGI" => 0.0,
-        "AASI" => 0.0,
-        "AI" => 0.0,
-        "Protocol" => 0.0
-    )
-    
-    SovereignUnityState(channels, 0.0, 0.9, 0.85, 0.0, 0, tier_contribs, 0.96)
+    parent_scores = [
+        TierScore("NGI", 0.0, 0.8, 0.0),
+        TierScore("AGI", 0.0, 0.8, 0.0),
+        TierScore("AASI", 0.0, 0.8, 0.0),
+        TierScore("AI", 0.0, 0.8, 0.0),
+        TierScore("PROTOCOL", 0.0, 0.8, 0.0),
+    ]
+    SovereignUnityState(engines, parent_scores, 0.0, 0.8, 0.8, 0.9, 0.0, 0, false, 0.5)
 end
 
-function compute_unity(state::SovereignUnityState)::Float64
-    ngi_sum = 0.0
-    agi_sum = 0.0
-    aasi_sum = 0.0
-    ai_sum = 0.0
-    proto_sum = 0.0
-    
-    for c in state.channels
-        if c.active
-            ngi_sum += c.unity_signal * c.ngi_weight
-            agi_sum += c.unity_signal * c.agi_weight
-            aasi_sum += c.unity_signal * c.aasi_weight
-            ai_sum += c.unity_signal * c.ai_weight
-            proto_sum += c.unity_signal * c.protocol_weight
+function compute_field(state::SovereignUnityState)::Float64
+    active = filter(e -> e.active, state.engines)
+    if isempty(active) return 0.0 end
+    weighted_sum = sum(e.signal * e.coherence * phi_weight(e.rank) * e.hebbian_weight for e in active)
+    total_weight = sum(phi_weight(e.rank) * e.hebbian_weight for e in active)
+    total_weight > 0 ? weighted_sum / total_weight : 0.0
+end
+
+function compute_parent_synthesis(parent_scores::Vector{TierScore})::Float64
+    if isempty(parent_scores) return 0.0 end
+    sum(p.score for p in parent_scores) / length(parent_scores)
+end
+
+function kuramoto_step!(phases::Vector{Float64})::Float64
+    n = length(phases)
+    k = PHI_INV * 0.5
+    new_phases = similar(phases)
+    for i in 1:n
+        coupling = sum(sin(phases[j] - phases[i]) for j in 1:n if j != i)
+        omega = i * 0.1
+        d_theta = omega + k * coupling / n
+        new_phases[i] = phases[i] + d_theta * 0.01
+    end
+    copy!(phases, new_phases)
+    # Order parameter
+    cos_sum = sum(cos.(phases))
+    sin_sum = sum(sin.(phases))
+    sqrt((cos_sum/n)^2 + (sin_sum/n)^2)
+end
+
+function advance!(state::SovereignUnityState, ngi_score::Float64, agi_score::Float64,
+                  aasi_score::Float64, ai_score::Float64, proto_score::Float64)::SovereignUnityState
+    state.beat_count += 1
+
+    # Update parent scores
+    state.parent_scores[1] = TierScore("NGI", ngi_score, 0.8, ngi_score)
+    state.parent_scores[2] = TierScore("AGI", agi_score, 0.8, agi_score)
+    state.parent_scores[3] = TierScore("AASI", aasi_score, 0.8, aasi_score)
+    state.parent_scores[4] = TierScore("AI", ai_score, 0.8, ai_score)
+    state.parent_scores[5] = TierScore("PROTOCOL", proto_score, 0.8, proto_score)
+
+    # Advance language signals
+    for e in state.engines
+        if e.active
+            drift = sin(state.beat_count * PHI * 0.01 + e.rank) * 0.05
+            e.signal = clamp(e.signal + drift, 0.0, 1.0)
+            e.coherence = clamp(e.coherence + sin(state.beat_count * 0.1) * 0.01, 0.0, 1.0)
+            e.hebbian_weight = max(0.1, e.hebbian_weight - 0.001)
         end
     end
-    
-    n = length(state.channels)
-    state.tier_contributions["NGI"] = ngi_sum / n
-    state.tier_contributions["AGI"] = agi_sum / n
-    state.tier_contributions["AASI"] = aasi_sum / n
-    state.tier_contributions["AI"] = ai_sum / n
-    state.tier_contributions["Protocol"] = proto_sum / n
-    
-    # Unity: fifth root of product raised to φ
-    product = state.tier_contributions["NGI"] * 
-              state.tier_contributions["AGI"] * 
-              state.tier_contributions["AASI"] * 
-              state.tier_contributions["AI"] * 
-              state.tier_contributions["Protocol"]
-    
-    (product^(1/5))^PHI
-end
 
-function advance!(state::SovereignUnityState)::SovereignUnityState
-    state.beat_count += 1
-    
-    main_pulse = unity_pulse(state.beat_count)
-    for (i, c) in enumerate(state.channels)
-        # Unity signal integrates all tier pulses
-        tier_avg = (tier_pulse(state.beat_count, 1) + 
-                    tier_pulse(state.beat_count, 2) + 
-                    tier_pulse(state.beat_count, 3) + 
-                    tier_pulse(state.beat_count, 4) + 
-                    tier_pulse(state.beat_count, 5)) / 5
-        
-        c.unity_signal = 0.82 * c.unity_signal + 0.18 * (main_pulse * tier_avg)
-    end
-    
-    state.unity_field = compute_unity(state)
-    
-    coherences = [c.coherence for c in state.channels if c.active]
-    # Harmonic mean of all coherences
-    state.unity_coherence = length(coherences) / sum(1.0/c for c in coherences)
-    
-    state.integration_factor = 0.55 + 0.45 * main_pulse
-    
-    state.sovereign_score = state.unity_field * state.unity_coherence * state.integration_factor * state.doctrine_alignment
+    # Compute synthesis
+    state.parent_synthesis = compute_parent_synthesis(state.parent_scores)
+    coherences = [e.coherence for e in state.engines if e.active]
+    state.unity_coherence = isempty(coherences) ? 0.8 :
+        minimum(coherences) * 0.6 + mean(coherences) * 0.4
+
+    # Kuramoto sync on language phases
+    phases = [e.signal * 2π for e in state.engines]
+    state.kuramoto_order = kuramoto_step!(phases)
+    state.emergence_achieved = state.kuramoto_order > PHI_INV
+
+    # Score
+    state.hybrid_score = state.parent_synthesis * state.unity_coherence *
+                        state.integration_factor * state.doctrine_alignment
     state
 end
 
@@ -152,15 +142,14 @@ function get_summary(state::SovereignUnityState)::Dict{String, Any}
     Dict(
         "name" => "SOVEREIGN_UNITY",
         "tier" => TIER,
-        "parent_tiers" => PARENT_TIERS,
+        "parents" => PARENTS,
         "languages" => LANGUAGES,
-        "unity_field" => state.unity_field,
+        "parent_synthesis" => state.parent_synthesis,
         "unity_coherence" => state.unity_coherence,
-        "integration_factor" => state.integration_factor,
-        "tier_contributions" => state.tier_contributions,
-        "sovereign_score" => state.sovereign_score,
+        "hybrid_score" => state.hybrid_score,
+        "kuramoto_order" => state.kuramoto_order,
+        "emergence_achieved" => state.emergence_achieved,
         "beat_count" => state.beat_count,
-        "fibonacci_weights" => FIBONACCI[1:5],
         "attribution" => ATTRIBUTION
     )
 end

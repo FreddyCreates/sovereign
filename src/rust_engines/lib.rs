@@ -22,6 +22,11 @@ pub use stream_sovereign::{
     STREAM_INTERVAL_MS,
 };
 
+// ── POLYGLOT PROTOCOL ENGINES ─────────────────────────────────────────────────
+// Protocol tier: PHI_RESONANCE, FIBONACCI_WEAVE, GOLDEN_SYNC, SOVEREIGN_MESH
+// Kuramoto synchronization + Hebbian learning across 25 oscillators
+pub mod polyglot_protocol;
+
 pub mod animal_engines {
     pub mod nova;
     pub mod brain;
