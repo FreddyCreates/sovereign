@@ -125,6 +125,7 @@ from .hades.hades import HadesOrchestrator, HadesState
 from .persephone.persephone import PersephoneOrchestrator, PersephoneState
 from .hecate.hecate import HecateOrchestrator, HecateState
 from .olympus.olympus import OlympusOrchestrator, OlympusState
+from .pantheon.pantheon import PantheonOrchestrator, PantheonState
 
 __all__ = [
     # SOPHIA
@@ -201,6 +202,8 @@ __all__ = [
     "HecateState",
     "OlympusOrchestrator",
     "OlympusState",
+    "PantheonOrchestrator",
+    "PantheonState",
     
     # Constants
     "PHI",
