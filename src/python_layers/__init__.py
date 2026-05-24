@@ -1,10 +1,13 @@
 """
 Python Layers for SOVEREIGN
+═══════════════════════════════════════════════════════════════════════════════
 
 Attribution: Alfredo Medina Hernandez — immutable
 
-This package contains Python-based layers for the SOVEREIGN polyglot architecture:
+This package contains Python-based layers for the SOVEREIGN polyglot architecture.
+The complete pantheon of 16 deity layers:
 
+ORIGINAL LAYERS (8):
 - SOPHIA: Wisdom Layer - ML/AI model orchestration
 - HERMES: Communication Layer - Message routing and protocols
 - PROMETHEUS: Learning Layer - Adaptive learning and training
@@ -13,15 +16,34 @@ This package contains Python-based layers for the SOVEREIGN polyglot architectur
 - ARTEMIS: Protection Layer - Boundary defense and threat detection
 - HEPHAESTUS: Forge Layer - Artifact creation and crafting
 
+NEW LAYERS (8):
+- GAIA: Foundation Layer - Primitive operations, reality anchoring
+- DIONYSUS: Creativity Layer - Creative chaos, novel generation
+- DEMETER: Growth Layer - Resource management, ecosystem health
+- POSEIDON: Flow Layer - Data streams, pipeline management
+- HERA: Governance Layer - Permission systems, role management
+- ARES: Optimization Layer - Gradient warfare, competitive selection
+- HADES: Archive Layer - Long-term storage, knowledge persistence
+- PERSEPHONE: Cycle Layer - Lifecycle management, phase transitions
+- HECATE: Decision Layer - Branching logic, path selection
+
+UNIFIED CONTROLLER:
+- OLYMPUS: Unified Controller - Coordinates all deity layers
+
 All layers maintain doctrine alignment and use PHI-based mathematics.
+
+Mathematical Model:
+    unified_field = Σ(deity_score_i × PHI^rank_i) / Σ(PHI^rank_i)
+    global_coherence = Π(deity_coherence_i) ^ (1/n)
 
 Constants:
     PHI = 1.6180339887498948482
     S0_FLOOR = 0.75
     S_CEIL = 9.75
+    Heartbeat = 873ms
 """
 
-__version__ = "1.0.0"
+__version__ = "2.0.0"
 __author__ = "Alfredo Medina Hernandez"
 __attribution__ = "Alfredo Medina Hernandez — immutable"
 
@@ -92,6 +114,18 @@ PHI_INV = 1.0 / PHI
 S0_FLOOR = 0.75
 S_CEIL = 9.75
 
+# Import new layers - Orchestrators
+from .gaia.gaia import GaiaOrchestrator, GaiaState
+from .dionysus.dionysus import DionysusOrchestrator, DionysusState
+from .demeter.demeter import DemeterOrchestrator, DemeterState
+from .poseidon.poseidon import PoseidonOrchestrator, PoseidonState
+from .hera.hera import HeraOrchestrator, HeraState
+from .ares.ares import AresOrchestrator, AresState
+from .hades.hades import HadesOrchestrator, HadesState
+from .persephone.persephone import PersephoneOrchestrator, PersephoneState
+from .hecate.hecate import HecateOrchestrator, HecateState
+from .olympus.olympus import OlympusOrchestrator, OlympusState
+
 __all__ = [
     # SOPHIA
     "init_sophia_state",
@@ -145,6 +179,28 @@ __all__ = [
     "Artifact",
     "Recipe",
     "ForgeState",
+    
+    # NEW LAYERS
+    "GaiaOrchestrator",
+    "GaiaState",
+    "DionysusOrchestrator",
+    "DionysusState",
+    "DemeterOrchestrator",
+    "DemeterState",
+    "PoseidonOrchestrator",
+    "PoseidonState",
+    "HeraOrchestrator",
+    "HeraState",
+    "AresOrchestrator",
+    "AresState",
+    "HadesOrchestrator",
+    "HadesState",
+    "PersephoneOrchestrator",
+    "PersephoneState",
+    "HecateOrchestrator",
+    "HecateState",
+    "OlympusOrchestrator",
+    "OlympusState",
     
     # Constants
     "PHI",
