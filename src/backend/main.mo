@@ -134,6 +134,9 @@ import Test20KTypes          "tests/SovereignTest20KTypes";
 import Test20KLib            "tests/SovereignTest20K";
 import POTypes               "types/polyglotOrganisms";
 import POLib                 "lib/polyglotOrganisms";
+import IFTypes               "types/intelligenceFloors";
+import IFLib                 "lib/intelligenceFloors";
+import CharterIFLib          "charters/CharterIntelligenceFloors";
 
 
 
@@ -763,6 +766,36 @@ actor SovereignWarSim {
   // φ-weighted unified field dynamics with Kuramoto cross-language synchronization.
   // Attribution: Alfredo Medina Hernandez | SOVEREIGN | May 2026
   stable var polyglotOrganismState : POTypes.PolyglotOrganismState = POLib.initState(0);
+
+  // ── INTELLIGENCE FLOORS & AI MICROS — LLM Architecture Weavers ─────────────
+  // "The architecture of intelligence is not flat — it is a tower of floors,
+  // each floor specialized, each floor essential. Between floors, micro-intelligences
+  // weave the connections — attention flows, parameters propagate, embeddings resonate."
+  //
+  // EIGHT FLOORS (modeled after LLM architecture):
+  //   I.   FLOOR_PARAMETERS      — Billions to trillions of weights (~10¹² floats)
+  //   II.  FLOOR_ATTENTION       — Multi-head self-attention mechanisms (O(n²) per layer)
+  //   III. FLOOR_FEEDFORWARD     — Dense neural network layers (~4d² per layer)
+  //   IV.  FLOOR_NORMALIZATION   — Layer norm, RMS norm (Stabilization)
+  //   V.   FLOOR_TOKENIZATION    — BPE, SentencePiece vocabularies (~100k tokens)
+  //   VI.  FLOOR_EMBEDDINGS      — High-dimensional vector spaces (~10⁴ dimensions)
+  //   VII. FLOOR_TRAINING_CORPUS — Vast text data (~10¹² tokens)
+  //   VIII.FLOOR_EMERGENT        — Reasoning, code, translation (Unpredicted capabilities)
+  //
+  // TWELVE AI MICROS (weave between floors):
+  //   1-12: GRADIENT_FLOW, RESIDUAL_STREAM, KEY_VALUE, POSITION_ENCODER, SOFTMAX_GATE,
+  //         GELU_ACTIVATION, DROPOUT_MASK, LAYER_CONNECT, CONTEXT_WINDOW, VOCAB_LOOKUP,
+  //         LOGIT_HEAD, ENTROPY_SAMPLER
+  //
+  // Attribution: Alfredo Medina Hernandez | SOVEREIGN | May 2026
+  stable var intelligenceFloorsState : IFTypes.IntelligenceFloorsState = IFLib.initState();
+
+  // ── B2.6b — CHARTER: INTELLIGENCE FLOORS V2 ──────────────────────────────
+  // CHARTER-IF-V2-001 — PHI-Resonant Governance for Intelligence Floors
+  // 20 Protocols × 5 Articles governing the 12 Floors and 20 AI Micros.
+  // Protocols advance each heartbeat, strength grows with coherence.
+  // Attribution: Alfredo Medina Hernandez | SOVEREIGN | May 2026
+  stable var charterIFState : CharterIFLib.CharterState = CharterIFLib.init();
 
   // ── B2.7 — STREAM_SOVEREIGN ────────────────────────────────────────────
   // Dedicated processing stream inside the SOVEREIGN organism's own runtime.
@@ -3878,6 +3911,26 @@ actor SovereignWarSim {
     // Calculates system-wide coherence from all active models.
     // Law: INTELLECTUS_NUMQUAM_OBLIVISCERE — "Intelligence Never Forgets"
     autonomousAIState := AILib.advanceHeartbeat(autonomousAIState, beat);
+
+    // ── INTELLIGENCE FLOORS & AI MICROS — LLM Architecture Weavers ─────────────
+    // V2: 12 floors advance: PARAMETERS, ATTENTION, FEEDFORWARD, NORMALIZATION,
+    // TOKENIZATION, EMBEDDINGS, TRAINING_CORPUS, EMERGENT, SCALING, MEMORY, REASONING, SAFETY.
+    // 20 micros weave between floors: GRADIENT_FLOW, RESIDUAL_STREAM, KEY_VALUE, etc.
+    // Coherence delta folds into compoundCoherence.
+    let (newIFState, ifDelta) = IFLib.advance(
+      intelligenceFloorsState, beat, globalCoherence, doctrineScoreEarly / 100.0,
+    );
+    intelligenceFloorsState := newIFState;
+    compoundCoherence += ifDelta;
+
+    // ── CHARTER: INTELLIGENCE FLOORS V2 ──────────────────────────────────────────
+    // 20 protocols × 5 tiers govern the 12 floors and 20 micros.
+    // Charter coherence delta folds into compoundCoherence.
+    let (newCharterIFState, charterIFDelta) = CharterIFLib.advance(
+      charterIFState, beat, globalCoherence, doctrineScoreEarly / 100.0,
+    );
+    charterIFState := newCharterIFState;
+    compoundCoherence += charterIFDelta;
 
     // Disconnected engine #2: quality scores computed but never re-injected.
     // After Ring 5 fires, re-inject quality weights into production queue state.
@@ -8560,6 +8613,93 @@ actor SovereignWarSim {
       ("Quantum", Test20KLib.getDomainPassRate(test20KState, #Quantum)),
       ("Neural", Test20KLib.getDomainPassRate(test20KState, #Neural)),
     ]
+  };
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // INTELLIGENCE FLOORS & AI MICROS ENDPOINTS — 8 floors × 12 micros
+  // "The architecture of intelligence is not flat — it is a tower of floors."
+  // Attribution: Alfredo Medina Hernandez | SOVEREIGN | May 2026
+  // ══════════════════════════════════════════════════════════════════════════
+
+  /// Get intelligence floors summary
+  public query func getIntelligenceFloorsSummary() : async IFTypes.IntelligenceFloorsSummary {
+    IFLib.getSummary(intelligenceFloorsState)
+  };
+
+  /// Get all 8 floor snapshots
+  public query func getIntelligenceFloorSnapshots() : async [IFTypes.FloorSnapshot] {
+    IFLib.getAllFloors(intelligenceFloorsState)
+  };
+
+  /// Get all 12 micro snapshots
+  public query func getAIMicroSnapshots() : async [IFTypes.MicroSnapshot] {
+    IFLib.getAllMicros(intelligenceFloorsState)
+  };
+
+  /// Get floor by name
+  public query func getIntelligenceFloorByName(name : Text) : async ?IFTypes.FloorSnapshot {
+    IFLib.getFloorByName(intelligenceFloorsState, name)
+  };
+
+  /// Get micro by name
+  public query func getAIMicroByName(name : Text) : async ?IFTypes.MicroSnapshot {
+    IFLib.getMicroByName(intelligenceFloorsState, name)
+  };
+
+  /// Get weave reports (floor-to-floor connections via micros)
+  public query func getIntelligenceWeaveReports() : async [IFTypes.WeaveReport] {
+    IFLib.getWeaveReports(intelligenceFloorsState)
+  };
+
+  /// Get system coherence (floor-micro integration score)
+  public query func getIntelligenceFloorsCoherence() : async Float {
+    intelligenceFloorsState.systemCoherence
+  };
+
+  /// Get total floor signal
+  public query func getTotalFloorSignal() : async Float {
+    intelligenceFloorsState.totalFloorSignal
+  };
+
+  /// Get total micro signal
+  public query func getTotalMicroSignal() : async Float {
+    intelligenceFloorsState.totalMicroSignal
+  };
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // CHARTER: INTELLIGENCE FLOORS V2 ENDPOINTS
+  // 20 protocols × 5 articles governing 12 floors + 20 micros
+  // Attribution: Alfredo Medina Hernandez | SOVEREIGN | May 2026
+  // ══════════════════════════════════════════════════════════════════════════
+
+  /// Get Charter Intelligence Floors summary
+  public query func getCharterIFSummary() : async CharterIFLib.CharterSummary {
+    CharterIFLib.getSummary(charterIFState)
+  };
+
+  /// Get all 20 protocol snapshots
+  public query func getCharterIFProtocols() : async [CharterIFLib.ProtocolSnapshot] {
+    CharterIFLib.getAllProtocols(charterIFState)
+  };
+
+  /// Get protocol by ID (1-20)
+  public query func getCharterIFProtocolById(id : Nat) : async ?CharterIFLib.ProtocolSnapshot {
+    CharterIFLib.getProtocolById(charterIFState, id)
+  };
+
+  /// Get all 5 charter articles
+  public query func getCharterIFArticles() : async [CharterIFLib.CharterArticle] {
+    CharterIFLib.getArticles(charterIFState)
+  };
+
+  /// Get charter coherence score
+  public query func getCharterIFCoherence() : async Float {
+    charterIFState.coherenceScore
+  };
+
+  /// Get charter total protocol strength
+  public query func getCharterIFTotalStrength() : async Float {
+    charterIFState.totalStrength
   };
 
   // ══════════════════════════════════════════════════════════════════════════

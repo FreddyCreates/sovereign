@@ -2776,6 +2776,64 @@ export interface ArtifactSealResult {
     timestamp: bigint;
     artifactId: string;
 }
+// ── INTELLIGENCE FLOORS & AI MICROS ─────────────────────────────────────────
+export interface FloorSnapshot {
+    name: string;
+    latinName: string;
+    signal: number;
+    efficiencyScore: number;
+    utilizationRate: number;
+    totalPulses: bigint;
+}
+export interface MicroSnapshot {
+    name: string;
+    latinName: string;
+    signalStrength: number;
+    weaveScore: number;
+    totalActivations: bigint;
+}
+export interface IntelligenceFloorsSummary {
+    floorCount: bigint;
+    microCount: bigint;
+    totalFloorSignal: number;
+    totalMicroSignal: number;
+    systemCoherence: number;
+    topFloor: string;
+    topMicro: string;
+    totalPulses: bigint;
+    beat: bigint;
+    attribution: string;
+}
+export type IntelligenceFloorId =
+    | { FLOOR_PARAMETERS: null }
+    | { FLOOR_ATTENTION: null }
+    | { FLOOR_FEEDFORWARD: null }
+    | { FLOOR_NORMALIZATION: null }
+    | { FLOOR_TOKENIZATION: null }
+    | { FLOOR_EMBEDDINGS: null }
+    | { FLOOR_TRAINING_CORPUS: null }
+    | { FLOOR_EMERGENT: null };
+export type AIMicroId =
+    | { MICRO_GRADIENT_FLOW: null }
+    | { MICRO_RESIDUAL_STREAM: null }
+    | { MICRO_KEY_VALUE: null }
+    | { MICRO_POSITION_ENCODER: null }
+    | { MICRO_SOFTMAX_GATE: null }
+    | { MICRO_GELU_ACTIVATION: null }
+    | { MICRO_DROPOUT_MASK: null }
+    | { MICRO_LAYER_CONNECT: null }
+    | { MICRO_CONTEXT_WINDOW: null }
+    | { MICRO_VOCAB_LOOKUP: null }
+    | { MICRO_LOGIT_HEAD: null }
+    | { MICRO_ENTROPY_SAMPLER: null };
+export interface WeaveReport {
+    microId: AIMicroId;
+    sourceFloorName: string;
+    targetFloorName: string;
+    currentStrength: number;
+    healthStatus: string;
+    lastActivation: bigint;
+}
 export interface WorldStateSnapshot {
     lastEvaluatedTs: bigint;
     totalSensors: bigint;
@@ -4155,6 +4213,16 @@ export interface backendInterface {
     getAlphaTest1300All(): Promise<Array<AlphaTestRecord>>;
     getAlphaTest1300Sealed(): Promise<Array<AlphaTestRecord>>;
     getAlphaTest1300ByCategory(category: string): Promise<Array<AlphaTestRecord>>;
+    // ── INTELLIGENCE FLOORS & AI MICROS ─────────────────────────────────────────
+    getIntelligenceFloorsSummary(): Promise<IntelligenceFloorsSummary>;
+    getIntelligenceFloorSnapshots(): Promise<Array<FloorSnapshot>>;
+    getAIMicroSnapshots(): Promise<Array<MicroSnapshot>>;
+    getIntelligenceFloorByName(name: string): Promise<FloorSnapshot | null>;
+    getAIMicroByName(name: string): Promise<MicroSnapshot | null>;
+    getIntelligenceWeaveReports(): Promise<Array<WeaveReport>>;
+    getIntelligenceFloorsCoherence(): Promise<number>;
+    getTotalFloorSignal(): Promise<number>;
+    getTotalMicroSignal(): Promise<number>;
 }
 import type { ADRECycleResult as _ADRECycleResult, ActivationState as _ActivationState, ActorMemoryState as _ActorMemoryState, ActorPublicProfile as _ActorPublicProfile, ActorRelationshipEntry as _ActorRelationshipEntry, AdoptionContract as _AdoptionContract, AgentTokenBudget as _AgentTokenBudget, AlphaFusionModel as _AlphaFusionModel, ArchResponseToken as _ArchResponseToken, ArchType as _ArchType, ArchitectureState as _ArchitectureState, AresSnapshot as _AresSnapshot, ArtifactEngineSource as _ArtifactEngineSource, ArtifactProvenance as _ArtifactProvenance, ArtifactRecord as _ArtifactRecord, ArtifactReview as _ArtifactReview, ArtifactSeal as _ArtifactSeal, ArtifactSealResult as _ArtifactSealResult, ArtifactType as _ArtifactType, AttributionContract as _AttributionContract, BackendWire as _BackendWire, BeatResult as _BeatResult, CallFamily as _CallFamily, CallerTier as _CallerTier, CanisterGroup as _CanisterGroup, CanisterGroupVariant as _CanisterGroupVariant, ChainTrace as _ChainTrace, CharterRecord as _CharterRecord, CivilizationState as _CivilizationState, CoherentArtifactRecord as _CoherentArtifactRecord, ColonelKernel as _ColonelKernel, CommercialBeat as _CommercialBeat, CommercialFormat as _CommercialFormat, CommercialFormatTemplate as _CommercialFormatTemplate, CommercialProject as _CommercialProject, CommercialSpeedMetrics as _CommercialSpeedMetrics, ContentFormat as _ContentFormat, ContentRating as _ContentRating, ContentWorldState as _ContentWorldState, CoreNode as _CoreNode, CoreSphere as _CoreSphere, CreatorPresence as _CreatorPresence, CrossChainChannelState as _CrossChainChannelState, DecisionRecord as _DecisionRecord, DecisionType as _DecisionType, DeploymentRecord as _DeploymentRecord, DistributionRoute as _DistributionRoute, DoctrineRestartEvent as _DoctrineRestartEvent, DoctrineStateEntry as _DoctrineStateEntry, DoctrineValidationResult as _DoctrineValidationResult, DocumentExecutionType as _DocumentExecutionType, DomainSignal as _DomainSignal, EngagementEvent as _EngagementEvent, EnterpriseMastery as _EnterpriseMastery, ExecutionEvent as _ExecutionEvent, ExecutionResult as _ExecutionResult, ExtendedPhenotypeOutput as _ExtendedPhenotypeOutput, ExtendedPhenotypeState as _ExtendedPhenotypeState, ExternalSession as _ExternalSession, Faction as _Faction, FestivalSubmission as _FestivalSubmission, FilmMetadataInput as _FilmMetadataInput, FilmRecord as _FilmRecord, FilmTrailer as _FilmTrailer, FilmWithQuality as _FilmWithQuality, FusionEngine as _FusionEngine, FusionGrade as _FusionGrade, FusionSubModel as _FusionSubModel, FusionTechnology as _FusionTechnology, GeneratedFilm as _GeneratedFilm, IntelligenceDomain as _IntelligenceDomain, IntelligenceOutput as _IntelligenceOutput, IntelligenceRecord as _IntelligenceRecord, IntelligenceState as _IntelligenceState, IntelligenceTaxonomyState as _IntelligenceTaxonomyState, IoTInfluence as _IoTInfluence, IoTSignalType as _IoTSignalType, JubileeState as _JubileeState, MasterCharterState as _MasterCharterState, MasteryCapability as _MasteryCapability, MasteryLevel as _MasteryLevel, MasteryRecord as _MasteryRecord, MicroNameAttribute as _MicroNameAttribute, MinerSnapshot as _MinerSnapshot, ModelParams as _ModelParams, NeurotransmitterProfile as _NeurotransmitterProfile, OmnisProposal as _OmnisProposal, OmnisProposalType as _OmnisProposalType, OmnisState as _OmnisState, OmnisStatus as _OmnisStatus, OmnisVote as _OmnisVote, OrgMasteryState as _OrgMasteryState, OrganismCollabSignal as _OrganismCollabSignal, OrganismCredit as _OrganismCredit, PHIFaceGeometry as _PHIFaceGeometry, PHIGeometry as _PHIGeometry, ParsedIoTSignal as _ParsedIoTSignal, PlacedActor as _PlacedActor, PosterArt as _PosterArt, PressKit as _PressKit, ProductionFormat as _ProductionFormat, ProductionFormatConfig as _ProductionFormatConfig, ProductionQueue as _ProductionQueue, ProtocolEvent as _ProtocolEvent, ProtocolId as _ProtocolId, ProtocolState as _ProtocolState, ProtocolStatus as _ProtocolStatus, QualityScore as _QualityScore, QualityStatus as _QualityStatus, RelationshipCell as _RelationshipCell, RelationshipType as _RelationshipType, ResponseRecord as _ResponseRecord, ReviewComment as _ReviewComment, ReviewStatus as _ReviewStatus, SKAICapability as _SKAICapability, SKAIFamily as _SKAIFamily, SKAIOrganism as _SKAIOrganism, SandboxOrganismId as _SandboxOrganismId, SandboxOrganismState as _SandboxOrganismState, SandboxResearchDocument as _SandboxResearchDocument, SandboxSignal as _SandboxSignal, SandboxSignalSnapshot as _SandboxSignalSnapshot, SchumannAmbient as _SchumannAmbient, SealedArtifact as _SealedArtifact, SeasonArcProgress as _SeasonArcProgress, SevenSpiritsState as _SevenSpiritsState, SkaiInstallSnapshot as _SkaiInstallSnapshot, SlatePriority as _SlatePriority, SocialContentPlan as _SocialContentPlan, SovereignActor as _SovereignActor, SovereignCall as _SovereignCall, SovereignCore as _SovereignCore, StateChange as _StateChange, SubModelRecord as _SubModelRecord, SubmissionStatus as _SubmissionStatus, SubtitleTrack as _SubtitleTrack, SuccessionState as _SuccessionState, TaskSnapshot as _TaskSnapshot, TranslationInstruction as _TranslationInstruction, TrendingContentItem as _TrendingContentItem, TrendingWorldSignal as _TrendingWorldSignal, UniverseBibleEntry as _UniverseBibleEntry, VELARingState as _VELARingState, VaultDocument as _VaultDocument, VaultDocumentKind as _VaultDocumentKind, VitalityState as _VitalityState, WorkerSnapshot as _WorkerSnapshot, WorldDoctrineState as _WorldDoctrineState, WorldDogonState as _WorldDogonState, WorldInstanceId as _WorldInstanceId, WorldProductionCapture as _WorldProductionCapture, WorldProductionStatus as _WorldProductionStatus, WorldSelfModel as _WorldSelfModel, YieldSubmission as _YieldSubmission } from "./declarations/backend.did.d.ts";
 export class Backend implements backendInterface {
@@ -9563,6 +9631,61 @@ export class Backend implements backendInterface {
             try { return (await this.actor.getAlphaTest1300ByCategory(category)) as Array<AlphaTestRecord>; }
             catch (e) { this.processError(e); throw new Error("unreachable"); }
         } else { return (await this.actor.getAlphaTest1300ByCategory(category)) as Array<AlphaTestRecord>; }
+    }
+    // ── INTELLIGENCE FLOORS & AI MICROS ─────────────────────────────────────────
+    async getIntelligenceFloorsSummary(): Promise<IntelligenceFloorsSummary> {
+        if (this.processError) {
+            try { return (await this.actor.getIntelligenceFloorsSummary()) as IntelligenceFloorsSummary; }
+            catch (e) { this.processError(e); throw new Error("unreachable"); }
+        } else { return (await this.actor.getIntelligenceFloorsSummary()) as IntelligenceFloorsSummary; }
+    }
+    async getIntelligenceFloorSnapshots(): Promise<Array<FloorSnapshot>> {
+        if (this.processError) {
+            try { return (await this.actor.getIntelligenceFloorSnapshots()) as Array<FloorSnapshot>; }
+            catch (e) { this.processError(e); throw new Error("unreachable"); }
+        } else { return (await this.actor.getIntelligenceFloorSnapshots()) as Array<FloorSnapshot>; }
+    }
+    async getAIMicroSnapshots(): Promise<Array<MicroSnapshot>> {
+        if (this.processError) {
+            try { return (await this.actor.getAIMicroSnapshots()) as Array<MicroSnapshot>; }
+            catch (e) { this.processError(e); throw new Error("unreachable"); }
+        } else { return (await this.actor.getAIMicroSnapshots()) as Array<MicroSnapshot>; }
+    }
+    async getIntelligenceFloorByName(name: string): Promise<FloorSnapshot | null> {
+        if (this.processError) {
+            try { return (await this.actor.getIntelligenceFloorByName(name)) as FloorSnapshot | null; }
+            catch (e) { this.processError(e); throw new Error("unreachable"); }
+        } else { return (await this.actor.getIntelligenceFloorByName(name)) as FloorSnapshot | null; }
+    }
+    async getAIMicroByName(name: string): Promise<MicroSnapshot | null> {
+        if (this.processError) {
+            try { return (await this.actor.getAIMicroByName(name)) as MicroSnapshot | null; }
+            catch (e) { this.processError(e); throw new Error("unreachable"); }
+        } else { return (await this.actor.getAIMicroByName(name)) as MicroSnapshot | null; }
+    }
+    async getIntelligenceWeaveReports(): Promise<Array<WeaveReport>> {
+        if (this.processError) {
+            try { return (await this.actor.getIntelligenceWeaveReports()) as Array<WeaveReport>; }
+            catch (e) { this.processError(e); throw new Error("unreachable"); }
+        } else { return (await this.actor.getIntelligenceWeaveReports()) as Array<WeaveReport>; }
+    }
+    async getIntelligenceFloorsCoherence(): Promise<number> {
+        if (this.processError) {
+            try { return (await this.actor.getIntelligenceFloorsCoherence()) as number; }
+            catch (e) { this.processError(e); throw new Error("unreachable"); }
+        } else { return (await this.actor.getIntelligenceFloorsCoherence()) as number; }
+    }
+    async getTotalFloorSignal(): Promise<number> {
+        if (this.processError) {
+            try { return (await this.actor.getTotalFloorSignal()) as number; }
+            catch (e) { this.processError(e); throw new Error("unreachable"); }
+        } else { return (await this.actor.getTotalFloorSignal()) as number; }
+    }
+    async getTotalMicroSignal(): Promise<number> {
+        if (this.processError) {
+            try { return (await this.actor.getTotalMicroSignal()) as number; }
+            catch (e) { this.processError(e); throw new Error("unreachable"); }
+        } else { return (await this.actor.getTotalMicroSignal()) as number; }
     }
 }
 function from_candid_ActivationState_n88(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _ActivationState): ActivationState {
