@@ -375,6 +375,64 @@ export interface OROSnapshot {
     expressionScore: number;
     totalPulses: bigint;
 }
+// ── INTELLIGENCE FLOORS & AI MICROS ─────────────────────────────────────────
+export interface FloorSnapshot {
+    name: string;
+    latinName: string;
+    signal: number;
+    efficiencyScore: number;
+    utilizationRate: number;
+    totalPulses: bigint;
+}
+export interface MicroSnapshot {
+    name: string;
+    latinName: string;
+    signalStrength: number;
+    weaveScore: number;
+    totalActivations: bigint;
+}
+export interface IntelligenceFloorsSummary {
+    floorCount: bigint;
+    microCount: bigint;
+    totalFloorSignal: number;
+    totalMicroSignal: number;
+    systemCoherence: number;
+    topFloor: string;
+    topMicro: string;
+    totalPulses: bigint;
+    beat: bigint;
+    attribution: string;
+}
+export type IntelligenceFloorId =
+    | { FLOOR_PARAMETERS: null }
+    | { FLOOR_ATTENTION: null }
+    | { FLOOR_FEEDFORWARD: null }
+    | { FLOOR_NORMALIZATION: null }
+    | { FLOOR_TOKENIZATION: null }
+    | { FLOOR_EMBEDDINGS: null }
+    | { FLOOR_TRAINING_CORPUS: null }
+    | { FLOOR_EMERGENT: null };
+export type AIMicroId =
+    | { MICRO_GRADIENT_FLOW: null }
+    | { MICRO_RESIDUAL_STREAM: null }
+    | { MICRO_KEY_VALUE: null }
+    | { MICRO_POSITION_ENCODER: null }
+    | { MICRO_SOFTMAX_GATE: null }
+    | { MICRO_GELU_ACTIVATION: null }
+    | { MICRO_DROPOUT_MASK: null }
+    | { MICRO_LAYER_CONNECT: null }
+    | { MICRO_CONTEXT_WINDOW: null }
+    | { MICRO_VOCAB_LOOKUP: null }
+    | { MICRO_LOGIT_HEAD: null }
+    | { MICRO_ENTROPY_SAMPLER: null };
+export interface WeaveReport {
+    microId: AIMicroId;
+    sourceFloorName: string;
+    targetFloorName: string;
+    currentStrength: number;
+    healthStatus: string;
+    lastActivation: bigint;
+}
 export interface AGIRoomSnapshot {
     name: string;
     latinName: string;
@@ -4150,4 +4208,14 @@ export interface backendInterface {
     getAlphaTest1300All(): Promise<Array<AlphaTestRecord>>;
     getAlphaTest1300Sealed(): Promise<Array<AlphaTestRecord>>;
     getAlphaTest1300ByCategory(category: string): Promise<Array<AlphaTestRecord>>;
+    // ── INTELLIGENCE FLOORS & AI MICROS ─────────────────────────────────────────
+    getIntelligenceFloorsSummary(): Promise<IntelligenceFloorsSummary>;
+    getIntelligenceFloorSnapshots(): Promise<Array<FloorSnapshot>>;
+    getAIMicroSnapshots(): Promise<Array<MicroSnapshot>>;
+    getIntelligenceFloorByName(name: string): Promise<FloorSnapshot | null>;
+    getAIMicroByName(name: string): Promise<MicroSnapshot | null>;
+    getIntelligenceWeaveReports(): Promise<Array<WeaveReport>>;
+    getIntelligenceFloorsCoherence(): Promise<number>;
+    getTotalFloorSignal(): Promise<number>;
+    getTotalMicroSignal(): Promise<number>;
 }
