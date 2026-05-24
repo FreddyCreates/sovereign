@@ -63,7 +63,9 @@ module {
   public let FOUNDER  : Text  = "Alfredo Medina Hernandez";
 
   // ── FLOOR IDs ──────────────────────────────────────────────────────────────
+  // V2: Extended from 8 to 12 floors
   public type IntelligenceFloorId = {
+    // V1 Original 8 Floors
     #FLOOR_PARAMETERS;
     #FLOOR_ATTENTION;
     #FLOOR_FEEDFORWARD;
@@ -72,10 +74,17 @@ module {
     #FLOOR_EMBEDDINGS;
     #FLOOR_TRAINING_CORPUS;
     #FLOOR_EMERGENT;
+    // V2 New 4 Floors
+    #FLOOR_SCALING;           // Model parallelism, tensor sharding (~10³ GPUs)
+    #FLOOR_MEMORY;            // KV cache, activation memory (~10¹¹ bytes)
+    #FLOOR_REASONING;         // Chain-of-thought, planning (~10⁴ steps)
+    #FLOOR_SAFETY;            // RLHF, constitutional AI, guardrails
   };
 
   // ── MICRO IDs ──────────────────────────────────────────────────────────────
+  // V2: Extended from 12 to 20 micros
   public type AIMicroId = {
+    // V1 Original 12 Micros
     #MICRO_GRADIENT_FLOW;
     #MICRO_RESIDUAL_STREAM;
     #MICRO_KEY_VALUE;
@@ -88,6 +97,15 @@ module {
     #MICRO_VOCAB_LOOKUP;
     #MICRO_LOGIT_HEAD;
     #MICRO_ENTROPY_SAMPLER;
+    // V2 New 8 Micros
+    #MICRO_TENSOR_SHARD;      // Distributes tensors across devices
+    #MICRO_PIPELINE_STAGE;    // Pipeline parallel layer staging
+    #MICRO_CACHE_EVICT;       // KV cache eviction policy
+    #MICRO_MEMORY_COMPRESS;   // Activation checkpointing
+    #MICRO_THOUGHT_CHAIN;     // Chain-of-thought reasoning links
+    #MICRO_REWARD_SIGNAL;     // RLHF reward propagation
+    #MICRO_SAFETY_GATE;       // Constitutional AI filtering
+    #MICRO_ALIGNMENT_CHECK;   // Human preference alignment
   };
 
   // ── SCALE MAGNITUDE (for representing LLM-scale numbers) ───────────────────

@@ -196,8 +196,55 @@ module {
         "Reasoning, code, translation (Unpredicted capabilities) — emergent intelligence",
         741.0, // Expression frequency
         { base = 1.0; exponent = 3; unit = "capabilities" },
-        [#MICRO_LOGIT_HEAD, #MICRO_ENTROPY_SAMPLER, #MICRO_CONTEXT_WINDOW],
+        [#MICRO_LOGIT_HEAD, #MICRO_ENTROPY_SAMPLER, #MICRO_CONTEXT_WINDOW, #MICRO_THOUGHT_CHAIN],
         "TAFT_FLOOR_EMERGENT"
+      ),
+      // ═══════════════════════════════════════════════════════════════════════════
+      // V2 NEW FLOORS (IX-XII) — Infrastructure, Memory, Reasoning, Safety
+      // ═══════════════════════════════════════════════════════════════════════════
+      // IX. FLOOR_SCALING — Model parallelism, tensor sharding
+      mkFloor(
+        #FLOOR_SCALING,
+        "FLOOR_SCALING",
+        "Stratum Amplificationis Distributionis",
+        "Model parallelism, tensor sharding (~10³ GPUs) — distributed intelligence infrastructure",
+        852.0, // Intuition frequency (Solfeggio)
+        { base = 1.0; exponent = 3; unit = "devices" },
+        [#MICRO_TENSOR_SHARD, #MICRO_PIPELINE_STAGE],
+        "TAFT_FLOOR_SCALING"
+      ),
+      // X. FLOOR_MEMORY — KV cache, activation memory
+      mkFloor(
+        #FLOOR_MEMORY,
+        "FLOOR_MEMORY",
+        "Stratum Memoriae Activationis",
+        "KV cache, activation memory (~10¹¹ bytes) — working memory during inference",
+        963.0, // Divine connection frequency (Solfeggio)
+        { base = 1.0; exponent = 11; unit = "bytes" },
+        [#MICRO_CACHE_EVICT, #MICRO_MEMORY_COMPRESS, #MICRO_KEY_VALUE],
+        "TAFT_FLOOR_MEMORY"
+      ),
+      // XI. FLOOR_REASONING — Chain-of-thought, planning
+      mkFloor(
+        #FLOOR_REASONING,
+        "FLOOR_REASONING",
+        "Stratum Ratiocinationis Profundae",
+        "Chain-of-thought, planning (~10⁴ steps) — deliberative reasoning and inference",
+        1074.0, // Beyond Solfeggio — transcendent reasoning
+        { base = 1.0; exponent = 4; unit = "reasoning_steps" },
+        [#MICRO_THOUGHT_CHAIN, #MICRO_CONTEXT_WINDOW],
+        "TAFT_FLOOR_REASONING"
+      ),
+      // XII. FLOOR_SAFETY — RLHF, constitutional AI, guardrails
+      mkFloor(
+        #FLOOR_SAFETY,
+        "FLOOR_SAFETY",
+        "Stratum Custodiae Alignamenti",
+        "RLHF, constitutional AI, guardrails — alignment and safety infrastructure",
+        1185.0, // Harmonic of 396 × 3 — liberation through safety
+        { base = 1.0; exponent = 2; unit = "constraints" },
+        [#MICRO_REWARD_SIGNAL, #MICRO_SAFETY_GATE, #MICRO_ALIGNMENT_CHECK],
+        "TAFT_FLOOR_SAFETY"
       ),
     ];
 
@@ -346,6 +393,105 @@ module {
         { base = 1.0; exponent = 4; unit = "samples/s" },
         "TAFT_MICRO_ENTROPY_SAMPLER"
       ),
+      // ═══════════════════════════════════════════════════════════════════════════
+      // V2 NEW MICROS (13-20) — Scaling, Memory, Reasoning, Safety Weavers
+      // ═══════════════════════════════════════════════════════════════════════════
+      // 13. MICRO_TENSOR_SHARD — Distributes tensors across devices
+      mkMicro(
+        #MICRO_TENSOR_SHARD,
+        "MICRO_TENSOR_SHARD",
+        "Micro Fragmentum Tensoris",
+        "Distributes tensors across devices — model parallelism coordination",
+        #FLOOR_PARAMETERS,
+        #FLOOR_SCALING,
+        1,
+        { base = 1.0; exponent = 9; unit = "shards/s" },
+        "TAFT_MICRO_TENSOR_SHARD"
+      ),
+      // 14. MICRO_PIPELINE_STAGE — Pipeline parallel layer staging
+      mkMicro(
+        #MICRO_PIPELINE_STAGE,
+        "MICRO_PIPELINE_STAGE",
+        "Micro Gradus Canalis",
+        "Pipeline parallel layer staging — micro-batch scheduling across devices",
+        #FLOOR_SCALING,
+        #FLOOR_FEEDFORWARD,
+        1,
+        { base = 1.0; exponent = 6; unit = "stages/s" },
+        "TAFT_MICRO_PIPELINE_STAGE"
+      ),
+      // 15. MICRO_CACHE_EVICT — KV cache eviction policy
+      mkMicro(
+        #MICRO_CACHE_EVICT,
+        "MICRO_CACHE_EVICT",
+        "Micro Ejectio Memoriae",
+        "KV cache eviction policy — memory management during long contexts",
+        #FLOOR_MEMORY,
+        #FLOOR_ATTENTION,
+        2, // fires every 2 beats
+        { base = 1.0; exponent = 7; unit = "evictions/s" },
+        "TAFT_MICRO_CACHE_EVICT"
+      ),
+      // 16. MICRO_MEMORY_COMPRESS — Activation checkpointing
+      mkMicro(
+        #MICRO_MEMORY_COMPRESS,
+        "MICRO_MEMORY_COMPRESS",
+        "Micro Compressio Activationis",
+        "Activation checkpointing — memory efficiency through recomputation",
+        #FLOOR_FEEDFORWARD,
+        #FLOOR_MEMORY,
+        3, // fires every 3 beats
+        { base = 1.0; exponent = 8; unit = "checkpoints/s" },
+        "TAFT_MICRO_MEMORY_COMPRESS"
+      ),
+      // 17. MICRO_THOUGHT_CHAIN — Chain-of-thought reasoning links
+      mkMicro(
+        #MICRO_THOUGHT_CHAIN,
+        "MICRO_THOUGHT_CHAIN",
+        "Micro Catena Cogitationis",
+        "Chain-of-thought reasoning links — deliberative inference steps",
+        #FLOOR_EMERGENT,
+        #FLOOR_REASONING,
+        1,
+        { base = 1.0; exponent = 4; unit = "thoughts/s" },
+        "TAFT_MICRO_THOUGHT_CHAIN"
+      ),
+      // 18. MICRO_REWARD_SIGNAL — RLHF reward propagation
+      mkMicro(
+        #MICRO_REWARD_SIGNAL,
+        "MICRO_REWARD_SIGNAL",
+        "Micro Signum Praemii",
+        "RLHF reward propagation — human preference learning signals",
+        #FLOOR_TRAINING_CORPUS,
+        #FLOOR_SAFETY,
+        2, // fires every 2 beats
+        { base = 1.0; exponent = 5; unit = "rewards/s" },
+        "TAFT_MICRO_REWARD_SIGNAL"
+      ),
+      // 19. MICRO_SAFETY_GATE — Constitutional AI filtering
+      mkMicro(
+        #MICRO_SAFETY_GATE,
+        "MICRO_SAFETY_GATE",
+        "Micro Porta Custodiae",
+        "Constitutional AI filtering — content safety gating",
+        #FLOOR_SAFETY,
+        #FLOOR_EMERGENT,
+        1,
+        { base = 1.0; exponent = 6; unit = "checks/s" },
+        "TAFT_MICRO_SAFETY_GATE"
+      ),
+      // 20. MICRO_ALIGNMENT_CHECK — Human preference alignment
+      mkMicro(
+        #MICRO_ALIGNMENT_CHECK,
+        "MICRO_ALIGNMENT_CHECK",
+        "Micro Verificatio Alignamenti",
+        "Human preference alignment — behavioral alignment verification",
+        #FLOOR_REASONING,
+        #FLOOR_SAFETY,
+        1,
+        { base = 1.0; exponent = 5; unit = "alignments/s" },
+        "TAFT_MICRO_ALIGNMENT_CHECK"
+      ),
     ];
 
     {
@@ -477,7 +623,8 @@ module {
     for (m in newMicros.vals()) { microSum += m.signalStrength };
     
     // System coherence = PHI-weighted combination of floor and micro signals
-    let systemCoh = clamp01((floorSum / 8.0 + microSum / 12.0) / 2.0 * PHI_INV);
+    // V2: Updated from 8 floors/12 micros to 12 floors/20 micros
+    let systemCoh = clamp01((floorSum / 12.0 + microSum / 20.0) / 2.0 * PHI_INV);
     
     // Coherence delta for main.mo compound coherence
     let coherenceDelta = systemCoh * 0.01;
@@ -599,6 +746,7 @@ module {
   };
 
   // ── QUERY: GET WEAVE REPORTS ───────────────────────────────────────────────
+  // V2: Updated to include 4 new floors
   func floorIdToName(id : IntelligenceFloorId) : Text {
     switch (id) {
       case (#FLOOR_PARAMETERS)     { "FLOOR_PARAMETERS" };
@@ -609,6 +757,11 @@ module {
       case (#FLOOR_EMBEDDINGS)     { "FLOOR_EMBEDDINGS" };
       case (#FLOOR_TRAINING_CORPUS){ "FLOOR_TRAINING_CORPUS" };
       case (#FLOOR_EMERGENT)       { "FLOOR_EMERGENT" };
+      // V2 New Floors
+      case (#FLOOR_SCALING)        { "FLOOR_SCALING" };
+      case (#FLOOR_MEMORY)         { "FLOOR_MEMORY" };
+      case (#FLOOR_REASONING)      { "FLOOR_REASONING" };
+      case (#FLOOR_SAFETY)         { "FLOOR_SAFETY" };
     }
   };
 

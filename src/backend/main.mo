@@ -136,6 +136,7 @@ import POTypes               "types/polyglotOrganisms";
 import POLib                 "lib/polyglotOrganisms";
 import IFTypes               "types/intelligenceFloors";
 import IFLib                 "lib/intelligenceFloors";
+import CharterIFLib          "charters/CharterIntelligenceFloors";
 
 
 
@@ -788,6 +789,13 @@ actor SovereignWarSim {
   //
   // Attribution: Alfredo Medina Hernandez | SOVEREIGN | May 2026
   stable var intelligenceFloorsState : IFTypes.IntelligenceFloorsState = IFLib.initState();
+
+  // ── B2.6b — CHARTER: INTELLIGENCE FLOORS V2 ──────────────────────────────
+  // CHARTER-IF-V2-001 — PHI-Resonant Governance for Intelligence Floors
+  // 20 Protocols × 5 Articles governing the 12 Floors and 20 AI Micros.
+  // Protocols advance each heartbeat, strength grows with coherence.
+  // Attribution: Alfredo Medina Hernandez | SOVEREIGN | May 2026
+  stable var charterIFState : CharterIFLib.CharterState = CharterIFLib.init();
 
   // ── B2.7 — STREAM_SOVEREIGN ────────────────────────────────────────────
   // Dedicated processing stream inside the SOVEREIGN organism's own runtime.
@@ -3905,15 +3913,24 @@ actor SovereignWarSim {
     autonomousAIState := AILib.advanceHeartbeat(autonomousAIState, beat);
 
     // ── INTELLIGENCE FLOORS & AI MICROS — LLM Architecture Weavers ─────────────
-    // 8 floors advance: PARAMETERS, ATTENTION, FEEDFORWARD, NORMALIZATION,
-    // TOKENIZATION, EMBEDDINGS, TRAINING_CORPUS, EMERGENT.
-    // 12 micros weave between floors: GRADIENT_FLOW, RESIDUAL_STREAM, etc.
+    // V2: 12 floors advance: PARAMETERS, ATTENTION, FEEDFORWARD, NORMALIZATION,
+    // TOKENIZATION, EMBEDDINGS, TRAINING_CORPUS, EMERGENT, SCALING, MEMORY, REASONING, SAFETY.
+    // 20 micros weave between floors: GRADIENT_FLOW, RESIDUAL_STREAM, KEY_VALUE, etc.
     // Coherence delta folds into compoundCoherence.
     let (newIFState, ifDelta) = IFLib.advance(
       intelligenceFloorsState, beat, globalCoherence, doctrineScoreEarly / 100.0,
     );
     intelligenceFloorsState := newIFState;
     compoundCoherence += ifDelta;
+
+    // ── CHARTER: INTELLIGENCE FLOORS V2 ──────────────────────────────────────────
+    // 20 protocols × 5 tiers govern the 12 floors and 20 micros.
+    // Charter coherence delta folds into compoundCoherence.
+    let (newCharterIFState, charterIFDelta) = CharterIFLib.advance(
+      charterIFState, beat, globalCoherence, doctrineScoreEarly / 100.0,
+    );
+    charterIFState := newCharterIFState;
+    compoundCoherence += charterIFDelta;
 
     // Disconnected engine #2: quality scores computed but never re-injected.
     // After Ring 5 fires, re-inject quality weights into production queue state.
@@ -8647,6 +8664,42 @@ actor SovereignWarSim {
   /// Get total micro signal
   public query func getTotalMicroSignal() : async Float {
     intelligenceFloorsState.totalMicroSignal
+  };
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // CHARTER: INTELLIGENCE FLOORS V2 ENDPOINTS
+  // 20 protocols × 5 articles governing 12 floors + 20 micros
+  // Attribution: Alfredo Medina Hernandez | SOVEREIGN | May 2026
+  // ══════════════════════════════════════════════════════════════════════════
+
+  /// Get Charter Intelligence Floors summary
+  public query func getCharterIFSummary() : async CharterIFLib.CharterSummary {
+    CharterIFLib.getSummary(charterIFState)
+  };
+
+  /// Get all 20 protocol snapshots
+  public query func getCharterIFProtocols() : async [CharterIFLib.ProtocolSnapshot] {
+    CharterIFLib.getAllProtocols(charterIFState)
+  };
+
+  /// Get protocol by ID (1-20)
+  public query func getCharterIFProtocolById(id : Nat) : async ?CharterIFLib.ProtocolSnapshot {
+    CharterIFLib.getProtocolById(charterIFState, id)
+  };
+
+  /// Get all 5 charter articles
+  public query func getCharterIFArticles() : async [CharterIFLib.CharterArticle] {
+    CharterIFLib.getArticles(charterIFState)
+  };
+
+  /// Get charter coherence score
+  public query func getCharterIFCoherence() : async Float {
+    charterIFState.coherenceScore
+  };
+
+  /// Get charter total protocol strength
+  public query func getCharterIFTotalStrength() : async Float {
+    charterIFState.totalStrength
   };
 
   // ══════════════════════════════════════════════════════════════════════════
