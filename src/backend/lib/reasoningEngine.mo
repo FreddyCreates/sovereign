@@ -309,14 +309,14 @@ module {
 
   public func createAttentionNode(
     nodeId : Nat,
-    label : Text,
+    nodeLabel : Text,
     attention : Float,
     beat : Nat,
     linkedArtifacts : [Nat]
   ) : RETypes.AttentionNode {
     {
       nodeId = nodeId;
-      label = label;
+      label = nodeLabel;
       attention = clampUnit(attention);
       activeBeat = beat;
       decayRate = PHI_INV;

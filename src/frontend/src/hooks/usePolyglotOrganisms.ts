@@ -8,7 +8,13 @@ import { useCallback, useEffect, useState } from "react";
 // TYPES
 // ═══════════════════════════════════════════════════════════════════════════════
 
-export type IntelligenceTier = "NGI" | "AGI" | "AASI" | "AI" | "PROTOCOL" | "HYBRID";
+export type IntelligenceTier =
+  | "NGI"
+  | "AGI"
+  | "AASI"
+  | "AI"
+  | "PROTOCOL"
+  | "HYBRID";
 
 export type PolyglotLanguage =
   | "julia"
@@ -75,31 +81,67 @@ export const PHI = 1.6180339887498948482;
 // biome-ignore lint/correctness/noPrecisionLoss: PHI sovereign constant — full 19-digit precision required by doctrine
 export const PHI_INV = 0.6180339887498948482;
 export const SOLFEGGIO = [174, 285, 396, 417, 432, 528, 639, 741, 852, 963];
-export const FIBONACCI = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610];
+export const FIBONACCI = [
+  1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610,
+];
 
-export const TIER_CONFIG: Record<IntelligenceTier, { engines: string[]; color: string }> = {
+export const TIER_CONFIG: Record<
+  IntelligenceTier,
+  { engines: string[]; color: string }
+> = {
   NGI: {
-    engines: ["NEXUS_PRIME", "COSMOS_WEAVER", "QUANTUM_ORACLE", "SOVEREIGN_MIND"],
+    engines: [
+      "NEXUS_PRIME",
+      "COSMOS_WEAVER",
+      "QUANTUM_ORACLE",
+      "SOVEREIGN_MIND",
+    ],
     color: "#FFD700",
   },
   AGI: {
-    engines: ["LOGOS_SYNTHESIS", "NOUS_ARCHITECT", "SOPHIA_CATALYST", "TECHNE_BUILDER"],
+    engines: [
+      "LOGOS_SYNTHESIS",
+      "NOUS_ARCHITECT",
+      "SOPHIA_CATALYST",
+      "TECHNE_BUILDER",
+    ],
     color: "#7B68EE",
   },
   AASI: {
-    engines: ["PHOENIX_ADAPTIVE", "HYDRA_EVOLVE", "CHIMERA_FLUX", "SPHINX_GUARD"],
+    engines: [
+      "PHOENIX_ADAPTIVE",
+      "HYDRA_EVOLVE",
+      "CHIMERA_FLUX",
+      "SPHINX_GUARD",
+    ],
     color: "#FF6347",
   },
   AI: {
-    engines: ["ATLAS_CORE", "PROMETHEUS_LEARN", "HERMES_COMM", "ATHENA_STRATEGY"],
+    engines: [
+      "ATLAS_CORE",
+      "PROMETHEUS_LEARN",
+      "HERMES_COMM",
+      "ATHENA_STRATEGY",
+    ],
     color: "#20B2AA",
   },
   PROTOCOL: {
-    engines: ["PHI_RESONANCE", "FIBONACCI_WEAVE", "GOLDEN_SYNC", "SOVEREIGN_MESH"],
+    engines: [
+      "PHI_RESONANCE",
+      "FIBONACCI_WEAVE",
+      "GOLDEN_SYNC",
+      "SOVEREIGN_MESH",
+    ],
     color: "#9370DB",
   },
   HYBRID: {
-    engines: ["OMEGA_SYNTHESIS", "GENESIS_ADAPTIVE", "NEXUS_CORE", "PROTOCOL_MIND", "SOVEREIGN_UNITY"],
+    engines: [
+      "OMEGA_SYNTHESIS",
+      "GENESIS_ADAPTIVE",
+      "NEXUS_CORE",
+      "PROTOCOL_MIND",
+      "SOVEREIGN_UNITY",
+    ],
     color: "#FF8C00",
   },
 };
@@ -125,13 +167,15 @@ export function kuramotoOrderParameter(phases: number[]): number {
 }
 
 export function computeUnifiedField(engines: LanguageEngine[]): number {
-  const active = engines.filter(e => e.active);
+  const active = engines.filter((e) => e.active);
   if (active.length === 0) return 0;
   const weightedSum = active.reduce(
-    (s, e) => s + e.signal * e.coherence * phiWeight(e.rank) * e.hebbianWeight, 0
+    (s, e) => s + e.signal * e.coherence * phiWeight(e.rank) * e.hebbianWeight,
+    0,
   );
   const totalWeight = active.reduce(
-    (s, e) => s + phiWeight(e.rank) * e.hebbianWeight, 0
+    (s, e) => s + phiWeight(e.rank) * e.hebbianWeight,
+    0,
   );
   return totalWeight > 0 ? weightedSum / totalWeight : 0;
 }
@@ -222,11 +266,19 @@ export function usePolyglotOrganisms(): UsePolyglotOrganismsReturn {
   }, [refresh]);
 
   const getEnginesByTier = useCallback(
-    (tier: IntelligenceTier) => snapshots.filter(s => s.tier === tier),
-    [snapshots]
+    (tier: IntelligenceTier) => snapshots.filter((s) => s.tier === tier),
+    [snapshots],
   );
 
-  return { summary, snapshots, busState, loading, error, refresh, getEnginesByTier };
+  return {
+    summary,
+    snapshots,
+    busState,
+    loading,
+    error,
+    refresh,
+    getEnginesByTier,
+  };
 }
 
 export default usePolyglotOrganisms;
