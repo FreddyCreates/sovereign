@@ -262,9 +262,150 @@ class MEMORIA_CONTEXTA {
 // ─── SYNTHETIS_RESPONSIO — Response generation & synthesis ───────────────────
 
 class ResponseGenerator {
-  generate(_input: ChatInput, context: string[]): string {
-    const ctx = context.slice(0, 2).join(", ") || "none";
-    return `[SOVEREIGN SYNTHESIS] Input received. Doctrine context: ${ctx}. Processing through ADRE cycle.`;
+  private readonly stopWords = new Set([
+    "a",
+    "an",
+    "and",
+    "are",
+    "as",
+    "at",
+    "be",
+    "by",
+    "for",
+    "from",
+    "how",
+    "i",
+    "in",
+    "is",
+    "it",
+    "of",
+    "on",
+    "or",
+    "the",
+    "to",
+    "what",
+    "when",
+    "where",
+    "why",
+    "with",
+    "you",
+  ]);
+
+  private extractKeywords(text: string): string[] {
+    const counts = new Map<string, number>();
+    for (const token of text.toLowerCase().match(/[a-z0-9_-]+/g) ?? []) {
+      if (token.length < 3 || this.stopWords.has(token)) continue;
+      counts.set(token, (counts.get(token) ?? 0) + 1);
+    }
+    return [...counts.entries()]
+      .sort((a, b) => b[1] - a[1] || b[0].length - a[0].length)
+      .slice(0, 4)
+      .map(([token]) => token);
+  }
+
+  private inferTopic(keywords: string[]): string {
+    if (
+      keywords.some((keyword) => /law|doctrine|phi|heartbeat/.test(keyword))
+    ) {
+      return "doctrine";
+    }
+    if (
+      keywords.some((keyword) =>
+        /code|build|engine|model|layer|agent|logic/.test(keyword),
+      )
+    ) {
+      return "implementation";
+    }
+    if (
+      keywords.some((keyword) =>
+        /analyze|review|assess|trace|debug|issue|error/.test(keyword),
+      )
+    ) {
+      return "analysis";
+    }
+    if (
+      keywords.some((keyword) =>
+        /route|plan|next|task|execute|deploy|launch/.test(keyword),
+      )
+    ) {
+      return "execution";
+    }
+    return "general";
+  }
+
+  private normalizeContext(context: string[]): string[] {
+    return context
+      .map((entry) =>
+        entry
+          .replace("[CONTEXT:", "")
+          .replace("]", "")
+          .replaceAll("_", " ")
+          .trim(),
+      )
+      .filter(Boolean)
+      .slice(0, 2);
+  }
+
+  private buildOpening(
+    intent: string,
+    topic: string,
+    keywords: string[],
+  ): string {
+    const focus = keywords.join(", ") || "the active signal";
+    if (intent.includes("CREATE")) {
+      return `Building from ${focus}. The current branch of the decision tree points toward a ${topic} artifact rather than a generic reply.`;
+    }
+    if (intent.includes("ANALYZE")) {
+      return `Analysis path selected. The signal clusters around ${focus}, so the agent is inspecting ${topic} structure first.`;
+    }
+    if (intent.includes("EXECUTE")) {
+      return `Execution path selected. ${focus} carries enough priority to route into a ${topic} action sequence.`;
+    }
+    if (intent.includes("DIRECT")) {
+      return `Guidance path selected. ${focus} becomes the lead thread for the next decision branch.`;
+    }
+    return `Query path selected. ${focus} defines the current ${topic} question.`;
+  }
+
+  private buildEvidence(keywords: string[], context: string[]): string {
+    const keywordSignal =
+      keywords.length > 0
+        ? `Keyword heuristic: ${keywords.join(" → ")}.`
+        : "Keyword heuristic: low-signal input, keeping a broad doctrine stance.";
+    const contextSignal =
+      context.length > 0
+        ? `Memory links: ${context.join(" · ")}.`
+        : "Memory links: no retained context, responding from first-turn rules.";
+    return `${keywordSignal} ${contextSignal}`;
+  }
+
+  private buildRecommendation(
+    intent: string,
+    topic: string,
+    keywords: string[],
+  ): string {
+    const dominant = keywords[0] ?? topic;
+    if (intent.includes("CREATE")) {
+      return `Next move: synthesize a compact ${topic} output around ${dominant}, then refine with the next strongest keyword.`;
+    }
+    if (intent.includes("ANALYZE")) {
+      return `Next move: verify assumptions around ${dominant}, score coherence, and surface the highest-variance branch.`;
+    }
+    if (intent.includes("EXECUTE")) {
+      return `Next move: route ${dominant} into the smallest executable step and keep fallback rules active.`;
+    }
+    return `Next move: answer directly, keep ${dominant} as the anchor, and avoid branches unsupported by the current signal.`;
+  }
+
+  generate(input: ChatInput, context: string[], intent: string): string {
+    const text = input.text?.trim() ?? "";
+    const keywords = this.extractKeywords(text);
+    const topic = this.inferTopic(keywords);
+    const normalizedContext = this.normalizeContext(context);
+    const opening = this.buildOpening(intent, topic, keywords);
+    const evidence = this.buildEvidence(keywords, normalizedContext);
+    const recommendation = this.buildRecommendation(intent, topic, keywords);
+    return `${opening} ${evidence} ${recommendation}`;
   }
 }
 
@@ -319,7 +460,7 @@ class SYNTHETIS_RESPONSIO {
     register: string,
     intent: string,
   ): string {
-    const raw = this.generator.generate(input, context);
+    const raw = this.generator.generate(input, context, intent);
     const toned = this.toneAdapter.adapt(raw, emotion, register);
     return this.lengthOptimizer.optimize(toned, intent);
   }
