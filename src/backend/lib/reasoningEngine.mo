@@ -316,7 +316,7 @@ module {
   ) : RETypes.AttentionNode {
     {
       nodeId = nodeId;
-      label = nodeLabel;
+      nodeLabel = nodeLabel;
       attention = clampUnit(attention);
       activeBeat = beat;
       decayRate = PHI_INV;
