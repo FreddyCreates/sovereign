@@ -28,6 +28,7 @@ import { useActor } from "./useActor";
 // ── CONSTANTS ─────────────────────────────────────────────────────────────────
 
 const HEARTBEAT_MS = 873;
+// biome-ignore lint/correctness/noPrecisionLoss: PHI sovereign constant — full 19-digit precision required by doctrine
 const PHI = 1.6180339887498948482;
 const NOVA_VELOCITY = 830.0; // mm/s — the sovereign coherence velocity
 
