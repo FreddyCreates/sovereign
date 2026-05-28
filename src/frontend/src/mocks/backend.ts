@@ -3400,5 +3400,13 @@ export const mockBackend: backendInterface = {
   getIntelligenceFloorsCoherence: async () => 0.0,
   getTotalFloorSignal: async () => 6.0,
   getTotalMicroSignal: async () => 0.0,
+  // ── ALPHA ORCHESTRATORS ──────────────────────────────────────────────────
+  getAlphaOrchestrators: async () => [],
+  getAlphaOrchestratorsTotalSignal: async () => 6.0,
+  getAlphaOrchestratorsAvgCoordination: async () => 0.75,
+  // ── ALPHA CONDUCTORS ─────────────────────────────────────────────────────
+  getAlphaConductors: async () => [],
+  getAlphaConductorsTotalSignal: async () => 6.0,
+  getAlphaConductorsAvgFidelity: async () => 0.75,
 };
 
