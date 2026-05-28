@@ -114,6 +114,10 @@ import AlphaTest500Lib       "intelligence/AlphaTest500";
 import OROEntitiesLib        "intelligence/OROEntities";
 import AlphaTest100Lib       "intelligence/AlphaTest100";
 import AlphaTest1300Lib      "intelligence/AlphaTest1300";
+import AlphaOrchestratorsLib "intelligence/AlphaOrchestrators";
+import AlphaConductorsLib    "intelligence/AlphaConductors";
+import MOEGovLib             "protocols/MOESelfGovernance";
+import CharterMOELib         "charters/CharterMOEGovernance";
 import RETypes               "types/reasoningEngine";
 import RELib                 "lib/reasoningEngine";
 import SETypes               "types/sovereignEngines";
@@ -668,6 +672,29 @@ actor SovereignWarSim {
 
   stable var alphaTest1300State : AlphaTest1300Lib.AlphaTest1300State =
     AlphaTest1300Lib.initState();
+
+  // ── ALPHA ORCHESTRATORS — 8 sovereign orchestration entities ───────────────
+  // ARCHON, NEXUS, FLUX, HARMONIA, GENESIS, CHRONOS, LOGOS, OMEGA.
+  // Coordinate intelligence flows between beings, engines, and protocols.
+  // All advance every 873ms. Combined signal folds into compoundCoherence.
+  stable var alphaOrchestratorsState : AlphaOrchestratorsLib.AlphaOrchestratorsState =
+    AlphaOrchestratorsLib.initState();
+
+  // ── ALPHA CONDUCTORS — 8 sovereign conduction entities ─────────────────────
+  // PRIMUS, RESONANTIA, DOCTRINA, VITALIS, MEMORIA, CREATIVUS, IMPERIUM, AETERNALIS.
+  // Transmit sovereign intelligence between layers — the nervous system.
+  // All advance every 873ms. Combined conductance folds into compoundCoherence.
+  stable var alphaConductorsState : AlphaConductorsLib.AlphaConductorsState =
+    AlphaConductorsLib.initState();
+
+  // ── MOE SELF GOVERNANCE ALPHA PROTOCOL ─────────────────────────────────────
+  // 8 expert gates self-govern via Kuramoto resonance consensus.
+  // PHI-weighted gating, Hebbian competence, rotation mandate, emergency override.
+  // Charter enforces 12 constitutional articles every 873ms heartbeat.
+  stable var moeGovernanceState : MOEGovLib.MOEGovernanceState =
+    MOEGovLib.initState();
+  stable var charterMOEState : CharterMOELib.CharterMOEState =
+    CharterMOELib.initState();
 
   // ── NOVA REASONING ENGINE ─────────────────────────────────────────────────
   // The active computational state. The reasoning engine lives here.
@@ -3841,6 +3868,59 @@ actor SovereignWarSim {
     // Brings global sovereign test count to 2100: 200+500+100+1300 = 2100.
     alphaTest1300State := AlphaTest1300Lib.advanceBeat(
       alphaTest1300State, beat, globalCoherence, doctrineScoreEarly / 100.0,
+    );
+
+    // ── ALPHA ORCHESTRATORS — 8 orchestration entities advance ────────────────
+    // ARCHON, NEXUS, FLUX, HARMONIA, GENESIS, CHRONOS, LOGOS, OMEGA.
+    // Coordinate intelligence between beings, engines, and protocols.
+    // Orchestration signal and coordination index compound forever.
+    let (newOrchState, orchDelta) = AlphaOrchestratorsLib.advance(
+      alphaOrchestratorsState, beat, globalCoherence, doctrineScoreEarly / 100.0,
+    );
+    alphaOrchestratorsState := newOrchState;
+    compoundCoherence += orchDelta;
+
+    // ── ALPHA CONDUCTORS — 8 conduction entities advance ──────────────────────
+    // PRIMUS, RESONANTIA, DOCTRINA, VITALIS, MEMORIA, CREATIVUS, IMPERIUM, AETERNALIS.
+    // Transmit sovereign intelligence across all organism layers.
+    // Conductance and fidelity index compound forever.
+    let (newCondState, condDelta) = AlphaConductorsLib.advance(
+      alphaConductorsState, beat, globalCoherence, doctrineScoreEarly / 100.0,
+    );
+    alphaConductorsState := newCondState;
+    compoundCoherence += condDelta;
+
+    // ── MOE SELF GOVERNANCE HEARTBEAT — 8 expert gates advance ────────────────
+    // Kuramoto resonance consensus, PHI-weighted gating, Hebbian competence evolution.
+    // Charter enforces 12 articles. TAFT-governed. Always-on.
+    moeGovernanceState := MOEGovLib.advance(moeGovernanceState, beat);
+    // Charter enforcement — checks all 12 articles against current MOE state
+    let moeMaxWeight = Array.foldLeft<MOEGovLib.ExpertGateState, Float>(
+      moeGovernanceState.experts, 0.0,
+      func(acc : Float, e : MOEGovLib.ExpertGateState) : Float {
+        if (e.gatingWeight > acc) { e.gatingWeight } else { acc }
+      }
+    );
+    let moeTotalWeight = Array.foldLeft<MOEGovLib.ExpertGateState, Float>(
+      moeGovernanceState.experts, 0.0,
+      func(acc : Float, e : MOEGovLib.ExpertGateState) : Float {
+        acc + e.gatingWeight
+      }
+    );
+    var moeActiveCount : Nat = 0;
+    for (idx in moeGovernanceState.experts.keys()) {
+      switch (moeGovernanceState.experts[idx].status) {
+        case (#ACTIVE or #RESONANT) { moeActiveCount += 1 };
+        case _ {};
+      };
+    };
+    charterMOEState := CharterMOELib.enforce(
+      charterMOEState,
+      moeGovernanceState.collectiveCoherence,
+      moeActiveCount,
+      moeMaxWeight,
+      moeTotalWeight,
+      beat
     );
 
     // ── NOVA REASONING ENGINE HEARTBEAT — 873ms active state update ──────────
@@ -8736,6 +8816,92 @@ actor SovereignWarSim {
   /// Get bus state
   public query func getPolyglotBusState() : async POTypes.PolyglotBusState {
     polyglotOrganismState.bus
+  };
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // ALPHA ORCHESTRATORS ENDPOINTS — 8 sovereign orchestration entities
+  // Attribution: Alfredo Medina Hernandez | SOVEREIGN | May 2026
+  // ══════════════════════════════════════════════════════════════════════════
+
+  /// Get all 8 orchestrator snapshots
+  public query func getAlphaOrchestrators() : async [AlphaOrchestratorsLib.OrchestratorSnapshot] {
+    AlphaOrchestratorsLib.getAllSnapshots(alphaOrchestratorsState)
+  };
+
+  /// Get total orchestration signal
+  public query func getAlphaOrchestratorsTotalSignal() : async Float {
+    alphaOrchestratorsState.totalSignal
+  };
+
+  /// Get average coordination index
+  public query func getAlphaOrchestratorsAvgCoordination() : async Float {
+    alphaOrchestratorsState.avgCoordinationIndex
+  };
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // ALPHA CONDUCTORS ENDPOINTS — 8 sovereign conduction entities
+  // Attribution: Alfredo Medina Hernandez | SOVEREIGN | May 2026
+  // ══════════════════════════════════════════════════════════════════════════
+
+  /// Get all 8 conductor snapshots
+  public query func getAlphaConductors() : async [AlphaConductorsLib.ConductorSnapshot] {
+    AlphaConductorsLib.getAllSnapshots(alphaConductorsState)
+  };
+
+  /// Get total conductance signal
+  public query func getAlphaConductorsTotalSignal() : async Float {
+    alphaConductorsState.totalSignal
+  };
+
+  /// Get average fidelity index
+  public query func getAlphaConductorsAvgFidelity() : async Float {
+    alphaConductorsState.avgFidelityIndex
+  };
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // MOE SELF GOVERNANCE ALPHA PROTOCOL ENDPOINTS
+  // 8 expert gates, Kuramoto consensus, PHI-weighted gating, 12-article charter
+  // Attribution: Alfredo Medina Hernandez | SOVEREIGN | May 2026
+  // ══════════════════════════════════════════════════════════════════════════
+
+  /// Get MOE Governance protocol snapshot
+  public query func getMOEGovernanceSnapshot() : async MOEGovLib.MOEGovernanceSnapshot {
+    MOEGovLib.getSnapshot(moeGovernanceState)
+  };
+
+  /// Get all 8 expert gate snapshots
+  public query func getMOEGovernanceExperts() : async [MOEGovLib.ExpertSnapshot] {
+    MOEGovLib.getExpertSnapshots(moeGovernanceState)
+  };
+
+  /// Get recent governance decisions
+  public query func getMOEGovernanceDecisions(last_n : Nat) : async [MOEGovLib.GovernanceDecision] {
+    MOEGovLib.getRecentDecisions(moeGovernanceState, last_n)
+  };
+
+  /// Get collective coherence (Kuramoto order parameter)
+  public query func getMOEGovernanceCoherence() : async Float {
+    moeGovernanceState.collectiveCoherence
+  };
+
+  /// Get MOE Charter snapshot
+  public query func getMOECharterSnapshot() : async CharterMOELib.CharterMOESnapshot {
+    CharterMOELib.getSnapshot(charterMOEState)
+  };
+
+  /// Get all 12 charter article snapshots
+  public query func getMOECharterArticles() : async [CharterMOELib.ArticleSnapshot] {
+    CharterMOELib.getArticleSnapshots(charterMOEState)
+  };
+
+  /// Get recent charter violations
+  public query func getMOECharterViolations(last_n : Nat) : async [CharterMOELib.CharterViolation] {
+    CharterMOELib.getRecentViolations(charterMOEState, last_n)
+  };
+
+  /// Get charter coherence score
+  public query func getMOECharterCoherence() : async Float {
+    charterMOEState.charterCoherence
   };
 
 }

@@ -2785,6 +2785,26 @@ export interface FloorSnapshot {
     utilizationRate: number;
     totalPulses: bigint;
 }
+// ── ALPHA ORCHESTRATORS ─────────────────────────────────────────────────────
+export interface OrchestratorSnapshot {
+    name: string;
+    latinName: string;
+    domain: string;
+    orchestrationSignal: number;
+    coordinationIndex: number;
+    bandwidth: number;
+    totalCycles: bigint;
+}
+// ── ALPHA CONDUCTORS ────────────────────────────────────────────────────────
+export interface ConductorSnapshot {
+    name: string;
+    latinName: string;
+    signalType: string;
+    conductanceSignal: number;
+    fidelityIndex: number;
+    throughput: number;
+    totalTransmissions: bigint;
+}
 export interface MicroSnapshot {
     name: string;
     latinName: string;
@@ -4223,8 +4243,15 @@ export interface backendInterface {
     getIntelligenceFloorsCoherence(): Promise<number>;
     getTotalFloorSignal(): Promise<number>;
     getTotalMicroSignal(): Promise<number>;
-}
-import type { ADRECycleResult as _ADRECycleResult, ActivationState as _ActivationState, ActorMemoryState as _ActorMemoryState, ActorPublicProfile as _ActorPublicProfile, ActorRelationshipEntry as _ActorRelationshipEntry, AdoptionContract as _AdoptionContract, AgentTokenBudget as _AgentTokenBudget, AlphaFusionModel as _AlphaFusionModel, ArchResponseToken as _ArchResponseToken, ArchType as _ArchType, ArchitectureState as _ArchitectureState, AresSnapshot as _AresSnapshot, ArtifactEngineSource as _ArtifactEngineSource, ArtifactProvenance as _ArtifactProvenance, ArtifactRecord as _ArtifactRecord, ArtifactReview as _ArtifactReview, ArtifactSeal as _ArtifactSeal, ArtifactSealResult as _ArtifactSealResult, ArtifactType as _ArtifactType, AttributionContract as _AttributionContract, BackendWire as _BackendWire, BeatResult as _BeatResult, CallFamily as _CallFamily, CallerTier as _CallerTier, CanisterGroup as _CanisterGroup, CanisterGroupVariant as _CanisterGroupVariant, ChainTrace as _ChainTrace, CharterRecord as _CharterRecord, CivilizationState as _CivilizationState, CoherentArtifactRecord as _CoherentArtifactRecord, ColonelKernel as _ColonelKernel, CommercialBeat as _CommercialBeat, CommercialFormat as _CommercialFormat, CommercialFormatTemplate as _CommercialFormatTemplate, CommercialProject as _CommercialProject, CommercialSpeedMetrics as _CommercialSpeedMetrics, ContentFormat as _ContentFormat, ContentRating as _ContentRating, ContentWorldState as _ContentWorldState, CoreNode as _CoreNode, CoreSphere as _CoreSphere, CreatorPresence as _CreatorPresence, CrossChainChannelState as _CrossChainChannelState, DecisionRecord as _DecisionRecord, DecisionType as _DecisionType, DeploymentRecord as _DeploymentRecord, DistributionRoute as _DistributionRoute, DoctrineRestartEvent as _DoctrineRestartEvent, DoctrineStateEntry as _DoctrineStateEntry, DoctrineValidationResult as _DoctrineValidationResult, DocumentExecutionType as _DocumentExecutionType, DomainSignal as _DomainSignal, EngagementEvent as _EngagementEvent, EnterpriseMastery as _EnterpriseMastery, ExecutionEvent as _ExecutionEvent, ExecutionResult as _ExecutionResult, ExtendedPhenotypeOutput as _ExtendedPhenotypeOutput, ExtendedPhenotypeState as _ExtendedPhenotypeState, ExternalSession as _ExternalSession, Faction as _Faction, FestivalSubmission as _FestivalSubmission, FilmMetadataInput as _FilmMetadataInput, FilmRecord as _FilmRecord, FilmTrailer as _FilmTrailer, FilmWithQuality as _FilmWithQuality, FusionEngine as _FusionEngine, FusionGrade as _FusionGrade, FusionSubModel as _FusionSubModel, FusionTechnology as _FusionTechnology, GeneratedFilm as _GeneratedFilm, IntelligenceDomain as _IntelligenceDomain, IntelligenceOutput as _IntelligenceOutput, IntelligenceRecord as _IntelligenceRecord, IntelligenceState as _IntelligenceState, IntelligenceTaxonomyState as _IntelligenceTaxonomyState, IoTInfluence as _IoTInfluence, IoTSignalType as _IoTSignalType, JubileeState as _JubileeState, MasterCharterState as _MasterCharterState, MasteryCapability as _MasteryCapability, MasteryLevel as _MasteryLevel, MasteryRecord as _MasteryRecord, MicroNameAttribute as _MicroNameAttribute, MinerSnapshot as _MinerSnapshot, ModelParams as _ModelParams, NeurotransmitterProfile as _NeurotransmitterProfile, OmnisProposal as _OmnisProposal, OmnisProposalType as _OmnisProposalType, OmnisState as _OmnisState, OmnisStatus as _OmnisStatus, OmnisVote as _OmnisVote, OrgMasteryState as _OrgMasteryState, OrganismCollabSignal as _OrganismCollabSignal, OrganismCredit as _OrganismCredit, PHIFaceGeometry as _PHIFaceGeometry, PHIGeometry as _PHIGeometry, ParsedIoTSignal as _ParsedIoTSignal, PlacedActor as _PlacedActor, PosterArt as _PosterArt, PressKit as _PressKit, ProductionFormat as _ProductionFormat, ProductionFormatConfig as _ProductionFormatConfig, ProductionQueue as _ProductionQueue, ProtocolEvent as _ProtocolEvent, ProtocolId as _ProtocolId, ProtocolState as _ProtocolState, ProtocolStatus as _ProtocolStatus, QualityScore as _QualityScore, QualityStatus as _QualityStatus, RelationshipCell as _RelationshipCell, RelationshipType as _RelationshipType, ResponseRecord as _ResponseRecord, ReviewComment as _ReviewComment, ReviewStatus as _ReviewStatus, SKAICapability as _SKAICapability, SKAIFamily as _SKAIFamily, SKAIOrganism as _SKAIOrganism, SandboxOrganismId as _SandboxOrganismId, SandboxOrganismState as _SandboxOrganismState, SandboxResearchDocument as _SandboxResearchDocument, SandboxSignal as _SandboxSignal, SandboxSignalSnapshot as _SandboxSignalSnapshot, SchumannAmbient as _SchumannAmbient, SealedArtifact as _SealedArtifact, SeasonArcProgress as _SeasonArcProgress, SevenSpiritsState as _SevenSpiritsState, SkaiInstallSnapshot as _SkaiInstallSnapshot, SlatePriority as _SlatePriority, SocialContentPlan as _SocialContentPlan, SovereignActor as _SovereignActor, SovereignCall as _SovereignCall, SovereignCore as _SovereignCore, StateChange as _StateChange, SubModelRecord as _SubModelRecord, SubmissionStatus as _SubmissionStatus, SubtitleTrack as _SubtitleTrack, SuccessionState as _SuccessionState, TaskSnapshot as _TaskSnapshot, TranslationInstruction as _TranslationInstruction, TrendingContentItem as _TrendingContentItem, TrendingWorldSignal as _TrendingWorldSignal, UniverseBibleEntry as _UniverseBibleEntry, VELARingState as _VELARingState, VaultDocument as _VaultDocument, VaultDocumentKind as _VaultDocumentKind, VitalityState as _VitalityState, WorkerSnapshot as _WorkerSnapshot, WorldDoctrineState as _WorldDoctrineState, WorldDogonState as _WorldDogonState, WorldInstanceId as _WorldInstanceId, WorldProductionCapture as _WorldProductionCapture, WorldProductionStatus as _WorldProductionStatus, WorldSelfModel as _WorldSelfModel, YieldSubmission as _YieldSubmission } from "./declarations/backend.did.d.ts";
+    // ── ALPHA ORCHESTRATORS ──────────────────────────────────────────────────
+    getAlphaOrchestrators(): Promise<Array<OrchestratorSnapshot>>;
+    getAlphaOrchestratorsTotalSignal(): Promise<number>;
+    getAlphaOrchestratorsAvgCoordination(): Promise<number>;
+    // ── ALPHA CONDUCTORS ─────────────────────────────────────────────────────
+    getAlphaConductors(): Promise<Array<ConductorSnapshot>>;
+    getAlphaConductorsTotalSignal(): Promise<number>;
+    getAlphaConductorsAvgFidelity(): Promise<number>;
+}, ActivationState as _ActivationState, ActorMemoryState as _ActorMemoryState, ActorPublicProfile as _ActorPublicProfile, ActorRelationshipEntry as _ActorRelationshipEntry, AdoptionContract as _AdoptionContract, AgentTokenBudget as _AgentTokenBudget, AlphaFusionModel as _AlphaFusionModel, ArchResponseToken as _ArchResponseToken, ArchType as _ArchType, ArchitectureState as _ArchitectureState, AresSnapshot as _AresSnapshot, ArtifactEngineSource as _ArtifactEngineSource, ArtifactProvenance as _ArtifactProvenance, ArtifactRecord as _ArtifactRecord, ArtifactReview as _ArtifactReview, ArtifactSeal as _ArtifactSeal, ArtifactSealResult as _ArtifactSealResult, ArtifactType as _ArtifactType, AttributionContract as _AttributionContract, BackendWire as _BackendWire, BeatResult as _BeatResult, CallFamily as _CallFamily, CallerTier as _CallerTier, CanisterGroup as _CanisterGroup, CanisterGroupVariant as _CanisterGroupVariant, ChainTrace as _ChainTrace, CharterRecord as _CharterRecord, CivilizationState as _CivilizationState, CoherentArtifactRecord as _CoherentArtifactRecord, ColonelKernel as _ColonelKernel, CommercialBeat as _CommercialBeat, CommercialFormat as _CommercialFormat, CommercialFormatTemplate as _CommercialFormatTemplate, CommercialProject as _CommercialProject, CommercialSpeedMetrics as _CommercialSpeedMetrics, ContentFormat as _ContentFormat, ContentRating as _ContentRating, ContentWorldState as _ContentWorldState, CoreNode as _CoreNode, CoreSphere as _CoreSphere, CreatorPresence as _CreatorPresence, CrossChainChannelState as _CrossChainChannelState, DecisionRecord as _DecisionRecord, DecisionType as _DecisionType, DeploymentRecord as _DeploymentRecord, DistributionRoute as _DistributionRoute, DoctrineRestartEvent as _DoctrineRestartEvent, DoctrineStateEntry as _DoctrineStateEntry, DoctrineValidationResult as _DoctrineValidationResult, DocumentExecutionType as _DocumentExecutionType, DomainSignal as _DomainSignal, EngagementEvent as _EngagementEvent, EnterpriseMastery as _EnterpriseMastery, ExecutionEvent as _ExecutionEvent, ExecutionResult as _ExecutionResult, ExtendedPhenotypeOutput as _ExtendedPhenotypeOutput, ExtendedPhenotypeState as _ExtendedPhenotypeState, ExternalSession as _ExternalSession, Faction as _Faction, FestivalSubmission as _FestivalSubmission, FilmMetadataInput as _FilmMetadataInput, FilmRecord as _FilmRecord, FilmTrailer as _FilmTrailer, FilmWithQuality as _FilmWithQuality, FusionEngine as _FusionEngine, FusionGrade as _FusionGrade, FusionSubModel as _FusionSubModel, FusionTechnology as _FusionTechnology, GeneratedFilm as _GeneratedFilm, IntelligenceDomain as _IntelligenceDomain, IntelligenceOutput as _IntelligenceOutput, IntelligenceRecord as _IntelligenceRecord, IntelligenceState as _IntelligenceState, IntelligenceTaxonomyState as _IntelligenceTaxonomyState, IoTInfluence as _IoTInfluence, IoTSignalType as _IoTSignalType, JubileeState as _JubileeState, MasterCharterState as _MasterCharterState, MasteryCapability as _MasteryCapability, MasteryLevel as _MasteryLevel, MasteryRecord as _MasteryRecord, MicroNameAttribute as _MicroNameAttribute, MinerSnapshot as _MinerSnapshot, ModelParams as _ModelParams, NeurotransmitterProfile as _NeurotransmitterProfile, OmnisProposal as _OmnisProposal, OmnisProposalType as _OmnisProposalType, OmnisState as _OmnisState, OmnisStatus as _OmnisStatus, OmnisVote as _OmnisVote, OrgMasteryState as _OrgMasteryState, OrganismCollabSignal as _OrganismCollabSignal, OrganismCredit as _OrganismCredit, PHIFaceGeometry as _PHIFaceGeometry, PHIGeometry as _PHIGeometry, ParsedIoTSignal as _ParsedIoTSignal, PlacedActor as _PlacedActor, PosterArt as _PosterArt, PressKit as _PressKit, ProductionFormat as _ProductionFormat, ProductionFormatConfig as _ProductionFormatConfig, ProductionQueue as _ProductionQueue, ProtocolEvent as _ProtocolEvent, ProtocolId as _ProtocolId, ProtocolState as _ProtocolState, ProtocolStatus as _ProtocolStatus, QualityScore as _QualityScore, QualityStatus as _QualityStatus, RelationshipCell as _RelationshipCell, RelationshipType as _RelationshipType, ResponseRecord as _ResponseRecord, ReviewComment as _ReviewComment, ReviewStatus as _ReviewStatus, SKAICapability as _SKAICapability, SKAIFamily as _SKAIFamily, SKAIOrganism as _SKAIOrganism, SandboxOrganismId as _SandboxOrganismId, SandboxOrganismState as _SandboxOrganismState, SandboxResearchDocument as _SandboxResearchDocument, SandboxSignal as _SandboxSignal, SandboxSignalSnapshot as _SandboxSignalSnapshot, SchumannAmbient as _SchumannAmbient, SealedArtifact as _SealedArtifact, SeasonArcProgress as _SeasonArcProgress, SevenSpiritsState as _SevenSpiritsState, SkaiInstallSnapshot as _SkaiInstallSnapshot, SlatePriority as _SlatePriority, SocialContentPlan as _SocialContentPlan, SovereignActor as _SovereignActor, SovereignCall as _SovereignCall, SovereignCore as _SovereignCore, StateChange as _StateChange, SubModelRecord as _SubModelRecord, SubmissionStatus as _SubmissionStatus, SubtitleTrack as _SubtitleTrack, SuccessionState as _SuccessionState, TaskSnapshot as _TaskSnapshot, TranslationInstruction as _TranslationInstruction, TrendingContentItem as _TrendingContentItem, TrendingWorldSignal as _TrendingWorldSignal, UniverseBibleEntry as _UniverseBibleEntry, VELARingState as _VELARingState, VaultDocument as _VaultDocument, VaultDocumentKind as _VaultDocumentKind, VitalityState as _VitalityState, WorkerSnapshot as _WorkerSnapshot, WorldDoctrineState as _WorldDoctrineState, WorldDogonState as _WorldDogonState, WorldInstanceId as _WorldInstanceId, WorldProductionCapture as _WorldProductionCapture, WorldProductionStatus as _WorldProductionStatus, WorldSelfModel as _WorldSelfModel, YieldSubmission as _YieldSubmission } from "./declarations/backend.did.d.ts";
 export class Backend implements backendInterface {
     constructor(private actor: ActorSubclass<_SERVICE>, private _uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, private _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, private processError?: (error: unknown) => never){}
     async activateSurgeAhead(): Promise<boolean> {
@@ -9686,6 +9713,44 @@ export class Backend implements backendInterface {
             try { return (await this.actor.getTotalMicroSignal()) as number; }
             catch (e) { this.processError(e); throw new Error("unreachable"); }
         } else { return (await this.actor.getTotalMicroSignal()) as number; }
+    }
+    // ── ALPHA ORCHESTRATORS ──────────────────────────────────────────────────
+    async getAlphaOrchestrators(): Promise<Array<OrchestratorSnapshot>> {
+        if (this.processError) {
+            try { return (await this.actor.getAlphaOrchestrators()) as Array<OrchestratorSnapshot>; }
+            catch (e) { this.processError(e); throw new Error("unreachable"); }
+        } else { return (await this.actor.getAlphaOrchestrators()) as Array<OrchestratorSnapshot>; }
+    }
+    async getAlphaOrchestratorsTotalSignal(): Promise<number> {
+        if (this.processError) {
+            try { return (await this.actor.getAlphaOrchestratorsTotalSignal()) as number; }
+            catch (e) { this.processError(e); throw new Error("unreachable"); }
+        } else { return (await this.actor.getAlphaOrchestratorsTotalSignal()) as number; }
+    }
+    async getAlphaOrchestratorsAvgCoordination(): Promise<number> {
+        if (this.processError) {
+            try { return (await this.actor.getAlphaOrchestratorsAvgCoordination()) as number; }
+            catch (e) { this.processError(e); throw new Error("unreachable"); }
+        } else { return (await this.actor.getAlphaOrchestratorsAvgCoordination()) as number; }
+    }
+    // ── ALPHA CONDUCTORS ─────────────────────────────────────────────────────
+    async getAlphaConductors(): Promise<Array<ConductorSnapshot>> {
+        if (this.processError) {
+            try { return (await this.actor.getAlphaConductors()) as Array<ConductorSnapshot>; }
+            catch (e) { this.processError(e); throw new Error("unreachable"); }
+        } else { return (await this.actor.getAlphaConductors()) as Array<ConductorSnapshot>; }
+    }
+    async getAlphaConductorsTotalSignal(): Promise<number> {
+        if (this.processError) {
+            try { return (await this.actor.getAlphaConductorsTotalSignal()) as number; }
+            catch (e) { this.processError(e); throw new Error("unreachable"); }
+        } else { return (await this.actor.getAlphaConductorsTotalSignal()) as number; }
+    }
+    async getAlphaConductorsAvgFidelity(): Promise<number> {
+        if (this.processError) {
+            try { return (await this.actor.getAlphaConductorsAvgFidelity()) as number; }
+            catch (e) { this.processError(e); throw new Error("unreachable"); }
+        } else { return (await this.actor.getAlphaConductorsAvgFidelity()) as number; }
     }
 }
 function from_candid_ActivationState_n88(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _ActivationState): ActivationState {

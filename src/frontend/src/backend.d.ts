@@ -375,6 +375,26 @@ export interface OROSnapshot {
     expressionScore: number;
     totalPulses: bigint;
 }
+// ── ALPHA ORCHESTRATORS ─────────────────────────────────────────────────────
+export interface OrchestratorSnapshot {
+    name: string;
+    latinName: string;
+    domain: string;
+    orchestrationSignal: number;
+    coordinationIndex: number;
+    bandwidth: number;
+    totalCycles: bigint;
+}
+// ── ALPHA CONDUCTORS ────────────────────────────────────────────────────────
+export interface ConductorSnapshot {
+    name: string;
+    latinName: string;
+    signalType: string;
+    conductanceSignal: number;
+    fidelityIndex: number;
+    throughput: number;
+    totalTransmissions: bigint;
+}
 // ── INTELLIGENCE FLOORS & AI MICROS ─────────────────────────────────────────
 export interface FloorSnapshot {
     name: string;
@@ -4218,4 +4238,12 @@ export interface backendInterface {
     getIntelligenceFloorsCoherence(): Promise<number>;
     getTotalFloorSignal(): Promise<number>;
     getTotalMicroSignal(): Promise<number>;
+    // ── ALPHA ORCHESTRATORS ──────────────────────────────────────────────────
+    getAlphaOrchestrators(): Promise<Array<OrchestratorSnapshot>>;
+    getAlphaOrchestratorsTotalSignal(): Promise<number>;
+    getAlphaOrchestratorsAvgCoordination(): Promise<number>;
+    // ── ALPHA CONDUCTORS ─────────────────────────────────────────────────────
+    getAlphaConductors(): Promise<Array<ConductorSnapshot>>;
+    getAlphaConductorsTotalSignal(): Promise<number>;
+    getAlphaConductorsAvgFidelity(): Promise<number>;
 }
