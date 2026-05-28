@@ -61,6 +61,43 @@ module {
     Float.max(0.0, Float.min(1.0, v))
   };
 
+  func average(values : [Float], fallback : Float) : Float {
+    if (values.size() == 0) { fallback }
+    else {
+      var sum : Float = 0.0;
+      for (value in values.vals()) {
+        sum += value;
+      };
+      sum / values.size().toFloat()
+    }
+  };
+
+  func containsNat(values : [Nat], target : Nat) : Bool {
+    for (value in values.vals()) {
+      if (value == target) { return true };
+    };
+    false
+  };
+
+  func phaseToText(phase : RETypes.SomnusPhase) : Text {
+    switch (phase) {
+      case (#vigilans) { "VIGILANS" };
+      case (#hypnagogic) { "HYPNAGOGIC" };
+      case (#dormiens) { "DORMIENS" };
+      case (#oneiric) { "ONEIRIC" };
+      case (#hypnopompic) { "HYPNOPOMPIC" };
+    }
+  };
+
+  func engineIndex(engine : Text) : Nat {
+    var i : Nat = 0;
+    while (i < ENGINE_NAMES.size()) {
+      if (ENGINE_NAMES[i] == engine) { return i };
+      i += 1;
+    };
+    0
+  };
+
   // ── FIBONACCI SEQUENCE ────────────────────────────────────────────────────
   // fib(0) = 1, fib(1) = 1, fib(n) = fib(n-1) + fib(n-2)
   func fib(n : Nat) : Nat {
@@ -272,14 +309,14 @@ module {
 
   public func createAttentionNode(
     nodeId : Nat,
-    label : Text,
+    nodeLabel : Text,
     attention : Float,
     beat : Nat,
     linkedArtifacts : [Nat]
   ) : RETypes.AttentionNode {
     {
       nodeId = nodeId;
-      label = label;
+      nodeLabel = nodeLabel;
       attention = clampUnit(attention);
       activeBeat = beat;
       decayRate = PHI_INV;
@@ -753,6 +790,264 @@ module {
     synapses
   };
 
+  func updateSynapses(
+    synapses : [RETypes.Synapse],
+    coupling : RETypes.EngineCoupling,
+    somnus : RETypes.SomnusState,
+    beat : Nat
+  ) : [RETypes.Synapse] {
+    let consolidationBoost = 1.0 + somnus.consolidationScore * 0.5;
+    Array.map<RETypes.Synapse, RETypes.Synapse>(synapses, func(synapse : RETypes.Synapse) : RETypes.Synapse {
+      let sourceIdx = engineIndex(synapse.sourceEngine);
+      let targetIdx = engineIndex(synapse.targetEngine);
+      let couplingStrength = if (
+        sourceIdx < coupling.couplingMatrix.size() and
+        targetIdx < coupling.couplingMatrix[sourceIdx].size()
+      ) {
+        coupling.couplingMatrix[sourceIdx][targetIdx]
+      } else { 0.0 };
+
+      let shouldFire = couplingStrength >= PHI_INV * 0.5 or sourceIdx == 8 or targetIdx == 8;
+      if (not shouldFire) { synapse }
+      else {
+        let potentiate = couplingStrength * consolidationBoost >= PHI_INV;
+        let fired = fireSynapse(synapse, beat, potentiate);
+        let consolidationDelta = if (potentiate) {
+          HEBBIAN_RATE * (consolidationBoost - 1.0)
+        } else {
+          -HEBBIAN_RATE * 0.25 * (1.0 - somnus.attenuationFactor)
+        };
+        {
+          fired with
+          weight = clampWeight(fired.weight + consolidationDelta);
+        }
+      }
+    })
+  };
+
+  func deriveHebbianMemory(
+    previous : RETypes.HebbianMemoryState,
+    synapses : [RETypes.Synapse],
+    somnus : RETypes.SomnusState,
+    beat : Nat
+  ) : RETypes.HebbianMemoryState {
+    let weights = Array.tabulate<Float>(previous.weights.size(), func(i : Nat) : Float {
+      let synapticWeight = if (i < synapses.size()) { synapses[i].weight } else { previous.weights[i] };
+      let consolidationDelta = somnus.consolidationScore * 0.05;
+      clampWeight((previous.weights[i] + synapticWeight) / 2.0 + consolidationDelta)
+    });
+
+    var ltpEvents : Nat = 0;
+    var ltdEvents : Nat = 0;
+    for (synapse in synapses.vals()) {
+      if (synapse.lastFired == beat) {
+        if (synapse.ltpAccumulator > synapse.ltdAccumulator) {
+          ltpEvents += 1;
+        } else if (synapse.ltdAccumulator > synapse.ltpAccumulator) {
+          ltdEvents += 1;
+        };
+      };
+    };
+
+    {
+      weights = weights;
+      lastUpdate = beat;
+      ltpCount = previous.ltpCount + ltpEvents;
+      ltdCount = previous.ltdCount + ltdEvents;
+      learningRate = HEBBIAN_RATE * (1.0 + somnus.consolidationScore * 0.5);
+    }
+  };
+
+  func trimArtifacts(artifacts : [RETypes.CognitiveArtifact], limit : Nat) : [RETypes.CognitiveArtifact] {
+    if (artifacts.size() <= limit) { artifacts }
+    else {
+      Array.tabulate<RETypes.CognitiveArtifact>(limit, func(i : Nat) : RETypes.CognitiveArtifact {
+        artifacts[artifacts.size() - limit + i]
+      })
+    }
+  };
+
+  func trimLineage(lineage : [[Nat]], limit : Nat) : [[Nat]] {
+    if (lineage.size() <= limit) { lineage }
+    else {
+      Array.tabulate<[Nat]>(limit, func(i : Nat) : [Nat] {
+        lineage[lineage.size() - limit + i]
+      })
+    }
+  };
+
+  func deriveWorkspace(artifacts : [RETypes.CognitiveArtifact]) : [Nat] {
+    var workspace : [Nat] = [];
+    var idx = artifacts.size();
+    while (idx > 0 and workspace.size() < 8) {
+      idx -= 1;
+      let artifact = artifacts[idx];
+      if (artifact.coherence >= S0_FLOOR or artifact.phiResonance >= PHI_INV) {
+        workspace := Array.append(workspace, [artifact.id]);
+      };
+    };
+    workspace
+  };
+
+  func updatePersistence(
+    persistence : RETypes.ConceptualPersistenceLayer,
+    coupling : RETypes.EngineCoupling,
+    somnus : RETypes.SomnusState,
+    beat : Nat
+  ) : RETypes.ConceptualPersistenceLayer {
+    let agedArtifacts = Array.map<RETypes.CognitiveArtifact, RETypes.CognitiveArtifact>(
+      persistence.artifacts,
+      func(artifact : RETypes.CognitiveArtifact) : RETypes.CognitiveArtifact {
+        let inWorkspace = containsNat(persistence.workspace, artifact.id);
+        let touched = if (inWorkspace or somnus.dreamReplayActive) {
+          accessArtifact(artifact, beat)
+        } else { artifact };
+        let decay = if (inWorkspace) { 0.0 } else {
+          Float.min(0.12, (beat - artifact.lastAccessBeat).toFloat() * 0.004)
+        };
+        let coherenceBoost = if (inWorkspace) {
+          0.04 + somnus.consolidationScore * 0.08
+        } else { 0.0 };
+        {
+          touched with
+          coherence = clampUnit(touched.coherence + coherenceBoost - decay);
+          phiResonance = clampUnit(
+            touched.phiResonance +
+            (if (inWorkspace or somnus.dreamReplayActive) { 0.05 } else { -0.02 })
+          );
+        }
+      }
+    );
+
+    var nextArtifacts = agedArtifacts;
+    var nextLineage = persistence.lineageGraph;
+    var nextTotal = persistence.totalArtifacts;
+
+    if (beat % 13 == 0 or somnus.dreamReplayActive) {
+      let artifactId = nextTotal + 1;
+      let newArtifact = createArtifact(
+        artifactId,
+        "reasoning_cycle",
+        "beat=" # beat.toText() # ";phase=" # phaseToText(somnus.phase),
+        beat,
+        persistence.workspace,
+        clampUnit((somnus.consolidationScore + coupling.entanglaForce + coupling.divergenceScore * 0.1) * PHI_INV)
+      );
+      nextArtifacts := Array.append(nextArtifacts, [newArtifact]);
+      nextLineage := Array.append(nextLineage, [persistence.workspace]);
+      nextTotal += 1;
+    };
+
+    let boundedArtifacts = trimArtifacts(nextArtifacts, 34);
+    let workspace = deriveWorkspace(boundedArtifacts);
+
+    {
+      persistence with
+      artifacts = boundedArtifacts;
+      workspace = workspace;
+      lineageGraph = trimLineage(nextLineage, 34);
+      lastUpdate = beat;
+      totalArtifacts = nextTotal;
+    }
+  };
+
+  func refreshAttentionGraph(
+    nodes : [RETypes.AttentionNode],
+    persistence : RETypes.ConceptualPersistenceLayer,
+    somnus : RETypes.SomnusState,
+    beat : Nat
+  ) : [RETypes.AttentionNode] {
+    var managed : [RETypes.AttentionNode] = [];
+
+    for (node in nodes.vals()) {
+      if (node.attention >= 0.18 or node.linkedArtifacts.size() > 0) {
+        managed := Array.append(managed, [node]);
+      };
+    };
+
+    for (artifactId in persistence.workspace.vals()) {
+      managed := Array.append(managed, [
+        createAttentionNode(
+          beat * 100 + artifactId,
+          "artifact_" # artifactId.toText(),
+          clampUnit(0.55 + somnus.consolidationScore * 0.35),
+          beat,
+          [artifactId],
+        ),
+      ]);
+    };
+
+    if (beat % 13 == 0 or managed.size() == 0) {
+      managed := Array.append(managed, [
+        createAttentionNode(
+          beat * 1000 + persistence.workspace.size(),
+          "phase_" # phaseToText(somnus.phase),
+          clampUnit(0.5 + somnus.consolidationScore * 0.25),
+          beat,
+          persistence.workspace,
+        ),
+      ]);
+    };
+
+    if (managed.size() <= 13) { managed }
+    else {
+      Array.tabulate<RETypes.AttentionNode>(13, func(i : Nat) : RETypes.AttentionNode {
+        managed[managed.size() - 13 + i]
+      })
+    }
+  };
+
+  func collectTransitions(
+    state : RETypes.ReasoningEngineState,
+    coupling : RETypes.EngineCoupling,
+    somnus : RETypes.SomnusState,
+    persistence : RETypes.ConceptualPersistenceLayer,
+    beat : Nat
+  ) : [RETypes.TokenTransition] {
+    var transitions : [RETypes.TokenTransition] = [];
+    let divergenceDelta = Float.abs(coupling.divergenceScore - state.engineCoupling.divergenceScore);
+
+    if (divergenceDelta > 0.05) {
+      transitions := Array.append(transitions, [
+        createTransition("engine_coupling", "divergence_rebalanced", beat, "ENTANGLA", clampUnit(divergenceDelta))
+      ]);
+    };
+
+    if (somnus.phase != state.somnus.phase) {
+      transitions := Array.append(transitions, [
+        createTransition(
+          phaseToText(state.somnus.phase),
+          phaseToText(somnus.phase),
+          beat,
+          "SOMNUS",
+          clampUnit(1.0 - somnus.somnusDepth * 0.2),
+        )
+      ]);
+    };
+
+    if (persistence.totalArtifacts > state.persistence.totalArtifacts) {
+      transitions := Array.append(transitions, [
+        createTransition("artifact_idle", "artifact_ingested", beat, "QMEM", somnus.consolidationScore)
+      ]);
+    };
+
+    if (persistence.workspace.size() != state.persistence.workspace.size()) {
+      transitions := Array.append(transitions, [
+        createTransition(
+          "workspace",
+          if (persistence.workspace.size() > state.persistence.workspace.size()) {
+            "workspace_expanded"
+          } else { "workspace_compacted" },
+          beat,
+          "BRAIN",
+          clampUnit((state.globalCoherence + somnus.consolidationScore) / 2.0),
+        )
+      ]);
+    };
+
+    transitions
+  };
+
   // ── XII. HEARTBEAT — Called Every 873ms ───────────────────────────────────
   // "The reasoning engine = continuous active state. AI instantiates reasoning every moment."
 
@@ -765,55 +1060,82 @@ module {
     // Run reasoning cycle
     let cycle = runReasoningCycle(state, expansiveScore, receptiveScore, beat);
 
+    // ── SOMNUS — Tick sleep/circadian cycle ──────────────────────────────────
+    // The organism's rest architecture runs every heartbeat, modulating all outputs.
+    // During sleep phases, external responsiveness is attenuated, consolidation occurs.
+    let somnusState = tickSomnus(state.somnus, state.hebbianMemory.weights, beat);
+
     // Update Nova protocol
-    let novaState = fireNova(expansiveScore, beat);
+    let novaState = fireNova(expansiveScore + somnusState.consolidationScore * PHI_INV, beat);
+
+    // Update engine coupling before learning so coupling can drive synaptic firing
+    let coupling = computeEngineCoupling(
+      expansiveScore * somnusState.attenuationFactor + somnusState.consolidationScore,
+      receptiveScore + somnusState.somnusDepth,
+      beat,
+    );
+
+    // Drive synapses and fold them back into Hebbian memory every beat
+    let synapses = updateSynapses(state.synapses, coupling, somnusState, beat);
+    let hebbianMemory = deriveHebbianMemory(state.hebbianMemory, synapses, somnusState, beat);
 
     // Update Kuramoto sync
     let kuramotoState = computeKuramotoSync(
       state.kuramotoSync.phases,
-      state.hebbianMemory.weights,
-      0.0,
+      hebbianMemory.weights,
+      somnusState.consolidationScore,
       beat
     );
 
-    // Update engine coupling
-    let coupling = computeEngineCoupling(expansiveScore, receptiveScore, beat);
+    // Sustain the conceptual persistence layer as an active workspace
+    let persistence = updatePersistence(state.persistence, coupling, somnusState, beat);
 
     // Update brain mapping
+    let meanHebbian = average(hebbianMemory.weights, 1.0);
+    let qmemOutput = clampUnit((persistence.workspace.size().toFloat() / 8.0) + somnusState.consolidationScore * 0.35);
+    let chronoOutput = clampUnit(1.0 - somnusState.somnusDepth * 0.4);
+    let veritasOutput = clampUnit(1.0 - coupling.divergenceScore / S_CEIL);
+    let axisOutput = clampUnit(kuramotoState.orderParameter + coupling.entanglaForce * 0.1);
     let brainMap = updateBrainMapping(
       novaState.signalStrength,
-      S0_FLOOR,  // brain output
-      S0_FLOOR,  // qmem output
-      S0_FLOOR,  // chrono output
-      S0_FLOOR,  // veritas output
-      S0_FLOOR,  // axis output
+      clampUnit(meanHebbian / W_MAX),
+      qmemOutput,
+      chronoOutput,
+      veritasOutput,
+      axisOutput,
       coupling.entanglaForce,
       beat
     );
 
-    // Decay attention
+    // Decay and repopulate attention around the current workspace
     let decayedAttention = decayAttention(state.attentionGraph, beat);
+    let attentionGraph = refreshAttentionGraph(decayedAttention, persistence, somnusState, beat);
+
+    // Capture cross-beat transitions so the cycle records actual changes
+    let transitions = collectTransitions(state, coupling, somnusState, persistence, beat);
 
     // Update cycle history (keep last 13 cycles)
-    var newHistory = Array.append(state.cycleHistory, [cycle]);
-    if (newHistory.size() > 13) {
-      newHistory := Array.tabulate<RETypes.ReasoningCycle>(13, func(i : Nat) : RETypes.ReasoningCycle {
-        newHistory[newHistory.size() - 13 + i]
-      });
+    let newGlobalCoherence = clampUnit(
+      (
+        cycle.globalCoherence +
+        kuramotoState.orderParameter +
+        somnusState.consolidationScore +
+        clampUnit(meanHebbian / W_MAX)
+      ) / 4.0
+    );
+    let engineFirings = if (somnusState.dreamReplayActive) {
+      Array.append<Text>(ENGINE_NAMES, ["SOMNUS", "ARTIFACT"])
+    } else {
+      Array.append<Text>(ENGINE_NAMES, ["ARTIFACT"])
     };
 
     // Update Nova firing history
-    var newFiringHistory = Array.append(state.novaProtocol.firingHistory, [novaState.signalStrength]);
+    var newFiringHistory = Array.append(state.novaProtocol.firingHistory, [novaState.signalStrength * somnusState.attenuationFactor]);
     if (newFiringHistory.size() > 13) {
       newFiringHistory := Array.tabulate<Float>(13, func(i : Nat) : Float {
         newFiringHistory[newFiringHistory.size() - 13 + i]
       });
     };
-
-    // ── SOMNUS — Tick sleep/circadian cycle ──────────────────────────────────
-    // The organism's rest architecture runs every heartbeat, modulating all outputs.
-    // During sleep phases, external responsiveness is attenuated, consolidation occurs.
-    let somnusState = tickSomnus(state.somnus, state.hebbianMemory.weights, beat);
 
     // Apply SOMNUS attenuation to nova signal during rest
     let attenuatedNova = {
@@ -822,18 +1144,40 @@ module {
       firingHistory = newFiringHistory;
     };
 
+    let enrichedCycle = {
+      cycle with
+      attentionGraph = attentionGraph;
+      transitions = transitions;
+      activeArtifacts = persistence.workspace;
+      engineFirings = engineFirings;
+      endBeat = beat;
+      globalCoherence = newGlobalCoherence;
+      novaSignal = attenuatedNova.signalStrength;
+      kuramotoR = kuramotoState.orderParameter;
+    };
+
+    var newHistory = Array.append(state.cycleHistory, [enrichedCycle]);
+    if (newHistory.size() > 13) {
+      newHistory := Array.tabulate<RETypes.ReasoningCycle>(13, func(i : Nat) : RETypes.ReasoningCycle {
+        newHistory[newHistory.size() - 13 + i]
+      });
+    };
+
     {
       state with
       novaProtocol = attenuatedNova;
       kuramotoSync = kuramotoState;
+      hebbianMemory = hebbianMemory;
       engineCoupling = coupling;
-      attentionGraph = decayedAttention;
+      attentionGraph = attentionGraph;
       brainMapping = brainMap;
-      currentCycle = cycle;
+      persistence = persistence;
+      synapses = synapses;
+      currentCycle = enrichedCycle;
       cycleHistory = newHistory;
       totalCycles = state.totalCycles + 1;
       somnus = somnusState;
-      globalCoherence = cycle.globalCoherence * somnusState.attenuationFactor;
+      globalCoherence = newGlobalCoherence;
       civilizationGap = coupling.divergenceScore;
       lastHeartbeat = beat;
     }

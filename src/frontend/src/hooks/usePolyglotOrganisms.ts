@@ -2,15 +2,27 @@
 // Provides real-time access to the 25 polyglot engine states across 6 tiers.
 // Attribution: Alfredo Medina Hernandez | SOVEREIGN | May 2026
 
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useState } from "react";
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // TYPES
 // ═══════════════════════════════════════════════════════════════════════════════
 
-export type IntelligenceTier = 'NGI' | 'AGI' | 'AASI' | 'AI' | 'PROTOCOL' | 'HYBRID';
+export type IntelligenceTier =
+  | "NGI"
+  | "AGI"
+  | "AASI"
+  | "AI"
+  | "PROTOCOL"
+  | "HYBRID";
 
-export type PolyglotLanguage = 'julia' | 'haskell' | 'python' | 'typescript' | 'rust' | 'go';
+export type PolyglotLanguage =
+  | "julia"
+  | "haskell"
+  | "python"
+  | "typescript"
+  | "rust"
+  | "go";
 
 export interface LanguageEngine {
   language: PolyglotLanguage;
@@ -64,35 +76,73 @@ export interface PolyglotBusState {
 // CONSTANTS
 // ═══════════════════════════════════════════════════════════════════════════════
 
+// biome-ignore lint/correctness/noPrecisionLoss: PHI sovereign constant — full 19-digit precision required by doctrine
 export const PHI = 1.6180339887498948482;
+// biome-ignore lint/correctness/noPrecisionLoss: PHI sovereign constant — full 19-digit precision required by doctrine
 export const PHI_INV = 0.6180339887498948482;
 export const SOLFEGGIO = [174, 285, 396, 417, 432, 528, 639, 741, 852, 963];
-export const FIBONACCI = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610];
+export const FIBONACCI = [
+  1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610,
+];
 
-export const TIER_CONFIG: Record<IntelligenceTier, { engines: string[]; color: string }> = {
+export const TIER_CONFIG: Record<
+  IntelligenceTier,
+  { engines: string[]; color: string }
+> = {
   NGI: {
-    engines: ['NEXUS_PRIME', 'COSMOS_WEAVER', 'QUANTUM_ORACLE', 'SOVEREIGN_MIND'],
-    color: '#FFD700',
+    engines: [
+      "NEXUS_PRIME",
+      "COSMOS_WEAVER",
+      "QUANTUM_ORACLE",
+      "SOVEREIGN_MIND",
+    ],
+    color: "#FFD700",
   },
   AGI: {
-    engines: ['LOGOS_SYNTHESIS', 'NOUS_ARCHITECT', 'SOPHIA_CATALYST', 'TECHNE_BUILDER'],
-    color: '#7B68EE',
+    engines: [
+      "LOGOS_SYNTHESIS",
+      "NOUS_ARCHITECT",
+      "SOPHIA_CATALYST",
+      "TECHNE_BUILDER",
+    ],
+    color: "#7B68EE",
   },
   AASI: {
-    engines: ['PHOENIX_ADAPTIVE', 'HYDRA_EVOLVE', 'CHIMERA_FLUX', 'SPHINX_GUARD'],
-    color: '#FF6347',
+    engines: [
+      "PHOENIX_ADAPTIVE",
+      "HYDRA_EVOLVE",
+      "CHIMERA_FLUX",
+      "SPHINX_GUARD",
+    ],
+    color: "#FF6347",
   },
   AI: {
-    engines: ['ATLAS_CORE', 'PROMETHEUS_LEARN', 'HERMES_COMM', 'ATHENA_STRATEGY'],
-    color: '#20B2AA',
+    engines: [
+      "ATLAS_CORE",
+      "PROMETHEUS_LEARN",
+      "HERMES_COMM",
+      "ATHENA_STRATEGY",
+    ],
+    color: "#20B2AA",
   },
   PROTOCOL: {
-    engines: ['PHI_RESONANCE', 'FIBONACCI_WEAVE', 'GOLDEN_SYNC', 'SOVEREIGN_MESH'],
-    color: '#9370DB',
+    engines: [
+      "PHI_RESONANCE",
+      "FIBONACCI_WEAVE",
+      "GOLDEN_SYNC",
+      "SOVEREIGN_MESH",
+    ],
+    color: "#9370DB",
   },
   HYBRID: {
-    engines: ['OMEGA_SYNTHESIS', 'GENESIS_ADAPTIVE', 'NEXUS_CORE', 'PROTOCOL_MIND', 'SOVEREIGN_UNITY'],
-    color: '#FF8C00',
+    engines: [
+      "OMEGA_SYNTHESIS",
+      "GENESIS_ADAPTIVE",
+      "NEXUS_CORE",
+      "PROTOCOL_MIND",
+      "SOVEREIGN_UNITY",
+    ],
+    color: "#FF8C00",
   },
 };
 
@@ -105,7 +155,7 @@ export function phiResonance(v: number): number {
 }
 
 export function phiWeight(rank: number): number {
-  return Math.pow(PHI, rank);
+  return PHI ** rank;
 }
 
 export function kuramotoOrderParameter(phases: number[]): number {
@@ -113,17 +163,19 @@ export function kuramotoOrderParameter(phases: number[]): number {
   const n = phases.length;
   const cosSum = phases.reduce((s, p) => s + Math.cos(p), 0);
   const sinSum = phases.reduce((s, p) => s + Math.sin(p), 0);
-  return Math.sqrt(Math.pow(cosSum / n, 2) + Math.pow(sinSum / n, 2));
+  return Math.sqrt((cosSum / n) ** 2 + (sinSum / n) ** 2);
 }
 
 export function computeUnifiedField(engines: LanguageEngine[]): number {
-  const active = engines.filter(e => e.active);
+  const active = engines.filter((e) => e.active);
   if (active.length === 0) return 0;
   const weightedSum = active.reduce(
-    (s, e) => s + e.signal * e.coherence * phiWeight(e.rank) * e.hebbianWeight, 0
+    (s, e) => s + e.signal * e.coherence * phiWeight(e.rank) * e.hebbianWeight,
+    0,
   );
   const totalWeight = active.reduce(
-    (s, e) => s + phiWeight(e.rank) * e.hebbianWeight, 0
+    (s, e) => s + phiWeight(e.rank) * e.hebbianWeight,
+    0,
   );
   return totalWeight > 0 ? weightedSum / totalWeight : 0;
 }
@@ -167,7 +219,7 @@ export function usePolyglotOrganisms(): UsePolyglotOrganismsReturn {
         globalCoherence: 0.89,
         kuramotoOrder: 0.85,
         lastHeartbeat: Date.now(),
-        founder: 'Alfredo Medina Hernandez',
+        founder: "Alfredo Medina Hernandez",
       };
       setSummary(mockSummary);
 
@@ -177,10 +229,11 @@ export function usePolyglotOrganisms(): UsePolyglotOrganismsReturn {
           allEngines.push({
             name,
             tier,
-            sigil: '⊕',
-            languages: tier === 'NGI' || tier === 'HYBRID'
-              ? ['julia', 'haskell', 'python', 'typescript', 'rust']
-              : ['julia', 'haskell', 'python', 'typescript'],
+            sigil: "⊕",
+            languages:
+              tier === "NGI" || tier === "HYBRID"
+                ? ["julia", "haskell", "python", "typescript", "rust"]
+                : ["julia", "haskell", "python", "typescript"],
             fieldStrength: 0.5 + Math.random() * 0.3,
             coherence: 0.7 + Math.random() * 0.2,
             score: 0.6 + Math.random() * 0.3,
@@ -194,7 +247,7 @@ export function usePolyglotOrganisms(): UsePolyglotOrganismsReturn {
       setBusState({
         globalCoherence: 0.89,
         kuramotoOrder: 0.85,
-        syncPhases: [0.0, 1.047, 2.094, 3.142, 4.189, 5.236],
+        syncPhases: [0.0, 1.047, 2.094, Math.PI, 4.189, 5.236],
         lastHeartbeat: Date.now(),
         messageCount: 0,
         busVersion: 1,
@@ -213,11 +266,19 @@ export function usePolyglotOrganisms(): UsePolyglotOrganismsReturn {
   }, [refresh]);
 
   const getEnginesByTier = useCallback(
-    (tier: IntelligenceTier) => snapshots.filter(s => s.tier === tier),
-    [snapshots]
+    (tier: IntelligenceTier) => snapshots.filter((s) => s.tier === tier),
+    [snapshots],
   );
 
-  return { summary, snapshots, busState, loading, error, refresh, getEnginesByTier };
+  return {
+    summary,
+    snapshots,
+    busState,
+    loading,
+    error,
+    refresh,
+    getEnginesByTier,
+  };
 }
 
 export default usePolyglotOrganisms;

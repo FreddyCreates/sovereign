@@ -5179,13 +5179,13 @@ actor SovereignWarSim {
 
   /// Add attention to a concept in the reasoning layer.
   public func addAttention(
-    label           : Text,
+    attentionLabel  : Text,
     attention       : Float,
     linkedArtifacts : [Nat],
   ) : async { nodeId : Nat; attention : Float } {
     let node = RELib.createAttentionNode(
       reasoningEngineState.attentionGraph.size(),
-      label,
+      attentionLabel,
       attention,
       beatCounter,
       linkedArtifacts
@@ -8739,7 +8739,6 @@ actor SovereignWarSim {
   };
 
 }
-
 
 
 

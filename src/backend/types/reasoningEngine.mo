@@ -75,7 +75,7 @@ module {
   // ── ATTENTION NODE — Single focus point in the attention graph ────────────
   public type AttentionNode = {
     nodeId          : Nat;
-    label           : Text;           // what is being attended to
+    nodeLabel       : Text;           // what is being attended to
     attention       : Float;          // attention weight [0, 1]
     activeBeat      : Nat;            // when attention was placed
     decayRate       : Float;          // PHI-inverse decay per beat
