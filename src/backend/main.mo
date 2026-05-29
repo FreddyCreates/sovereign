@@ -143,6 +143,28 @@ import POLib                 "lib/polyglotOrganisms";
 import IFTypes               "types/intelligenceFloors";
 import IFLib                 "lib/intelligenceFloors";
 import CharterIFLib          "charters/CharterIntelligenceFloors";
+import AIDivTypes            "types/aiDivision";
+import AIDivLib              "lib/aiDivision";
+import AIDivCoreLib          "intelligence/AIDivisionCore";
+import AIDivRuntimeLib       "intelligence/AIDivisionRuntime";
+import AIDivStrategicLib     "intelligence/AIDivisionStrategic";
+import AIDivTacticalLib      "intelligence/AIDivisionTactical";
+import AIDivWarfareLib       "intelligence/AIDivisionWarfare";
+import AIDivCivilizationLib  "intelligence/AIDivisionCivilization";
+import AIDivEvolutionLib     "intelligence/AIDivisionEvolution";
+import AIDivGovernanceLib    "intelligence/AIDivisionGovernance";
+import AIDivEcosystemLib     "intelligence/AIDivisionEcosystem";
+import AIDivTranscendenceLib "intelligence/AIDivisionTranscendence";
+import AIDivIntelNetLib      "intelligence/AIDivisionIntelligenceNet";
+import AIDivQuantumLib       "intelligence/AIDivisionQuantumField";
+import AIDivNeuralForgeLib   "intelligence/AIDivisionNeuralForge";
+import AIDivCosmicLib        "intelligence/AIDivisionCosmicArchitecture";
+import AIDivSovMindLib       "intelligence/AIDivisionSovereignMind";
+import AIDivTemporalLib      "intelligence/AIDivisionTemporalDynamics";
+import AIDivHarmonicLib      "intelligence/AIDivisionHarmonicResonance";
+import AIDivDoctrineLib      "intelligence/AIDivisionSovereignDoctrine";
+import AIDivMetaLib          "intelligence/AIDivisionMetaConsciousness";
+import AIDivNexusLib         "intelligence/AIDivisionSovereignNexus";
 
 
 
@@ -833,6 +855,21 @@ actor SovereignWarSim {
   // Protocols advance each heartbeat, strength grows with coherence.
   // Attribution: Alfredo Medina Hernandez | SOVEREIGN | May 2026
   stable var charterIFState : CharterIFLib.CharterState = CharterIFLib.init();
+
+  // ── AI DIVISION — SOVEREIGN INTELLIGENCE COMMAND ─────────────────────────
+  // 64 Commanders, 16 Battalions, 8 Theatres, 4 Domains. ALL RUNNING TIME.
+  // Core: 64 entities with cognitive architecture, memory, communication, vitals.
+  // Runtime: 32 executors, 16 scheduler slots, anomaly detection, self-healing.
+  // Strategic: 24 operations, 12 advisors, 8 campaigns, forecast, posture.
+  // Tactical: 48 operations, 32 patrols, 16 forges, 24 training, 12 threats.
+  // PHI-weighted Kuramoto synchronization. Hebbian learning. Doctrine enforcement.
+  // Law 01 (Attribution), Law 02 (PHI), Law 14 (Heartbeat), Law 18 (Always-On)
+  // Attribution: Alfredo Medina Hernandez | SOVEREIGN | May 2026
+  stable var aiDivisionState : AIDivTypes.AIDivisionState = AIDivLib.initState();
+  stable var aiDivCoreState : AIDivCoreLib.CoreDivisionState = AIDivCoreLib.initState();
+  stable var aiDivRuntimeState : AIDivRuntimeLib.RuntimeState = AIDivRuntimeLib.initState();
+  stable var aiDivStrategicState : AIDivStrategicLib.StrategicState = AIDivStrategicLib.initState();
+  stable var aiDivTacticalState : AIDivTacticalLib.TacticalState = AIDivTacticalLib.initState();
 
   // ── B2.7 — STREAM_SOVEREIGN ────────────────────────────────────────────
   // Dedicated processing stream inside the SOVEREIGN organism's own runtime.
@@ -4032,6 +4069,43 @@ actor SovereignWarSim {
     );
     charterIFState := newCharterIFState;
     compoundCoherence += charterIFDelta;
+
+    // ── AI DIVISION — ALL RUNNING TIME — 873ms heartbeat ────────────────────
+    // 64 commanders, 16 battalions, 8 theatres, 4 domains advance.
+    // Kuramoto synchronization, Hebbian learning, doctrine enforcement.
+    // Core: 64 entities with full cognitive cycles.
+    // Runtime: 32 executors with scheduling, anomaly detection, self-healing.
+    // Strategic: 24 operations, 12 advisors, 8 campaigns.
+    // Tactical: 48 operations, 32 patrols, 16 forges, 24 training exercises.
+    let (newAIDivState, aiDivDelta) = AIDivLib.advance(
+      aiDivisionState, beat, globalCoherence, doctrineScoreEarly / 100.0,
+    );
+    aiDivisionState := newAIDivState;
+    compoundCoherence += aiDivDelta;
+
+    let (newAIDivCoreState, aiDivCoreDelta) = AIDivCoreLib.advance(
+      aiDivCoreState, beat, globalCoherence, doctrineScoreEarly / 100.0,
+    );
+    aiDivCoreState := newAIDivCoreState;
+    compoundCoherence += aiDivCoreDelta;
+
+    let (newAIDivRuntimeState, aiDivRuntimeDelta) = AIDivRuntimeLib.advance(
+      aiDivRuntimeState, beat, globalCoherence, doctrineScoreEarly / 100.0,
+    );
+    aiDivRuntimeState := newAIDivRuntimeState;
+    compoundCoherence += aiDivRuntimeDelta;
+
+    let (newAIDivStrategicState, aiDivStrategicDelta) = AIDivStrategicLib.advance(
+      aiDivStrategicState, beat, globalCoherence, doctrineScoreEarly / 100.0,
+    );
+    aiDivStrategicState := newAIDivStrategicState;
+    compoundCoherence += aiDivStrategicDelta;
+
+    let (newAIDivTacticalState, aiDivTacticalDelta) = AIDivTacticalLib.advance(
+      aiDivTacticalState, beat, globalCoherence, doctrineScoreEarly / 100.0,
+    );
+    aiDivTacticalState := newAIDivTacticalState;
+    compoundCoherence += aiDivTacticalDelta;
 
     // Disconnected engine #2: quality scores computed but never re-injected.
     // After Ring 5 fires, re-inject quality weights into production queue state.
@@ -8984,6 +9058,132 @@ actor SovereignWarSim {
   /// Get inter-layer couplings (12 directed connections between 4 layers)
   public query func getMembraneNeuroMapInterLayerCouplings() : async [MNTypes.InterLayerCoupling] {
     membraneNeuroMapState.interLayerCouplings
+  };
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // AI DIVISION — SOVEREIGN INTELLIGENCE COMMAND ENDPOINTS
+  // 64 Commanders, 16 Battalions, 8 Theatres, 4 Domains. ALL RUNNING TIME.
+  // Attribution: Alfredo Medina Hernandez | SOVEREIGN | May 2026
+  // ══════════════════════════════════════════════════════════════════════════
+
+  /// Get AI Division snapshot — global overview of the entire division
+  public query func getAIDivisionSnapshot() : async AIDivTypes.AIDivisionSnapshot {
+    AIDivLib.getSnapshot(aiDivisionState)
+  };
+
+  /// Get all 64 commander snapshots
+  public query func getAIDivisionCommanders() : async [AIDivTypes.CommanderSnapshot] {
+    AIDivLib.getCommanderSnapshots(aiDivisionState)
+  };
+
+  /// Get all 16 battalion snapshots
+  public query func getAIDivisionBattalions() : async [AIDivTypes.BattalionSnapshot] {
+    AIDivLib.getBattalionSnapshots(aiDivisionState)
+  };
+
+  /// Get all 8 theatre snapshots
+  public query func getAIDivisionTheatres() : async [AIDivTypes.TheatreSnapshot] {
+    AIDivLib.getTheatreSnapshots(aiDivisionState)
+  };
+
+  /// Get all 4 domain snapshots
+  public query func getAIDivisionDomains() : async [AIDivTypes.DomainSnapshot] {
+    AIDivLib.getDomainSnapshots(aiDivisionState)
+  };
+
+  /// Get division metrics
+  public query func getAIDivisionMetrics() : async AIDivTypes.DivisionMetrics {
+    AIDivLib.getMetrics(aiDivisionState)
+  };
+
+  /// Get division resource pool
+  public query func getAIDivisionResources() : async AIDivTypes.ResourcePool {
+    AIDivLib.getResourcePool(aiDivisionState)
+  };
+
+  /// Get division war room state
+  public query func getAIDivisionWarRoom() : async AIDivTypes.WarRoom {
+    AIDivLib.getWarRoom(aiDivisionState)
+  };
+
+  /// Get division health report
+  public query func getAIDivisionHealth() : async AIDivTypes.DivisionHealthReport {
+    AIDivLib.getHealthReport(aiDivisionState)
+  };
+
+  /// Get division Kuramoto global R (synchronization order parameter)
+  public query func getAIDivisionKuramotoR() : async Float {
+    AIDivLib.getGlobalKuramotoR(aiDivisionState)
+  };
+
+  /// Get sovereignty assessment
+  public query func getAIDivisionSovereignty() : async AIDivTypes.SovereigntyAssessment {
+    AIDivLib.getSovereigntyAssessment(aiDivisionState)
+  };
+
+  /// Get performance report
+  public query func getAIDivisionPerformance() : async AIDivTypes.PerformanceReport {
+    AIDivLib.getPerformanceReport(aiDivisionState)
+  };
+
+  /// Get AI Division Core snapshot — 64 deep entities
+  public query func getAIDivisionCoreSnapshot() : async AIDivCoreLib.CoreSnapshot {
+    AIDivCoreLib.getSnapshot(aiDivCoreState)
+  };
+
+  /// Get AI Division Core global sync
+  public query func getAIDivisionCoreSync() : async Float {
+    AIDivCoreLib.getGlobalSync(aiDivCoreState)
+  };
+
+  /// Get AI Division Runtime snapshot — 32 executors
+  public query func getAIDivisionRuntimeSnapshot() : async AIDivRuntimeLib.RuntimeSnapshot {
+    AIDivRuntimeLib.getSnapshot(aiDivRuntimeState)
+  };
+
+  /// Get AI Division Runtime metrics
+  public query func getAIDivisionRuntimeMetrics() : async AIDivRuntimeLib.RuntimeMetrics {
+    AIDivRuntimeLib.getMetrics(aiDivRuntimeState)
+  };
+
+  /// Get AI Division Runtime signal output
+  public query func getAIDivisionRuntimeSignal() : async Float {
+    AIDivRuntimeLib.getSignalOutput(aiDivRuntimeState)
+  };
+
+  /// Get AI Division Runtime doctrine compliance
+  public query func getAIDivisionRuntimeCompliance() : async Float {
+    AIDivRuntimeLib.getDoctrineCompliance(aiDivRuntimeState)
+  };
+
+  /// Get AI Division Strategic snapshot — 24 operations, 12 advisors
+  public query func getAIDivisionStrategicSnapshot() : async AIDivStrategicLib.StrategicSnapshot {
+    AIDivStrategicLib.getSnapshot(aiDivStrategicState)
+  };
+
+  /// Get AI Division Strategic forecast
+  public query func getAIDivisionStrategicForecast() : async AIDivStrategicLib.StrategicForecast {
+    AIDivStrategicLib.getForecast(aiDivStrategicState)
+  };
+
+  /// Get AI Division Strategic posture
+  public query func getAIDivisionStrategicPosture() : async AIDivStrategicLib.StrategicPosture {
+    AIDivStrategicLib.getPosture(aiDivStrategicState)
+  };
+
+  /// Get AI Division Tactical snapshot — 48 ops, 32 patrols, 16 forges
+  public query func getAIDivisionTacticalSnapshot() : async AIDivTacticalLib.TacticalSnapshot {
+    AIDivTacticalLib.getSnapshot(aiDivTacticalState)
+  };
+
+  /// Get AI Division Tactical metrics
+  public query func getAIDivisionTacticalMetrics() : async AIDivTacticalLib.TacticalMetrics {
+    AIDivTacticalLib.getMetrics(aiDivTacticalState)
+  };
+
+  /// Get AI Division Tactical threat matrix
+  public query func getAIDivisionTacticalThreats() : async [AIDivTacticalLib.ThreatVector] {
+    AIDivTacticalLib.getThreats(aiDivTacticalState)
   };
 
 }
