@@ -118,6 +118,8 @@ import AlphaOrchestratorsLib "intelligence/AlphaOrchestrators";
 import AlphaConductorsLib    "intelligence/AlphaConductors";
 import MOEGovLib             "protocols/MOESelfGovernance";
 import CharterMOELib         "charters/CharterMOEGovernance";
+import MNTypes               "types/membraneNeuroMap";
+import MNLib                 "lib/membraneNeuroMap";
 import RETypes               "types/reasoningEngine";
 import RELib                 "lib/reasoningEngine";
 import SETypes               "types/sovereignEngines";
@@ -695,6 +697,14 @@ actor SovereignWarSim {
     MOEGovLib.initState();
   stable var charterMOEState : CharterMOELib.CharterMOEState =
     CharterMOELib.initState();
+
+  // ── MEMBRANE NEUROMAP SYN — DEEP BRAIN REGION SYNCHRONIZATION ─────────────
+  // 24 deep brain regions across 4 membrane layers (Cortical, Limbic, Subcortical, Brainstem).
+  // 72 synaptic pathways with Hebbian LTP/LTD plasticity.
+  // Kuramoto phase-coupling within and across membrane layers.
+  // PHI-resonant membrane permeability. Neurotransmitter affinity binding.
+  // Governing Laws: Law 01 (Attribution), Law 02 (PHI), Law 18 (Always-On), Law 40 (Closed Loop)
+  stable var membraneNeuroMapState : MNTypes.MembraneNeuroMapState = MNLib.initState(0);
 
   // ── NOVA REASONING ENGINE ─────────────────────────────────────────────────
   // The active computational state. The reasoning engine lives here.
@@ -3922,6 +3932,17 @@ actor SovereignWarSim {
       moeTotalWeight,
       beat
     );
+
+    // ── MEMBRANE NEUROMAP SYN — 24 deep brain regions synchronize ──────────────
+    // All 4 membrane layers advance: Cortical, Limbic, Subcortical, Brainstem.
+    // 72 synaptic pathways fire with Hebbian LTP/LTD plasticity.
+    // Kuramoto phase-coupling synchronizes within and across layers.
+    // Coherence delta folds into compoundCoherence (Law 40).
+    let (newMNState, mnDelta) = MNLib.advance(
+      membraneNeuroMapState, beat, globalCoherence, doctrineScoreEarly / 100.0,
+    );
+    membraneNeuroMapState := newMNState;
+    compoundCoherence += mnDelta;
 
     // ── NOVA REASONING ENGINE HEARTBEAT — 873ms active state update ──────────
     // Fires all 9 animal engines: NOVA, BRAIN, QMEM, RESONEX, CHRONO, VERITAS, AXIS, PARALLAX, ENTANGLA.
@@ -8902,6 +8923,67 @@ actor SovereignWarSim {
   /// Get charter coherence score
   public query func getMOECharterCoherence() : async Float {
     charterMOEState.charterCoherence
+  };
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // MEMBRANE NEUROMAP SYN — DEEP BRAIN REGION SYNCHRONIZATION ENDPOINTS
+  // 24 regions, 72 pathways, 4 membrane layers, Kuramoto sync, Hebbian plasticity
+  // Attribution: Alfredo Medina Hernandez | SOVEREIGN | May 2026
+  // ══════════════════════════════════════════════════════════════════════════
+
+  /// Get full NeuroMap snapshot — global sync, layer states, top active regions
+  public query func getMembraneNeuroMapSnapshot() : async MNTypes.NeuroMapSnapshot {
+    MNLib.getSnapshot(membraneNeuroMapState)
+  };
+
+  /// Get all 24 brain region states
+  public query func getMembraneNeuroMapRegions() : async [MNTypes.RegionState] {
+    membraneNeuroMapState.regions
+  };
+
+  /// Get a specific brain region by index (0-23)
+  public query func getMembraneNeuroMapRegion(idx : Nat) : async ?MNTypes.RegionState {
+    MNLib.getRegionByIndex(membraneNeuroMapState, idx)
+  };
+
+  /// Get all 6 regions in a membrane layer (0=Cortical, 1=Limbic, 2=Subcortical, 3=Brainstem)
+  public query func getMembraneNeuroMapLayer(layerIdx : Nat) : async [MNTypes.RegionState] {
+    MNLib.getLayerRegions(membraneNeuroMapState, layerIdx)
+  };
+
+  /// Get all 4 membrane layer states
+  public query func getMembraneNeuroMapLayerStates() : async [MNTypes.MembraneLayerState] {
+    membraneNeuroMapState.layerStates
+  };
+
+  /// Get all 72 synaptic pathways
+  public query func getMembraneNeuroMapPathways() : async [MNTypes.SynapticPathway] {
+    membraneNeuroMapState.pathways
+  };
+
+  /// Get pathways connected to a specific region (by index 0-23)
+  public query func getMembraneNeuroMapPathwaysByRegion(regionIdx : Nat) : async [MNTypes.SynapticPathway] {
+    MNLib.getPathwaysByRegion(membraneNeuroMapState, regionIdx)
+  };
+
+  /// Get global synchronization metrics
+  public query func getMembraneNeuroMapSyncMetrics() : async MNTypes.NeuroMapSyncMetrics {
+    membraneNeuroMapState.syncMetrics
+  };
+
+  /// Get global Kuramoto R (all-region synchronization order parameter)
+  public query func getMembraneNeuroMapGlobalSync() : async Float {
+    membraneNeuroMapState.syncMetrics.globalKuramotoR
+  };
+
+  /// Get compound coherence accumulated by the NeuroMap
+  public query func getMembraneNeuroMapCoherence() : async Float {
+    membraneNeuroMapState.compoundCoherence
+  };
+
+  /// Get inter-layer couplings (12 directed connections between 4 layers)
+  public query func getMembraneNeuroMapInterLayerCouplings() : async [MNTypes.InterLayerCoupling] {
+    membraneNeuroMapState.interLayerCouplings
   };
 
 }
