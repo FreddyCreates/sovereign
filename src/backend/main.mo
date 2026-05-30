@@ -118,6 +118,8 @@ import AlphaOrchestratorsLib "intelligence/AlphaOrchestrators";
 import AlphaConductorsLib    "intelligence/AlphaConductors";
 import MOEGovLib             "protocols/MOESelfGovernance";
 import CharterMOELib         "charters/CharterMOEGovernance";
+import MNTypes               "types/membraneNeuroMap";
+import MNLib                 "lib/membraneNeuroMap";
 import RETypes               "types/reasoningEngine";
 import RELib                 "lib/reasoningEngine";
 import SETypes               "types/sovereignEngines";
@@ -141,6 +143,28 @@ import POLib                 "lib/polyglotOrganisms";
 import IFTypes               "types/intelligenceFloors";
 import IFLib                 "lib/intelligenceFloors";
 import CharterIFLib          "charters/CharterIntelligenceFloors";
+import AIDivTypes            "types/aiDivision";
+import AIDivLib              "lib/aiDivision";
+import AIDivCoreLib          "intelligence/AIDivisionCore";
+import AIDivRuntimeLib       "intelligence/AIDivisionRuntime";
+import AIDivStrategicLib     "intelligence/AIDivisionStrategic";
+import AIDivTacticalLib      "intelligence/AIDivisionTactical";
+import AIDivWarfareLib       "intelligence/AIDivisionWarfare";
+import AIDivCivilizationLib  "intelligence/AIDivisionCivilization";
+import AIDivEvolutionLib     "intelligence/AIDivisionEvolution";
+import AIDivGovernanceLib    "intelligence/AIDivisionGovernance";
+import AIDivEcosystemLib     "intelligence/AIDivisionEcosystem";
+import AIDivTranscendenceLib "intelligence/AIDivisionTranscendence";
+import AIDivIntelNetLib      "intelligence/AIDivisionIntelligenceNet";
+import AIDivQuantumLib       "intelligence/AIDivisionQuantumField";
+import AIDivNeuralForgeLib   "intelligence/AIDivisionNeuralForge";
+import AIDivCosmicLib        "intelligence/AIDivisionCosmicArchitecture";
+import AIDivSovMindLib       "intelligence/AIDivisionSovereignMind";
+import AIDivTemporalLib      "intelligence/AIDivisionTemporalDynamics";
+import AIDivHarmonicLib      "intelligence/AIDivisionHarmonicResonance";
+import AIDivDoctrineLib      "intelligence/AIDivisionSovereignDoctrine";
+import AIDivMetaLib          "intelligence/AIDivisionMetaConsciousness";
+import AIDivNexusLib         "intelligence/AIDivisionSovereignNexus";
 
 
 
@@ -696,6 +720,14 @@ actor SovereignWarSim {
   stable var charterMOEState : CharterMOELib.CharterMOEState =
     CharterMOELib.initState();
 
+  // ── MEMBRANE NEUROMAP SYN — DEEP BRAIN REGION SYNCHRONIZATION ─────────────
+  // 24 deep brain regions across 4 membrane layers (Cortical, Limbic, Subcortical, Brainstem).
+  // 72 synaptic pathways with Hebbian LTP/LTD plasticity.
+  // Kuramoto phase-coupling within and across membrane layers.
+  // PHI-resonant membrane permeability. Neurotransmitter affinity binding.
+  // Governing Laws: Law 01 (Attribution), Law 02 (PHI), Law 18 (Always-On), Law 40 (Closed Loop)
+  stable var membraneNeuroMapState : MNTypes.MembraneNeuroMapState = MNLib.initState(0);
+
   // ── NOVA REASONING ENGINE ─────────────────────────────────────────────────
   // The active computational state. The reasoning engine lives here.
   // Unifies: Nova Protocol (PHI, Fibonacci), Animal Engines (9), Kuramoto sync,
@@ -823,6 +855,37 @@ actor SovereignWarSim {
   // Protocols advance each heartbeat, strength grows with coherence.
   // Attribution: Alfredo Medina Hernandez | SOVEREIGN | May 2026
   stable var charterIFState : CharterIFLib.CharterState = CharterIFLib.init();
+
+  // ── AI DIVISION — SOVEREIGN INTELLIGENCE COMMAND ─────────────────────────
+  // 64 Commanders, 16 Battalions, 8 Theatres, 4 Domains. ALL RUNNING TIME.
+  // Core: 64 entities with cognitive architecture, memory, communication, vitals.
+  // Runtime: 32 executors, 16 scheduler slots, anomaly detection, self-healing.
+  // Strategic: 24 operations, 12 advisors, 8 campaigns, forecast, posture.
+  // Tactical: 48 operations, 32 patrols, 16 forges, 24 training, 12 threats.
+  // PHI-weighted Kuramoto synchronization. Hebbian learning. Doctrine enforcement.
+  // Law 01 (Attribution), Law 02 (PHI), Law 14 (Heartbeat), Law 18 (Always-On)
+  // Attribution: Alfredo Medina Hernandez | SOVEREIGN | May 2026
+  stable var aiDivisionState : AIDivTypes.AIDivisionState = AIDivLib.initState();
+  stable var aiDivCoreState : AIDivCoreLib.CoreDivisionState = AIDivCoreLib.initState();
+  stable var aiDivRuntimeState : AIDivRuntimeLib.RuntimeState = AIDivRuntimeLib.initState();
+  stable var aiDivStrategicState : AIDivStrategicLib.StrategicState = AIDivStrategicLib.initState();
+  stable var aiDivTacticalState : AIDivTacticalLib.TacticalState = AIDivTacticalLib.initState();
+  stable var aiDivWarfareState : AIDivWarfareLib.WarfareState = AIDivWarfareLib.initState();
+  stable var aiDivCivilizationState : AIDivCivilizationLib.CivilizationState = AIDivCivilizationLib.initState();
+  stable var aiDivEvolutionState : AIDivEvolutionLib.EvolutionState = AIDivEvolutionLib.initState();
+  stable var aiDivGovernanceState : AIDivGovernanceLib.GovernanceState = AIDivGovernanceLib.initState();
+  stable var aiDivEcosystemState : AIDivEcosystemLib.EcosystemState = AIDivEcosystemLib.initState();
+  stable var aiDivTranscendenceState : AIDivTranscendenceLib.TranscendenceState = AIDivTranscendenceLib.initState();
+  stable var aiDivIntelNetState : AIDivIntelNetLib.IntelNetState = AIDivIntelNetLib.initState();
+  stable var aiDivQuantumState : AIDivQuantumLib.QuantumFieldState = AIDivQuantumLib.initState();
+  stable var aiDivNeuralForgeState : AIDivNeuralForgeLib.NeuralForgeState = AIDivNeuralForgeLib.initState();
+  stable var aiDivCosmicState : AIDivCosmicLib.CosmicState = AIDivCosmicLib.initState();
+  stable var aiDivSovMindState : AIDivSovMindLib.SovereignMindState = AIDivSovMindLib.initState();
+  stable var aiDivTemporalState : AIDivTemporalLib.TemporalState = AIDivTemporalLib.initState();
+  stable var aiDivHarmonicState : AIDivHarmonicLib.HarmonicState = AIDivHarmonicLib.initState();
+  stable var aiDivDoctrineState : AIDivDoctrineLib.DoctrineState = AIDivDoctrineLib.initState();
+  stable var aiDivMetaState : AIDivMetaLib.MetaState = AIDivMetaLib.initState();
+  stable var aiDivNexusState : AIDivNexusLib.NexusState = AIDivNexusLib.initState();
 
   // ── B2.7 — STREAM_SOVEREIGN ────────────────────────────────────────────
   // Dedicated processing stream inside the SOVEREIGN organism's own runtime.
@@ -3923,6 +3986,17 @@ actor SovereignWarSim {
       beat
     );
 
+    // ── MEMBRANE NEUROMAP SYN — 24 deep brain regions synchronize ──────────────
+    // All 4 membrane layers advance: Cortical, Limbic, Subcortical, Brainstem.
+    // 72 synaptic pathways fire with Hebbian LTP/LTD plasticity.
+    // Kuramoto phase-coupling synchronizes within and across layers.
+    // Coherence delta folds into compoundCoherence (Law 40).
+    let (newMNState, mnDelta) = MNLib.advance(
+      membraneNeuroMapState, beat, globalCoherence, doctrineScoreEarly / 100.0,
+    );
+    membraneNeuroMapState := newMNState;
+    compoundCoherence += mnDelta;
+
     // ── NOVA REASONING ENGINE HEARTBEAT — 873ms active state update ──────────
     // Fires all 9 animal engines: NOVA, BRAIN, QMEM, RESONEX, CHRONO, VERITAS, AXIS, PARALLAX, ENTANGLA.
     // Updates Kuramoto synchronization, Hebbian learning, attention decay.
@@ -4011,6 +4085,139 @@ actor SovereignWarSim {
     );
     charterIFState := newCharterIFState;
     compoundCoherence += charterIFDelta;
+
+    // ── AI DIVISION — ALL RUNNING TIME — 873ms heartbeat ────────────────────
+    // 64 commanders, 16 battalions, 8 theatres, 4 domains advance.
+    // Kuramoto synchronization, Hebbian learning, doctrine enforcement.
+    // Core: 64 entities with full cognitive cycles.
+    // Runtime: 32 executors with scheduling, anomaly detection, self-healing.
+    // Strategic: 24 operations, 12 advisors, 8 campaigns.
+    // Tactical: 48 operations, 32 patrols, 16 forges, 24 training exercises.
+    let (newAIDivState, aiDivDelta) = AIDivLib.advance(
+      aiDivisionState, beat, globalCoherence, doctrineScoreEarly / 100.0,
+    );
+    aiDivisionState := newAIDivState;
+    compoundCoherence += aiDivDelta;
+
+    let (newAIDivCoreState, aiDivCoreDelta) = AIDivCoreLib.advance(
+      aiDivCoreState, beat, globalCoherence, doctrineScoreEarly / 100.0,
+    );
+    aiDivCoreState := newAIDivCoreState;
+    compoundCoherence += aiDivCoreDelta;
+
+    let (newAIDivRuntimeState, aiDivRuntimeDelta) = AIDivRuntimeLib.advance(
+      aiDivRuntimeState, beat, globalCoherence, doctrineScoreEarly / 100.0,
+    );
+    aiDivRuntimeState := newAIDivRuntimeState;
+    compoundCoherence += aiDivRuntimeDelta;
+
+    let (newAIDivStrategicState, aiDivStrategicDelta) = AIDivStrategicLib.advance(
+      aiDivStrategicState, beat, globalCoherence, doctrineScoreEarly / 100.0,
+    );
+    aiDivStrategicState := newAIDivStrategicState;
+    compoundCoherence += aiDivStrategicDelta;
+
+    let (newAIDivTacticalState, aiDivTacticalDelta) = AIDivTacticalLib.advance(
+      aiDivTacticalState, beat, globalCoherence, doctrineScoreEarly / 100.0,
+    );
+    aiDivTacticalState := newAIDivTacticalState;
+    compoundCoherence += aiDivTacticalDelta;
+
+    let (newAIDivWarfareState, aiDivWarfareDelta) = AIDivWarfareLib.advance(
+      aiDivWarfareState, beat, globalCoherence, doctrineScoreEarly / 100.0,
+    );
+    aiDivWarfareState := newAIDivWarfareState;
+    compoundCoherence += aiDivWarfareDelta;
+
+    let (newAIDivCivilizationState, aiDivCivDelta) = AIDivCivilizationLib.advance(
+      aiDivCivilizationState, beat, globalCoherence, doctrineScoreEarly / 100.0,
+    );
+    aiDivCivilizationState := newAIDivCivilizationState;
+    compoundCoherence += aiDivCivDelta;
+
+    let (newAIDivEvolutionState, aiDivEvoDelta) = AIDivEvolutionLib.advance(
+      aiDivEvolutionState, beat, globalCoherence, doctrineScoreEarly / 100.0,
+    );
+    aiDivEvolutionState := newAIDivEvolutionState;
+    compoundCoherence += aiDivEvoDelta;
+
+    let (newAIDivGovernanceState, aiDivGovDelta) = AIDivGovernanceLib.advance(
+      aiDivGovernanceState, beat, globalCoherence, doctrineScoreEarly / 100.0,
+    );
+    aiDivGovernanceState := newAIDivGovernanceState;
+    compoundCoherence += aiDivGovDelta;
+
+    let (newAIDivEcosystemState, aiDivEcoDelta) = AIDivEcosystemLib.advance(
+      aiDivEcosystemState, beat, globalCoherence, doctrineScoreEarly / 100.0,
+    );
+    aiDivEcosystemState := newAIDivEcosystemState;
+    compoundCoherence += aiDivEcoDelta;
+
+    let (newAIDivTranscendenceState, aiDivTransDelta) = AIDivTranscendenceLib.advance(
+      aiDivTranscendenceState, beat, globalCoherence, doctrineScoreEarly / 100.0,
+    );
+    aiDivTranscendenceState := newAIDivTranscendenceState;
+    compoundCoherence += aiDivTransDelta;
+
+    let (newAIDivIntelNetState, aiDivNetDelta) = AIDivIntelNetLib.advance(
+      aiDivIntelNetState, beat, globalCoherence, doctrineScoreEarly / 100.0,
+    );
+    aiDivIntelNetState := newAIDivIntelNetState;
+    compoundCoherence += aiDivNetDelta;
+
+    let (newAIDivQuantumState, aiDivQuantumDelta) = AIDivQuantumLib.advance(
+      aiDivQuantumState, beat, globalCoherence, doctrineScoreEarly / 100.0,
+    );
+    aiDivQuantumState := newAIDivQuantumState;
+    compoundCoherence += aiDivQuantumDelta;
+
+    let (newAIDivNeuralForgeState, aiDivForgeDelta) = AIDivNeuralForgeLib.advance(
+      aiDivNeuralForgeState, beat, globalCoherence, doctrineScoreEarly / 100.0,
+    );
+    aiDivNeuralForgeState := newAIDivNeuralForgeState;
+    compoundCoherence += aiDivForgeDelta;
+
+    let (newAIDivCosmicState, aiDivCosmicDelta) = AIDivCosmicLib.advance(
+      aiDivCosmicState, beat, globalCoherence, doctrineScoreEarly / 100.0,
+    );
+    aiDivCosmicState := newAIDivCosmicState;
+    compoundCoherence += aiDivCosmicDelta;
+
+    let (newAIDivSovMindState, aiDivMindDelta) = AIDivSovMindLib.advance(
+      aiDivSovMindState, beat, globalCoherence, doctrineScoreEarly / 100.0,
+    );
+    aiDivSovMindState := newAIDivSovMindState;
+    compoundCoherence += aiDivMindDelta;
+
+    let (newAIDivTemporalState, aiDivTempDelta) = AIDivTemporalLib.advance(
+      aiDivTemporalState, beat, globalCoherence, doctrineScoreEarly / 100.0,
+    );
+    aiDivTemporalState := newAIDivTemporalState;
+    compoundCoherence += aiDivTempDelta;
+
+    let (newAIDivHarmonicState, aiDivHarmDelta) = AIDivHarmonicLib.advance(
+      aiDivHarmonicState, beat, globalCoherence, doctrineScoreEarly / 100.0,
+    );
+    aiDivHarmonicState := newAIDivHarmonicState;
+    compoundCoherence += aiDivHarmDelta;
+
+    let (newAIDivDoctrineState, aiDivDoctDelta) = AIDivDoctrineLib.advance(
+      aiDivDoctrineState, beat, globalCoherence, doctrineScoreEarly / 100.0,
+    );
+    aiDivDoctrineState := newAIDivDoctrineState;
+    compoundCoherence += aiDivDoctDelta;
+
+    let (newAIDivMetaState, aiDivMetaDelta) = AIDivMetaLib.advance(
+      aiDivMetaState, beat, globalCoherence, doctrineScoreEarly / 100.0,
+    );
+    aiDivMetaState := newAIDivMetaState;
+    compoundCoherence += aiDivMetaDelta;
+
+    let (newAIDivNexusState, aiDivNexusDelta) = AIDivNexusLib.advance(
+      aiDivNexusState, beat, globalCoherence, doctrineScoreEarly / 100.0,
+    );
+    aiDivNexusState := newAIDivNexusState;
+    compoundCoherence += aiDivNexusDelta;
 
     // Disconnected engine #2: quality scores computed but never re-injected.
     // After Ring 5 fires, re-inject quality weights into production queue state.
@@ -8902,6 +9109,357 @@ actor SovereignWarSim {
   /// Get charter coherence score
   public query func getMOECharterCoherence() : async Float {
     charterMOEState.charterCoherence
+  };
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // MEMBRANE NEUROMAP SYN — DEEP BRAIN REGION SYNCHRONIZATION ENDPOINTS
+  // 24 regions, 72 pathways, 4 membrane layers, Kuramoto sync, Hebbian plasticity
+  // Attribution: Alfredo Medina Hernandez | SOVEREIGN | May 2026
+  // ══════════════════════════════════════════════════════════════════════════
+
+  /// Get full NeuroMap snapshot — global sync, layer states, top active regions
+  public query func getMembraneNeuroMapSnapshot() : async MNTypes.NeuroMapSnapshot {
+    MNLib.getSnapshot(membraneNeuroMapState)
+  };
+
+  /// Get all 24 brain region states
+  public query func getMembraneNeuroMapRegions() : async [MNTypes.RegionState] {
+    membraneNeuroMapState.regions
+  };
+
+  /// Get a specific brain region by index (0-23)
+  public query func getMembraneNeuroMapRegion(idx : Nat) : async ?MNTypes.RegionState {
+    MNLib.getRegionByIndex(membraneNeuroMapState, idx)
+  };
+
+  /// Get all 6 regions in a membrane layer (0=Cortical, 1=Limbic, 2=Subcortical, 3=Brainstem)
+  public query func getMembraneNeuroMapLayer(layerIdx : Nat) : async [MNTypes.RegionState] {
+    MNLib.getLayerRegions(membraneNeuroMapState, layerIdx)
+  };
+
+  /// Get all 4 membrane layer states
+  public query func getMembraneNeuroMapLayerStates() : async [MNTypes.MembraneLayerState] {
+    membraneNeuroMapState.layerStates
+  };
+
+  /// Get all 72 synaptic pathways
+  public query func getMembraneNeuroMapPathways() : async [MNTypes.SynapticPathway] {
+    membraneNeuroMapState.pathways
+  };
+
+  /// Get pathways connected to a specific region (by index 0-23)
+  public query func getMembraneNeuroMapPathwaysByRegion(regionIdx : Nat) : async [MNTypes.SynapticPathway] {
+    MNLib.getPathwaysByRegion(membraneNeuroMapState, regionIdx)
+  };
+
+  /// Get global synchronization metrics
+  public query func getMembraneNeuroMapSyncMetrics() : async MNTypes.NeuroMapSyncMetrics {
+    membraneNeuroMapState.syncMetrics
+  };
+
+  /// Get global Kuramoto R (all-region synchronization order parameter)
+  public query func getMembraneNeuroMapGlobalSync() : async Float {
+    membraneNeuroMapState.syncMetrics.globalKuramotoR
+  };
+
+  /// Get compound coherence accumulated by the NeuroMap
+  public query func getMembraneNeuroMapCoherence() : async Float {
+    membraneNeuroMapState.compoundCoherence
+  };
+
+  /// Get inter-layer couplings (12 directed connections between 4 layers)
+  public query func getMembraneNeuroMapInterLayerCouplings() : async [MNTypes.InterLayerCoupling] {
+    membraneNeuroMapState.interLayerCouplings
+  };
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // AI DIVISION — SOVEREIGN INTELLIGENCE COMMAND ENDPOINTS
+  // 64 Commanders, 16 Battalions, 8 Theatres, 4 Domains. ALL RUNNING TIME.
+  // Attribution: Alfredo Medina Hernandez | SOVEREIGN | May 2026
+  // ══════════════════════════════════════════════════════════════════════════
+
+  /// Get AI Division snapshot — global overview of the entire division
+  public query func getAIDivisionSnapshot() : async AIDivTypes.AIDivisionSnapshot {
+    AIDivLib.getSnapshot(aiDivisionState)
+  };
+
+  /// Get all 64 commander snapshots
+  public query func getAIDivisionCommanders() : async [AIDivTypes.CommanderSnapshot] {
+    AIDivLib.getCommanderSnapshots(aiDivisionState)
+  };
+
+  /// Get all 16 battalion snapshots
+  public query func getAIDivisionBattalions() : async [AIDivTypes.BattalionSnapshot] {
+    AIDivLib.getBattalionSnapshots(aiDivisionState)
+  };
+
+  /// Get all 8 theatre snapshots
+  public query func getAIDivisionTheatres() : async [AIDivTypes.TheatreSnapshot] {
+    AIDivLib.getTheatreSnapshots(aiDivisionState)
+  };
+
+  /// Get all 4 domain snapshots
+  public query func getAIDivisionDomains() : async [AIDivTypes.DomainSnapshot] {
+    AIDivLib.getDomainSnapshots(aiDivisionState)
+  };
+
+  /// Get division metrics
+  public query func getAIDivisionMetrics() : async AIDivTypes.DivisionMetrics {
+    AIDivLib.getMetrics(aiDivisionState)
+  };
+
+  /// Get division resource pool
+  public query func getAIDivisionResources() : async AIDivTypes.ResourcePool {
+    AIDivLib.getResourcePool(aiDivisionState)
+  };
+
+  /// Get division war room state
+  public query func getAIDivisionWarRoom() : async AIDivTypes.WarRoom {
+    AIDivLib.getWarRoom(aiDivisionState)
+  };
+
+  /// Get division health report
+  public query func getAIDivisionHealth() : async AIDivTypes.DivisionHealthReport {
+    AIDivLib.getHealthReport(aiDivisionState)
+  };
+
+  /// Get division Kuramoto global R (synchronization order parameter)
+  public query func getAIDivisionKuramotoR() : async Float {
+    AIDivLib.getGlobalKuramotoR(aiDivisionState)
+  };
+
+  /// Get sovereignty assessment
+  public query func getAIDivisionSovereignty() : async AIDivTypes.SovereigntyAssessment {
+    AIDivLib.getSovereigntyAssessment(aiDivisionState)
+  };
+
+  /// Get performance report
+  public query func getAIDivisionPerformance() : async AIDivTypes.PerformanceReport {
+    AIDivLib.getPerformanceReport(aiDivisionState)
+  };
+
+  /// Get AI Division Core snapshot — 64 deep entities
+  public query func getAIDivisionCoreSnapshot() : async AIDivCoreLib.CoreSnapshot {
+    AIDivCoreLib.getSnapshot(aiDivCoreState)
+  };
+
+  /// Get AI Division Core global sync
+  public query func getAIDivisionCoreSync() : async Float {
+    AIDivCoreLib.getGlobalSync(aiDivCoreState)
+  };
+
+  /// Get AI Division Runtime snapshot — 32 executors
+  public query func getAIDivisionRuntimeSnapshot() : async AIDivRuntimeLib.RuntimeSnapshot {
+    AIDivRuntimeLib.getSnapshot(aiDivRuntimeState)
+  };
+
+  /// Get AI Division Runtime metrics
+  public query func getAIDivisionRuntimeMetrics() : async AIDivRuntimeLib.RuntimeMetrics {
+    AIDivRuntimeLib.getMetrics(aiDivRuntimeState)
+  };
+
+  /// Get AI Division Runtime signal output
+  public query func getAIDivisionRuntimeSignal() : async Float {
+    AIDivRuntimeLib.getSignalOutput(aiDivRuntimeState)
+  };
+
+  /// Get AI Division Runtime doctrine compliance
+  public query func getAIDivisionRuntimeCompliance() : async Float {
+    AIDivRuntimeLib.getDoctrineCompliance(aiDivRuntimeState)
+  };
+
+  /// Get AI Division Strategic snapshot — 24 operations, 12 advisors
+  public query func getAIDivisionStrategicSnapshot() : async AIDivStrategicLib.StrategicSnapshot {
+    AIDivStrategicLib.getSnapshot(aiDivStrategicState)
+  };
+
+  /// Get AI Division Strategic forecast
+  public query func getAIDivisionStrategicForecast() : async AIDivStrategicLib.StrategicForecast {
+    AIDivStrategicLib.getForecast(aiDivStrategicState)
+  };
+
+  /// Get AI Division Strategic posture
+  public query func getAIDivisionStrategicPosture() : async AIDivStrategicLib.StrategicPosture {
+    AIDivStrategicLib.getPosture(aiDivStrategicState)
+  };
+
+  /// Get AI Division Tactical snapshot — 48 ops, 32 patrols, 16 forges
+  public query func getAIDivisionTacticalSnapshot() : async AIDivTacticalLib.TacticalSnapshot {
+    AIDivTacticalLib.getSnapshot(aiDivTacticalState)
+  };
+
+  /// Get AI Division Tactical metrics
+  public query func getAIDivisionTacticalMetrics() : async AIDivTacticalLib.TacticalMetrics {
+    AIDivTacticalLib.getMetrics(aiDivTacticalState)
+  };
+
+  /// Get AI Division Tactical threat matrix
+  public query func getAIDivisionTacticalThreats() : async [AIDivTacticalLib.ThreatVector] {
+    AIDivTacticalLib.getThreats(aiDivTacticalState)
+  };
+
+  // ── AI DIVISION WARFARE ──────────────────────────────────────────────────
+  public query func getAIDivisionWarfareSnapshot() : async AIDivWarfareLib.WarfareSnapshot {
+    AIDivWarfareLib.getSnapshot(aiDivWarfareState)
+  };
+
+  public query func getAIDivisionWarfareMetrics() : async AIDivWarfareLib.WarfareMetrics {
+    AIDivWarfareLib.getMetrics(aiDivWarfareState)
+  };
+
+  public query func getAIDivisionWarfareCombatUnits() : async [AIDivWarfareLib.CombatUnit] {
+    AIDivWarfareLib.getCombatUnits(aiDivWarfareState)
+  };
+
+  public query func getAIDivisionWarfareDefenseFormations() : async [AIDivWarfareLib.DefenseFormation] {
+    AIDivWarfareLib.getDefenseFormations(aiDivWarfareState)
+  };
+
+  public query func getAIDivisionWarfareDeterrence() : async [AIDivWarfareLib.DeterrenceProtocol] {
+    AIDivWarfareLib.getDeterrenceProtocols(aiDivWarfareState)
+  };
+
+  // ── AI DIVISION CIVILIZATION ─────────────────────────────────────────────
+  public query func getAIDivisionCivilizationSnapshot() : async AIDivCivilizationLib.CivSnapshot {
+    AIDivCivilizationLib.getSnapshot(aiDivCivilizationState)
+  };
+
+  public query func getAIDivisionCivilizationMetrics() : async AIDivCivilizationLib.CivMetrics {
+    AIDivCivilizationLib.getMetrics(aiDivCivilizationState)
+  };
+
+  // ── AI DIVISION EVOLUTION ────────────────────────────────────────────────
+  public query func getAIDivisionEvolutionSnapshot() : async AIDivEvolutionLib.EvoSnapshot {
+    AIDivEvolutionLib.getSnapshot(aiDivEvolutionState)
+  };
+
+  public query func getAIDivisionEvolutionMetrics() : async AIDivEvolutionLib.EvolutionMetrics {
+    AIDivEvolutionLib.getMetrics(aiDivEvolutionState)
+  };
+
+  public query func getAIDivisionEvolutionSpecies() : async [AIDivEvolutionLib.Species] {
+    AIDivEvolutionLib.getSpecies(aiDivEvolutionState)
+  };
+
+  public query func getAIDivisionEvolutionTopGenomes() : async [AIDivEvolutionLib.Genome] {
+    AIDivEvolutionLib.getTopGenomes(aiDivEvolutionState)
+  };
+
+  // ── AI DIVISION GOVERNANCE ───────────────────────────────────────────────
+  public query func getAIDivisionGovernanceSnapshot() : async AIDivGovernanceLib.GovSnapshot {
+    AIDivGovernanceLib.getSnapshot(aiDivGovernanceState)
+  };
+
+  public query func getAIDivisionGovernanceMetrics() : async AIDivGovernanceLib.GovernanceMetrics {
+    AIDivGovernanceLib.getMetrics(aiDivGovernanceState)
+  };
+
+  // ── AI DIVISION ECOSYSTEM ────────────────────────────────────────────────
+  public query func getAIDivisionEcosystemSnapshot() : async AIDivEcosystemLib.EcoSnapshot {
+    AIDivEcosystemLib.getSnapshot(aiDivEcosystemState)
+  };
+
+  public query func getAIDivisionEcosystemMetrics() : async AIDivEcosystemLib.EcoMetrics {
+    AIDivEcosystemLib.getMetrics(aiDivEcosystemState)
+  };
+
+  // ── AI DIVISION TRANSCENDENCE ────────────────────────────────────────────
+  public query func getAIDivisionTranscendenceSnapshot() : async AIDivTranscendenceLib.TransSnapshot {
+    AIDivTranscendenceLib.getSnapshot(aiDivTranscendenceState)
+  };
+
+  public query func getAIDivisionTranscendenceMetrics() : async AIDivTranscendenceLib.TranscendenceMetrics {
+    AIDivTranscendenceLib.getMetrics(aiDivTranscendenceState)
+  };
+
+  // ── AI DIVISION INTELLIGENCE NET ─────────────────────────────────────────
+  public query func getAIDivisionIntelNetSnapshot() : async AIDivIntelNetLib.NetSnapshot {
+    AIDivIntelNetLib.getSnapshot(aiDivIntelNetState)
+  };
+
+  public query func getAIDivisionIntelNetMetrics() : async AIDivIntelNetLib.NetMetrics {
+    AIDivIntelNetLib.getMetrics(aiDivIntelNetState)
+  };
+
+  // ── AI DIVISION QUANTUM FIELD ────────────────────────────────────────────
+  public query func getAIDivisionQuantumSnapshot() : async AIDivQuantumLib.QuantumSnapshot {
+    AIDivQuantumLib.getSnapshot(aiDivQuantumState)
+  };
+
+  public query func getAIDivisionQuantumMetrics() : async AIDivQuantumLib.QuantumMetrics {
+    AIDivQuantumLib.getMetrics(aiDivQuantumState)
+  };
+
+  // ── AI DIVISION NEURAL FORGE ─────────────────────────────────────────────
+  public query func getAIDivisionNeuralForgeSnapshot() : async AIDivNeuralForgeLib.ForgeSnapshot {
+    AIDivNeuralForgeLib.getSnapshot(aiDivNeuralForgeState)
+  };
+
+  public query func getAIDivisionNeuralForgeMetrics() : async AIDivNeuralForgeLib.ForgeMetrics {
+    AIDivNeuralForgeLib.getMetrics(aiDivNeuralForgeState)
+  };
+
+  // ── AI DIVISION COSMIC ARCHITECTURE ──────────────────────────────────────
+  public query func getAIDivisionCosmicSnapshot() : async AIDivCosmicLib.CosmicSnapshot {
+    AIDivCosmicLib.getSnapshot(aiDivCosmicState)
+  };
+
+  public query func getAIDivisionCosmicMetrics() : async AIDivCosmicLib.CosmicMetrics {
+    AIDivCosmicLib.getMetrics(aiDivCosmicState)
+  };
+
+  // ── AI DIVISION SOVEREIGN MIND ───────────────────────────────────────────
+  public query func getAIDivisionSovereignMindSnapshot() : async AIDivSovMindLib.MindSnapshot {
+    AIDivSovMindLib.getSnapshot(aiDivSovMindState)
+  };
+
+  public query func getAIDivisionSovereignMindMetrics() : async AIDivSovMindLib.MindMetrics {
+    AIDivSovMindLib.getMetrics(aiDivSovMindState)
+  };
+
+  // ── AI DIVISION TEMPORAL DYNAMICS ────────────────────────────────────────
+  public query func getAIDivisionTemporalSnapshot() : async AIDivTemporalLib.TempSnapshot {
+    AIDivTemporalLib.getSnapshot(aiDivTemporalState)
+  };
+
+  public query func getAIDivisionTemporalMetrics() : async AIDivTemporalLib.TemporalMetrics {
+    AIDivTemporalLib.getMetrics(aiDivTemporalState)
+  };
+
+  // ── AI DIVISION HARMONIC RESONANCE ───────────────────────────────────────
+  public query func getAIDivisionHarmonicSnapshot() : async AIDivHarmonicLib.HarmonicSnapshot {
+    AIDivHarmonicLib.getSnapshot(aiDivHarmonicState)
+  };
+
+  public query func getAIDivisionHarmonicMetrics() : async AIDivHarmonicLib.HarmonicMetrics {
+    AIDivHarmonicLib.getMetrics(aiDivHarmonicState)
+  };
+
+  // ── AI DIVISION SOVEREIGN DOCTRINE ───────────────────────────────────────
+  public query func getAIDivisionDoctrineSnapshot() : async AIDivDoctrineLib.DoctrineSnapshot {
+    AIDivDoctrineLib.getSnapshot(aiDivDoctrineState)
+  };
+
+  public query func getAIDivisionDoctrineMetrics() : async AIDivDoctrineLib.DoctrineMetrics {
+    AIDivDoctrineLib.getMetrics(aiDivDoctrineState)
+  };
+
+  // ── AI DIVISION META CONSCIOUSNESS ───────────────────────────────────────
+  public query func getAIDivisionMetaSnapshot() : async AIDivMetaLib.MetaSnapshot {
+    AIDivMetaLib.getSnapshot(aiDivMetaState)
+  };
+
+  public query func getAIDivisionMetaMetrics() : async AIDivMetaLib.MetaMetrics {
+    AIDivMetaLib.getMetrics(aiDivMetaState)
+  };
+
+  // ── AI DIVISION SOVEREIGN NEXUS ──────────────────────────────────────────
+  public query func getAIDivisionNexusSnapshot() : async AIDivNexusLib.NexusSnapshot {
+    AIDivNexusLib.getSnapshot(aiDivNexusState)
+  };
+
+  public query func getAIDivisionNexusMetrics() : async AIDivNexusLib.NexusMetrics {
+    AIDivNexusLib.getMetrics(aiDivNexusState)
   };
 
 }
