@@ -3357,6 +3357,19 @@ export const mockBackend: backendInterface = {
   getAlphaTest1300All: async () => [],
   getAlphaTest1300Sealed: async () => [],
   getAlphaTest1300ByCategory: async (_category: string) => [],
+  // ── ALPHA TEST 50 ─────────────────────────────────────────────────────────
+  getAlphaTest50Summary: async () => ({
+    totalTests: 50,
+    totalPassed: 0,
+    totalFailed: 0,
+    totalSealed: 0,
+    totalPending: 50,
+    passRate: 0.0,
+    avgScore: 0.0,
+  }),
+  getAlphaTest50All: async () => [],
+  getAlphaTest50Sealed: async () => [],
+  getAlphaTest50ByCategory: async (_category: string) => [],
   // ── INTELLIGENCE FLOORS & AI MICROS ─────────────────────────────────────────
   getIntelligenceFloorsSummary: async () => ({
     floorCount: BigInt(8),
