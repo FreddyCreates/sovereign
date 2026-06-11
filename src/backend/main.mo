@@ -114,6 +114,8 @@ import AlphaTest500Lib       "intelligence/AlphaTest500";
 import OROEntitiesLib        "intelligence/OROEntities";
 import AlphaTest100Lib       "intelligence/AlphaTest100";
 import AlphaTest1300Lib      "intelligence/AlphaTest1300";
+import AlphaTestGov200Lib    "intelligence/AlphaTestGovernance200";
+import CharterGovProtoLib    "charters/CharterGovernanceProtocol";
 import AlphaOrchestratorsLib "intelligence/AlphaOrchestrators";
 import AlphaConductorsLib    "intelligence/AlphaConductors";
 import MOEGovLib             "protocols/MOESelfGovernance";
@@ -696,6 +698,19 @@ actor SovereignWarSim {
 
   stable var alphaTest1300State : AlphaTest1300Lib.AlphaTest1300State =
     AlphaTest1300Lib.initState();
+
+  // ── ALPHA TEST GOVERNANCE 200 — 200 governance tests (#2101-2300) ─────────
+  // 10 categories × 20 tests: TEMPORIS_GUBERNATIO, CIVIUM_RELATIO,
+  // POLITICA_LEGIS, ETHICA_PRINCIPIUM, CHARTA_CONSTITUENS, CONSENSUS_MECHANIS,
+  // AUDITIO_PROBITAS, SUCCESSIO_CONTINUITAS, FOEDERATIO_NEXUS, SUPREMA_LEX.
+  stable var alphaTestGov200State : AlphaTestGov200Lib.AlphaTestGovernance200State =
+    AlphaTestGov200Lib.initState();
+
+  // ── CHARTER GOVERNANCE PROTOCOL — The Sovereign Governance Macro ──────────
+  // 35 articles across 7 domains (TEMPORIS, CIVIUM, POLITICAE, ETHICAE,
+  // CONSENSUS, AUDITIO, FOEDERATIO). 5-tier law hierarchy. PHI-weighted.
+  stable var charterGovProtoState : CharterGovProtoLib.CharterGovernanceState =
+    CharterGovProtoLib.initState();
 
   // ── ALPHA ORCHESTRATORS — 8 sovereign orchestration entities ───────────────
   // ARCHON, NEXUS, FLUX, HARMONIA, GENESIS, CHRONOS, LOGOS, OMEGA.
@@ -3931,6 +3946,20 @@ actor SovereignWarSim {
     // Brings global sovereign test count to 2100: 200+500+100+1300 = 2100.
     alphaTest1300State := AlphaTest1300Lib.advanceBeat(
       alphaTest1300State, beat, globalCoherence, doctrineScoreEarly / 100.0,
+    );
+
+    // ── ALPHA TEST GOVERNANCE 200 — 200 governance tests (#2101-2300) advance
+    // 20 tests per beat (10-beat cycle). Governance-focused: time, users, policies,
+    // ethics, constitution, consensus, audit, succession, federation, supreme law.
+    alphaTestGov200State := AlphaTestGov200Lib.advanceBeat(
+      alphaTestGov200State, beat, globalCoherence, doctrineScoreEarly / 100.0,
+    );
+
+    // ── CHARTER GOVERNANCE PROTOCOL — The Sovereign Governance Macro advance ─
+    // 5 articles per beat (7-beat cycle). 35 articles across 7 domains.
+    // PHI-weighted compliance scoring. Ratification toward charter seal.
+    charterGovProtoState := CharterGovProtoLib.advanceBeat(
+      charterGovProtoState, beat, globalCoherence, doctrineScoreEarly / 100.0,
     );
 
     // ── ALPHA ORCHESTRATORS — 8 orchestration entities advance ────────────────
@@ -8146,6 +8175,78 @@ actor SovereignWarSim {
   /// Get expanded alpha tests by category (e.g. "NEXUS_FIELD", "SOVEREIGN_OMEGA").
   public query func getAlphaTest1300ByCategory(category : Text) : async [AlphaTest1300Lib.AlphaTestRecord] {
     AlphaTest1300Lib.getTestsByCategory(alphaTest1300State, category)
+  };
+
+  // ── ALPHA TEST GOVERNANCE 200 ENDPOINTS (#2101-2300) ─────────────────────
+  // 200 governance tests: time, users, policies, ethics, constitution, consensus,
+  // audit, succession, federation, supreme law. Total tests: 2100 + 200 = 2300.
+
+  /// Get summary of 200 governance alpha tests (#2101-2300).
+  public query func getAlphaTestGovernance200Summary() : async AlphaTestGov200Lib.AlphaTestGovernance200Summary {
+    AlphaTestGov200Lib.getSummary(alphaTestGov200State)
+  };
+
+  /// Get all 200 governance alpha test records.
+  public query func getAlphaTestGovernance200All() : async [AlphaTestGov200Lib.AlphaTestRecord] {
+    AlphaTestGov200Lib.getAllTests(alphaTestGov200State)
+  };
+
+  /// Get permanently sealed governance alpha tests (score >= 0.9).
+  public query func getAlphaTestGovernance200Sealed() : async [AlphaTestGov200Lib.AlphaTestRecord] {
+    AlphaTestGov200Lib.getSealedTests(alphaTestGov200State)
+  };
+
+  /// Get governance alpha tests by category (e.g. "ETHICA_PRINCIPIUM", "SUPREMA_LEX").
+  public query func getAlphaTestGovernance200ByCategory(category : Text) : async [AlphaTestGov200Lib.AlphaTestRecord] {
+    AlphaTestGov200Lib.getTestsByCategory(alphaTestGov200State, category)
+  };
+
+  // ── CHARTER GOVERNANCE PROTOCOL ENDPOINTS ─────────────────────────────────
+  // THE CHARTER: 35 articles across 7 domains, 5-tier law hierarchy.
+  // Sovereign governance macro for time, users, policies, ethics, and federation.
+
+  /// Get governance charter metrics (compliance, health, violations, domains active).
+  public query func getCharterGovernanceMetrics() : async CharterGovProtoLib.GovernanceMetrics {
+    CharterGovProtoLib.getMetrics(charterGovProtoState)
+  };
+
+  /// Get all 35 charter governance articles.
+  public query func getCharterGovernanceArticles() : async [CharterGovProtoLib.CharterArticle] {
+    CharterGovProtoLib.getAllArticles(charterGovProtoState)
+  };
+
+  /// Get charter governance articles by domain (e.g. #TEMPORIS, #ETHICAE).
+  public query func getCharterGovernanceByDomain(domain : CharterGovProtoLib.GovernanceDomain) : async [CharterGovProtoLib.CharterArticle] {
+    CharterGovProtoLib.getArticlesByDomain(charterGovProtoState, domain)
+  };
+
+  /// Get charter governance articles by law tier (e.g. #SUPREMA, #CONSTITUTIO).
+  public query func getCharterGovernanceByTier(tier : CharterGovProtoLib.LawTier) : async [CharterGovProtoLib.CharterArticle] {
+    CharterGovProtoLib.getArticlesByTier(charterGovProtoState, tier)
+  };
+
+  /// Get all eternity clauses (immutable articles).
+  public query func getCharterGovernanceEternityClauses() : async [CharterGovProtoLib.CharterArticle] {
+    CharterGovProtoLib.getEternityClauses(charterGovProtoState)
+  };
+
+  /// Get charter governance summary (articles, compliance, health, ratification, seal status).
+  public query func getCharterGovernanceSummary() : async {
+    totalArticles : Nat;
+    activeArticles : Nat;
+    sealedArticles : Nat;
+    eternityClauses : Nat;
+    avgCompliance : Float;
+    healthScore : Float;
+    domainsActive : Nat;
+    charterSealed : Bool;
+    ratificationScore : Float;
+    totalBeats : Nat;
+    epoch : Nat;
+  } {
+    CharterGovProtoLib.getSummary(charterGovProtoState)
+  };
+
   // ══════════════════════════════════════════════════════════════════════════
   // MACHINAE NOVAE — 18 ENGINES + COMPLETE HIERARCHY
   // ══════════════════════════════════════════════════════════════════════════

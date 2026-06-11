@@ -552,6 +552,57 @@ export interface AlphaTest1300Summary {
     passRate: number;
     avgScore: number;
 }
+export interface AlphaTestGovernance200Summary {
+    totalTests: number;
+    totalPassed: number;
+    totalFailed: number;
+    totalSealed: number;
+    totalPending: number;
+    passRate: number;
+    avgScore: number;
+}
+export type GovernanceDomain = { TEMPORIS: null } | { CIVIUM: null } | { POLITICAE: null } | { ETHICAE: null } | { CONSENSUS: null } | { AUDITIO: null } | { FOEDERATIO: null };
+export type LawTier = { SUPREMA: null } | { CONSTITUTIO: null } | { ORGANICA: null } | { STATUTARIA: null } | { REGULATORIA: null };
+export type ArticleStatus = { ACTIVE: null } | { SUSPENDED: null } | { AMENDED: null } | { SEALED: null };
+export interface GovernanceCharterArticle {
+    articleId: bigint;
+    latinTitle: string;
+    domain: GovernanceDomain;
+    tier: LawTier;
+    lawText: string;
+    enforcementRule: string;
+    status: ArticleStatus;
+    complianceScore: number;
+    lastEnforced: bigint;
+    totalEnforcements: bigint;
+    totalViolations: bigint;
+    isEternityClause: boolean;
+    attribution: string;
+}
+export interface GovernanceMetrics {
+    totalArticles: bigint;
+    activeArticles: bigint;
+    sealedArticles: bigint;
+    avgComplianceScore: number;
+    totalEnforcements: bigint;
+    totalViolations: bigint;
+    violationRate: number;
+    governanceHealthScore: number;
+    domainsActive: bigint;
+}
+export interface CharterGovernanceSummary {
+    totalArticles: bigint;
+    activeArticles: bigint;
+    sealedArticles: bigint;
+    eternityClauses: bigint;
+    avgCompliance: number;
+    healthScore: number;
+    domainsActive: bigint;
+    charterSealed: boolean;
+    ratificationScore: number;
+    totalBeats: bigint;
+    epoch: bigint;
+}
 export interface LawExecutionRecord {
     lawName: string;
     beat: bigint;
@@ -4228,6 +4279,18 @@ export interface backendInterface {
     getAlphaTest1300All(): Promise<Array<AlphaTestRecord>>;
     getAlphaTest1300Sealed(): Promise<Array<AlphaTestRecord>>;
     getAlphaTest1300ByCategory(category: string): Promise<Array<AlphaTestRecord>>;
+    // ── ALPHA TEST GOVERNANCE 200 (#2101-2300) ──────────────────────────────────
+    getAlphaTestGovernance200Summary(): Promise<AlphaTestGovernance200Summary>;
+    getAlphaTestGovernance200All(): Promise<Array<AlphaTestRecord>>;
+    getAlphaTestGovernance200Sealed(): Promise<Array<AlphaTestRecord>>;
+    getAlphaTestGovernance200ByCategory(category: string): Promise<Array<AlphaTestRecord>>;
+    // ── CHARTER GOVERNANCE PROTOCOL ─────────────────────────────────────────────
+    getCharterGovernanceMetrics(): Promise<GovernanceMetrics>;
+    getCharterGovernanceArticles(): Promise<Array<GovernanceCharterArticle>>;
+    getCharterGovernanceByDomain(domain: GovernanceDomain): Promise<Array<GovernanceCharterArticle>>;
+    getCharterGovernanceByTier(tier: LawTier): Promise<Array<GovernanceCharterArticle>>;
+    getCharterGovernanceEternityClauses(): Promise<Array<GovernanceCharterArticle>>;
+    getCharterGovernanceSummary(): Promise<CharterGovernanceSummary>;
     // ── INTELLIGENCE FLOORS & AI MICROS ─────────────────────────────────────────
     getIntelligenceFloorsSummary(): Promise<IntelligenceFloorsSummary>;
     getIntelligenceFloorSnapshots(): Promise<Array<FloorSnapshot>>;
