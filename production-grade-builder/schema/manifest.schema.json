@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Packet Manifest",
+  "description": "Schema for individual packet manifest.json files",
+  "type": "object",
+  "required": ["name", "type", "version", "author", "created"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "static-app",
+        "python-service",
+        "node-service",
+        "benchmark-engine",
+        "local-api",
+        "ci-workflow",
+        "dataset",
+        "manifest",
+        "proof-pack",
+        "research-packet",
+        "dashboard",
+        "docs",
+        "deploy-scaffold",
+        "repo-surface"
+      ]
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "author": {
+      "type": "string",
+      "minLength": 1
+    },
+    "created": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "entry_point": {
+      "type": "string"
+    },
+    "dependencies": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": true
+}

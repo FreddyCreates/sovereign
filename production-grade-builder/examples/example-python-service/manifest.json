@@ -1,0 +1,9 @@
+{
+  "name": "example-python-service",
+  "type": "python-service",
+  "version": "1.0.0",
+  "author": "Alfredo Medina Hernandez",
+  "created": "2026-06-11T08:35:15.886004+00:00",
+  "entry_point": "main.py",
+  "dependencies": []
+}

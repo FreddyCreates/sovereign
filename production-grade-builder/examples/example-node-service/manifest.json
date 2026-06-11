@@ -1,0 +1,9 @@
+{
+  "name": "example-node-service",
+  "type": "node-service",
+  "version": "1.0.0",
+  "author": "Alfredo Medina Hernandez",
+  "created": "2026-06-11T08:35:15.919727+00:00",
+  "entry_point": "index.js",
+  "dependencies": []
+}

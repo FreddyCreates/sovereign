@@ -1,0 +1,7 @@
+{
+  "name": "example-python-service",
+  "type": "python-service",
+  "scaffolded_at": "2026-06-11T08:35:15.886413+00:00",
+  "quality_gate": "pending",
+  "files_generated": 7
+}
