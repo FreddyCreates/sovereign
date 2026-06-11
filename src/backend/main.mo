@@ -165,6 +165,9 @@ import AIDivHarmonicLib      "intelligence/AIDivisionHarmonicResonance";
 import AIDivDoctrineLib      "intelligence/AIDivisionSovereignDoctrine";
 import AIDivMetaLib          "intelligence/AIDivisionMetaConsciousness";
 import AIDivNexusLib         "intelligence/AIDivisionSovereignNexus";
+import SMTypes               "types/sovereignModular";
+import SMLib                 "lib/sovereignModular";
+import SovereignModularMixin "mixins/sovereign-modular-api";
 
 
 
@@ -886,6 +889,14 @@ actor SovereignWarSim {
   stable var aiDivDoctrineState : AIDivDoctrineLib.DoctrineState = AIDivDoctrineLib.initState();
   stable var aiDivMetaState : AIDivMetaLib.MetaState = AIDivMetaLib.initState();
   stable var aiDivNexusState : AIDivNexusLib.NexusState = AIDivNexusLib.initState();
+
+  // ── SOVEREIGN MODULAR ARCHITECTURE — 11-PILLAR MESH ────────────────────
+  // Implements composable Sovereign AI pillars: Data Sovereignty, Infrastructure
+  // Control, Model Ownership, Governance & Values, Resilience, Compute,
+  // Energy & Sustainability, Datasets & Models, Talent & Ecosystem,
+  // Hybrid Collaboration, Security & Interoperability.
+  // Modular mesh with φ-weighted coherence and inter-pillar signal topology.
+  stable var sovereignModularState : SMTypes.SovereignModularState = SMLib.initState(0);
 
   // ── B2.7 — STREAM_SOVEREIGN ────────────────────────────────────────────
   // Dedicated processing stream inside the SOVEREIGN organism's own runtime.
@@ -1857,6 +1868,13 @@ actor SovereignWarSim {
   // Voice × 5, Chat × 5, Sensor × 5 — all firing every 873ms heartbeat.
   include IntelMixin(
     intelligenceTaxonomyStateRef,
+  );
+
+  // Include Sovereign Modular Architecture mixin
+  // 11-pillar composable mesh: Data Sovereignty, Infrastructure, Model Ownership,
+  // Governance, Resilience, Compute, Energy, Datasets, Talent, Hybrid, Security.
+  include SovereignModularMixin(
+    sovereignModularState,
   );
 
   // ── HELPERS ───────────────────────────────────────────────────────────
@@ -4218,6 +4236,12 @@ actor SovereignWarSim {
     );
     aiDivNexusState := newAIDivNexusState;
     compoundCoherence += aiDivNexusDelta;
+
+    // ── SOVEREIGN MODULAR ARCHITECTURE TICK ───────────────────────────────
+    // Advance all 11 pillars: coherence growth, link strength convergence,
+    // mesh resilience computation. Law 23 (compound coherence never decrements).
+    sovereignModularState := SMLib.tick(sovereignModularState, beat);
+    compoundCoherence += sovereignModularState.globalCoherence * 0.001;
 
     // Disconnected engine #2: quality scores computed but never re-injected.
     // After Ring 5 fires, re-inject quality weights into production queue state.
