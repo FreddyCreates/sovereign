@@ -167,6 +167,8 @@ import AIDivHarmonicLib      "intelligence/AIDivisionHarmonicResonance";
 import AIDivDoctrineLib      "intelligence/AIDivisionSovereignDoctrine";
 import AIDivMetaLib          "intelligence/AIDivisionMetaConsciousness";
 import AIDivNexusLib         "intelligence/AIDivisionSovereignNexus";
+import SIRTypes              "types/sovereignInfraResilience";
+import SIRLib                "lib/sovereignInfraResilience";
 
 
 
@@ -870,6 +872,13 @@ actor SovereignWarSim {
   // Protocols advance each heartbeat, strength grows with coherence.
   // Attribution: Alfredo Medina Hernandez | SOVEREIGN | May 2026
   stable var charterIFState : CharterIFLib.CharterState = CharterIFLib.init();
+
+  // ── SOVEREIGN INFRASTRUCTURE RESILIENCE LAYER ──────────────────────────────
+  // 5 Pillars: Verifiability & Control, Recursive/Self-Hosted, Energy & Infra,
+  // Ecosystem Plays, Risk Management. Post-quantum encryption, SBOMs, agentic
+  // identity, data flywheels, multi-chip resilience topology.
+  // Attribution: Alfredo Medina Hernandez | SOVEREIGN | June 2026
+  stable var sovereignInfraState : SIRTypes.SovereignInfraResilienceState = SIRLib.initState();
 
   // ── AI DIVISION — SOVEREIGN INTELLIGENCE COMMAND ─────────────────────────
   // 64 Commanders, 16 Battalions, 8 Theatres, 4 Domains. ALL RUNNING TIME.
@@ -4114,6 +4123,11 @@ actor SovereignWarSim {
     );
     charterIFState := newCharterIFState;
     compoundCoherence += charterIFDelta;
+
+    // ── SOVEREIGN INFRASTRUCTURE RESILIENCE — 873ms heartbeat ────────────────
+    // 5 pillars pulse: Verifiability, Recursive Stacks, Energy, Ecosystem, Risk.
+    // PHI-weighted signal propagation across sovereign infrastructure topology.
+    sovereignInfraState := SIRLib.pulse(sovereignInfraState, beat);
 
     // ── AI DIVISION — ALL RUNNING TIME — 873ms heartbeat ────────────────────
     // 64 commanders, 16 battalions, 8 theatres, 4 domains advance.
@@ -9561,6 +9575,27 @@ actor SovereignWarSim {
 
   public query func getAIDivisionNexusMetrics() : async AIDivNexusLib.NexusMetrics {
     AIDivNexusLib.getMetrics(aiDivNexusState)
+  };
+
+  // ── SOVEREIGN INFRASTRUCTURE RESILIENCE ENDPOINTS ──────────────────────────
+  public query func getSovereignInfraResilienceSummary() : async SIRTypes.SovereignInfraResilienceSummary {
+    SIRLib.getSummary(sovereignInfraState)
+  };
+
+  public query func getSovereignInfraPillarSnapshots() : async [SIRTypes.PillarSnapshot] {
+    SIRLib.getPillarSnapshots(sovereignInfraState)
+  };
+
+  public query func getSovereignInfraAgentCount() : async Nat {
+    sovereignInfraState.agenticIdentities.size()
+  };
+
+  public query func getSovereignInfraResilienceScore() : async Float {
+    sovereignInfraState.resilience.overallResilience
+  };
+
+  public query func getSovereignInfraOverallSignal() : async Float {
+    sovereignInfraState.overallSignal
   };
 
 }
