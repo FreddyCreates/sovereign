@@ -114,6 +114,7 @@ import AlphaTest500Lib       "intelligence/AlphaTest500";
 import OROEntitiesLib        "intelligence/OROEntities";
 import AlphaTest100Lib       "intelligence/AlphaTest100";
 import AlphaTest1300Lib      "intelligence/AlphaTest1300";
+import AlphaTest50Lib        "intelligence/AlphaTest50";
 import AlphaOrchestratorsLib "intelligence/AlphaOrchestrators";
 import AlphaConductorsLib    "intelligence/AlphaConductors";
 import MOEGovLib             "protocols/MOESelfGovernance";
@@ -696,6 +697,12 @@ actor SovereignWarSim {
 
   stable var alphaTest1300State : AlphaTest1300Lib.AlphaTest1300State =
     AlphaTest1300Lib.initState();
+
+  // ── ALPHA TEST 50 — 50 sovereign genesis tests (#2101-2150) ─────────────────
+  // 1 category (SOVEREIGN_GENESIS) × 50 tests. All run every beat.
+  // Brings global sovereign test count to 2150: 200+500+100+1300+50 = 2150.
+  stable var alphaTest50State : AlphaTest50Lib.AlphaTest50State =
+    AlphaTest50Lib.initState();
 
   // ── ALPHA ORCHESTRATORS — 8 sovereign orchestration entities ───────────────
   // ARCHON, NEXUS, FLUX, HARMONIA, GENESIS, CHRONOS, LOGOS, OMEGA.
@@ -3931,6 +3938,13 @@ actor SovereignWarSim {
     // Brings global sovereign test count to 2100: 200+500+100+1300 = 2100.
     alphaTest1300State := AlphaTest1300Lib.advanceBeat(
       alphaTest1300State, beat, globalCoherence, doctrineScoreEarly / 100.0,
+    );
+
+    // ── ALPHA TEST 50 — 50 sovereign genesis tests (#2101-2150) advance ──────
+    // All 50 tests run every beat (1-beat cycle).
+    // Brings global sovereign test count to 2150: 200+500+100+1300+50 = 2150.
+    alphaTest50State := AlphaTest50Lib.advanceBeat(
+      alphaTest50State, beat, globalCoherence, doctrineScoreEarly / 100.0,
     );
 
     // ── ALPHA ORCHESTRATORS — 8 orchestration entities advance ────────────────
@@ -8146,6 +8160,31 @@ actor SovereignWarSim {
   /// Get expanded alpha tests by category (e.g. "NEXUS_FIELD", "SOVEREIGN_OMEGA").
   public query func getAlphaTest1300ByCategory(category : Text) : async [AlphaTest1300Lib.AlphaTestRecord] {
     AlphaTest1300Lib.getTestsByCategory(alphaTest1300State, category)
+  };
+
+  // ── ALPHA TEST 50 ENDPOINTS (#2101-2150) ────────────────────────────────────
+
+  /// Get summary of 50 sovereign genesis alpha tests (#2101-2150).
+  /// Total sovereign tests after this suite: 200 + 500 + 100 + 1300 + 50 = 2150.
+  public query func getAlphaTest50Summary() : async AlphaTest50Lib.AlphaTest50Summary {
+    AlphaTest50Lib.getSummary(alphaTest50State)
+  };
+
+  /// Get all 50 sovereign genesis alpha test records with current status and scores.
+  public query func getAlphaTest50All() : async [AlphaTest50Lib.AlphaTestRecord] {
+    AlphaTest50Lib.getAllTests(alphaTest50State)
+  };
+
+  /// Get permanently sealed sovereign genesis alpha tests (score >= 0.9).
+  public query func getAlphaTest50Sealed() : async [AlphaTest50Lib.AlphaTestRecord] {
+    AlphaTest50Lib.getSealedTests(alphaTest50State)
+  };
+
+  /// Get sovereign genesis alpha tests by category (e.g. "SOVEREIGN_GENESIS").
+  public query func getAlphaTest50ByCategory(category : Text) : async [AlphaTest50Lib.AlphaTestRecord] {
+    AlphaTest50Lib.getTestsByCategory(alphaTest50State, category)
+  };
+
   // ══════════════════════════════════════════════════════════════════════════
   // MACHINAE NOVAE — 18 ENGINES + COMPLETE HIERARCHY
   // ══════════════════════════════════════════════════════════════════════════

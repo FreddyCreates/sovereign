@@ -528,6 +528,24 @@ export interface AlphaTest100Summary {
     passRate: number;
     avgScore: number;
 }
+export interface AlphaTest1300Summary {
+    totalTests: number;
+    totalPassed: number;
+    totalFailed: number;
+    totalSealed: number;
+    totalPending: number;
+    passRate: number;
+    avgScore: number;
+}
+export interface AlphaTest50Summary {
+    totalTests: number;
+    totalPassed: number;
+    totalFailed: number;
+    totalSealed: number;
+    totalPending: number;
+    passRate: number;
+    avgScore: number;
+}
 export interface LawExecutionRecord {
     lawName: string;
     beat: bigint;
@@ -4233,6 +4251,10 @@ export interface backendInterface {
     getAlphaTest1300All(): Promise<Array<AlphaTestRecord>>;
     getAlphaTest1300Sealed(): Promise<Array<AlphaTestRecord>>;
     getAlphaTest1300ByCategory(category: string): Promise<Array<AlphaTestRecord>>;
+    getAlphaTest50Summary(): Promise<AlphaTest50Summary>;
+    getAlphaTest50All(): Promise<Array<AlphaTestRecord>>;
+    getAlphaTest50Sealed(): Promise<Array<AlphaTestRecord>>;
+    getAlphaTest50ByCategory(category: string): Promise<Array<AlphaTestRecord>>;
     // ── INTELLIGENCE FLOORS & AI MICROS ─────────────────────────────────────────
     getIntelligenceFloorsSummary(): Promise<IntelligenceFloorsSummary>;
     getIntelligenceFloorSnapshots(): Promise<Array<FloorSnapshot>>;
@@ -9658,6 +9680,30 @@ export class Backend implements backendInterface {
             try { return (await this.actor.getAlphaTest1300ByCategory(category)) as Array<AlphaTestRecord>; }
             catch (e) { this.processError(e); throw new Error("unreachable"); }
         } else { return (await this.actor.getAlphaTest1300ByCategory(category)) as Array<AlphaTestRecord>; }
+    }
+    async getAlphaTest50Summary(): Promise<AlphaTest50Summary> {
+        if (this.processError) {
+            try { return (await this.actor.getAlphaTest50Summary()) as AlphaTest50Summary; }
+            catch (e) { this.processError(e); throw new Error("unreachable"); }
+        } else { return (await this.actor.getAlphaTest50Summary()) as AlphaTest50Summary; }
+    }
+    async getAlphaTest50All(): Promise<Array<AlphaTestRecord>> {
+        if (this.processError) {
+            try { return (await this.actor.getAlphaTest50All()) as Array<AlphaTestRecord>; }
+            catch (e) { this.processError(e); throw new Error("unreachable"); }
+        } else { return (await this.actor.getAlphaTest50All()) as Array<AlphaTestRecord>; }
+    }
+    async getAlphaTest50Sealed(): Promise<Array<AlphaTestRecord>> {
+        if (this.processError) {
+            try { return (await this.actor.getAlphaTest50Sealed()) as Array<AlphaTestRecord>; }
+            catch (e) { this.processError(e); throw new Error("unreachable"); }
+        } else { return (await this.actor.getAlphaTest50Sealed()) as Array<AlphaTestRecord>; }
+    }
+    async getAlphaTest50ByCategory(category: string): Promise<Array<AlphaTestRecord>> {
+        if (this.processError) {
+            try { return (await this.actor.getAlphaTest50ByCategory(category)) as Array<AlphaTestRecord>; }
+            catch (e) { this.processError(e); throw new Error("unreachable"); }
+        } else { return (await this.actor.getAlphaTest50ByCategory(category)) as Array<AlphaTestRecord>; }
     }
     // ── INTELLIGENCE FLOORS & AI MICROS ─────────────────────────────────────────
     async getIntelligenceFloorsSummary(): Promise<IntelligenceFloorsSummary> {

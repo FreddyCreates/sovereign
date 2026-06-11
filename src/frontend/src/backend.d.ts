@@ -552,6 +552,15 @@ export interface AlphaTest1300Summary {
     passRate: number;
     avgScore: number;
 }
+export interface AlphaTest50Summary {
+    totalTests: number;
+    totalPassed: number;
+    totalFailed: number;
+    totalSealed: number;
+    totalPending: number;
+    passRate: number;
+    avgScore: number;
+}
 export interface LawExecutionRecord {
     lawName: string;
     beat: bigint;
@@ -4228,6 +4237,11 @@ export interface backendInterface {
     getAlphaTest1300All(): Promise<Array<AlphaTestRecord>>;
     getAlphaTest1300Sealed(): Promise<Array<AlphaTestRecord>>;
     getAlphaTest1300ByCategory(category: string): Promise<Array<AlphaTestRecord>>;
+    // ── ALPHA TEST 50 ─────────────────────────────────────────────────────────
+    getAlphaTest50Summary(): Promise<AlphaTest50Summary>;
+    getAlphaTest50All(): Promise<Array<AlphaTestRecord>>;
+    getAlphaTest50Sealed(): Promise<Array<AlphaTestRecord>>;
+    getAlphaTest50ByCategory(category: string): Promise<Array<AlphaTestRecord>>;
     // ── INTELLIGENCE FLOORS & AI MICROS ─────────────────────────────────────────
     getIntelligenceFloorsSummary(): Promise<IntelligenceFloorsSummary>;
     getIntelligenceFloorSnapshots(): Promise<Array<FloorSnapshot>>;
