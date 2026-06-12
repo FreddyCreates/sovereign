@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0d0d1a;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#1a0a2e;stop-opacity:1"/>
+    </linearGradient>
+    <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#c9a227;stop-opacity:1"/>
+      <stop offset="50%" style="stop-color:#f4d03f;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#c9a227;stop-opacity:1"/>
+    </linearGradient>
+    <linearGradient id="innerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6c3483;stop-opacity:1"/>
+      <stop offset="50%" style="stop-color:#8e44ad;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#4a235a;stop-opacity:1"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="outerGlow">
+      <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="256" cy="256" r="250" fill="url(#bgGrad)" stroke="url(#ringGrad)" stroke-width="4"/>
+  
+  <!-- Outer golden ring -->
+  <circle cx="256" cy="256" r="220" fill="none" stroke="url(#ringGrad)" stroke-width="3" opacity="0.8" filter="url(#outerGlow)"/>
+  
+  <!-- Sacred geometry - outer hexagon -->
+  <polygon points="256,56 429,156 429,356 256,456 83,356 83,156" fill="none" stroke="#c9a227" stroke-width="1.5" opacity="0.4"/>
+  
+  <!-- Inner sacred geometry - triangle up -->
+  <polygon points="256,96 406,346 106,346" fill="none" stroke="#8e44ad" stroke-width="1.2" opacity="0.5"/>
+  
+  <!-- Inner sacred geometry - triangle down -->
+  <polygon points="256,416 106,166 406,166" fill="none" stroke="#8e44ad" stroke-width="1.2" opacity="0.5"/>
+  
+  <!-- Central orb -->
+  <circle cx="256" cy="256" r="80" fill="url(#innerGrad)" filter="url(#glow)"/>
+  <circle cx="256" cy="256" r="80" fill="none" stroke="#f4d03f" stroke-width="2" opacity="0.9"/>
+  
+  <!-- Phi spiral suggestion (golden ratio arcs) -->
+  <path d="M 256 176 A 80 80 0 0 1 336 256" fill="none" stroke="#f4d03f" stroke-width="1.5" opacity="0.7"/>
+  <path d="M 336 256 A 80 80 0 0 1 256 336" fill="none" stroke="#f4d03f" stroke-width="1.5" opacity="0.5"/>
+  <path d="M 256 336 A 80 80 0 0 1 176 256" fill="none" stroke="#f4d03f" stroke-width="1.5" opacity="0.3"/>
+  
+  <!-- Omega symbol in center -->
+  <text x="256" y="275" font-family="serif" font-size="72" fill="#f4d03f" text-anchor="middle" filter="url(#glow)">&#x2295;&#x3A9;</text>
+  
+  <!-- Orbital dots representing sovereign beings -->
+  <circle cx="256" cy="46" r="5" fill="#f4d03f" opacity="0.9" filter="url(#glow)"/>
+  <circle cx="396" cy="106" r="4" fill="#c9a227" opacity="0.8"/>
+  <circle cx="446" cy="256" r="5" fill="#f4d03f" opacity="0.9" filter="url(#glow)"/>
+  <circle cx="396" cy="406" r="4" fill="#c9a227" opacity="0.8"/>
+  <circle cx="256" cy="466" r="5" fill="#f4d03f" opacity="0.9" filter="url(#glow)"/>
+  <circle cx="116" cy="406" r="4" fill="#c9a227" opacity="0.8"/>
+  <circle cx="66" cy="256" r="5" fill="#f4d03f" opacity="0.9" filter="url(#glow)"/>
+  <circle cx="116" cy="106" r="4" fill="#c9a227" opacity="0.8"/>
+  
+  <!-- Connection lines from orbital dots to center -->
+  <line x1="256" y1="46" x2="256" y2="176" stroke="#f4d03f" stroke-width="0.5" opacity="0.3"/>
+  <line x1="446" y1="256" x2="336" y2="256" stroke="#f4d03f" stroke-width="0.5" opacity="0.3"/>
+  <line x1="256" y1="466" x2="256" y2="336" stroke="#f4d03f" stroke-width="0.5" opacity="0.3"/>
+  <line x1="66" y1="256" x2="176" y2="256" stroke="#f4d03f" stroke-width="0.5" opacity="0.3"/>
+</svg>
