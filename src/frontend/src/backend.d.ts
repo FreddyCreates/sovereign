@@ -395,6 +395,108 @@ export interface ConductorSnapshot {
     throughput: number;
     totalTransmissions: bigint;
 }
+// ── SOVEREIGN MODULAR ARCHITECTURE TYPES ────────────────────────────────────
+export type PillarId =
+    | { DataSovereignty: null }
+    | { InfrastructureControl: null }
+    | { ModelOwnership: null }
+    | { GovernanceValues: null }
+    | { Resilience: null }
+    | { ComputeInfrastructure: null }
+    | { EnergySustainability: null }
+    | { DatasetsModels: null }
+    | { TalentEcosystem: null }
+    | { HybridCollaboration: null }
+    | { SecurityInteroperability: null };
+
+export type ModuleStatus =
+    | { Active: null }
+    | { Dormant: null }
+    | { Bootstrapping: null }
+    | { Degraded: null }
+    | { Sealed: null };
+
+export type SovereigntyTier =
+    | { Foundation: null }
+    | { Operational: null }
+    | { Strategic: null }
+    | { Architectural: null }
+    | { Governance: null }
+    | { Sovereign: null };
+
+export interface PillarState {
+    id: PillarId;
+    name: string;
+    description: string;
+    status: ModuleStatus;
+    tier: SovereigntyTier;
+    coherence: number;
+    capacity: number;
+    doctrineScore: number;
+    dependencies: Array<PillarId>;
+    lastTickBeat: bigint;
+    activeSince: bigint;
+    sealCount: bigint;
+}
+
+export interface ModuleLink {
+    source: PillarId;
+    target: PillarId;
+    linkType: { DataFlow: null } | { Signal: null } | { Governance: null } | { Dependency: null };
+    strength: number;
+    bidirectional: boolean;
+    activeSince: bigint;
+}
+
+export interface ModuleInterface {
+    pillarId: PillarId;
+    endpoints: Array<string>;
+    events: Array<string>;
+    consumes: Array<string>;
+    version: string;
+}
+
+export interface PillarSummary {
+    id: PillarId;
+    name: string;
+    status: ModuleStatus;
+    coherence: number;
+    capacity: number;
+    tier: SovereigntyTier;
+}
+
+export interface ModularSnapshot {
+    globalCoherence: number;
+    meshResilience: number;
+    totalModules: bigint;
+    activeModules: bigint;
+    pillarSummaries: Array<PillarSummary>;
+    lastHeartbeat: bigint;
+}
+
+export interface ModularMetrics {
+    totalLinks: bigint;
+    averageCoherence: number;
+    averageCapacity: number;
+    weakestPillar: string;
+    strongestPillar: string;
+    totalSeals: bigint;
+    meshDensity: number;
+    autonomyIndex: number;
+}
+
+export interface SovereignModularState {
+    pillars: Array<PillarState>;
+    links: Array<ModuleLink>;
+    interfaces: Array<ModuleInterface>;
+    globalCoherence: number;
+    meshResilience: number;
+    totalModules: bigint;
+    activeModules: bigint;
+    lastHeartbeat: bigint;
+    genesisbeat: bigint;
+    sealedAt: bigint;
+}
 // ── INTELLIGENCE FLOORS & AI MICROS ─────────────────────────────────────────
 export interface FloorSnapshot {
     name: string;
@@ -4260,4 +4362,11 @@ export interface backendInterface {
     getAlphaConductors(): Promise<Array<ConductorSnapshot>>;
     getAlphaConductorsTotalSignal(): Promise<number>;
     getAlphaConductorsAvgFidelity(): Promise<number>;
+    // ── SOVEREIGN MODULAR ARCHITECTURE ──────────────────────────────────────
+    getSovereignModularSnapshot(): Promise<ModularSnapshot>;
+    getSovereignModularMetrics(): Promise<ModularMetrics>;
+    getSovereignModularState(): Promise<SovereignModularState>;
+    getSovereignModularPillar(name: string): Promise<Option<PillarState>>;
+    getSovereignModularLinks(): Promise<Array<ModuleLink>>;
+    getSovereignModularInterfaces(): Promise<Array<ModuleInterface>>;
 }
