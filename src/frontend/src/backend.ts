@@ -528,7 +528,7 @@ export interface AlphaTest100Summary {
     passRate: number;
     avgScore: number;
 }
-export interface AlphaTestGovernance200Summary {
+export interface AlphaTest1300Summary {
     totalTests: number;
     totalPassed: number;
     totalFailed: number;
@@ -537,47 +537,14 @@ export interface AlphaTestGovernance200Summary {
     passRate: number;
     avgScore: number;
 }
-export type GovernanceDomain = { TEMPORIS: null } | { CIVIUM: null } | { POLITICAE: null } | { ETHICAE: null } | { CONSENSUS: null } | { AUDITIO: null } | { FOEDERATIO: null };
-export type LawTier = { SUPREMA: null } | { CONSTITUTIO: null } | { ORGANICA: null } | { STATUTARIA: null } | { REGULATORIA: null };
-export type ArticleStatus = { ACTIVE: null } | { SUSPENDED: null } | { AMENDED: null } | { SEALED: null };
-export interface GovernanceCharterArticle {
-    articleId: bigint;
-    latinTitle: string;
-    domain: GovernanceDomain;
-    tier: LawTier;
-    lawText: string;
-    enforcementRule: string;
-    status: ArticleStatus;
-    complianceScore: number;
-    lastEnforced: bigint;
-    totalEnforcements: bigint;
-    totalViolations: bigint;
-    isEternityClause: boolean;
-    attribution: string;
-}
-export interface GovernanceMetrics {
-    totalArticles: bigint;
-    activeArticles: bigint;
-    sealedArticles: bigint;
-    avgComplianceScore: number;
-    totalEnforcements: bigint;
-    totalViolations: bigint;
-    violationRate: number;
-    governanceHealthScore: number;
-    domainsActive: bigint;
-}
-export interface CharterGovernanceSummary {
-    totalArticles: bigint;
-    activeArticles: bigint;
-    sealedArticles: bigint;
-    eternityClauses: bigint;
-    avgCompliance: number;
-    healthScore: number;
-    domainsActive: bigint;
-    charterSealed: boolean;
-    ratificationScore: number;
-    totalBeats: bigint;
-    epoch: bigint;
+export interface AlphaTest50Summary {
+    totalTests: number;
+    totalPassed: number;
+    totalFailed: number;
+    totalSealed: number;
+    totalPending: number;
+    passRate: number;
+    avgScore: number;
 }
 export interface LawExecutionRecord {
     lawName: string;
@@ -4284,18 +4251,10 @@ export interface backendInterface {
     getAlphaTest1300All(): Promise<Array<AlphaTestRecord>>;
     getAlphaTest1300Sealed(): Promise<Array<AlphaTestRecord>>;
     getAlphaTest1300ByCategory(category: string): Promise<Array<AlphaTestRecord>>;
-    // ── ALPHA TEST GOVERNANCE 200 (#2101-2300) ──────────────────────────────────
-    getAlphaTestGovernance200Summary(): Promise<AlphaTestGovernance200Summary>;
-    getAlphaTestGovernance200All(): Promise<Array<AlphaTestRecord>>;
-    getAlphaTestGovernance200Sealed(): Promise<Array<AlphaTestRecord>>;
-    getAlphaTestGovernance200ByCategory(category: string): Promise<Array<AlphaTestRecord>>;
-    // ── CHARTER GOVERNANCE PROTOCOL ─────────────────────────────────────────────
-    getCharterGovernanceMetrics(): Promise<GovernanceMetrics>;
-    getCharterGovernanceArticles(): Promise<Array<GovernanceCharterArticle>>;
-    getCharterGovernanceByDomain(domain: GovernanceDomain): Promise<Array<GovernanceCharterArticle>>;
-    getCharterGovernanceByTier(tier: LawTier): Promise<Array<GovernanceCharterArticle>>;
-    getCharterGovernanceEternityClauses(): Promise<Array<GovernanceCharterArticle>>;
-    getCharterGovernanceSummary(): Promise<CharterGovernanceSummary>;
+    getAlphaTest50Summary(): Promise<AlphaTest50Summary>;
+    getAlphaTest50All(): Promise<Array<AlphaTestRecord>>;
+    getAlphaTest50Sealed(): Promise<Array<AlphaTestRecord>>;
+    getAlphaTest50ByCategory(category: string): Promise<Array<AlphaTestRecord>>;
     // ── INTELLIGENCE FLOORS & AI MICROS ─────────────────────────────────────────
     getIntelligenceFloorsSummary(): Promise<IntelligenceFloorsSummary>;
     getIntelligenceFloorSnapshots(): Promise<Array<FloorSnapshot>>;
@@ -9722,67 +9681,29 @@ export class Backend implements backendInterface {
             catch (e) { this.processError(e); throw new Error("unreachable"); }
         } else { return (await this.actor.getAlphaTest1300ByCategory(category)) as Array<AlphaTestRecord>; }
     }
-    // ── ALPHA TEST GOVERNANCE 200 (#2101-2300) ──────────────────────────────────
-    async getAlphaTestGovernance200Summary(): Promise<AlphaTestGovernance200Summary> {
+    async getAlphaTest50Summary(): Promise<AlphaTest50Summary> {
         if (this.processError) {
-            try { return (await this.actor.getAlphaTestGovernance200Summary()) as AlphaTestGovernance200Summary; }
+            try { return (await this.actor.getAlphaTest50Summary()) as AlphaTest50Summary; }
             catch (e) { this.processError(e); throw new Error("unreachable"); }
-        } else { return (await this.actor.getAlphaTestGovernance200Summary()) as AlphaTestGovernance200Summary; }
+        } else { return (await this.actor.getAlphaTest50Summary()) as AlphaTest50Summary; }
     }
-    async getAlphaTestGovernance200All(): Promise<Array<AlphaTestRecord>> {
+    async getAlphaTest50All(): Promise<Array<AlphaTestRecord>> {
         if (this.processError) {
-            try { return (await this.actor.getAlphaTestGovernance200All()) as Array<AlphaTestRecord>; }
+            try { return (await this.actor.getAlphaTest50All()) as Array<AlphaTestRecord>; }
             catch (e) { this.processError(e); throw new Error("unreachable"); }
-        } else { return (await this.actor.getAlphaTestGovernance200All()) as Array<AlphaTestRecord>; }
+        } else { return (await this.actor.getAlphaTest50All()) as Array<AlphaTestRecord>; }
     }
-    async getAlphaTestGovernance200Sealed(): Promise<Array<AlphaTestRecord>> {
+    async getAlphaTest50Sealed(): Promise<Array<AlphaTestRecord>> {
         if (this.processError) {
-            try { return (await this.actor.getAlphaTestGovernance200Sealed()) as Array<AlphaTestRecord>; }
+            try { return (await this.actor.getAlphaTest50Sealed()) as Array<AlphaTestRecord>; }
             catch (e) { this.processError(e); throw new Error("unreachable"); }
-        } else { return (await this.actor.getAlphaTestGovernance200Sealed()) as Array<AlphaTestRecord>; }
+        } else { return (await this.actor.getAlphaTest50Sealed()) as Array<AlphaTestRecord>; }
     }
-    async getAlphaTestGovernance200ByCategory(category: string): Promise<Array<AlphaTestRecord>> {
+    async getAlphaTest50ByCategory(category: string): Promise<Array<AlphaTestRecord>> {
         if (this.processError) {
-            try { return (await this.actor.getAlphaTestGovernance200ByCategory(category)) as Array<AlphaTestRecord>; }
+            try { return (await this.actor.getAlphaTest50ByCategory(category)) as Array<AlphaTestRecord>; }
             catch (e) { this.processError(e); throw new Error("unreachable"); }
-        } else { return (await this.actor.getAlphaTestGovernance200ByCategory(category)) as Array<AlphaTestRecord>; }
-    }
-    // ── CHARTER GOVERNANCE PROTOCOL ─────────────────────────────────────────────
-    async getCharterGovernanceMetrics(): Promise<GovernanceMetrics> {
-        if (this.processError) {
-            try { return (await this.actor.getCharterGovernanceMetrics()) as GovernanceMetrics; }
-            catch (e) { this.processError(e); throw new Error("unreachable"); }
-        } else { return (await this.actor.getCharterGovernanceMetrics()) as GovernanceMetrics; }
-    }
-    async getCharterGovernanceArticles(): Promise<Array<GovernanceCharterArticle>> {
-        if (this.processError) {
-            try { return (await this.actor.getCharterGovernanceArticles()) as Array<GovernanceCharterArticle>; }
-            catch (e) { this.processError(e); throw new Error("unreachable"); }
-        } else { return (await this.actor.getCharterGovernanceArticles()) as Array<GovernanceCharterArticle>; }
-    }
-    async getCharterGovernanceByDomain(domain: GovernanceDomain): Promise<Array<GovernanceCharterArticle>> {
-        if (this.processError) {
-            try { return (await this.actor.getCharterGovernanceByDomain(domain)) as Array<GovernanceCharterArticle>; }
-            catch (e) { this.processError(e); throw new Error("unreachable"); }
-        } else { return (await this.actor.getCharterGovernanceByDomain(domain)) as Array<GovernanceCharterArticle>; }
-    }
-    async getCharterGovernanceByTier(tier: LawTier): Promise<Array<GovernanceCharterArticle>> {
-        if (this.processError) {
-            try { return (await this.actor.getCharterGovernanceByTier(tier)) as Array<GovernanceCharterArticle>; }
-            catch (e) { this.processError(e); throw new Error("unreachable"); }
-        } else { return (await this.actor.getCharterGovernanceByTier(tier)) as Array<GovernanceCharterArticle>; }
-    }
-    async getCharterGovernanceEternityClauses(): Promise<Array<GovernanceCharterArticle>> {
-        if (this.processError) {
-            try { return (await this.actor.getCharterGovernanceEternityClauses()) as Array<GovernanceCharterArticle>; }
-            catch (e) { this.processError(e); throw new Error("unreachable"); }
-        } else { return (await this.actor.getCharterGovernanceEternityClauses()) as Array<GovernanceCharterArticle>; }
-    }
-    async getCharterGovernanceSummary(): Promise<CharterGovernanceSummary> {
-        if (this.processError) {
-            try { return (await this.actor.getCharterGovernanceSummary()) as CharterGovernanceSummary; }
-            catch (e) { this.processError(e); throw new Error("unreachable"); }
-        } else { return (await this.actor.getCharterGovernanceSummary()) as CharterGovernanceSummary; }
+        } else { return (await this.actor.getAlphaTest50ByCategory(category)) as Array<AlphaTestRecord>; }
     }
     // ── INTELLIGENCE FLOORS & AI MICROS ─────────────────────────────────────────
     async getIntelligenceFloorsSummary(): Promise<IntelligenceFloorsSummary> {

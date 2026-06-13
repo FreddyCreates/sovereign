@@ -395,6 +395,108 @@ export interface ConductorSnapshot {
     throughput: number;
     totalTransmissions: bigint;
 }
+// ── SOVEREIGN MODULAR ARCHITECTURE TYPES ────────────────────────────────────
+export type PillarId =
+    | { DataSovereignty: null }
+    | { InfrastructureControl: null }
+    | { ModelOwnership: null }
+    | { GovernanceValues: null }
+    | { Resilience: null }
+    | { ComputeInfrastructure: null }
+    | { EnergySustainability: null }
+    | { DatasetsModels: null }
+    | { TalentEcosystem: null }
+    | { HybridCollaboration: null }
+    | { SecurityInteroperability: null };
+
+export type ModuleStatus =
+    | { Active: null }
+    | { Dormant: null }
+    | { Bootstrapping: null }
+    | { Degraded: null }
+    | { Sealed: null };
+
+export type SovereigntyTier =
+    | { Foundation: null }
+    | { Operational: null }
+    | { Strategic: null }
+    | { Architectural: null }
+    | { Governance: null }
+    | { Sovereign: null };
+
+export interface PillarState {
+    id: PillarId;
+    name: string;
+    description: string;
+    status: ModuleStatus;
+    tier: SovereigntyTier;
+    coherence: number;
+    capacity: number;
+    doctrineScore: number;
+    dependencies: Array<PillarId>;
+    lastTickBeat: bigint;
+    activeSince: bigint;
+    sealCount: bigint;
+}
+
+export interface ModuleLink {
+    source: PillarId;
+    target: PillarId;
+    linkType: { DataFlow: null } | { Signal: null } | { Governance: null } | { Dependency: null };
+    strength: number;
+    bidirectional: boolean;
+    activeSince: bigint;
+}
+
+export interface ModuleInterface {
+    pillarId: PillarId;
+    endpoints: Array<string>;
+    events: Array<string>;
+    consumes: Array<string>;
+    version: string;
+}
+
+export interface PillarSummary {
+    id: PillarId;
+    name: string;
+    status: ModuleStatus;
+    coherence: number;
+    capacity: number;
+    tier: SovereigntyTier;
+}
+
+export interface ModularSnapshot {
+    globalCoherence: number;
+    meshResilience: number;
+    totalModules: bigint;
+    activeModules: bigint;
+    pillarSummaries: Array<PillarSummary>;
+    lastHeartbeat: bigint;
+}
+
+export interface ModularMetrics {
+    totalLinks: bigint;
+    averageCoherence: number;
+    averageCapacity: number;
+    weakestPillar: string;
+    strongestPillar: string;
+    totalSeals: bigint;
+    meshDensity: number;
+    autonomyIndex: number;
+}
+
+export interface SovereignModularState {
+    pillars: Array<PillarState>;
+    links: Array<ModuleLink>;
+    interfaces: Array<ModuleInterface>;
+    globalCoherence: number;
+    meshResilience: number;
+    totalModules: bigint;
+    activeModules: bigint;
+    lastHeartbeat: bigint;
+    genesisbeat: bigint;
+    sealedAt: bigint;
+}
 // ── INTELLIGENCE FLOORS & AI MICROS ─────────────────────────────────────────
 export interface FloorSnapshot {
     name: string;
@@ -552,7 +654,7 @@ export interface AlphaTest1300Summary {
     passRate: number;
     avgScore: number;
 }
-export interface AlphaTestGovernance200Summary {
+export interface AlphaTest50Summary {
     totalTests: number;
     totalPassed: number;
     totalFailed: number;
@@ -560,48 +662,6 @@ export interface AlphaTestGovernance200Summary {
     totalPending: number;
     passRate: number;
     avgScore: number;
-}
-export type GovernanceDomain = { TEMPORIS: null } | { CIVIUM: null } | { POLITICAE: null } | { ETHICAE: null } | { CONSENSUS: null } | { AUDITIO: null } | { FOEDERATIO: null };
-export type LawTier = { SUPREMA: null } | { CONSTITUTIO: null } | { ORGANICA: null } | { STATUTARIA: null } | { REGULATORIA: null };
-export type ArticleStatus = { ACTIVE: null } | { SUSPENDED: null } | { AMENDED: null } | { SEALED: null };
-export interface GovernanceCharterArticle {
-    articleId: bigint;
-    latinTitle: string;
-    domain: GovernanceDomain;
-    tier: LawTier;
-    lawText: string;
-    enforcementRule: string;
-    status: ArticleStatus;
-    complianceScore: number;
-    lastEnforced: bigint;
-    totalEnforcements: bigint;
-    totalViolations: bigint;
-    isEternityClause: boolean;
-    attribution: string;
-}
-export interface GovernanceMetrics {
-    totalArticles: bigint;
-    activeArticles: bigint;
-    sealedArticles: bigint;
-    avgComplianceScore: number;
-    totalEnforcements: bigint;
-    totalViolations: bigint;
-    violationRate: number;
-    governanceHealthScore: number;
-    domainsActive: bigint;
-}
-export interface CharterGovernanceSummary {
-    totalArticles: bigint;
-    activeArticles: bigint;
-    sealedArticles: bigint;
-    eternityClauses: bigint;
-    avgCompliance: number;
-    healthScore: number;
-    domainsActive: bigint;
-    charterSealed: boolean;
-    ratificationScore: number;
-    totalBeats: bigint;
-    epoch: bigint;
 }
 export interface LawExecutionRecord {
     lawName: string;
@@ -4279,18 +4339,11 @@ export interface backendInterface {
     getAlphaTest1300All(): Promise<Array<AlphaTestRecord>>;
     getAlphaTest1300Sealed(): Promise<Array<AlphaTestRecord>>;
     getAlphaTest1300ByCategory(category: string): Promise<Array<AlphaTestRecord>>;
-    // ── ALPHA TEST GOVERNANCE 200 (#2101-2300) ──────────────────────────────────
-    getAlphaTestGovernance200Summary(): Promise<AlphaTestGovernance200Summary>;
-    getAlphaTestGovernance200All(): Promise<Array<AlphaTestRecord>>;
-    getAlphaTestGovernance200Sealed(): Promise<Array<AlphaTestRecord>>;
-    getAlphaTestGovernance200ByCategory(category: string): Promise<Array<AlphaTestRecord>>;
-    // ── CHARTER GOVERNANCE PROTOCOL ─────────────────────────────────────────────
-    getCharterGovernanceMetrics(): Promise<GovernanceMetrics>;
-    getCharterGovernanceArticles(): Promise<Array<GovernanceCharterArticle>>;
-    getCharterGovernanceByDomain(domain: GovernanceDomain): Promise<Array<GovernanceCharterArticle>>;
-    getCharterGovernanceByTier(tier: LawTier): Promise<Array<GovernanceCharterArticle>>;
-    getCharterGovernanceEternityClauses(): Promise<Array<GovernanceCharterArticle>>;
-    getCharterGovernanceSummary(): Promise<CharterGovernanceSummary>;
+    // ── ALPHA TEST 50 ─────────────────────────────────────────────────────────
+    getAlphaTest50Summary(): Promise<AlphaTest50Summary>;
+    getAlphaTest50All(): Promise<Array<AlphaTestRecord>>;
+    getAlphaTest50Sealed(): Promise<Array<AlphaTestRecord>>;
+    getAlphaTest50ByCategory(category: string): Promise<Array<AlphaTestRecord>>;
     // ── INTELLIGENCE FLOORS & AI MICROS ─────────────────────────────────────────
     getIntelligenceFloorsSummary(): Promise<IntelligenceFloorsSummary>;
     getIntelligenceFloorSnapshots(): Promise<Array<FloorSnapshot>>;
@@ -4309,4 +4362,11 @@ export interface backendInterface {
     getAlphaConductors(): Promise<Array<ConductorSnapshot>>;
     getAlphaConductorsTotalSignal(): Promise<number>;
     getAlphaConductorsAvgFidelity(): Promise<number>;
+    // ── SOVEREIGN MODULAR ARCHITECTURE ──────────────────────────────────────
+    getSovereignModularSnapshot(): Promise<ModularSnapshot>;
+    getSovereignModularMetrics(): Promise<ModularMetrics>;
+    getSovereignModularState(): Promise<SovereignModularState>;
+    getSovereignModularPillar(name: string): Promise<Option<PillarState>>;
+    getSovereignModularLinks(): Promise<Array<ModuleLink>>;
+    getSovereignModularInterfaces(): Promise<Array<ModuleInterface>>;
 }

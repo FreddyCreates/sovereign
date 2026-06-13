@@ -114,8 +114,7 @@ import AlphaTest500Lib       "intelligence/AlphaTest500";
 import OROEntitiesLib        "intelligence/OROEntities";
 import AlphaTest100Lib       "intelligence/AlphaTest100";
 import AlphaTest1300Lib      "intelligence/AlphaTest1300";
-import AlphaTestGov200Lib    "intelligence/AlphaTestGovernance200";
-import CharterGovProtoLib    "charters/CharterGovernanceProtocol";
+import AlphaTest50Lib        "intelligence/AlphaTest50";
 import AlphaOrchestratorsLib "intelligence/AlphaOrchestrators";
 import AlphaConductorsLib    "intelligence/AlphaConductors";
 import MOEGovLib             "protocols/MOESelfGovernance";
@@ -167,8 +166,9 @@ import AIDivHarmonicLib      "intelligence/AIDivisionHarmonicResonance";
 import AIDivDoctrineLib      "intelligence/AIDivisionSovereignDoctrine";
 import AIDivMetaLib          "intelligence/AIDivisionMetaConsciousness";
 import AIDivNexusLib         "intelligence/AIDivisionSovereignNexus";
-import SIRTypes              "types/sovereignInfraResilience";
-import SIRLib                "lib/sovereignInfraResilience";
+import SMTypes               "types/sovereignModular";
+import SMLib                 "lib/sovereignModular";
+import SovereignModularMixin "mixins/sovereign-modular-api";
 
 
 
@@ -701,18 +701,11 @@ actor SovereignWarSim {
   stable var alphaTest1300State : AlphaTest1300Lib.AlphaTest1300State =
     AlphaTest1300Lib.initState();
 
-  // ── ALPHA TEST GOVERNANCE 200 — 200 governance tests (#2101-2300) ─────────
-  // 10 categories × 20 tests: TEMPORIS_GUBERNATIO, CIVIUM_RELATIO,
-  // POLITICA_LEGIS, ETHICA_PRINCIPIUM, CHARTA_CONSTITUENS, CONSENSUS_MECHANIS,
-  // AUDITIO_PROBITAS, SUCCESSIO_CONTINUITAS, FOEDERATIO_NEXUS, SUPREMA_LEX.
-  stable var alphaTestGov200State : AlphaTestGov200Lib.AlphaTestGovernance200State =
-    AlphaTestGov200Lib.initState();
-
-  // ── CHARTER GOVERNANCE PROTOCOL — The Sovereign Governance Macro ──────────
-  // 35 articles across 7 domains (TEMPORIS, CIVIUM, POLITICAE, ETHICAE,
-  // CONSENSUS, AUDITIO, FOEDERATIO). 5-tier law hierarchy. PHI-weighted.
-  stable var charterGovProtoState : CharterGovProtoLib.CharterGovernanceState =
-    CharterGovProtoLib.initState();
+  // ── ALPHA TEST 50 — 50 sovereign genesis tests (#2101-2150) ─────────────────
+  // 1 category (SOVEREIGN_GENESIS) × 50 tests. All run every beat.
+  // Brings global sovereign test count to 2150: 200+500+100+1300+50 = 2150.
+  stable var alphaTest50State : AlphaTest50Lib.AlphaTest50State =
+    AlphaTest50Lib.initState();
 
   // ── ALPHA ORCHESTRATORS — 8 sovereign orchestration entities ───────────────
   // ARCHON, NEXUS, FLUX, HARMONIA, GENESIS, CHRONOS, LOGOS, OMEGA.
@@ -873,13 +866,6 @@ actor SovereignWarSim {
   // Attribution: Alfredo Medina Hernandez | SOVEREIGN | May 2026
   stable var charterIFState : CharterIFLib.CharterState = CharterIFLib.init();
 
-  // ── SOVEREIGN INFRASTRUCTURE RESILIENCE LAYER ──────────────────────────────
-  // 5 Pillars: Verifiability & Control, Recursive/Self-Hosted, Energy & Infra,
-  // Ecosystem Plays, Risk Management. Post-quantum encryption, SBOMs, agentic
-  // identity, data flywheels, multi-chip resilience topology.
-  // Attribution: Alfredo Medina Hernandez | SOVEREIGN | June 2026
-  stable var sovereignInfraState : SIRTypes.SovereignInfraResilienceState = SIRLib.initState();
-
   // ── AI DIVISION — SOVEREIGN INTELLIGENCE COMMAND ─────────────────────────
   // 64 Commanders, 16 Battalions, 8 Theatres, 4 Domains. ALL RUNNING TIME.
   // Core: 64 entities with cognitive architecture, memory, communication, vitals.
@@ -910,6 +896,14 @@ actor SovereignWarSim {
   stable var aiDivDoctrineState : AIDivDoctrineLib.DoctrineState = AIDivDoctrineLib.initState();
   stable var aiDivMetaState : AIDivMetaLib.MetaState = AIDivMetaLib.initState();
   stable var aiDivNexusState : AIDivNexusLib.NexusState = AIDivNexusLib.initState();
+
+  // ── SOVEREIGN MODULAR ARCHITECTURE — 11-PILLAR MESH ────────────────────
+  // Implements composable Sovereign AI pillars: Data Sovereignty, Infrastructure
+  // Control, Model Ownership, Governance & Values, Resilience, Compute,
+  // Energy & Sustainability, Datasets & Models, Talent & Ecosystem,
+  // Hybrid Collaboration, Security & Interoperability.
+  // Modular mesh with φ-weighted coherence and inter-pillar signal topology.
+  stable var sovereignModularState : SMTypes.SovereignModularState = SMLib.initState(0);
 
   // ── B2.7 — STREAM_SOVEREIGN ────────────────────────────────────────────
   // Dedicated processing stream inside the SOVEREIGN organism's own runtime.
@@ -1881,6 +1875,13 @@ actor SovereignWarSim {
   // Voice × 5, Chat × 5, Sensor × 5 — all firing every 873ms heartbeat.
   include IntelMixin(
     intelligenceTaxonomyStateRef,
+  );
+
+  // Include Sovereign Modular Architecture mixin
+  // 11-pillar composable mesh: Data Sovereignty, Infrastructure, Model Ownership,
+  // Governance, Resilience, Compute, Energy, Datasets, Talent, Hybrid, Security.
+  include SovereignModularMixin(
+    sovereignModularState,
   );
 
   // ── HELPERS ───────────────────────────────────────────────────────────
@@ -3957,18 +3958,11 @@ actor SovereignWarSim {
       alphaTest1300State, beat, globalCoherence, doctrineScoreEarly / 100.0,
     );
 
-    // ── ALPHA TEST GOVERNANCE 200 — 200 governance tests (#2101-2300) advance
-    // 20 tests per beat (10-beat cycle). Governance-focused: time, users, policies,
-    // ethics, constitution, consensus, audit, succession, federation, supreme law.
-    alphaTestGov200State := AlphaTestGov200Lib.advanceBeat(
-      alphaTestGov200State, beat, globalCoherence, doctrineScoreEarly / 100.0,
-    );
-
-    // ── CHARTER GOVERNANCE PROTOCOL — The Sovereign Governance Macro advance ─
-    // 5 articles per beat (7-beat cycle). 35 articles across 7 domains.
-    // PHI-weighted compliance scoring. Ratification toward charter seal.
-    charterGovProtoState := CharterGovProtoLib.advanceBeat(
-      charterGovProtoState, beat, globalCoherence, doctrineScoreEarly / 100.0,
+    // ── ALPHA TEST 50 — 50 sovereign genesis tests (#2101-2150) advance ──────
+    // All 50 tests run every beat (1-beat cycle).
+    // Brings global sovereign test count to 2150: 200+500+100+1300+50 = 2150.
+    alphaTest50State := AlphaTest50Lib.advanceBeat(
+      alphaTest50State, beat, globalCoherence, doctrineScoreEarly / 100.0,
     );
 
     // ── ALPHA ORCHESTRATORS — 8 orchestration entities advance ────────────────
@@ -4124,11 +4118,6 @@ actor SovereignWarSim {
     charterIFState := newCharterIFState;
     compoundCoherence += charterIFDelta;
 
-    // ── SOVEREIGN INFRASTRUCTURE RESILIENCE — 873ms heartbeat ────────────────
-    // 5 pillars pulse: Verifiability, Recursive Stacks, Energy, Ecosystem, Risk.
-    // PHI-weighted signal propagation across sovereign infrastructure topology.
-    sovereignInfraState := SIRLib.pulse(sovereignInfraState, beat);
-
     // ── AI DIVISION — ALL RUNNING TIME — 873ms heartbeat ────────────────────
     // 64 commanders, 16 battalions, 8 theatres, 4 domains advance.
     // Kuramoto synchronization, Hebbian learning, doctrine enforcement.
@@ -4261,6 +4250,12 @@ actor SovereignWarSim {
     );
     aiDivNexusState := newAIDivNexusState;
     compoundCoherence += aiDivNexusDelta;
+
+    // ── SOVEREIGN MODULAR ARCHITECTURE TICK ───────────────────────────────
+    // Advance all 11 pillars: coherence growth, link strength convergence,
+    // mesh resilience computation. Law 23 (compound coherence never decrements).
+    sovereignModularState := SMLib.tick(sovereignModularState, beat);
+    compoundCoherence += sovereignModularState.globalCoherence * 0.001;
 
     // Disconnected engine #2: quality scores computed but never re-injected.
     // After Ring 5 fires, re-inject quality weights into production queue state.
@@ -8191,74 +8186,27 @@ actor SovereignWarSim {
     AlphaTest1300Lib.getTestsByCategory(alphaTest1300State, category)
   };
 
-  // ── ALPHA TEST GOVERNANCE 200 ENDPOINTS (#2101-2300) ─────────────────────
-  // 200 governance tests: time, users, policies, ethics, constitution, consensus,
-  // audit, succession, federation, supreme law. Total tests: 2100 + 200 = 2300.
+  // ── ALPHA TEST 50 ENDPOINTS (#2101-2150) ────────────────────────────────────
 
-  /// Get summary of 200 governance alpha tests (#2101-2300).
-  public query func getAlphaTestGovernance200Summary() : async AlphaTestGov200Lib.AlphaTestGovernance200Summary {
-    AlphaTestGov200Lib.getSummary(alphaTestGov200State)
+  /// Get summary of 50 sovereign genesis alpha tests (#2101-2150).
+  /// Total sovereign tests after this suite: 200 + 500 + 100 + 1300 + 50 = 2150.
+  public query func getAlphaTest50Summary() : async AlphaTest50Lib.AlphaTest50Summary {
+    AlphaTest50Lib.getSummary(alphaTest50State)
   };
 
-  /// Get all 200 governance alpha test records.
-  public query func getAlphaTestGovernance200All() : async [AlphaTestGov200Lib.AlphaTestRecord] {
-    AlphaTestGov200Lib.getAllTests(alphaTestGov200State)
+  /// Get all 50 sovereign genesis alpha test records with current status and scores.
+  public query func getAlphaTest50All() : async [AlphaTest50Lib.AlphaTestRecord] {
+    AlphaTest50Lib.getAllTests(alphaTest50State)
   };
 
-  /// Get permanently sealed governance alpha tests (score >= 0.9).
-  public query func getAlphaTestGovernance200Sealed() : async [AlphaTestGov200Lib.AlphaTestRecord] {
-    AlphaTestGov200Lib.getSealedTests(alphaTestGov200State)
+  /// Get permanently sealed sovereign genesis alpha tests (score >= 0.9).
+  public query func getAlphaTest50Sealed() : async [AlphaTest50Lib.AlphaTestRecord] {
+    AlphaTest50Lib.getSealedTests(alphaTest50State)
   };
 
-  /// Get governance alpha tests by category (e.g. "ETHICA_PRINCIPIUM", "SUPREMA_LEX").
-  public query func getAlphaTestGovernance200ByCategory(category : Text) : async [AlphaTestGov200Lib.AlphaTestRecord] {
-    AlphaTestGov200Lib.getTestsByCategory(alphaTestGov200State, category)
-  };
-
-  // ── CHARTER GOVERNANCE PROTOCOL ENDPOINTS ─────────────────────────────────
-  // THE CHARTER: 35 articles across 7 domains, 5-tier law hierarchy.
-  // Sovereign governance macro for time, users, policies, ethics, and federation.
-
-  /// Get governance charter metrics (compliance, health, violations, domains active).
-  public query func getCharterGovernanceMetrics() : async CharterGovProtoLib.GovernanceMetrics {
-    CharterGovProtoLib.getMetrics(charterGovProtoState)
-  };
-
-  /// Get all 35 charter governance articles.
-  public query func getCharterGovernanceArticles() : async [CharterGovProtoLib.CharterArticle] {
-    CharterGovProtoLib.getAllArticles(charterGovProtoState)
-  };
-
-  /// Get charter governance articles by domain (e.g. #TEMPORIS, #ETHICAE).
-  public query func getCharterGovernanceByDomain(domain : CharterGovProtoLib.GovernanceDomain) : async [CharterGovProtoLib.CharterArticle] {
-    CharterGovProtoLib.getArticlesByDomain(charterGovProtoState, domain)
-  };
-
-  /// Get charter governance articles by law tier (e.g. #SUPREMA, #CONSTITUTIO).
-  public query func getCharterGovernanceByTier(tier : CharterGovProtoLib.LawTier) : async [CharterGovProtoLib.CharterArticle] {
-    CharterGovProtoLib.getArticlesByTier(charterGovProtoState, tier)
-  };
-
-  /// Get all eternity clauses (immutable articles).
-  public query func getCharterGovernanceEternityClauses() : async [CharterGovProtoLib.CharterArticle] {
-    CharterGovProtoLib.getEternityClauses(charterGovProtoState)
-  };
-
-  /// Get charter governance summary (articles, compliance, health, ratification, seal status).
-  public query func getCharterGovernanceSummary() : async {
-    totalArticles : Nat;
-    activeArticles : Nat;
-    sealedArticles : Nat;
-    eternityClauses : Nat;
-    avgCompliance : Float;
-    healthScore : Float;
-    domainsActive : Nat;
-    charterSealed : Bool;
-    ratificationScore : Float;
-    totalBeats : Nat;
-    epoch : Nat;
-  } {
-    CharterGovProtoLib.getSummary(charterGovProtoState)
+  /// Get sovereign genesis alpha tests by category (e.g. "SOVEREIGN_GENESIS").
+  public query func getAlphaTest50ByCategory(category : Text) : async [AlphaTest50Lib.AlphaTestRecord] {
+    AlphaTest50Lib.getTestsByCategory(alphaTest50State, category)
   };
 
   // ══════════════════════════════════════════════════════════════════════════
@@ -9575,27 +9523,6 @@ actor SovereignWarSim {
 
   public query func getAIDivisionNexusMetrics() : async AIDivNexusLib.NexusMetrics {
     AIDivNexusLib.getMetrics(aiDivNexusState)
-  };
-
-  // ── SOVEREIGN INFRASTRUCTURE RESILIENCE ENDPOINTS ──────────────────────────
-  public query func getSovereignInfraResilienceSummary() : async SIRTypes.SovereignInfraResilienceSummary {
-    SIRLib.getSummary(sovereignInfraState)
-  };
-
-  public query func getSovereignInfraPillarSnapshots() : async [SIRTypes.PillarSnapshot] {
-    SIRLib.getPillarSnapshots(sovereignInfraState)
-  };
-
-  public query func getSovereignInfraAgentCount() : async Nat {
-    sovereignInfraState.agenticIdentities.size()
-  };
-
-  public query func getSovereignInfraResilienceScore() : async Float {
-    sovereignInfraState.resilience.overallResilience
-  };
-
-  public query func getSovereignInfraOverallSignal() : async Float {
-    sovereignInfraState.overallSignal
   };
 
 }
