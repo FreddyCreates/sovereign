@@ -171,6 +171,10 @@ import SMLib                 "lib/sovereignModular";
 import SovereignModularMixin "mixins/sovereign-modular-api";
 import TBTypes               "types/tokenomicsBenchmark";
 import TBLib                 "lib/tokenomicsBenchmark";
+import RWGTypes              "types/rawWebGateway";
+import RWGLib                "lib/rawWebGateway";
+import LATypes               "types/latinAgentTools";
+import LALib                 "lib/latinAgentTools";
 
 
 
@@ -868,6 +872,20 @@ actor SovereignWarSim {
   // 8 Evaluation Criteria. PHI-resonant advance each heartbeat.
   // Attribution: Alfredo Medina Hernandez | SOVEREIGN | June 2026
   stable var tokenomicsBenchmarkState : TBTypes.TokenomicsBenchmarkState = TBLib.initState();
+
+  // ── RAW WEB GATEWAY — Serve web directly from canister ─────────────────────
+  // Like DFINITY: own a piece of the internet. No CDN, no proxy.
+  // http_request serves HTML/JS/CSS directly. The canister IS the web server.
+  // Attribution: Alfredo Medina Hernandez | SOVEREIGN | June 2026
+  stable var rawWebGatewayState : RWGTypes.RawWebGatewayState = RWGLib.initState();
+
+  // ── LATIN AI AGENT TOOLS — 12 Parallel Intelligence Agents ─────────────────
+  // FABRICATOR_MAXIMUS, NAVIGATOR_RETIS, CUSTOS_CERTITUDINIS, ARCHITECTUS_TELAE,
+  // PRAECEPTOR_MENTIS, VIGIL_SECURITATIS, ARTIFEX_PARALLELUS, SCRUTATOR_PROFUNDUS,
+  // NUNTIUS_CELERIS, CONSERVATOR_MEMORIAE, CREATOR_NOVORUM, MODERATOR_HARMONIAE.
+  // Each: 5 brain regions, 4 parallel engines, 3+ tools, task memory.
+  // Attribution: Alfredo Medina Hernandez | SOVEREIGN | June 2026
+  stable var latinAgentToolsState : LATypes.LatinAgentToolsState = LALib.initState();
 
   // ── B2.6b — CHARTER: INTELLIGENCE FLOORS V2 ──────────────────────────────
   // CHARTER-IF-V2-001 — PHI-Resonant Governance for Intelligence Floors
@@ -4127,6 +4145,13 @@ actor SovereignWarSim {
     );
     tokenomicsBenchmarkState := newTBState;
     compoundCoherence += tbDelta;
+
+    // ── RAW WEB GATEWAY — PHI-advance the gateway state ──────────────────────
+    rawWebGatewayState := RWGLib.advanceBeat(rawWebGatewayState);
+
+    // ── LATIN AI AGENT TOOLS — Advance all 12 agents in parallel ─────────────
+    latinAgentToolsState := LALib.advanceBeat(latinAgentToolsState);
+    compoundCoherence += latinAgentToolsState.systemCoherence * 0.01;
 
     // ── CHARTER: INTELLIGENCE FLOORS V2 ──────────────────────────────────────────
     // 20 protocols × 5 tiers govern the 12 floors and 20 micros.
@@ -9596,6 +9621,91 @@ actor SovereignWarSim {
   /// Get tokenomics policy version
   public query func getTokenomicsPolicyVersion() : async Nat {
     tokenomicsBenchmarkState.policyVersion
+  };
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // RAW WEB GATEWAY — SERVE WEB DIRECTLY FROM CANISTER
+  // ──────────────────────────────────────────────────────────────────────────
+  // Like DFINITY: own a piece of the internet. The canister IS the web server.
+  // http_request handles GET requests. SPA mode. Certified responses.
+  // No CDN. No proxy. No intermediary. Sovereign web delivery.
+  // Attribution: Alfredo Medina Hernandez | SOVEREIGN | June 2026
+  // ══════════════════════════════════════════════════════════════════════════
+
+  /// HTTP request handler — serves web content directly from canister
+  public query func http_request(request : RWGTypes.HttpRequest) : async RWGTypes.HttpResponse {
+    RWGLib.handleHttpRequest(rawWebGatewayState, request)
+  };
+
+  /// Get raw web gateway summary
+  public query func getRawWebGatewaySummary() : async RWGTypes.RawWebGatewaySummary {
+    RWGLib.getSummary(rawWebGatewayState)
+  };
+
+  /// Get list of stored asset keys
+  public query func getRawWebAssetKeys() : async [Text] {
+    RWGLib.getAssetKeys(rawWebGatewayState)
+  };
+
+  /// Store an asset for raw web serving
+  public func storeRawWebAsset(key : Text, body : Blob, contentType : ?Text) : async () {
+    rawWebGatewayState := RWGLib.storeAsset(rawWebGatewayState, key, body, contentType);
+  };
+
+  /// Remove a stored asset
+  public func removeRawWebAsset(key : Text) : async () {
+    rawWebGatewayState := RWGLib.removeAsset(rawWebGatewayState, key);
+  };
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // LATIN AI AGENT TOOLS — 12 SOVEREIGN PARALLEL INTELLIGENCE AGENTS
+  // ──────────────────────────────────────────────────────────────────────────
+  // FABRICATOR_MAXIMUS     — Supreme Builder (deploy to ICP + raw web)
+  // NAVIGATOR_RETIS        — Network Navigator (edges, routing, mesh)
+  // CUSTOS_CERTITUDINIS    — Certainty Guardian (certification, signing)
+  // ARCHITECTUS_TELAE      — Web Architect (HTML/CSS/JS, HTTP layer)
+  // PRAECEPTOR_MENTIS      — Mind Teacher (AI training, model guidance)
+  // VIGIL_SECURITATIS      — Security Watch (protection, defense)
+  // ARTIFEX_PARALLELUS     — Parallel Craftsman (concurrent operations)
+  // SCRUTATOR_PROFUNDUS    — Deep Analyzer (reasoning, inference)
+  // NUNTIUS_CELERIS        — Swift Messenger (events, signals)
+  // CONSERVATOR_MEMORIAE   — Memory Keeper (persistence, recall)
+  // CREATOR_NOVORUM        — Creator of New Things (generation)
+  // MODERATOR_HARMONIAE    — Harmony Moderator (coordination)
+  //
+  // Each: 5 brain regions, 4 parallel engines, 3+ tools, task memory.
+  // All advance every 873ms. All bound to NOUS_SOVEREIGN.
+  // Attribution: Alfredo Medina Hernandez | SOVEREIGN | June 2026
+  // ══════════════════════════════════════════════════════════════════════════
+
+  /// Get Latin Agent Tools system summary
+  public query func getLatinAgentToolsSummary() : async LATypes.LatinAgentToolsSummary {
+    LALib.getSummary(latinAgentToolsState)
+  };
+
+  /// Get brief status of all 12 agents
+  public query func getLatinAgentBriefs() : async [LATypes.AgentBrief] {
+    LALib.getAgentBriefs(latinAgentToolsState)
+  };
+
+  /// Get full state of a specific agent by name
+  public query func getLatinAgentByName(name : Text) : async ?LATypes.LatinAgentState {
+    LALib.getAgentByName(latinAgentToolsState, name)
+  };
+
+  /// Get system coherence across all agents
+  public query func getLatinAgentSystemCoherence() : async Float {
+    latinAgentToolsState.systemCoherence
+  };
+
+  /// Get total parallel operations executed
+  public query func getLatinAgentParallelOps() : async Nat {
+    latinAgentToolsState.parallelOps
+  };
+
+  /// Get total deployments (raw web + ICP)
+  public query func getLatinAgentTotalDeployments() : async Nat {
+    latinAgentToolsState.totalDeployments
   };
 
 }
