@@ -169,6 +169,8 @@ import AIDivNexusLib         "intelligence/AIDivisionSovereignNexus";
 import SMTypes               "types/sovereignModular";
 import SMLib                 "lib/sovereignModular";
 import SovereignModularMixin "mixins/sovereign-modular-api";
+import TBTypes               "types/tokenomicsBenchmark";
+import TBLib                 "lib/tokenomicsBenchmark";
 
 
 
@@ -858,6 +860,14 @@ actor SovereignWarSim {
   //
   // Attribution: Alfredo Medina Hernandez | SOVEREIGN | May 2026
   stable var intelligenceFloorsState : IFTypes.IntelligenceFloorsState = IFLib.initState();
+
+  // ── TOKENOMICS MEASUREMENT & BENCHMARKING FRAMEWORK ────────────────────────
+  // "Do not optimize for fewer tokens. Optimize for higher-value tokens."
+  // Token Value Function, CRPT, Salience Allocation, Compression Efficiency,
+  // Benchmark Tasks (Tokenomic vs Non-Tokenomic), Runtime Measurement Loop.
+  // 8 Evaluation Criteria. PHI-resonant advance each heartbeat.
+  // Attribution: Alfredo Medina Hernandez | SOVEREIGN | June 2026
+  stable var tokenomicsBenchmarkState : TBTypes.TokenomicsBenchmarkState = TBLib.initState();
 
   // ── B2.6b — CHARTER: INTELLIGENCE FLOORS V2 ──────────────────────────────
   // CHARTER-IF-V2-001 — PHI-Resonant Governance for Intelligence Floors
@@ -4108,6 +4118,15 @@ actor SovereignWarSim {
     );
     intelligenceFloorsState := newIFState;
     compoundCoherence += ifDelta;
+
+    // ── TOKENOMICS MEASUREMENT & BENCHMARKING FRAMEWORK ─────────────────────────
+    // Token Value, CRPT, Salience Allocation, Compression Efficiency, Benchmarks.
+    // PHI-resonant signal growth, Kuramoto coherence coupling, evaluation criteria evolution.
+    let (newTBState, tbDelta) = TBLib.advance(
+      tokenomicsBenchmarkState, beat, globalCoherence, doctrineScoreEarly / 100.0,
+    );
+    tokenomicsBenchmarkState := newTBState;
+    compoundCoherence += tbDelta;
 
     // ── CHARTER: INTELLIGENCE FLOORS V2 ──────────────────────────────────────────
     // 20 protocols × 5 tiers govern the 12 floors and 20 micros.
@@ -9523,6 +9542,60 @@ actor SovereignWarSim {
 
   public query func getAIDivisionNexusMetrics() : async AIDivNexusLib.NexusMetrics {
     AIDivNexusLib.getMetrics(aiDivNexusState)
+  };
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // TOKENOMICS MEASUREMENT & BENCHMARKING FRAMEWORK ENDPOINTS
+  // ──────────────────────────────────────────────────────────────────────────
+  // "Do not optimize for fewer tokens. Optimize for higher-value tokens."
+  // Token Value Function, Cognitive Return Per Token, Salience Allocation,
+  // Compression Efficiency, Benchmark Tasks, Runtime Measurement Loop.
+  // Attribution: Alfredo Medina Hernandez | SOVEREIGN | June 2026
+  // ══════════════════════════════════════════════════════════════════════════
+
+  /// Get tokenomics benchmark summary
+  public query func getTokenomicsBenchmarkSummary() : async TBTypes.TokenomicsBenchmarkSummary {
+    TBLib.getSummary(tokenomicsBenchmarkState)
+  };
+
+  /// Get tokenomics benchmark metrics (8 evaluation criteria + derived)
+  public query func getTokenomicsBenchmarkMetrics() : async TBTypes.TokenomicsBenchmarkMetrics {
+    TBLib.getMetrics(tokenomicsBenchmarkState)
+  };
+
+  /// Get current evaluation criteria scores
+  public query func getTokenomicsEvaluationCriteria() : async TBTypes.EvaluationCriteria {
+    TBLib.getEvaluationCriteria(tokenomicsBenchmarkState)
+  };
+
+  /// Get current Token Value Function weights
+  public query func getTokenValueWeights() : async TBTypes.TokenValueWeights {
+    TBLib.getTokenValueWeights(tokenomicsBenchmarkState)
+  };
+
+  /// Get current Salience Allocation weights
+  public query func getSalienceWeights() : async TBTypes.SalienceWeights {
+    TBLib.getSalienceWeights(tokenomicsBenchmarkState)
+  };
+
+  /// Get recent benchmark comparisons (tokenomic vs non-tokenomic)
+  public query func getRecentBenchmarks() : async [TBTypes.BenchmarkComparison] {
+    TBLib.getRecentBenchmarks(tokenomicsBenchmarkState)
+  };
+
+  /// Get tokenomics system coherence
+  public query func getTokenomicsCoherence() : async Float {
+    tokenomicsBenchmarkState.coherence
+  };
+
+  /// Get tokenomics system signal
+  public query func getTokenomicsSignal() : async Float {
+    tokenomicsBenchmarkState.signal
+  };
+
+  /// Get tokenomics policy version
+  public query func getTokenomicsPolicyVersion() : async Nat {
+    tokenomicsBenchmarkState.policyVersion
   };
 
 }
