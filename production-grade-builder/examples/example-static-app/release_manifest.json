@@ -1,0 +1,9 @@
+{
+  "name": "example-static-app",
+  "type": "static-app",
+  "version": "1.0.0",
+  "release_date": "2026-06-11T08:35:15.852754+00:00",
+  "status": "scaffolded",
+  "checksum": null,
+  "quality_gate_passed": false
+}

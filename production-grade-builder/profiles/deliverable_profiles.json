@@ -1,0 +1,104 @@
+{
+  "profiles": {
+    "static-app": {
+      "description": "Static frontend application (HTML/CSS/JS)",
+      "required_files": ["index.html", "README.md", "PACKET_POLICY.md", "manifest.json", "release_manifest.json", "tools/quality_gate.py"],
+      "optional_files": ["assets/", "styles/", "scripts/"],
+      "entry_point": "index.html",
+      "quality_checks": ["structure", "policy", "manifest", "readme", "self_verification", "entry_point_exists"]
+    },
+    "python-service": {
+      "description": "Python backend service",
+      "required_files": ["main.py", "requirements.txt", "README.md", "PACKET_POLICY.md", "manifest.json", "release_manifest.json", "tools/quality_gate.py"],
+      "optional_files": ["tests/", "config/", "Dockerfile"],
+      "entry_point": "main.py",
+      "quality_checks": ["structure", "policy", "manifest", "readme", "self_verification", "entry_point_exists", "dependencies_declared"]
+    },
+    "node-service": {
+      "description": "Node.js backend service",
+      "required_files": ["index.js", "package.json", "README.md", "PACKET_POLICY.md", "manifest.json", "release_manifest.json", "tools/quality_gate.py"],
+      "optional_files": ["tests/", "config/", "Dockerfile"],
+      "entry_point": "index.js",
+      "quality_checks": ["structure", "policy", "manifest", "readme", "self_verification", "entry_point_exists", "dependencies_declared"]
+    },
+    "benchmark-engine": {
+      "description": "Performance benchmark tooling",
+      "required_files": ["bench.py", "README.md", "PACKET_POLICY.md", "manifest.json", "release_manifest.json", "tools/quality_gate.py", "reports/"],
+      "optional_files": ["data/", "config/"],
+      "entry_point": "bench.py",
+      "quality_checks": ["structure", "policy", "manifest", "readme", "self_verification", "entry_point_exists"]
+    },
+    "local-api": {
+      "description": "Local REST/GraphQL API service",
+      "required_files": ["api.py", "README.md", "PACKET_POLICY.md", "manifest.json", "release_manifest.json", "tools/quality_gate.py", "docs/endpoints.md"],
+      "optional_files": ["tests/", "openapi.yaml"],
+      "entry_point": "api.py",
+      "quality_checks": ["structure", "policy", "manifest", "readme", "self_verification", "entry_point_exists", "api_docs_present"]
+    },
+    "ci-workflow": {
+      "description": "CI/CD pipeline definition",
+      "required_files": ["workflow.yml", "README.md", "PACKET_POLICY.md", "manifest.json", "release_manifest.json", "tools/quality_gate.py"],
+      "optional_files": ["scripts/", "templates/"],
+      "entry_point": "workflow.yml",
+      "quality_checks": ["structure", "policy", "manifest", "readme", "self_verification", "entry_point_exists"]
+    },
+    "dataset": {
+      "description": "Structured data package",
+      "required_files": ["data/", "schema.json", "README.md", "PACKET_POLICY.md", "manifest.json", "release_manifest.json", "tools/quality_gate.py"],
+      "optional_files": ["scripts/", "provenance.md"],
+      "entry_point": "schema.json",
+      "quality_checks": ["structure", "policy", "manifest", "readme", "self_verification", "schema_valid"]
+    },
+    "manifest": {
+      "description": "System manifest or declaration",
+      "required_files": ["manifest_def.json", "README.md", "PACKET_POLICY.md", "manifest.json", "release_manifest.json", "tools/quality_gate.py"],
+      "optional_files": ["schema/", "examples/"],
+      "entry_point": "manifest_def.json",
+      "quality_checks": ["structure", "policy", "manifest", "readme", "self_verification", "entry_point_exists"]
+    },
+    "proof-pack": {
+      "description": "Verification and proof bundle",
+      "required_files": ["assertions.json", "evidence/", "README.md", "PACKET_POLICY.md", "manifest.json", "release_manifest.json", "tools/quality_gate.py"],
+      "optional_files": ["logs/", "screenshots/"],
+      "entry_point": "assertions.json",
+      "quality_checks": ["structure", "policy", "manifest", "readme", "self_verification", "assertions_valid"]
+    },
+    "research-packet": {
+      "description": "Research document with reproducibility",
+      "required_files": ["research.md", "data/", "README.md", "PACKET_POLICY.md", "manifest.json", "release_manifest.json", "tools/quality_gate.py"],
+      "optional_files": ["figures/", "references/"],
+      "entry_point": "research.md",
+      "quality_checks": ["structure", "policy", "manifest", "readme", "self_verification", "entry_point_exists"]
+    },
+    "dashboard": {
+      "description": "Monitoring and analytics dashboard",
+      "required_files": ["dashboard.json", "README.md", "PACKET_POLICY.md", "manifest.json", "release_manifest.json", "tools/quality_gate.py"],
+      "optional_files": ["widgets/", "queries/"],
+      "entry_point": "dashboard.json",
+      "quality_checks": ["structure", "policy", "manifest", "readme", "self_verification", "entry_point_exists"]
+    },
+    "docs": {
+      "description": "Documentation package",
+      "required_files": ["index.md", "README.md", "PACKET_POLICY.md", "manifest.json", "release_manifest.json", "tools/quality_gate.py"],
+      "optional_files": ["images/", "api/"],
+      "entry_point": "index.md",
+      "quality_checks": ["structure", "policy", "manifest", "readme", "self_verification", "entry_point_exists"]
+    },
+    "deploy-scaffold": {
+      "description": "Deployment infrastructure template",
+      "required_files": ["deploy.sh", "README.md", "PACKET_POLICY.md", "manifest.json", "release_manifest.json", "tools/quality_gate.py", "rollback.md"],
+      "optional_files": ["terraform/", "docker-compose.yml"],
+      "entry_point": "deploy.sh",
+      "quality_checks": ["structure", "policy", "manifest", "readme", "self_verification", "entry_point_exists", "rollback_documented"]
+    },
+    "repo-surface": {
+      "description": "Repository surface configuration",
+      "required_files": [".gitignore", "LICENSE", "CONTRIBUTING.md", "README.md", "PACKET_POLICY.md", "manifest.json", "release_manifest.json", "tools/quality_gate.py"],
+      "optional_files": [".editorconfig", ".github/"],
+      "entry_point": "README.md",
+      "quality_checks": ["structure", "policy", "manifest", "readme", "self_verification", "license_present"]
+    }
+  },
+  "version": "1.0.0",
+  "author": "Alfredo Medina Hernandez"
+}

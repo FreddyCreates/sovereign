@@ -5,6 +5,10 @@
 # - SOPHIA (Wisdom Layer)
 # - HERMES (Communication Layer)
 # - PROMETHEUS (Learning Layer)
+# - HANDS (Manipulation & Interaction Layer)
+# - SOVEREIGN_API (Commercial API Library)
+# - SOVEREIGN_DATA (Financial Tools & Trust Operations)
+# - REGULATORY (Government Agencies as Charters & Protocols)
 #
 # The layers use only Python standard library by default.
 # These optional dependencies enhance capabilities:
@@ -30,3 +34,4 @@
 # - hashlib (stdlib)
 # - heapq (stdlib)
 # - datetime (stdlib)
+# - time (stdlib)

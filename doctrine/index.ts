@@ -122,6 +122,7 @@ export { default as LAW_35_BRANCH_GENESIS }           from './laws/LAW_35_BRANCH
 export { default as LAW_36_OBSERVER_COLLAPSE }        from './laws/LAW_36_OBSERVER_COLLAPSE';
 export { default as LAW_37_MEDINA_PROTOCOL }          from './laws/LAW_37_MEDINA_PROTOCOL';
 export { default as LAW_38_PRESENCE_GATE }            from './laws/LAW_38_PRESENCE_GATE';
+export { default as LAW_39_PRODUCTION_GRADE }         from './laws/LAW_39_PRODUCTION_GRADE';
 
 // ─── Doctrine summary ────────────────────────────────────────────────────────
 export const DOCTRINE_SUMMARY = {

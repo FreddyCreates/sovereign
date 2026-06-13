@@ -1,0 +1,7 @@
+{
+  "name": "example-node-service",
+  "type": "node-service",
+  "scaffolded_at": "2026-06-11T08:35:15.920132+00:00",
+  "quality_gate": "pending",
+  "files_generated": 7
+}
