@@ -3,7 +3,8 @@
 // "Intelligence is not computation. It is PHI-structured self-organization."
 //
 // 12 AI Archetypes using 4 cognitive engines (Temporal, Emotional, Spatial, Social)
-// Attribution: Alfredo Medina Hernandez | SOVEREIGN | May 2026
+// Integrated with Adaptive Learning (embedding updates, homeostasis)
+// Attribution: Alfredo Medina Hernandez | SOVEREIGN | May 2026, June 2026
 
 import Array "mo:base/Array";
 import Buffer "mo:base/Buffer";
@@ -15,6 +16,9 @@ import Option "mo:base/Option";
 import Text "mo:base/Text";
 
 import AITypes "../types/autonomousAI";
+import AdaptiveTypes "../types/adaptiveIntelligence";
+import AdaptiveIntel "../lib/adaptiveIntelligence";
+import Homeostasis "../lib/homeostasis";
 
 module {
 
@@ -312,6 +316,12 @@ module {
       evolutionStage = #NASCENT;
       experienceTotal = 0;
       noveltyMismatchCount = 0;
+      // Adaptive learning state (new in adaptive intelligence)
+      mindEmbedding = [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5];  // Initialize to neutral
+      learningRate = 0.05;                  // Base learning rate
+      lastOutcomeQuality = 0.5;
+      previousEffectiveness = (1.0 + 1.0 + PHI_INV) / 3.0;
+      previousPreviousEffectiveness = (1.0 + 1.0 + PHI_INV) / 3.0;
       lastHeartbeatBeat = beat;
       heartbeatCount = 0;
     };
@@ -523,33 +533,53 @@ module {
         let resonanceDrift = (newCoherence - 0.5) * 0.001;  // Drifts with coherence
         let newResonance = Float.max(0.0, Float.min(1.0, PHI_INV + resonanceDrift - m.entropy * 0.001));
 
-        // 5. Calculate effectiveness = (awareness + coherence + resonance) / 3
+        // 5. Calculate effectiveness using component metrics
         let newEffectiveness = (awarenessDowndrive + newCoherence + newResonance) / 3.0;
 
-        // 6. Explore/Exploit Homeostat: if effectiveness < PHI_INV, inject entropy and explore
-        let exploredNow = newEffectiveness < PHI_INV;
-        let entropyInject = if (exploredNow) { 0.05 } else { 0.0 };  // 5% entropy boost when exploring
-        let entropyDecay = 0.0001;  // Entropy naturally decays
-        let newEntropy = Float.max(0.0, Float.min(1.0, 
-          m.entropy + entropyInject - entropyDecay
-        ));
+        // 6. Use new Homeostasis engine for explore/exploit coupling + awareness management
+        // This replaces the old inline logic with a comprehensive homeostasis update
+        let homeostatUpdate = Homeostasis.updateHomeostasis(
+          awarenessDowndrive,
+          newCoherence,
+          newResonance,
+          m.entropy,
+          m.noveltyMismatchCount,
+          m.previousEffectiveness,
+          m.previousPreviousEffectiveness
+        );
 
-        // 7. Clear novelty mismatch counter after processing
-        let clearedMismatchCount = if (exploredNow) { 0 } else { m.noveltyMismatchCount };
+        // 7. Apply homeostasis results
+        let finalAwareness = homeostatUpdate.newAwareness;
+        let finalEntropy = homeostatUpdate.newEntropy;
+        let finalEffectiveness = (finalAwareness + newCoherence + newResonance) / 3.0;
 
-        // 8. Update autonomy score based on decisions
+        // 8. Update learning rate based on recent outcome quality
+        let updatedLearningRate = AdaptiveIntel.computeLearningRate(m.lastOutcomeQuality, 0.8);
+
+        // 9. Clear novelty mismatch counter when exploring (entropy injection happens)
+        let clearedMismatchCount = if (homeostatUpdate.exploringNow) { 0 } else { m.noveltyMismatchCount };
+
+        // 10. Update autonomy score based on decisions
         let autonomyGain = if (m.decisions.size() > 0) { 0.0001 } else { 0.0 };
         let newAutonomy = Float.min(1.0, m.autonomyScore + autonomyGain);
+
+        // 11. Track effectiveness history for pattern analysis
+        let prevEffectiveness = m.previousEffectiveness;
+        let prevPrevEffectiveness = m.previousPreviousEffectiveness;
 
         {
           m with
           currentBeat = beat;
+          awarenessLevel = finalAwareness;
           coherence = newCoherence;
           resonance = newResonance;
-          entropy = newEntropy;
-          effectiveness = newEffectiveness;
+          entropy = finalEntropy;
+          effectiveness = finalEffectiveness;
           autonomyScore = newAutonomy;
+          learningRate = updatedLearningRate;
           noveltyMismatchCount = clearedMismatchCount;
+          previousEffectiveness = finalEffectiveness;
+          previousPreviousEffectiveness = prevEffectiveness;
           lastHeartbeatBeat = beat;
           heartbeatCount = m.heartbeatCount + 1;
         };
@@ -613,7 +643,74 @@ module {
   };
 
   // ══════════════════════════════════════════════════════════════════════════
-  // IX. BOOTSTRAP — Create the 12 archetypes
+  // IX. OUTCOME RECORDING & LEARNING — Feedback Loop Integration
+  // ══════════════════════════════════════════════════════════════════════════
+  // This is the bridge that wires feedback outcomes to embedding updates
+  // (closes the loop: Decision → Outcome → Learning Signal → Embedding Update)
+
+  /// Record an outcome from a decision and trigger embedding update
+  /// This is the core learning function that makes ANIMUS adaptive
+  /// Called after every decision/action completes with outcome quality
+  public func recordOutcomeWithLearning(
+    state : AITypes.AutonomousAIEngineState,
+    modelId : Nat,
+    outcomeType : AdaptiveTypes.OutcomeType,
+    outcomeQuality : Float,              // 0.0-1.0 how good was this outcome
+    confidence : Float,                  // 0.0-1.0 certainty of quality assessment
+    noveltyFactor : Float,               // 0.0-1.0 how novel/unexpected was this
+    beat : Nat
+  ) : AITypes.AutonomousAIEngineState {
+    let updatedModels = Array.map<AITypes.AIModelState, AITypes.AIModelState>(
+      state.models,
+      func(m) {
+        if (m.modelId == modelId) {
+          // 1. Create learning signal from outcome
+          let learningSignal : AdaptiveTypes.LearningSignal = {
+            sourceModelId = modelId;
+            outcomeType;
+            outcomeQuality;
+            predictionError = 1.0 - outcomeQuality;  // Error = difference from perfect
+            confidence;
+            beat;
+            noveltyFactor;
+          };
+
+          // 2. Compute updated mind embedding based on learning signal
+          let embedding : AdaptiveTypes.MindEmbeddingVector = {
+            dimensions = m.mindEmbedding;
+            timestamp = m.lastHeartbeatBeat;
+            coherence = m.coherence;
+            magnitude = 1.0;  // Will be computed by adaptive intel lib
+          };
+
+          let updatedEmbedding = AdaptiveIntel.updateMindEmbedding(
+            embedding,
+            learningSignal,
+            m.learningRate
+          );
+
+          // 3. Update model with new embedding state
+          {
+            m with
+            mindEmbedding = updatedEmbedding.newEmbedding.dimensions;
+            lastOutcomeQuality = outcomeQuality;
+            decisionQuality = (m.decisionQuality * 0.9) + (outcomeQuality * 0.1);  // Exponential moving average
+            experienceTotal = m.experienceTotal + 1;
+          };
+        } else {
+          m;
+        };
+      }
+    );
+    {
+      state with
+      models = updatedModels;
+      totalDecisions = state.totalDecisions + 1;
+    };
+  };
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // X. BOOTSTRAP — Create the 12 archetypes
   // ══════════════════════════════════════════════════════════════════════════
 
   public func bootstrapAllArchetypes(state : AITypes.AutonomousAIEngineState, beat : Nat) : AITypes.AutonomousAIEngineState {
