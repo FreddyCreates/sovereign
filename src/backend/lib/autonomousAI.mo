@@ -501,9 +501,10 @@ module {
         // 2. Novelty-based awareness downdriver (surprise/prediction-error term)
         // When novelty is high (perceptual mismatch detected), drive awareness DOWN
         // This couples surprise to the awareness signal, making effectiveness crossable
-        let noveltyDelta = Float.fromInt(m.noveltyMismatchCount) * 0.001;  // Novelty accumulated
+        // Multiplier: 0.05 per mismatch (15+ mismatches drops from 0.618 to ~0.068, crossing threshold)
+        let noveltyDelta = Float.fromInt(m.noveltyMismatchCount) * 0.05;
         let awarenessDowndrive = if (noveltyDelta > 0.0) {
-          Float.max(PHI_INV, m.awarenessLevel - noveltyDelta)  // Drive down, but floor at PHI_INV
+          Float.max(0.0, m.awarenessLevel - noveltyDelta)  // Drive down to floor at 0.0 (minimum awareness)
         } else {
           m.awarenessLevel
         };
