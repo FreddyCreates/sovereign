@@ -305,9 +305,13 @@ module {
       spatialIntegration = spatial;
       socialIntegration = social;
       coherence = 1.0;
+      resonance = PHI_INV;                   // 0.618 initial PHI harmonic state
+      entropy = 1.0;                        // High entropy at birth (explores freely)
+      effectiveness = (1.0 + 1.0 + PHI_INV) / 3.0;  // (awareness + coherence + resonance) / 3
       autonomyScore = PHI_INV;
       evolutionStage = #NASCENT;
       experienceTotal = 0;
+      noveltyMismatchCount = 0;
       lastHeartbeatBeat = beat;
       heartbeatCount = 0;
     };
@@ -487,18 +491,52 @@ module {
           let primaryCap = archetypePrimaryCapability(m.archetype);
           m := gainExperience(m, primaryCap, 1, beat);
 
-          // Update awareness level based on experience
+          // Update awareness level based on experience (can INCREASE)
           m := {
             m with
             awarenessLevel = Float.min(1.0, PHI_INV + Float.fromInt(m.experienceTotal) / 100000.0);
           };
         };
 
-        // 2. Update coherence
+        // 2. Novelty-based awareness downdriver (surprise/prediction-error term)
+        // When novelty is high (perceptual mismatch detected), drive awareness DOWN
+        // This couples surprise to the awareness signal, making effectiveness crossable
+        let noveltyDelta = Float.fromInt(m.noveltyMismatchCount) * 0.001;  // Novelty accumulated
+        let awarenessDowndrive = if (noveltyDelta > 0.0) {
+          Float.max(PHI_INV, m.awarenessLevel - noveltyDelta)  // Drive down, but floor at PHI_INV
+        } else {
+          m.awarenessLevel
+        };
+
+        m := {
+          m with
+          awarenessLevel = awarenessDowndrive;
+        };
+
+        // 3. Update coherence (slight decay)
         let coherenceDecay = 0.0001;
         let newCoherence = Float.max(S_FLOOR / S_CEIL, m.coherence - coherenceDecay);
 
-        // 3. Update autonomy score based on decisions
+        // 4. Update resonance (PHI harmonic can drift slightly)
+        // Resonance = base PHI_INV + coherence contribution - entropy dissipation
+        let resonanceDrift = (newCoherence - 0.5) * 0.001;  // Drifts with coherence
+        let newResonance = Float.max(0.0, Float.min(1.0, PHI_INV + resonanceDrift - m.entropy * 0.001));
+
+        // 5. Calculate effectiveness = (awareness + coherence + resonance) / 3
+        let newEffectiveness = (awarenessDowndrive + newCoherence + newResonance) / 3.0;
+
+        // 6. Explore/Exploit Homeostat: if effectiveness < PHI_INV, inject entropy and explore
+        let exploredNow = newEffectiveness < PHI_INV;
+        let entropyInject = if (exploredNow) { 0.05 } else { 0.0 };  // 5% entropy boost when exploring
+        let entropyDecay = 0.0001;  // Entropy naturally decays
+        let newEntropy = Float.max(0.0, Float.min(1.0, 
+          m.entropy + entropyInject - entropyDecay
+        ));
+
+        // 7. Clear novelty mismatch counter after processing
+        let clearedMismatchCount = if (exploredNow) { 0 } else { m.noveltyMismatchCount };
+
+        // 8. Update autonomy score based on decisions
         let autonomyGain = if (m.decisions.size() > 0) { 0.0001 } else { 0.0 };
         let newAutonomy = Float.min(1.0, m.autonomyScore + autonomyGain);
 
@@ -506,7 +544,11 @@ module {
           m with
           currentBeat = beat;
           coherence = newCoherence;
+          resonance = newResonance;
+          entropy = newEntropy;
+          effectiveness = newEffectiveness;
           autonomyScore = newAutonomy;
+          noveltyMismatchCount = clearedMismatchCount;
           lastHeartbeatBeat = beat;
           heartbeatCount = m.heartbeatCount + 1;
         };
@@ -539,7 +581,38 @@ module {
   };
 
   // ══════════════════════════════════════════════════════════════════════════
-  // VIII. BOOTSTRAP — Create the 12 archetypes
+  // VIII. NOVELTY DETECTION — Perception Error Integration
+  // ══════════════════════════════════════════════════════════════════════════
+  
+  /// When a perception error or novelty mismatch is detected (e.g., expected pattern
+  /// doesn't match actual percept), call this to increment the mismatch counter.
+  /// This drives the awareness downdriver in the next heartbeat, lowering effectiveness
+  /// and triggering the explore/exploit homeostat when effectiveness < PHI_INV.
+  public func recordNoveltyMismatch(
+    state : AITypes.AutonomousAIEngineState,
+    modelId : Nat
+  ) : AITypes.AutonomousAIEngineState {
+    let updatedModels = Array.map<AITypes.AIModelState, AITypes.AIModelState>(
+      state.models,
+      func(m) {
+        if (m.modelId == modelId) {
+          {
+            m with
+            noveltyMismatchCount = m.noveltyMismatchCount + 1;
+          };
+        } else {
+          m;
+        };
+      }
+    );
+    {
+      state with
+      models = updatedModels;
+    };
+  };
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // IX. BOOTSTRAP — Create the 12 archetypes
   // ══════════════════════════════════════════════════════════════════════════
 
   public func bootstrapAllArchetypes(state : AITypes.AutonomousAIEngineState, beat : Nat) : AITypes.AutonomousAIEngineState {

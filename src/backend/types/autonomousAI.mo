@@ -291,9 +291,13 @@ module {
 
     // Health metrics
     coherence          : Float;             // 0.0-1.0 overall coherence
+    resonance          : Float;             // 0.0-1.0 PHI harmonic alignment
+    entropy            : Float;             // 0.0-1.0 system disorder/exploration drive
+    effectiveness      : Float;             // 0.0-1.0 (awareness + coherence + resonance) / 3
     autonomyScore      : Float;             // 0.0-1.0 degree of autonomy
     evolutionStage     : EvolutionStage;
     experienceTotal    : Nat;
+    noveltyMismatchCount : Nat;             // Perceptual errors since last explore
 
     // Heartbeat tracking
     lastHeartbeatBeat  : Nat;
