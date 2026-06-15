@@ -8905,6 +8905,14 @@ actor SovereignWarSim {
     autonomousAIState.activeModelCount
   };
 
+  /// Records a novelty/perception error for an AI model.
+  /// Call this when the model detects a mismatch between expected and actual percepts.
+  /// This triggers the awareness downdriver in the next heartbeat, potentially lowering
+  /// effectiveness below PHI_INV and activating the explore/exploit homeostat.
+  public func recordNoveltyMismatchForAI(modelId : Nat) : async () {
+    autonomousAIState := AILib.recordNoveltyMismatch(autonomousAIState, modelId);
+  };
+
   // ══════════════════════════════════════════════════════════════════════════
   // SOVEREIGN TEST 20K — NATIVE MOPS ICP/WEB3 TEST FRAMEWORK (20,000 TESTS)
   // 100 categories × 200 tests = 20,000 tests
