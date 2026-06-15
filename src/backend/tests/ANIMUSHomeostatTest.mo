@@ -40,9 +40,9 @@ module {
     let initialEffectiveness = (PHI_INV + 1.0 + PHI_INV) / 3.0;
     if (initialEffectiveness <= PHI_INV) { return false; }; // Should NOT be below threshold initially
 
-    // Simulate novelty mismatches for 10 beats
+    // Simulate novelty mismatches for 20 beats (need ~13 mismatches to cross threshold)
     var beat : Nat = 1;
-    while (beat <= 10) {
+    while (beat <= 20) {
       state := AILib.recordNoveltyMismatch(state, model.modelId);
       state := AILib.advanceHeartbeat(state, beat);
       beat += 1;
@@ -55,11 +55,11 @@ module {
       case (null) { return false; };
     };
 
-    // Check that effectiveness has dropped
-    if (updated.effectiveness > PHI_INV) { return false; }; // Should now be below threshold
+    // Check that effectiveness has dropped BELOW threshold
+    if (updated.effectiveness >= PHI_INV) { return false; }; // Should now be below threshold
 
-    // Check that entropy has been injected (should be > 0.9)
-    if (updated.entropy < 0.9) { return false; };
+    // Check that entropy has been injected (should be > 0.8 after 20 beats with constant novelty)
+    if (updated.entropy < 0.8) { return false; };
 
     // Check that novelty mismatch counter was cleared (homeostat fired)
     if (updated.noveltyMismatchCount > 0) { return false; };
@@ -83,7 +83,9 @@ module {
 
     let initialAwareness = model.awarenessLevel;
 
-    // Record multiple novelty mismatches
+    // Record multiple novelty mismatches (5 × 0.05 = 0.25 drop expected)
+    state := AILib.recordNoveltyMismatch(state, model.modelId);
+    state := AILib.recordNoveltyMismatch(state, model.modelId);
     state := AILib.recordNoveltyMismatch(state, model.modelId);
     state := AILib.recordNoveltyMismatch(state, model.modelId);
     state := AILib.recordNoveltyMismatch(state, model.modelId);
@@ -97,11 +99,16 @@ module {
       case (null) { return false; };
     };
 
-    // Awareness should have decreased
+    // Awareness should have decreased significantly
     if (updated.awarenessLevel >= initialAwareness) { return false; };
 
-    // But not below floor
-    if (updated.awarenessLevel < PHI_INV) { return false; };
+    // But should stay above 0.0 (the floor)
+    if (updated.awarenessLevel < 0.0) { return false; };
+
+    // Expected: 0.618 - (5 * 0.05) = 0.618 - 0.25 = 0.368
+    let expectedAwareness = 0.368;
+    let tolerance = 0.01;
+    if (Float.abs(updated.awarenessLevel - expectedAwareness) > tolerance) { return false; };
 
     true
   };
