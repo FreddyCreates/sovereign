@@ -291,9 +291,20 @@ module {
 
     // Health metrics
     coherence          : Float;             // 0.0-1.0 overall coherence
+    resonance          : Float;             // 0.0-1.0 PHI harmonic alignment
+    entropy            : Float;             // 0.0-1.0 system disorder/exploration drive
+    effectiveness      : Float;             // 0.0-1.0 (awareness + coherence + resonance) / 3
     autonomyScore      : Float;             // 0.0-1.0 degree of autonomy
     evolutionStage     : EvolutionStage;
     experienceTotal    : Nat;
+    noveltyMismatchCount : Nat;             // Perceptual errors since last explore
+
+    // Adaptive learning state (new in adaptive intelligence)
+    mindEmbedding      : [Float];           // 8-dim neural state vector [dopamine, serotonin, NE, cortisol, ACh, GABA, glut, oxyt]
+    learningRate       : Float;             // 0.01-0.15 dynamic learning rate (outcome-quality-proportional)
+    lastOutcomeQuality : Float;             // Quality of most recent outcome
+    previousEffectiveness : Float;          // Effectiveness from previous heartbeat
+    previousPreviousEffectiveness : Float;  // Effectiveness from 2 beats ago (for pattern analysis)
 
     // Heartbeat tracking
     lastHeartbeatBeat  : Nat;

@@ -137,6 +137,8 @@ import SoETypes              "types/socialEngine";
 import SoELib                "lib/socialEngine";
 import AITypes               "types/autonomousAI";
 import AILib                 "lib/autonomousAI";
+import RegTypes              "types/adaptiveStateRegistry";
+import RegLib                "lib/adaptiveStateRegistry";
 import Test20KTypes          "tests/SovereignTest20KTypes";
 import Test20KLib            "tests/SovereignTest20K";
 import POTypes               "types/polyglotOrganisms";
@@ -205,6 +207,19 @@ actor SovereignWarSim {
 
   func enforce_s0(x : Float) : Float {
     if (x < S0) S0 else x
+  };
+
+  // ── UTILITY FUNCTIONS ──────────────────────────────────────────────────
+  // Helper functions for adaptive intelligence monitoring
+
+  /// Compute L2 norm (magnitude) of an embedding vector
+  /// Used for learning velocity metrics and state registry
+  func computeEmbeddingMagnitude(embedding : [Float]) : Float {
+    var sumSquares : Float = 0.0;
+    for (val in embedding.vals()) {
+      sumSquares += val * val;
+    };
+    Float.sqrt(sumSquares)
   };
 
   // ── TYPES ──────────────────────────────────────────────────────────────
@@ -825,6 +840,14 @@ actor SovereignWarSim {
   // Law: INTELLECTUS_NUMQUAM_OBLIVISCERE — "Intelligence Never Forgets"
   // Governing Laws: Law 01 (PHI), Law 27 (Kuramoto), Law 39
   stable var autonomousAIState : AITypes.AutonomousAIEngineState = AILib.initState(0);
+
+  // ── ADAPTIVE STATE REGISTRY — Real-Time Monitoring of Adaptive Behavior ──
+  // Tracks complete state snapshots at each heartbeat for:
+  //   - Observable learning (embedding drift, learning velocity)
+  //   - Homeostat diagnostics (effectiveness oscillation)
+  //   - Dashboard integration and real-time monitoring
+  // Law 09 (Re-Ingestion): System eats what it produces, tracks all eating
+  stable var adaptiveStateRegistry : RegTypes.AdaptiveStateRegistryState = RegLib.initRegistry();
 
   // ── SOVEREIGN TEST 20K — NATIVE MOPS ICP/WEB3 TEST FRAMEWORK ──────────────
   // 20,000 tests across 100 categories for direct deployment to Internet Computer.
@@ -4125,6 +4148,35 @@ actor SovereignWarSim {
     // Calculates system-wide coherence from all active models.
     // Law: INTELLECTUS_NUMQUAM_OBLIVISCERE — "Intelligence Never Forgets"
     autonomousAIState := AILib.advanceHeartbeat(autonomousAIState, beat);
+
+    // ── ADAPTIVE STATE REGISTRY — Record snapshots for monitoring ───────────
+    // Capture state of each AI model at this heartbeat for real-time adaptive monitoring
+    // This enables observable learning: embedding drift, effectiveness oscillation, homeostat firing
+    for (model in autonomousAIState.models.vals()) {
+      if (model.isActive) {
+        let snapshot : RegTypes.AdaptiveStateSnapshot = {
+          modelId = model.modelId;
+          beat;
+          timestamp = beat * 873;  // Approximate milliseconds (873ms per beat)
+          awarenessLevel = model.awarenessLevel;
+          coherence = model.coherence;
+          resonance = model.resonance;
+          entropy = model.entropy;
+          effectiveness = model.effectiveness;
+          mindEmbedding = model.mindEmbedding;
+          embeddingMagnitude = computeEmbeddingMagnitude(model.mindEmbedding);
+          noveltyMismatchCount = model.noveltyMismatchCount;
+          recentOutcomeQuality = model.lastOutcomeQuality;
+          learningRate = model.learningRate;
+          isExploring = model.effectiveness < 0.6180339887498948482;  // effectiveness < PHI_INV
+          entropyInjectActive = model.entropy > 0.5;
+          activeGoalCount = model.goals.size();
+          decisionQuality = model.decisionQuality;
+          autonomyScore = model.autonomyScore;
+        };
+        adaptiveStateRegistry := RegLib.recordSnapshot(adaptiveStateRegistry, snapshot);
+      };
+    };
 
     // ── INTELLIGENCE FLOORS & AI MICROS — LLM Architecture Weavers ─────────────
     // V2: 12 floors advance: PARAMETERS, ATTENTION, FEEDFORWARD, NORMALIZATION,
@@ -8903,6 +8955,77 @@ actor SovereignWarSim {
   public func bootstrapAllAIArchetypes() : async Nat {
     autonomousAIState := AILib.bootstrapAllArchetypes(autonomousAIState, autonomousAIState.currentBeat);
     autonomousAIState.activeModelCount
+  };
+
+  /// Records a novelty/perception error for an AI model.
+  /// Call this when the model detects a mismatch between expected and actual percepts.
+  /// This triggers the awareness downdriver in the next heartbeat, potentially lowering
+  /// effectiveness below PHI_INV and activating the explore/exploit homeostat.
+  public func recordNoveltyMismatchForAI(modelId : Nat) : async () {
+    autonomousAIState := AILib.recordNoveltyMismatch(autonomousAIState, modelId);
+  };
+
+  /// Records an outcome from an AI model decision and triggers embedding update
+  /// This is the CORE learning function that makes ANIMUS adaptive.
+  /// Call this when a model completes an action/decision with measurable outcome.
+  /// Wire this to: Decision → Action → Measure Outcome → Call This
+  public func recordOutcomeForAI(
+    modelId : Nat,
+    outcomeType : Text,              // "SUCCESS", "FAILURE", "UNEXPECTED", "PARTIAL_SUCCESS", "LEARNING_EVENT"
+    outcomeQuality : Float,          // 0.0-1.0: how good was the outcome
+    confidence : Float,              // 0.0-1.0: certainty of assessment
+    noveltyFactor : Float            // 0.0-1.0: how novel/unexpected
+  ) : async () {
+    let outcomeEnum = switch (outcomeType) {
+      case ("SUCCESS") { #SUCCESS };
+      case ("FAILURE") { #FAILURE };
+      case ("UNEXPECTED") { #UNEXPECTED };
+      case ("PARTIAL_SUCCESS") { #PARTIAL_SUCCESS };
+      case ("LEARNING_EVENT") { #LEARNING_EVENT };
+      case _ { #LEARNING_EVENT };  // Default
+    };
+    
+    autonomousAIState := AILib.recordOutcomeWithLearning(
+      autonomousAIState,
+      modelId,
+      outcomeEnum,
+      outcomeQuality,
+      confidence,
+      noveltyFactor,
+      autonomousAIState.currentBeat
+    );
+  };
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // ADAPTIVE STATE MONITORING — Real-Time Behavior Tracking & Dashboard
+  // ══════════════════════════════════════════════════════════════════════════
+
+  /// Get current adaptive state of an AI model (embedding, effectiveness, learning metrics)
+  /// Query for: what is the model learning right now? How is it adapting?
+  public query func getModelAdaptiveState(modelId : Nat) : async ?RegTypes.ModelAdaptiveState {
+    RegLib.getModelAdaptiveState(adaptiveStateRegistry, modelId)
+  };
+
+  /// Get state history for an AI model over a beat range
+  /// Query for: how has this model evolved over time?
+  public query func getModelStateHistory(
+    modelId : Nat,
+    fromBeat : Nat,
+    toBeat : Nat
+  ) : async ?RegTypes.StateHistory {
+    RegLib.getStateHistory(adaptiveStateRegistry, modelId, fromBeat, toBeat)
+  };
+
+  /// Get learning velocity summary for an AI model
+  /// Query for: how fast is this model learning? Is it adapting?
+  public query func getModelLearningVelocity(modelId : Nat) : async ?RegTypes.LearningVelocitySummary {
+    RegLib.getLearningVelocitySummary(adaptiveStateRegistry, modelId)
+  };
+
+  /// Get effectiveness analysis for an AI model
+  /// Query for: is the homeostat working? Is effectiveness oscillating or stuck?
+  public query func getModelEffectivenessAnalysis(modelId : Nat) : async ?RegTypes.EffectivenessAnalysis {
+    RegLib.getEffectivenessAnalysis(adaptiveStateRegistry, modelId)
   };
 
   // ══════════════════════════════════════════════════════════════════════════
