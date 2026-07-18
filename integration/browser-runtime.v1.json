@@ -9,7 +9,9 @@
     "agents.council",
     "office.create_bundle",
     "security.scan_workspace",
-    "extension.package"
+    "extension.package",
+    "workers.browser_pool",
+    "workers.outside_pool"
   ],
   "artifact_formats": ["pdf", "xlsx", "docx", "csv", "md", "zip", "onnx"],
   "security_boundaries": {
@@ -19,7 +21,8 @@
     "downloads_are_content_addressed": true,
     "scanner_is_static_and_bounded": true,
     "vault_is_integrity_storage_not_secret_custody": true,
-    "browser_automation_requires_explicit_real_browser_mode": true
+    "browser_automation_requires_explicit_real_browser_mode": true,
+    "worker_tasks_are_bounded_and_timeout_controlled": true
   },
   "claim_boundary": "This contract defines required interfaces and controls. Each consumer must emit its own test and runtime receipts."
 }
