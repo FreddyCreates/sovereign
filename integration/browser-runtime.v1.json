@@ -11,7 +11,15 @@
     "security.scan_workspace",
     "extension.package",
     "workers.browser_pool",
-    "workers.outside_pool"
+    "workers.outside_pool",
+    "compute.delta_attention",
+    "multisense.spectral_fusion",
+    "cloudflare.api_mcp",
+    "cloudflare.dynamic_workers",
+    "cloudflare.sandbox",
+    "cloudflare.browser_run",
+    "cloudflare.agents_think",
+    "cloudflare.observability"
   ],
   "artifact_formats": ["pdf", "xlsx", "docx", "csv", "md", "zip", "onnx"],
   "security_boundaries": {
