@@ -19,7 +19,9 @@
     "cloudflare.sandbox",
     "cloudflare.browser_run",
     "cloudflare.agents_think",
-    "cloudflare.observability"
+    "cloudflare.observability",
+    "mobile.expo_go",
+    "mobile.native_senses"
   ],
   "artifact_formats": ["pdf", "xlsx", "docx", "csv", "md", "zip", "onnx"],
   "security_boundaries": {
