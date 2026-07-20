@@ -20,6 +20,7 @@
     "cloudflare.browser_run",
     "cloudflare.agents_think",
     "cloudflare.observability",
+    "cloudflare.autonomous_operator",
     "mobile.expo_go",
     "mobile.native_senses"
   ],
@@ -32,7 +33,8 @@
     "scanner_is_static_and_bounded": true,
     "vault_is_integrity_storage_not_secret_custody": true,
     "browser_automation_requires_explicit_real_browser_mode": true,
-    "worker_tasks_are_bounded_and_timeout_controlled": true
+    "worker_tasks_are_bounded_and_timeout_controlled": true,
+    "cloudflare_mutations_require_scoped_token_server_flag_and_turn_approval": true
   },
   "claim_boundary": "This contract defines required interfaces and controls. Each consumer must emit its own test and runtime receipts."
 }

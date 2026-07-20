@@ -14,6 +14,10 @@ Consumers must distinguish architecture targets from trained checkpoints. A mode
 ## Browser runtime
 
 `browser-runtime.v1.json` is the shared Auro/MESIE browser-workspace contract.
+It also governs the deployable Cloudflare autonomous operator: durable chat,
+Workers AI, managed API MCP, Dynamic Workers, Browser Run, extensions, and
+observability. Remote mutation requires a scoped token, server-side enablement,
+and explicit approval on the exact turn.
 It requires governed inference, integrity storage, internal agents, PDF/XLSX
 artifacts, bounded static security scanning, packaged extension downloads, and
 local ONNX model support with remote model loading disabled by default.
