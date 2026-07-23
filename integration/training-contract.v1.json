@@ -1,0 +1,54 @@
+{
+  "schema": "sovereign.training.contract.v1",
+  "contract_id": "freddycreates.sovereign.training.v1",
+  "repository": "FreddyCreates/sovereign",
+  "default_ref": "main",
+  "attribution": {
+    "creator": "Alfredo Medina Hernandez",
+    "required": true,
+    "notice": "Sovereign doctrine and training material retain source-path and commit provenance."
+  },
+  "required_files": [
+    "AGENTS.md",
+    "LICENSE",
+    "cpl/CPL_SPECIFICATION.md",
+    "docs/ARCHITECTURE.md",
+    "integration/browser-runtime.v1.json",
+    "src/backend/lib/modelRegistry.mo"
+  ],
+  "include_globs": [
+    "AGENTS.md",
+    "DESIGN.md",
+    "PHASE_9_FOUNDATION.md",
+    "cpl/**/*.md",
+    "cpl/languages/*.cpl",
+    "cpl/laws/*.cpl",
+    "docs/ARCHITECTURE.md",
+    "docs/INTELLIGENCE_FLOORS_PAPER.md",
+    "docs/SOVEREIGN_MODELS/*.md",
+    "docs/RESEARCH_PAPERS/*.md",
+    "doctrine/laws/*.ts",
+    "integration/browser-runtime.v1.json",
+    "src/backend/lib/modelRegistry.mo",
+    "src/backend/lib/cplRuntime.mo",
+    "src/backend/lib/governance.mo",
+    "src/backend/lib/reasoningEngine.mo",
+    "src/backend/protocols/**/*.mo",
+    "production-grade-builder/PACKET_POLICY.md"
+  ],
+  "exclude_parts": [
+    ".git",
+    "dist",
+    "node_modules",
+    "target",
+    "vendor"
+  ],
+  "consumer_requirements": [
+    "record the Sovereign Git commit",
+    "record a SHA-256 digest for every consumed file",
+    "preserve repository-relative source paths",
+    "redact credential-shaped values before corpus emission",
+    "report consumed, skipped, and redacted counts",
+    "do not claim training occurred without checkpoint and metric receipts"
+  ]
+}

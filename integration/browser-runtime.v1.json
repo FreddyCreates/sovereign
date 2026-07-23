@@ -1,0 +1,40 @@
+{
+  "schema": "sovereign.browser.runtime.v1",
+  "contract_id": "freddycreates.sovereign.browser-runtime.v1",
+  "repository": "FreddyCreates/sovereign",
+  "capabilities": [
+    "inference.respond",
+    "storage.put_text",
+    "storage.verify",
+    "agents.council",
+    "office.create_bundle",
+    "security.scan_workspace",
+    "extension.package",
+    "workers.browser_pool",
+    "workers.outside_pool",
+    "compute.delta_attention",
+    "multisense.spectral_fusion",
+    "cloudflare.api_mcp",
+    "cloudflare.dynamic_workers",
+    "cloudflare.sandbox",
+    "cloudflare.browser_run",
+    "cloudflare.agents_think",
+    "cloudflare.observability",
+    "cloudflare.autonomous_operator",
+    "mobile.expo_go",
+    "mobile.native_senses"
+  ],
+  "artifact_formats": ["pdf", "xlsx", "docx", "csv", "md", "zip", "onnx"],
+  "security_boundaries": {
+    "bind_default": "127.0.0.1",
+    "execution_requires_separate_token": true,
+    "remote_model_loading_default": false,
+    "downloads_are_content_addressed": true,
+    "scanner_is_static_and_bounded": true,
+    "vault_is_integrity_storage_not_secret_custody": true,
+    "browser_automation_requires_explicit_real_browser_mode": true,
+    "worker_tasks_are_bounded_and_timeout_controlled": true,
+    "cloudflare_mutations_require_scoped_token_server_flag_and_turn_approval": true
+  },
+  "claim_boundary": "This contract defines required interfaces and controls. Each consumer must emit its own test and runtime receipts."
+}
